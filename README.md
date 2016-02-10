@@ -6,14 +6,14 @@ Editeur **Hors-ligne** de contenus au format zMarkdown.
 
 Linux | Windows
 ---|---
-[![](https://img.shields.io/shippable/56b005981895ca4474732541.svg)](https://app.shippable.com/projects/56bb616d1895ca447473c166) | [![Build status](https://ci.appveyor.com/api/projects/status/n3aa5h519uxvjufq/branch/master?svg=true)](https://ci.appveyor.com/project/firm1/zest-writer/branch/master)
+[![](https://img.shields.io/shippable/56bb616d1895ca447473c166.svg)](https://app.shippable.com/projects/56bb616d1895ca447473c166) | [![Build status](https://ci.appveyor.com/api/projects/status/n3aa5h519uxvjufq/branch/master?svg=true)](https://ci.appveyor.com/project/firm1/zest-writer/branch/master)
 - | [![](https://img.shields.io/badge/Download--green.svg)](https://ci.appveyor.com/api/projects/firm1/zest-writer/artifacts/build/zest-writer-for-windows.zip)
 
 ## Screenshoot
 
 ![](doc/home.png)
 
-![](edit.png)
+![](doc/edit.png)
 
 ## Fonctionnalités supportées
 
