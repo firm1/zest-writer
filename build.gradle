@@ -1,0 +1,82 @@
+// Declares binary plugin and its required JavaFX classpath
+
+apply from: "http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.plugin"
+
+// Configures plugin
+javafx {
+    // Application name and ID presented by target OS
+    appID 'ZestWriter'
+    appName 'Zest Writer'
+    mainClass 'com.zestedesavoir.zestwriter.MainApp'
+
+    // JVM arguments, system properties, application command line arguments
+    jvmArgs = ['-XX:+AggressiveOpts', '-XX:CompileThreshold=1']
+    systemProperties = ['prism.disableRegionCaching':'true']
+    arguments = ['-l', '--fast']
+
+    // informations
+    category = "Editor"
+    copyright = "Copyright (c) 2016 Zest Writer"
+    description = "This is a Markdown Editor for Zeste de Savoir contents"
+    licenseType = "Apache 2.0"
+    vendor = "firm1"
+    installSystemWide = true
+    menu = true
+
+    // app icons
+    icons {
+        shortcut = ["src/logo/logo-16.png", "src/logo/logo-32.png", "src/logo/logo-128.png", "src/logo/logo-256.png", "src/logo/logo-16@2x.png", "src/logo/logo-32@2x.png", "src/logo/logo-128@2x.png"]
+        volume = 'javafx-icon.png'
+        setup = 'javafx-icon.png'
+    }
+
+    // Keystore credentials for signing JAR
+    // Generate key: keytool -genkey -alias release -keyalg RSA -keystore keystore.jks -keysize 2048
+
+    releaseKey {
+        alias = "release"
+        keyStore = file('keys/keystore.jks')
+    }
+    signingMode 'release'
+}
+
+String getProjectProperty(String propertyName) {
+    project.hasProperty(propertyName) ? project.property(propertyName) : null
+}
+
+repositories {
+    mavenLocal()
+  mavenCentral()
+}
+
+sourceSets {
+  main {
+    java {
+      srcDir 'src/'
+    }
+    resources {
+      srcDir 'src/'
+      exclude 'src/log4j.properties'
+    }
+  }
+}
+
+dependencies {
+ compile 'org.languagetool:languagetool-core:3.1',
+         'org.languagetool:language-fr:3.1',
+         'org.apache.httpcomponents:httpclient:4.5.1',
+         'org.apache.httpcomponents:httpcore:4.4.3',
+         'org.apache.httpcomponents:fluent-hc:4.5.1',
+         'org.apache.httpcomponents:httpmime:4.5.1',
+         'org.apache.httpcomponents:httpclient-cache:4.5.1',
+         'org.apache.httpcomponents:httpclient-win:4.5.1',
+         'org.codehaus.jackson:jackson-core-asl:1.9.2',
+         'org.codehaus.jackson:jackson-mapper-asl:1.9.2',
+         'de.julielab:aliasi-lingpipe:4.1.0',
+         'org.python:jython-standalone:2.7.0',
+         'org.jsoup:jsoup:1.8.1'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.8'
+}

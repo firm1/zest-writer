@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.input.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane prefHeight="600.0" prefWidth="900.0" stylesheets="@dark.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MenuController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="Fichier">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#HandleOpenButtonAction" text="Ouvrir">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+              <MenuItem mnemonicParsing="false" onAction="#HandleQuitButtonAction" text="Quitter">
+                     <accelerator>
+                        <KeyCodeCombination alt="DOWN" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edition">
+            <items>
+                  <MenuItem fx:id="menuReport" disable="true" mnemonicParsing="false" onAction="#HandleReportWithoutTypoButtonAction" text="Rapport de correction">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/editor.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="F7" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <Menu fx:id="menuLisibility" disable="true" mnemonicParsing="false" text="Lisibilité du contenu">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#HandleFleshButtonAction" text="Indice de Flesch" />
+                      <MenuItem mnemonicParsing="false" onAction="#HandleGunningButtonAction" text="Indice Gunning-Fog" />
+                    </items>
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/view.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Menu>
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Synchronisation">
+              <items>
+                <MenuItem fx:id="menuLogin" mnemonicParsing="false" onAction="#HandleLoginButtonAction" text="Connexion">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/login.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
+                  <MenuItem fx:id="menuLogout" disable="true" mnemonicParsing="false" onAction="#HandleLogoutButtonAction" text="Déconnexion" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="menuDownload" disable="true" mnemonicParsing="false" onAction="#HandleDownloadButtonAction" text="Téléchargez vos contenus ZdS">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/download.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem fx:id="menuUpload" disable="true" mnemonicParsing="false" onAction="#HandleUploadButtonAction" text="Envoyez votre contenu sur ZdS">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/upload.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+              </items>
+            </Menu>
+          <Menu mnemonicParsing="false" text="Aide">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+</BorderPane>

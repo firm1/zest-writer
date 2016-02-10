@@ -1,0 +1,12 @@
+.tab .tab-label {
+    /*-fx-alignment: CENTER;*/
+}
+
+.tab, .menu, .menu-item{
+    -fx-padding: 10 20 10 20;
+}
+
+.menu-bar {
+    -fx-border-color: #DDD #DDD #F8AD32 #DDD;
+    -fx-border-width: 0 0 3px 0;
+}

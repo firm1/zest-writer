@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import org.fxmisc.richtext.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<SplitPane stylesheets="@dark.css" dividerPositions="0.5" prefHeight="633.0" prefWidth="773.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MdConvertController">
+   <items>
+      <BorderPane>
+         <top>
+            <ToolBar BorderPane.alignment="CENTER">
+              <items>
+                  <Button fx:id="SaveButton" mnemonicParsing="false" onAction="#HandleSaveButtonAction">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/save.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Separator orientation="VERTICAL" />
+                <Button mnemonicParsing="false" onAction="#HandleBoldButtonAction">
+                	<tooltip>
+				        <Tooltip text="Gras" />
+				    </tooltip>
+                	<graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
+                            <image>
+                                <Image url="@static/icons/bold.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleItalicButtonAction">
+                	<tooltip>
+				        <Tooltip text="Italique" />
+				    </tooltip>
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/italic.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Separator orientation="VERTICAL" />
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBarredButtonAction">
+                  	<tooltip>
+				        <Tooltip text="Barrer le texte" />
+				    </tooltip>
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/barred.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleTouchButtonAction">
+                  	<tooltip>
+				        <Tooltip text="Touche clavier" />
+				    </tooltip>
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/touch.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleExpButtonAction">
+                  	<tooltip>
+				        <Tooltip text="Exposant" />
+				    </tooltip>
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/exposant.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleIndButtonAction">
+                  	<tooltip>
+				        <Tooltip text="Indice" />
+				    </tooltip>
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/indice.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Separator orientation="VERTICAL" />
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleCenterButtonAction">
+                  	<tooltip>
+				        <Tooltip text="Centrer le texte" />
+				    </tooltip>
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/center.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleRightButtonAction">
+                  	<tooltip>
+				        <Tooltip text="Aligner le texte a droite" />
+				    </tooltip>
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/right.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Separator orientation="VERTICAL" />
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBulletButtonAction">
+                  	<tooltip>
+				        <Tooltip text="Liste a puces" />
+				    </tooltip>
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/bullet.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleNumberedButtonAction">
+                  	<tooltip>
+				        <Tooltip text="Liste ordonnée" />
+				    </tooltip>
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/numbered.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Separator orientation="VERTICAL" />
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleHeaderButtonAction">
+                  	<tooltip>
+				        <Tooltip text="Titre" />
+				    </tooltip>
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/header.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleQuoteButtonAction">
+                  	<tooltip>
+				        <Tooltip text="Citer du texte" />
+				    </tooltip>
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/quote.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBlocButtonAction">
+                  	<tooltip>
+				        <Tooltip text="Bloc spéciaux" />
+				    </tooltip>
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/information.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleTableButtonAction">
+                  	<tooltip>
+				        <Tooltip text="Editeur de tableaux" />
+				    </tooltip>
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/table.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleLinkButtonAction">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/link.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleCodeButtonAction">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/code.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+              </items>
+            </ToolBar>
+         </top>
+         <center>
+            <TextArea fx:id="SourceText" wrapText="true" BorderPane.alignment="CENTER">
+               <font>
+                  <Font name="Source Code Pro" size="13.0" />
+               </font>
+            </TextArea>
+         </center>
+      </BorderPane>
+      <BorderPane fx:id="BoxRender" prefHeight="200.0" prefWidth="200.0">
+         <center>
+            <WebView fx:id="renderView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+         </center>
+         <top>
+            <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <items>
+                  <Button fx:id="FullScreeen" mnemonicParsing="false" onAction="#HandleFullScreeenButtonAction">
+                  <tooltip>
+                        <Tooltip text="Plein écran" />
+                  </tooltip>
+                  <graphic>
+                       <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                          <image>
+                             <Image url="@static/icons/fullscreen.png" />
+                          </image>
+                       </ImageView>
+                    </graphic>
+                  </Button>
+                  <Button fx:id="RefreshButton" mnemonicParsing="false" onAction="#updateRender">
+                  <tooltip>
+                        <Tooltip text="Actualiser le rendu" />
+                  </tooltip>
+                  	<graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/refresh.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="RefreshButton" mnemonicParsing="false" onAction="#HandleValidateButtonAction">
+                  <tooltip>
+                        <Tooltip text="Corriger le texte" />
+                  </tooltip>
+                  	<graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@static/icons/check.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </items>
+            </ToolBar>
+         </top>
+      </BorderPane>
+   </items>
+</SplitPane>

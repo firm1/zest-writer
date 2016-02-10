@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.TableController">
+   <center>
+      <TableView fx:id="tableView" editable="true" prefHeight="300.0" prefWidth="400.0" BorderPane.alignment="CENTER" />
+   </center>
+   <right>
+      <Button mnemonicParsing="false" onAction="#HandleAddColumnButtonAction" BorderPane.alignment="TOP_RIGHT">
+         <graphic>
+            <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@static/icons/add.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+   </right>
+   <bottom>
+      <Button mnemonicParsing="false" onAction="#HandleAddRowButtonAction" BorderPane.alignment="BOTTOM_LEFT">
+         <graphic>
+            <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@static/icons/add.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+   </bottom>
+</BorderPane>

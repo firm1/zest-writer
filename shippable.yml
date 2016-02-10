@@ -1,0 +1,18 @@
+language: java
+
+archive: true
+
+before_script:
+  - sudo apt-get install -y unzip
+  - mkdir -p ~/opt/packages/gradle
+  - wget -P ~/opt/packages/gradle https://services.gradle.org/distributions/gradle-2.3-bin.zip
+  - unzip ~/opt/packages/gradle/gradle-2.3-bin.zip -d ~/opt/packages/gradle
+  - ln -s ~/opt/packages/gradle/gradle-2.3/ ~/opt/gradle
+  - echo 'export GRADLE_HOME="$HOME/opt/gradle"' >> ~/.profile
+  - echo 'PATH="$PATH:$GRADLE_HOME/bin"' >> ~/.profile
+  - echo 'export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8' >> ~/.profile
+  - source ~/.profile
+
+script:
+  - gradle build
+  - cp -R build/* $SHIPPABLE_REPO_DIR/shippable/buildoutput
