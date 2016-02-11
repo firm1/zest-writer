@@ -302,6 +302,27 @@ public class MdTextController {
 		Summary.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		rootItem = addChild(rootItem, jsonData, filePath);
 		Summary.setRoot(rootItem);
+		Summary.setOnMouseClicked(new EventHandler<MouseEvent>()
+		{
+		    @Override
+		    public void handle(MouseEvent mouseEvent)
+		    {
+		        if(mouseEvent.getClickCount() == 2)
+		        {
+		            TreeItem<ExtractFile> item = Summary.getSelectionModel().getSelectedItem();
+
+		            if ((!mainApp.getExtracts().contains(item.getValue()))
+							&& (item.getValue().getFilePath() != null)) {
+						try {
+							createTabExtract(item.getValue());
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+		        }
+		    }
+		});
+
 	    Summary.setCellFactory(new Callback<TreeView<ExtractFile>, TreeCell<ExtractFile>>() {
 
 	        @Override
@@ -323,7 +344,7 @@ public class MdTextController {
 	            	public void initContextMenu(ExtractFile item) {
 	                    MenuItem addMenuItem1 = new MenuItem("Ajouter un extrait", new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/child.png"), 16, 16, true, true)));
 	                    MenuItem addMenuItem2 = new MenuItem("Ajouter un conteneur", new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/container.png"), 16, 16, true, true)));
-	                    MenuItem addMenuItem3 = new MenuItem("Editer", new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/editor.png"), 16, 16, true, true)));
+	                    MenuItem addMenuItem3 = new MenuItem("Renommer", new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/editor.png"), 16, 16, true, true)));
 	                    MenuItem addMenuItem4 = new MenuItem("Supprimer", new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/delete.png"), 16, 16, true, true)));
 	                    addMenu.getItems().clear();
 	                    if (item.canTakeContainer(getAncestorContainerCount(getTreeItem()))) {
@@ -332,7 +353,7 @@ public class MdTextController {
 	                    if (item.canTakeExtract()) {
 	                    	addMenu.getItems().add(addMenuItem1);
 	                    }
-	                    if (item.canEdit()) {
+	                    if (item.isEditable()) {
 	                    	addMenu.getItems().add(addMenuItem3);
 	                    }
 	                    if (item.canDelete()) {
@@ -450,37 +471,21 @@ public class MdTextController {
 	                    addMenuItem3.setOnAction(new EventHandler<ActionEvent>() {
 	                        public void handle(ActionEvent t) {
 			                    TreeItem<ExtractFile> item = Summary.getSelectionModel().getSelectedItem();
-								if ((!mainApp.getExtracts().contains(item.getValue()))
-										&& (item.getValue().getFilePath() != null)) {
-									try {
-										createTabExtract(item.getValue());
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
-								}
+			                    TextInputDialog dialog = new TextInputDialog(item.getValue().getTitle().getValue());
+			                    dialog.setTitle("Renommer  "+item.getValue().getTitle().getValue());
+			                    dialog.setHeaderText(null);
+			                    dialog.setContentText("Nouveau titre : ");
+
+			                    Optional<String> result = dialog.showAndWait();
+			                    if (result.isPresent()){
+			                    	if (!result.get().trim().equals("")) {
+			                    		item.getValue().setTitle(result.get());
+			                    		setText(result.get());
+			                    	}
+			                    }
+
 	                        }
 	                    });
-	                }
-
-	            	@Override
-	    	        public void startEdit() {
-	    	            super.startEdit();
-
-	    	            if (getItem().getOject() != null && getItem().isEditable()) {
-		    	            if (textField == null) {
-		    	                createTextField();
-		    	            }
-		    	            setText(null);
-		    	            setGraphic(textField);
-		    	            textField.selectAll();
-	    	            }
-	    	        }
-
-	            	@Override
-	                public void cancelEdit() {
-	                    super.cancelEdit();
-	                    setText(getString());
-	                    setGraphic(getTreeItem().getGraphic());
 	                }
 
 	                protected void updateItem(ExtractFile item, boolean empty) {
@@ -490,22 +495,14 @@ public class MdTextController {
 	                        setText(null);
 	                        setGraphic(null);
 	                    } else {
-	                        if (isEditing()) {
-	                            if (textField != null) {
-	                                textField.setText(getString());
-	                            }
-	                            setText(null);
-	                            setGraphic(textField);
-	                        } else {
-	                            setText(getString());
-	                            if(getItem().isContainer()) {
-	                            	setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/container.png"), 20, 20, true, true)));
-	                            }
-	                            else {
-	                            	setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/child.png"), 20, 20, true, true)));
-	                            }
-	                            setContextMenu(addMenu);
-	                        }
+                            setText(getString());
+                            if(getItem().isContainer()) {
+                            	setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/container.png"), 20, 20, true, true)));
+                            }
+                            else {
+                            	setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/child.png"), 20, 20, true, true)));
+                            }
+                            setContextMenu(addMenu);
 	                        initContextMenu(item);
 	                    }
 	                }
