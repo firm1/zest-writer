@@ -77,6 +77,14 @@ dependencies {
             'org.jsoup:jsoup:1.8.1'
 }
 
+jfxCopyLibs.enabled = false
+
+jar{
+    configurations.compile.collect { it.isDirectory() ? it: zipTree(it)}
+    from(configurations.compile) { 
+    }
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '2.8'
 }

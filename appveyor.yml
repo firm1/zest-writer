@@ -15,9 +15,12 @@ build_script:
   - gradlew.bat -u -i clean assemble
 
 artifacts:
-  - path: build\distributions
+  - path: build\distributions\ZestWriter
     name: "zest-writer-for-windows"
     type: zip
- 
+  - path: build\distributions\ZestWriter\app\zest-writer-0.1.1.jar
+    name: "zest-writer-jar"
+    type: zip
+
 on_failure:
   - echo Somebody setup us the bomb
