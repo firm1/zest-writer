@@ -6,15 +6,15 @@ apply from: "http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.pl
 javafx {
     // Application name and ID presented by target OS
     appID 'ZestWriter'
-    appName 'Zest Writer'
+    appName 'ZestWriter'
     mainClass 'com.zestedesavoir.zestwriter.MainApp'
 
     // JVM arguments, system properties, application command line arguments
     jvmArgs = ['-XX:+AggressiveOpts', '-XX:CompileThreshold=1']
-    systemProperties = ['prism.disableRegionCaching':'true']
+    systemProperties = ['prism.disableRegionCaching': 'true']
     arguments = ['-l', '--fast']
 
-    // informations
+    // informations |  grep eclipse
     category = "Editor"
     copyright = "Copyright (c) 2016 Zest Writer"
     description = "This is a Markdown Editor for Zeste de Savoir contents"
@@ -46,35 +46,35 @@ String getProjectProperty(String propertyName) {
 
 repositories {
     mavenLocal()
-  mavenCentral()
+    mavenCentral()
 }
 
 sourceSets {
-  main {
-    java {
-      srcDir 'src/'
+    main {
+        java {
+            srcDir 'src/'
+        }
+        resources {
+            srcDir 'src/'
+            exclude 'src/log4j.properties'
+        }
     }
-    resources {
-      srcDir 'src/'
-      exclude 'src/log4j.properties'
-    }
-  }
 }
 
 dependencies {
- compile 'org.languagetool:languagetool-core:3.1',
-         'org.languagetool:language-fr:3.1',
-         'org.apache.httpcomponents:httpclient:4.5.1',
-         'org.apache.httpcomponents:httpcore:4.4.3',
-         'org.apache.httpcomponents:fluent-hc:4.5.1',
-         'org.apache.httpcomponents:httpmime:4.5.1',
-         'org.apache.httpcomponents:httpclient-cache:4.5.1',
-         'org.apache.httpcomponents:httpclient-win:4.5.1',
-         'org.codehaus.jackson:jackson-core-asl:1.9.2',
-         'org.codehaus.jackson:jackson-mapper-asl:1.9.2',
-         'de.julielab:aliasi-lingpipe:4.1.0',
-         'org.python:jython-standalone:2.7.0',
-         'org.jsoup:jsoup:1.8.1'
+    compile 'org.languagetool:languagetool-core:3.1',
+            'org.languagetool:language-fr:3.1',
+            'org.apache.httpcomponents:httpclient:4.5.1',
+            'org.apache.httpcomponents:httpcore:4.4.3',
+            'org.apache.httpcomponents:fluent-hc:4.5.1',
+            'org.apache.httpcomponents:httpmime:4.5.1',
+            'org.apache.httpcomponents:httpclient-cache:4.5.1',
+            'org.apache.httpcomponents:httpclient-win:4.5.1',
+            'org.codehaus.jackson:jackson-core-asl:1.9.2',
+            'org.codehaus.jackson:jackson-mapper-asl:1.9.2',
+            'de.julielab:aliasi-lingpipe:4.1.0',
+            'org.python:jython-standalone:2.7.0',
+            'org.jsoup:jsoup:1.8.1'
 }
 
 task wrapper(type: Wrapper) {

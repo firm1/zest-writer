@@ -6,38 +6,25 @@
  */
 package com.zestedesavoir.zestwriter.utils.readability;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.io.StringWriter;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.*;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 /**
  * @author Panos Ipeirotis
@@ -82,7 +69,7 @@ public class Utilities {
     }
 
     public static String cleanLine(String line) {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         for (int i = 0; i < line.length(); i++) {
             char c = line.charAt(i);
             if (c < 128 && Character.isLetter(c)) {
@@ -95,7 +82,7 @@ public class Utilities {
     }
 
     public static String cleanForXML(String line) {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         for (int i = 0; i < line.length(); i++) {
             char c = line.charAt(i);
             if (c < 128 && Character.isLetter(c)) {
@@ -123,7 +110,7 @@ public class Utilities {
     */
 
     public static String getFile(String FileName) {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
 
         try {
             BufferedReader dataInput = new BufferedReader(new FileReader(new File(FileName)));
@@ -142,7 +129,7 @@ public class Utilities {
     }
 
     public static String getFile(File f) {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
 
         try {
             BufferedReader dataInput = new BufferedReader(new FileReader(f));
@@ -161,7 +148,7 @@ public class Utilities {
     }
 
     public static TreeSet<String> getWords(String TextFile) {
-        TreeSet<String> result = new TreeSet<String>();
+        TreeSet<String> result = new TreeSet<>();
         StringTokenizer st = new StringTokenizer(TextFile);
         while (st.hasMoreTokens()) {
             result.add(st.nextToken());
@@ -170,7 +157,7 @@ public class Utilities {
     }
 
     public static String getPage(String URLName) {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
 
             try {
                 HttpURLConnection.setFollowRedirects(false);
@@ -264,12 +251,9 @@ public class Utilities {
             if (sxe.getException() != null)
                 x = sxe.getException();
             x.printStackTrace();
-        } catch (ParserConfigurationException pce) {
+        } catch (ParserConfigurationException | IOException pce) {
             // Parser with specified options can't be built
             pce.printStackTrace();
-        } catch (IOException ioe) {
-            // I/O error
-            ioe.printStackTrace();
         } catch (FactoryConfigurationError fce) {
             // Factory configuration error
             fce.printStackTrace();
@@ -326,12 +310,9 @@ public class Utilities {
             });
 
             MIQuery = builder.newDocument();
-        } catch (ParserConfigurationException pce) {
+        } catch (ParserConfigurationException | FactoryConfigurationError pce) {
             // Parser with specified options can't be built
             pce.printStackTrace();
-        } catch (FactoryConfigurationError fce) {
-            // Factory configuration error
-            fce.printStackTrace();
         }
         return MIQuery;
     }
@@ -349,8 +330,7 @@ public class Utilities {
             // Write the DOM document to the file
             Transformer xformer = TransformerFactory.newInstance().newTransformer();
             xformer.transform(source, result);
-        } catch (TransformerConfigurationException e) {
-        } catch (TransformerException e) {
+        } catch (TransformerException ignored) {
         }
     }
 
@@ -366,8 +346,7 @@ public class Utilities {
             // Write the DOM document to the file
             Transformer xformer = TransformerFactory.newInstance().newTransformer();
             xformer.transform(source, result);
-        } catch (TransformerConfigurationException e) {
-        } catch (TransformerException e) {
+        } catch (TransformerException ignored) {
         }
     }
 
@@ -385,8 +364,7 @@ public class Utilities {
             // Write the DOM document to the file
             Transformer xformer = TransformerFactory.newInstance().newTransformer();
             xformer.transform(source, result);
-        } catch (TransformerConfigurationException e) {
-        } catch (TransformerException e) {
+        } catch (TransformerException ignored) {
         }
         return sw.toString();
 

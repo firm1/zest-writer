@@ -37,14 +37,12 @@ public class Syllabify {
         String[] phonems = word.split("[^aeiouy]+");
 
         int syl = 0;
-        for (int i = 0; i < SubSyl.length; i++) {
-            String syllabe = SubSyl[i];
+        for (String syllabe : SubSyl) {
             if (word.matches(syllabe)) {
                 syl--;
             }
         }
-        for (int i = 0; i < AddSyl.length; i++) {
-            String syllabe = AddSyl[i];
+        for (String syllabe : AddSyl) {
             if (word.matches(syllabe)) {
                 syl++;
             }
@@ -53,8 +51,8 @@ public class Syllabify {
             syl++;
         }
 
-        for (int i = 0; i < phonems.length; i++) {
-            if (phonems[i].length() > 0)
+        for (String phonem : phonems) {
+            if (phonem.length() > 0)
                 syl++;
         }
 
