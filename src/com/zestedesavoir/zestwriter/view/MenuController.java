@@ -7,8 +7,12 @@ import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZipUtil;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -18,12 +22,12 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Pair;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 
@@ -51,6 +55,10 @@ public class MenuController {
     MenuItem menuReport;
     @FXML
     MenuItem menuLisibility;
+    @FXML
+    HBox hBottomBox;
+    final ProgressBar pb = new ProgressBar(0);
+    final Text labelField = new Text("");
 
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
@@ -446,34 +454,63 @@ public class MenuController {
 
     @FXML
     private void HandleDownloadButtonAction(ActionEvent event) {
-        if (mainApp.getZdsutils().isAuthenticated()) {
-            try {
+        hBottomBox.getChildren().addAll(pb, labelField);
 
-                for (MetadataContent meta : mainApp.getZdsutils().getContentListOnline()) {
-                    mainApp.getZdsutils().downloaDraft(meta.getId(), meta.getType());
-                    mainApp.getZdsutils().unzipOnlineContent(mainApp.getZdsutils().getOnlineContentPathDir() + File.separator + meta.getSlug() + ".zip");
-                }
+        Service<Void> downloadContentTask = new Service<Void>() {
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        int max = mainApp.getZdsutils().getContentListOnline().size();
+                        int iterations = 0;
+                        if (mainApp.getZdsutils().isAuthenticated()) {
+                            for (MetadataContent meta : mainApp.getZdsutils().getContentListOnline()) {
+                                updateMessage("Téléchargement : " + meta.getSlug());
+                                updateProgress(iterations, max);
+                                mainApp.getZdsutils().downloaDraft(meta.getId(), meta.getType());
+                                iterations++;
+                            }
 
-                Alert alert = new Alert(AlertType.INFORMATION);
-                alert.setTitle("Connexion");
-                alert.setHeaderText("Confirmation de connexion");
-                alert.setContentText("Vos contenus (tutoriels et articles) de ZdS ont été téléchargés en local. \nVous pouvez maintenant travailler en mode Hors ligne !");
-                alert.showAndWait();
-            } catch (IOException e) {
-                e.printStackTrace();
-
-                Alert alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Connexion");
-                alert.setHeaderText("Erreur de connexion");
-                alert.setContentText("Désolé mais un problème vous empêche de télécharger le contenu de ZdS en local.");
-
-                alert.showAndWait();
+                            iterations = 0;
+                            for (MetadataContent meta : mainApp.getZdsutils().getContentListOnline()) {
+                                updateMessage("Décompression : " + meta.getSlug());
+                                updateProgress(iterations, max);
+                                mainApp.getZdsutils().unzipOnlineContent(mainApp.getZdsutils().getOnlineContentPathDir() + File.separator + meta.getSlug() + ".zip");
+                                iterations++;
+                            }
+                            updateMessage("Terminé");
+                            updateProgress(iterations, max);
+                        }
+                        return null;
+                    }
+                };
             }
-        }
+        };
+        labelField.textProperty().bind(downloadContentTask.messageProperty());
+        pb.progressProperty().bind(downloadContentTask.progressProperty());
+        downloadContentTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
+            switch (newValue) {
+                case FAILED:
+                case CANCELLED:
+                case SUCCEEDED:
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Téléchargement des contenus");
+                    alert.setHeaderText("Confirmation du téléchargement");
+                    alert.setContentText("Vos contenus (tutoriels et articles) de ZdS ont été téléchargés en local. \n" +
+                            "Vous pouvez maintenant travailler en mode Hors ligne !");
+                    alert.showAndWait();
+                    hBottomBox.getChildren().clear();
+                    break;
+            }
+        });
+        downloadContentTask.start();
     }
 
     @FXML
     private void HandleUploadButtonAction(ActionEvent event) {
+        hBottomBox.getChildren().addAll(labelField);
+
         List<MetadataContent> contents = mainApp.getZdsutils().getContentListOnline();
 
         ChoiceDialog<MetadataContent> dialog = new ChoiceDialog<>(null, contents);
@@ -481,33 +518,57 @@ public class MenuController {
         dialog.setHeaderText("Choisissez le tutoriel vers lequel importer");
         dialog.setContentText("Tutoriel: ");
 
-        // Traditional way to get the response value.
         Optional<MetadataContent> result = dialog.showAndWait();
-        if (result.isPresent()) {
-            if (mainApp.getZdsutils().isAuthenticated()) {
-                String targetId = result.get().getId();
-                String localSlug = mainApp.getZdsutils().getLocalSlug();
-                String targetSlug = result.get().getSlug();
-                try {
-                    String pathDir = mainApp.getZdsutils().getOfflineContentPathDir() + File.separator + localSlug;
-                    ZipUtil.zipContent(pathDir, pathDir + ".zip");
-                    mainApp.getZdsutils().importContent(pathDir + ".zip", targetId, targetSlug);
 
-                    Alert alert = new Alert(AlertType.INFORMATION);
+        Service<Void> uploadContentTask = new Service<Void>() {
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        if (mainApp.getZdsutils().isAuthenticated()) {
+                            String targetId = result.get().getId();
+                            String localSlug = mainApp.getZdsutils().getLocalSlug();
+                            String targetSlug = result.get().getSlug();
+                            try {
+                                String pathDir = mainApp.getZdsutils().getOfflineContentPathDir() + File.separator + localSlug;
+                                updateMessage("Compression : "+targetSlug+" en cours ...");
+                                ZipUtil.zipContent(pathDir, pathDir + ".zip");
+                                updateMessage("Import : "+targetSlug+" en cours ...");
+                                mainApp.getZdsutils().importContent(pathDir + ".zip", targetId, targetSlug);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        return null;
+                    }
+                };
+            }
+        };
+        labelField.textProperty().bind(uploadContentTask.messageProperty());
+        uploadContentTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
+            Alert alert;
+            switch (newValue) {
+                case FAILED:
+                    alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Import de contenu");
+                    alert.setHeaderText("Erreur d'import");
+                    alert.setContentText("Désolé mais un problème vous empêche d'importer votre contenu sur ZdS");
+                    alert.showAndWait();
+                case CANCELLED:
+                case SUCCEEDED:
+                    alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("Import de contenu");
                     alert.setHeaderText("Confirmation de l'import");
                     alert.setContentText("Votre contenu à été importé sur ZdS avec succès !");
                     alert.showAndWait();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Alert alert = new Alert(AlertType.ERROR);
-                    alert.setTitle("Import de contenu");
-                    alert.setHeaderText("Erreur d'import");
-                    alert.setContentText("Désolé mais un problème vous empêche d'importer votre contenu sur ZdS");
-
-                    alert.showAndWait();
-                }
+                    hBottomBox.getChildren().clear();
+                    break;
             }
+        });
+
+        if (result.isPresent()) {
+            uploadContentTask.start();
         }
     }
 
