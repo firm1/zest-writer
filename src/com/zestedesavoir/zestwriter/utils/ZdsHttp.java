@@ -403,7 +403,7 @@ public class ZdsHttp {
         logger.debug("Tentative de téléchargement via le lien : " + getDownloadDraftContentUrl(targetId, targetSlug));
 
 
-        HttpResponse response = client.execute(get);
+        HttpResponse response = client.execute(get, context);
 
         InputStream is = response.getEntity().getContent();
         String filePath = getOnlineContentPathDir() + File.separator + targetSlug + ".zip";
