@@ -311,7 +311,7 @@ public class MdConvertController {
             WebEngine webEngine = renderView.getEngine();
             webEngine.loadContent("<!doctype html><html lang='fr'><head><meta charset='utf-8'><base href='file://" + getClass().getResource(".").getPath() + "' /></head><body>" + result + "</body></html>");
             webEngine.setUserStyleSheetLocation(getClass().getResource("content.css").toExternalForm());
-        } catch (DOMException | IOException e) {
+        } catch (DOMException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

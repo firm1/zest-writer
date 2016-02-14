@@ -142,13 +142,18 @@ public class Corrector {
         return builder.build();
     }
 
-    public String checkHtmlContent(String htmlContent) throws IOException {
+    public String checkHtmlContent(String htmlContent) {
         AnnotatedText markup = makeAnnotatedText(htmlContent);
         StringBuilder bf = new StringBuilder(htmlContent);
 
         langTool.getAllActiveRules().stream().filter(rule -> rule instanceof SpellingCheckRule).forEach(rule -> ((SpellingCheckRule) rule).addIgnoreTokens(wordsToIgnore));
-
-        List<RuleMatch> matches = langTool.check(markup);
+        List<RuleMatch> matches = new ArrayList<>();
+        try {
+            matches = langTool.check(markup);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         int offset = 0;
         for (RuleMatch match : matches) {
             String desc = "Note : " + match.getRule().getDescription();
@@ -167,13 +172,16 @@ public class Corrector {
         return bf.toString();
     }
 
-    public String checkHtmlContentToText(String htmlContent, String source) throws IOException {
+    public String checkHtmlContentToText(String htmlContent, String source) {
         AnnotatedText markup = makeAnnotatedText(htmlContent);
         StringBuilder bf = new StringBuilder();
-
         langTool.getAllActiveRules().stream().filter(rule -> rule instanceof SpellingCheckRule).forEach(rule -> ((SpellingCheckRule) rule).addIgnoreTokens(wordsToIgnore));
-
-        List<RuleMatch> matches = langTool.check(markup);
+        List<RuleMatch> matches = new ArrayList<>();
+        try {
+            matches = langTool.check(markup);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         int offset = 0;
         for (RuleMatch match : matches) {
             String txt = htmlContent.substring(match.getFromPos(), match.getToPos());

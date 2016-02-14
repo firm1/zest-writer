@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.BorderPane?>
+
 <BorderPane prefHeight="600.0" prefWidth="900.0" stylesheets="@dark.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MenuController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
@@ -90,4 +94,7 @@
         </menus>
       </MenuBar>
    </top>
+   <bottom>
+      <HBox fx:id="hBottomBox" prefHeight="30.0" BorderPane.alignment="CENTER" />
+   </bottom>
 </BorderPane>
