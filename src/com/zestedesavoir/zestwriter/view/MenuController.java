@@ -24,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Pair;
@@ -69,35 +70,44 @@ public class MenuController {
         System.exit(0);
     }
 
-    private void correctChildren(TreeItem<ExtractFile> root, boolean typo) throws IOException {
-        for (TreeItem<ExtractFile> child : root.getChildren()) {
-            String markdown = "";
+    private List<ExtractFile> getExtractFilesFromTree(TreeItem<ExtractFile> node) {
+        List<ExtractFile> extractFiles = new ArrayList<>();
+        for (TreeItem<ExtractFile> child : node.getChildren()) {
             if (child.getChildren().isEmpty()) {
-                // load mdText
-                Path path = Paths.get(child.getValue().getFilePath());
-                Scanner scanner;
-                StringBuilder bfString = new StringBuilder();
-                try {
-                    scanner = new Scanner(path, StandardCharsets.UTF_8.name());
-                    while (scanner.hasNextLine()) {
-                        bfString.append(scanner.nextLine());
-                        bfString.append("\n");
-                    }
-                    markdown = bfString.toString();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-
-                Corrector cr = new Corrector();
-                if (!typo) {
-                    cr.ignoreRule("FRENCH_WHITESPACE");
-                }
-                String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), markdown));
-                textArea.appendText(cr.checkHtmlContentToText(htmlText, child.getValue().getTitle().getValue()));
-            } else {
-                correctChildren(child, typo);
+                extractFiles.add(child.getValue());
             }
+            else {
+                extractFiles.addAll(getExtractFilesFromTree(child));
+            }
+        }
+        return extractFiles;
+    }
+
+    private void correctChildren(TreeItem<ExtractFile> root, boolean typo) throws IOException {
+        List<ExtractFile> myExtracts = getExtractFilesFromTree(root);
+        for(ExtractFile extract:myExtracts) {
+            String markdown = "";
+            // load mdText
+            Path path = Paths.get(extract.getFilePath());
+            Scanner scanner;
+            StringBuilder bfString = new StringBuilder();
+            try {
+                scanner = new Scanner(path, StandardCharsets.UTF_8.name());
+                while (scanner.hasNextLine()) {
+                    bfString.append(scanner.nextLine());
+                    bfString.append("\n");
+                }
+                markdown = bfString.toString();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Corrector cr = new Corrector();
+            if (!typo) {
+                cr.ignoreRule("FRENCH_WHITESPACE");
+            }
+            String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), markdown));
+            textArea.appendText(cr.checkHtmlContentToText(htmlText, extract.getTitle().getValue()));
         }
     }
 
@@ -278,13 +288,7 @@ public class MenuController {
     }
 
     @FXML
-    private void HandleReportWithTypoButtonAction(ActionEvent event) throws IOException {
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle("Validation du contenu");
-        alert.setHeaderText("Rapport de validation du contenu prêt à être copié sur ZdS");
-
-        Label label = new Label("Liste des erreurs dans votre contenu");
-
+    private void HandleReportWithoutTypoButtonAction(ActionEvent event) {
         textArea = new TextArea();
         textArea.setEditable(true);
         textArea.setWrapText(true);
@@ -296,46 +300,77 @@ public class MenuController {
 
         GridPane expContent = new GridPane();
         expContent.setMaxWidth(Double.MAX_VALUE);
-        expContent.add(label, 0, 0);
+        expContent.add(new Label("Rapport de correction"), 0, 0);
         expContent.add(textArea, 0, 1);
 
-        // Set expandable Exception into the dialog pane.
-        alert.getDialogPane().setExpandableContent(expContent);
-        alert.getDialogPane().setPrefSize(760, 700);
+        hBottomBox.getChildren().addAll(labelField);
+        List<ExtractFile> myExtracts = getExtractFilesFromTree(mainApp.getIndex().getSummary().getRoot());
+        MdTextController mdText = mainApp.getIndex();
+        Corrector corrector = new Corrector();
+        corrector.ignoreRule("FRENCH_WHITESPACE");
 
-        correctChildren(mainApp.getIndex().getSummary().getRoot(), true);
+        Service<String> correctTask = new Service<String>() {
+            @Override
+            protected Task<String> createTask() {
+                return new Task<String>() {
+                    @Override
+                    protected String call(){
+                        updateMessage("Préparation du rapport de validation ...");
+                        StringBuilder resultCorrect = new StringBuilder();
+                        for(ExtractFile extract:myExtracts) {
+                            updateMessage("Préparation du rapport de validation de "+extract.getTitle().getValue());
+                            String markdown = "";
+                            // load mdText
+                            Path path = Paths.get(extract.getFilePath());
+                            Scanner scanner;
+                            StringBuilder bfString = new StringBuilder();
+                            try {
+                                scanner = new Scanner(path, StandardCharsets.UTF_8.name());
+                                while (scanner.hasNextLine()) {
+                                    bfString.append(scanner.nextLine());
+                                    bfString.append("\n");
+                                }
+                                markdown = bfString.toString();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
 
-        alert.showAndWait();
-    }
+                            String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mdText, markdown));
+                            String note = corrector.checkHtmlContentToText(htmlText, extract.getTitle().getValue());
+                            resultCorrect.append(note);
+                        }
+                        return resultCorrect.toString();
+                    }
+                };
+            }
+        };
+        labelField.textProperty().bind(correctTask.messageProperty());
+        textArea.textProperty().bind(correctTask.valueProperty());
+        correctTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
+        	Alert alert;
+            switch (newValue) {
+                case FAILED:
+                	alert = new Alert(AlertType.ERROR);
+                	alert.setTitle("Validation du contenu");
+                    alert.setHeaderText("Erreur de validation");
+                    alert.setContentText("Désolé une erreur nous empêche de trouver les erreurs dans votre contenu");
 
-    @FXML
-    private void HandleReportWithoutTypoButtonAction(ActionEvent event) throws IOException {
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle("Validation du contenu");
-        alert.setHeaderText("Rapport de validation du contenu prêt à être copié sur ZdS");
+                    alert.showAndWait();
+                    break;
+                case CANCELLED:
+                case SUCCEEDED:
+                    alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Validation du contenu");
+                    alert.setHeaderText("Rapport de validation du contenu prêt à être copié sur ZdS");
 
-        Label label = new Label("The exception stacktrace was:");
-
-        textArea = new TextArea();
-        textArea.setEditable(true);
-        textArea.setWrapText(true);
-
-        textArea.setMaxWidth(Double.MAX_VALUE);
-        textArea.setMaxHeight(Double.MAX_VALUE);
-        GridPane.setVgrow(textArea, Priority.ALWAYS);
-        GridPane.setHgrow(textArea, Priority.ALWAYS);
-
-        GridPane expContent = new GridPane();
-        expContent.setMaxWidth(Double.MAX_VALUE);
-        expContent.add(label, 0, 0);
-        expContent.add(textArea, 0, 1);
-
-        // Set expandable Exception into the dialog pane.
-        alert.getDialogPane().setExpandableContent(expContent);
-
-        correctChildren(mainApp.getIndex().getSummary().getRoot(), false);
-
-        alert.showAndWait();
+                    // Set expandable Exception into the dialog pane.
+                    alert.getDialogPane().setExpandableContent(expContent);
+                    alert.showAndWait();
+                    break;
+            }
+            hBottomBox.getChildren().clear();
+        });
+        correctTask.start();
     }
 
     @FXML
@@ -423,32 +458,54 @@ public class MenuController {
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
         result.ifPresent(usernamePassword -> {
-            try {
-                mainApp.getZdsutils().login(usernamePassword.getKey(), usernamePassword.getValue());
-
-                menuDownload.setDisable(false);
-                menuLogin.setDisable(true);
-                menuLogout.setDisable(false);
-                if (mainApp.getContents().containsKey("dir")) {
-                    menuUpload.setDisable(false);
+            hBottomBox.getChildren().addAll(labelField);
+            Service<Void> loginTask = new Service<Void>() {
+                @Override
+                protected Task<Void> createTask() {
+                    return new Task<Void>() {
+                        @Override
+                        protected Void call() throws Exception {
+                            updateMessage("Connexion au site en cours ...");
+                            mainApp.getZdsutils().login(usernamePassword.getKey(), usernamePassword.getValue());
+                            updateMessage("Recherche des contenus ...");
+                            mainApp.getZdsutils().initInfoOnlineContent("tutorial");
+                            mainApp.getZdsutils().initInfoOnlineContent("article");
+                            return null;
+                        }
+                    };
                 }
-                mainApp.getZdsutils().initInfoOnlineContent("tutorial");
-                mainApp.getZdsutils().initInfoOnlineContent("article");
+            };
+            labelField.textProperty().bind(loginTask.messageProperty());
+            loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
+                Alert alert;
+                switch (newValue) {
+                    case FAILED:
+                        alert = new Alert(AlertType.ERROR);
+                        alert.setTitle("Connexion");
+                        alert.setHeaderText("Erreur de connexion");
+                        alert.setContentText("Désolé mais vous n'avez pas été authentifié sur le serveur de Zeste de Savoir.");
 
-                Alert alert = new Alert(AlertType.INFORMATION);
-                alert.setTitle("Connexion");
-                alert.setHeaderText("Confirmation de connexion");
-                alert.setContentText("Félicitations, vous êtes a présent connecté.");
+                        alert.showAndWait();
+                        break;
+                    case CANCELLED:
+                    case SUCCEEDED:
+                        menuDownload.setDisable(false);
+                        menuLogin.setDisable(true);
+                        menuLogout.setDisable(false);
+                        if (mainApp.getContents().containsKey("dir")) {
+                            menuUpload.setDisable(false);
+                        }
+                        alert = new Alert(AlertType.INFORMATION);
+                        alert.setTitle("Connexion");
+                        alert.setHeaderText("Confirmation de connexion");
+                        alert.setContentText("Félicitations, vous êtes a présent connecté.");
 
-                alert.showAndWait();
-            } catch (Exception e) {
-                Alert alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Connexion");
-                alert.setHeaderText("Erreur de connexion");
-                alert.setContentText("Désolé mais vous n'avez pas été authentifié sur le serveur de Zeste de Savoir.");
-
-                alert.showAndWait();
-            }
+                        alert.showAndWait();
+                        hBottomBox.getChildren().clear();
+                        break;
+                }
+            });
+            loginTask.start();
         });
     }
 
@@ -555,6 +612,7 @@ public class MenuController {
                     alert.setHeaderText("Erreur d'import");
                     alert.setContentText("Désolé mais un problème vous empêche d'importer votre contenu sur ZdS");
                     alert.showAndWait();
+                    break;
                 case CANCELLED:
                 case SUCCEEDED:
                     alert = new Alert(AlertType.INFORMATION);
