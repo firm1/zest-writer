@@ -1,32 +1,49 @@
 package com.zestedesavoir.zestwriter.view;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.python.core.PyString;
+import org.python.util.PythonInterpreter;
+import org.w3c.dom.DOMException;
+
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.ExtractFile;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.FlipTable;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Pair;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.python.core.PyString;
-import org.python.util.PythonInterpreter;
-import org.w3c.dom.DOMException;
-
-import java.io.IOException;
-import java.util.*;
 
 public class MdConvertController {
     private MdTextController mdBox;
@@ -48,8 +65,9 @@ public class MdConvertController {
 
     private Corrector corrector;
 
-    private int refreshTimeSeconds = 5;
-    private boolean canRefresh = false;
+    private Service<String> renderTask;
+    private int xRenderPosition=0;
+    private int yRenderPosition=0;
 
 
     public MdConvertController() {
@@ -63,17 +81,7 @@ public class MdConvertController {
 
     @FXML
     private void initialize() {
-        Timer time = new Timer();
-        TimerTask tt = new TimerTask() {
-
-            @Override
-            public void run() {
-                if (canRefresh) {
-                    updateRender();
-                }
-            }
-        };
-        time.schedule(tt, 0, refreshTimeSeconds * 1000);
+    	renderView.getEngine().setUserStyleSheetLocation(getClass().getResource("content.css").toExternalForm());
     }
 
     @FXML
@@ -276,42 +284,72 @@ public class MdConvertController {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String s2) {
                 tab.setText("! " + extract.getTitle().getValue());
-                canRefresh = true;
+                //canRefresh = true;
+                updateRender();
             }
         });
         updateRender();
     }
 
     public void updateRender() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                WebEngine webEngine = renderView.getEngine();
+        if(renderTask != null) {
+        	if(renderTask.isRunning()) {
+        		renderTask.cancel();
+        	}
+        }
 
-                int y = getVScrollValue(renderView);
-                int x = getHScrollValue(renderView);
-                System.out.println();
-                System.out.println();
-                System.out.println("<!doctype html><html><head><meta charset='utf-8'><base href='" + MainApp.class.getResource("view").toExternalForm() + "' /></head><body>" + StringEscapeUtils.unescapeHtml(markdownToHtml(SourceText.getText())) + "</body></html>");
-                System.out.println();
-                System.out.println();
-                webEngine.loadContent("<!doctype html><html><head><meta charset='utf-8'><base href='" + MainApp.class.getResource("view").toExternalForm() + "' /></head><body>" + StringEscapeUtils.unescapeHtml(markdownToHtml(SourceText.getText())) + "</body></html>");
-                webEngine.setUserStyleSheetLocation(getClass().getResource("content.css").toExternalForm());
-                webEngine.getLoadWorker().stateProperty().addListener(
-                        (ObservableValue<? extends State> ov, State oldState, State newState) -> {
-                            if (newState == State.SUCCEEDED) {
-                                scrollTo(renderView, x, y);
-                            }
-                        });
-                canRefresh = false;
+        WebEngine webEngine = renderView.getEngine();
+
+        webEngine.getLoadWorker().stateProperty().addListener(
+                (ObservableValue<? extends State> ov, State oldState, State newState) -> {
+                    if (newState == State.SUCCEEDED) {
+                        scrollTo(renderView, xRenderPosition, yRenderPosition);
+                    }
+                });
+
+
+    	renderTask = new Service<String>() {
+            @Override
+            protected Task<String> createTask() {
+                return new Task<String>() {
+                    @Override
+                    protected String call(){
+                    	StringBuilder content = new StringBuilder();
+                    	content.append("<!doctype html><html><head><meta charset='utf-8'><base href='");
+                    	if(!isCancelled()) {
+                    		content.append(MainApp.class.getResource("view").toExternalForm());
+                    	}
+                    	content.append("' /></head><body>");
+                    	if(!isCancelled()) {
+                    		content.append(StringEscapeUtils.unescapeHtml(markdownToHtml(SourceText.getText())));
+                    	}
+                    	content.append("</body></html>");
+                    	return content.toString();
+                    }
+
+
+                };
+            }
+    	};
+    	renderTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
+            switch (newValue) {
+                case FAILED:
+                    break;
+                case CANCELLED:
+                	break;
+                case SUCCEEDED:
+                	yRenderPosition = getVScrollValue(renderView);
+                    xRenderPosition = getHScrollValue(renderView);
+                	webEngine.loadContent(renderTask.valueProperty().getValue());
+                    break;
             }
         });
+    	renderTask.start();
     }
 
     public void HandleValidateButtonAction() {
         String s = StringEscapeUtils.unescapeHtml(markdownToHtml(SourceText.getText()));
         try {
-            canRefresh = false;
             String result = corrector.checkHtmlContent(s);
             WebEngine webEngine = renderView.getEngine();
             webEngine.loadContent("<!doctype html><html lang='fr'><head><meta charset='utf-8'><base href='file://" + getClass().getResource(".").getPath() + "' /></head><body>" + result + "</body></html>");
