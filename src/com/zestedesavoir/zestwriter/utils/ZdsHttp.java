@@ -61,7 +61,9 @@ public class ZdsHttp {
     private String localType;
     private final Logger logger;
     private static String USER_AGENT = "Mozilla/5.0";
-
+    private StorageSaver offlineSaver;
+    private StorageSaver onlineSaver;
+    
     public String getLogin() {
         return login;
     }
@@ -158,6 +160,7 @@ public class ZdsHttp {
         context = HttpClientContext.create();
         cookieStore = new BasicCookieStore();
         context.setCookieStore(cookieStore);
+        
         PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
         // Increase max total connection to 200
         cm.setMaxTotal(500);
@@ -166,16 +169,18 @@ public class ZdsHttp {
         client = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).setConnectionManager(cm).build();
         contentListOnline = new ArrayList<>();
         // create workspace if doesn't exist
-        String[] dirPaths = {this.workspace, getOnlineContentPathDir(), getOfflineContentPathDir()};
-        for (String dirPath : dirPaths) {
-            File theDir = new File(dirPath);
-            if (!theDir.exists()) {
-                try {
-                    theDir.mkdir();
-                } catch (SecurityException se) {
-                    se.printStackTrace();
-                }
-            }
+        initWorkspace();
+
+    }
+
+    private void initWorkspace() {
+        LocalDirectoryFactory workspaceFactory = new LocalDirectoryFactory(this.workspace);
+        try{
+            offlineSaver = workspaceFactory.getOfflineSaver();
+            onlineSaver = workspaceFactory.getOnlineSaver();
+        }
+        catch(IOException e){
+            logger.error("could not initialize workspace due to " + e.getMessage());
         }
     }
 
