@@ -538,7 +538,9 @@ class GridTableProcessor(markdown.blockprocessors.BlockProcessor):
             if not success:
                 self._render_as_block(parent, '\n'.join(orig_block))
                 return
-            table = etree.SubElement(parent, 'table')
+            pr = etree.SubElement(parent, 'div')
+            pr.set('class', "table-wrapper")
+            table = etree.SubElement(pr, 'table')
             self._render_rows(body, table)
             if len(after) > 0 :
                 blocks.insert(0, "\n".join(after))

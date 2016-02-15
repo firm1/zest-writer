@@ -6,7 +6,7 @@ from markdown.blockprocessors import BlockProcessor
 import re
 
 class VideoExtension(markdown.Extension):
-    def __init__(self, configs={}):
+    def __init__(self, js_support=False, configs={}):
         self.config = {
             'dailymotion_width': ['480', 'Width for Dailymotion videos'],
             'dailymotion_height': ['270', 'Height for Dailymotion videos'],
@@ -20,11 +20,16 @@ class VideoExtension(markdown.Extension):
             'yahoo_height': ['351', 'Height for Yahoo! videos'],
             'youtube_width': ['560', 'Width for Youtube videos'],
             'youtube_height': ['315', 'Height for Youtube videos'],
+            'jsfiddle' : [False, ''],
+            'jsfiddle_width': ['560', 'Width for jsfiddle'],
+            'jsfiddle_height': ['560', 'Height for jsfiddle'],
         }
 
         # Override defaults with user settings
         for key, value in configs:
             self.setConfig(key, value)
+        if js_support:
+            self.setConfig("jsfiddle", True)
 
     def add_inline(self, md, name, klass, pat):
         RE = r'(^|\n)!\(' + pat + r'\)'
@@ -45,6 +50,10 @@ class VideoExtension(markdown.Extension):
             r'https?://www\.youtube\.com/watch\?\S*v=(?P<youtubeid>\S[^&/]+)')
         self.add_inline(md, 'youtube_short', Youtube,
             r'https?://youtu\.be/(?P<youtubeid>\S[^?&/]+)?')
+        if self.config["jsfiddle"][0]:
+            self.add_inline(md, 'jsfiddle', JsFiddle,
+                r'https?://(www.|)jsfiddle\.net/(?P<jsfiddleid>[a-z0-9]+)/(?P<jsfiddlerev>[0-9]+)/?')
+            
 
 class VideoBProcessor(BlockProcessor):
     def __init__(self, md, name, klass, patt, config):
@@ -77,7 +86,7 @@ class Dailymotion(object):
     def __init__(self, config):
         self.config = config
     def handleMatch(self, m):
-        url = 'http://www.dailymotion.com/embed/video/%s' % m.group('dailymotionid')
+        url = 'https://www.dailymotion.com/embed/video/%s' % m.group('dailymotionid')
         width = self.config['dailymotion_width'][0]
         height = self.config['dailymotion_height'][0]
         return render_iframe(url, width, height)
@@ -87,7 +96,7 @@ class Metacafe(object):
     def __init__(self, config):
         self.config = config
     def handleMatch(self, m):
-        url = 'http://www.metacafe.com/embed/%s/' % m.group('metacafeid')
+        url = 'https://www.metacafe.com/embed/%s/' % m.group('metacafeid')
         width = self.config['metacafe_width'][0]
         height = self.config['metacafe_height'][0]
         return render_iframe(url, width, height)
@@ -97,7 +106,7 @@ class Veoh(object):
     def __init__(self, config):
         self.config = config
     def handleMatch(self, m):
-        url = 'http://www.veoh.com/videodetails2.swf?permalinkId=%s' % m.group('veohid')
+        url = 'https://www.veoh.com/videodetails2.swf?permalinkId=%s' % m.group('veohid')
         width = self.config['veoh_width'][0]
         height = self.config['veoh_height'][0]
         return flash_object(url, width, height)
@@ -107,7 +116,7 @@ class Vimeo(object):
     def __init__(self, config):
         self.config = config
     def handleMatch(self, m):
-        url = 'http://player.vimeo.com/video/%s' % m.group('vimeoid')
+        url = 'https://player.vimeo.com/video/%s' % m.group('vimeoid')
         width = self.config['vimeo_width'][0]
         height = self.config['vimeo_height'][0]
         return render_iframe(url, width, height)
@@ -127,9 +136,19 @@ class Youtube(object):
     def __init__(self, config):
         self.config = config
     def handleMatch(self, m):
-        url = 'http://www.youtube.com/embed/%s' % m.group('youtubeid')
+        url = 'https://www.youtube.com/embed/%s' % m.group('youtubeid')
         width = self.config['youtube_width'][0]
         height = self.config['youtube_height'][0]
+        return render_iframe(url, width, height)
+
+class JsFiddle(object):
+    def __init__(self, config):
+        self.config = config 
+    def handleMatch(self, m):
+        url =  "https://jsfiddle.net/{}/{}/embedded/result,js,html,css/".format(m.group('jsfiddleid'), m.group('jsfiddlerev'))
+
+        width = self.config['jsfiddle_width'][0]
+        height = self.config['jsfiddle_height'][0]
         return render_iframe(url, width, height)
 
 

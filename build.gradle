@@ -72,7 +72,7 @@ dependencies {
             'org.codehaus.jackson:jackson-core-asl:1.9.2',
             'org.codehaus.jackson:jackson-mapper-asl:1.9.2',
             'de.julielab:aliasi-lingpipe:4.1.0',
-            'org.python:jython-standalone:2.7.0',
+            'org.python:jython-standalone:2.7.1b3',
             'org.jsoup:jsoup:1.8.1'
 }
 
@@ -80,7 +80,7 @@ jfxCopyLibs.enabled = false
 
 jar{
     configurations.compile.collect { it.isDirectory() ? it: zipTree(it)}
-    from(configurations.compile) { 
+    from(configurations.compile) {
     }
 }
 

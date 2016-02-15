@@ -12,7 +12,7 @@ class CommentsExtension(Extension):
         self.config={"START_TAG" : "<--COMMENTS", 
                      "END_TAG"   : "COMMENTS-->"}
         
-        for key, value in config.iteritems():
+        for key, value in config.items():
             self.config[key] = value
     
     def extendMarkdown(self, md, md_globals):

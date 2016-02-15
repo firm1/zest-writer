@@ -4,14 +4,15 @@ Tables Extension for Python-Markdown
 
 Added parsing of tables to Python-Markdown.
 
-A simple example:
+See <https://pythonhosted.org/Markdown/extensions/tables.html>
+for documentation.
 
-    First Header  | Second Header
-    ------------- | -------------
-    Content Cell  | Content Cell
-    Content Cell  | Content Cell
+Original code Copyright 2009 [Waylan Limberg](http://achinghead.com)
 
-Copyright 2009 - [Waylan Limberg](http://achinghead.com)
+All changes Copyright 2008-2014 The Python Markdown Project
+
+License: [BSD](http://www.opensource.org/licenses/bsd-license.php)
+
 """
 
 from __future__ import absolute_import
@@ -20,13 +21,14 @@ from . import Extension
 from ..blockprocessors import BlockProcessor
 from ..util import etree
 
+
 class TableProcessor(BlockProcessor):
     """ Process Tables. """
 
     def test(self, parent, block):
         rows = block.split('\n')
-        return (len(rows) > 2 and '|' in rows[0] and 
-                '|' in rows[1] and '-' in rows[1] and 
+        return (len(rows) > 2 and '|' in rows[0] and
+                '|' in rows[1] and '-' in rows[1] and
                 rows[1].strip()[0] in ['|', ':', '-'])
 
     def run(self, parent, blocks):
@@ -51,7 +53,9 @@ class TableProcessor(BlockProcessor):
             else:
                 align.append(None)
         # Build table
-        table = etree.SubElement(parent, 'table')
+        pr = etree.SubElement(parent, 'div')
+        pr.set('class', "table-wrapper")
+        table = etree.SubElement(pr, 'table')
         thead = etree.SubElement(table, 'thead')
         self._build_row(header, thead, align, border)
         tbody = etree.SubElement(table, 'tbody')
@@ -65,13 +69,13 @@ class TableProcessor(BlockProcessor):
         if parent.tag == 'thead':
             tag = 'th'
         cells = self._split_row(row, border)
-        # We use align here rather than cells to ensure every row 
+        # We use align here rather than cells to ensure every row
         # contains the same number of columns.
         for i, a in enumerate(align):
             c = etree.SubElement(tr, tag)
             try:
                 c.text = cells[i].strip()
-            except IndexError:
+            except IndexError:  # pragma: no cover
                 c.text = ""
             if a:
                 c.set('align', a)
@@ -91,10 +95,10 @@ class TableExtension(Extension):
 
     def extendMarkdown(self, md, md_globals):
         """ Add an instance of TableProcessor to BlockParser. """
-        md.parser.blockprocessors.add('table', 
+        md.parser.blockprocessors.add('table',
                                       TableProcessor(md.parser),
-                                      '<hashheader')
+                                      '>ulist')
 
 
-def makeExtension(configs={}):
-    return TableExtension(configs=configs)
+def makeExtension(*args, **kwargs):
+    return TableExtension(*args, **kwargs)

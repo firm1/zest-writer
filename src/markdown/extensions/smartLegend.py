@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
 import markdown
 from markdown.treeprocessors import Treeprocessor
@@ -11,7 +12,7 @@ import copy
 from markdown.inlinepatterns import IMAGE_LINK_RE
 
 class InFigureParser(object):
-    
+
     def transform(self,  parent, element, legend, index, InP = False):
         if InP:
             lelems = list(element.iter())
@@ -26,7 +27,7 @@ class InFigureParser(object):
         for el in legend:
             legend.remove(el)
             nFigCaption.append(el)
-        
+
         nFig.append(oldImg)
         nFig.append(nFigCaption)
         parent.remove(element)
@@ -53,7 +54,7 @@ class FigureParser(InFigureParser):
                 and (len(lelems) == 1 or (len(lelems)==2 and lelems[0] is element)) \
                 and lelems[-1].tag == "img" \
                 and (lelems[-1].attrib["src"] not in self.ignoringImg)))
-            
+
     def transform(self,  parent, element, legend, index):
         InFigureParser.transform(self, parent, element, legend, index, True)
 
@@ -94,7 +95,7 @@ class QuoteParser(InFigureParser):
     def detect(self, element, type):
         if element == None:
             return False
-            
+
         return  (type == "unknown" or type == "Source") and element.tag=="blockquote"
 
 
@@ -119,7 +120,7 @@ class VideoParser(InFigureParser):
             return False
         lelems = list(element.iter())
         return  (type == "unknown" or type == "Video") \
-                and element.tag=="iframe" 
+                and element.tag=="iframe"
 
 
 class SmartLegendProcessor(Treeprocessor):
@@ -134,12 +135,12 @@ class SmartLegendProcessor(Treeprocessor):
                             TableParser(),
                             VideoParser(),
                             QuoteParser())
-    
+
     def run(self, root):
         root = self.parse_legend(root)
         root = self.parse_autoimg(root)
         return root
-    
+
 
     def parse_legend(self, root):
         elemsToInspect = [root]
@@ -163,8 +164,8 @@ class SmartLegendProcessor(Treeprocessor):
                     i+=1
 
         return root
-    
-    
+
+
     def parse_autoimg(self, root):
         elemsToInspect = [root]
         while len(elemsToInspect) > 0:
@@ -196,7 +197,7 @@ class SmartLegendProcessor(Treeprocessor):
                             break
                     i+=1
         return root
-    
+
     def detectElement(self, elem, legend):
         for proc in self.processors:
             if proc.detect(elem, legend) :
@@ -216,8 +217,8 @@ class LegendProcessor(BlockProcessor):
                             TableParser(),
                             VideoParser(),
                             QuoteParser())
-        self.RE = re.compile(ur'(^|(?<=\n))((?P<typelegend>Figure|Table|Code|Equation|Video|Source)\s?)*\:\s?(?P<txtlegend>.*?)(\n|$)')
-    
+        self.RE = re.compile(r'(^|(?<=\n))((?P<typelegend>Figure|Table|Code|Equation|Video|Source)\s?)*\:\s?(?P<txtlegend>.*?)(\n|$)')
+
     def detectElement(self, elem, legend):
         for proc in self.processors:
             if proc.detect(elem, legend) :
@@ -225,13 +226,13 @@ class LegendProcessor(BlockProcessor):
         return None
 
     def test(self, parent, block):
-        
+
         mLeg = self.RE.search(block)
         if not bool(mLeg):
             return False
         else:
             return True
-            
+
     def test_complete(self, parent, block):
         mLeg = self.RE.search(block)
         gd = mLeg.groupdict()
@@ -243,7 +244,7 @@ class LegendProcessor(BlockProcessor):
         return self.detectElement(sibling, type) is not None
 
     def run(self, parent, blocks):
-        
+
         block = blocks.pop(0)
         mLeg = self.RE.search(block)
         before = block[:mLeg.start()]
@@ -251,7 +252,7 @@ class LegendProcessor(BlockProcessor):
         contentStart = block[mLeg.start():mLeg.start("txtlegend")]
         cpp = None
         if before:
-            cpp = copy.copy(parent)
+            cpp = copy.deepcopy(parent)
             self.parser.parseBlocks(cpp, [before])
         else:
             cpp = parent
@@ -278,7 +279,7 @@ class SmartLegendExtension(markdown.extensions.Extension):
             "IGNORING_IMG" : [],
             "PARENTS"      : [],
             }
-        for key, value in configs.iteritems():
+        for key, value in configs.items():
             self.configs[key] = value
         if "div" not in self.configs["PARENTS"]:
             self.configs["PARENTS"].append("div")
