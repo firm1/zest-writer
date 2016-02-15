@@ -1,25 +1,15 @@
 """
-========================= FOOTNOTES =================================
+Footnotes Extension for Python-Markdown
+=======================================
 
-This section adds footnote handling to markdown.  It can be used as
-an example for extending python-markdown with relatively complex
-functionality.  While in this case the extension is included inside
-the module itself, it could just as easily be added from outside the
-module.  Not that all markdown classes above are ignorant about
-footnotes.  All footnote functionality is provided separately and
-then added to the markdown instance at the run time.
+Adds footnote handling to Python-Markdown.
 
-Footnote functionality is attached by calling extendMarkdown()
-method of FootnoteExtension.  The method also registers the
-extension to allow it's state to be reset by a call to reset()
-method.
+See <https://pythonhosted.org/Markdown/extensions/footnotes.html>
+for documentation.
 
-Example:
-    Footnotes[^1] have a label[^label] and a definition[^!DEF].
+Copyright The Python Markdown Project
 
-    [^1]: This is a footnote
-    [^label]: A footnote on "label"
-    [^!DEF]: The footnote for definition
+License: [BSD](http://www.opensource.org/licenses/bsd-license.php)
 
 """
 
@@ -35,29 +25,31 @@ from ..odict import OrderedDict
 import re
 
 FN_BACKLINK_TEXT = "zz1337820767766393qq"
-NBSP_PLACEHOLDER =  "qq3936677670287331zz"
+NBSP_PLACEHOLDER = "qq3936677670287331zz"
 DEF_RE = re.compile(r'[ ]{0,3}\[\^([^\]]*)\]:\s*(.*)')
 TABBED_RE = re.compile(r'((\t)|(    ))(.*)')
+
 
 class FootnoteExtension(Extension):
     """ Footnote Extension. """
 
-    def __init__ (self, configs):
+    def __init__(self, *args, **kwargs):
         """ Setup configs. """
-        self.config = {'PLACE_MARKER':
-                       ["///Footnotes Go Here///",
-                        "The text string that marks where the footnotes go"],
-                       'UNIQUE_IDS':
-                       [False,
-                        "Avoid name collisions across "
-                        "multiple calls to reset()."],
-                       "BACKLINK_TEXT":
-                       ["&#8617;",
-                        "The text string that links from the footnote to the reader's place."]
-                       }
 
-        for key, value in configs:
-            self.config[key][0] = value
+        self.config = {
+            'PLACE_MARKER':
+                ["///Footnotes Go Here///",
+                 "The text string that marks where the footnotes go"],
+            'UNIQUE_IDS':
+                [False,
+                 "Avoid name collisions across "
+                 "multiple calls to reset()."],
+            "BACKLINK_TEXT":
+                ["&#8617;",
+                 "The text string that links from the footnote "
+                 "to the reader's place."]
+        }
+        super(FootnoteExtension, self).__init__(*args, **kwargs)
 
         # In multiple invocations, emit links that don't get tangled.
         self.unique_prefix = 0
@@ -70,23 +62,27 @@ class FootnoteExtension(Extension):
         self.parser = md.parser
         self.md = md
         # Insert a preprocessor before ReferencePreprocessor
-        md.preprocessors.add("footnote", FootnotePreprocessor(self),
-                             "<reference")
+        md.preprocessors.add(
+            "footnote", FootnotePreprocessor(self), "<reference"
+        )
         # Insert an inline pattern before ImageReferencePattern
-        FOOTNOTE_RE = r'\[\^([^\]]*)\]' # blah blah [^1] blah
-        md.inlinePatterns.add("footnote", FootnotePattern(FOOTNOTE_RE, self),
-                              "<reference")
+        FOOTNOTE_RE = r'\[\^([^\]]*)\]'  # blah blah [^1] blah
+        md.inlinePatterns.add(
+            "footnote", FootnotePattern(FOOTNOTE_RE, self), "<reference"
+        )
         # Insert a tree-processor that would actually add the footnote div
-        # This must be before all other treeprocessors (i.e., inline and 
+        # This must be before all other treeprocessors (i.e., inline and
         # codehilite) so they can run on the the contents of the div.
-        md.treeprocessors.add("footnote", FootnoteTreeprocessor(self),
-                                 "_begin")
+        md.treeprocessors.add(
+            "footnote", FootnoteTreeprocessor(self), "_begin"
+        )
         # Insert a postprocessor after amp_substitute oricessor
-        md.postprocessors.add("footnote", FootnotePostprocessor(self),
-                                  ">amp_substitute")
+        md.postprocessors.add(
+            "footnote", FootnotePostprocessor(self), ">amp_substitute"
+        )
 
     def reset(self):
-        """ Clear the footnotes on reset, and prepare for a distinct document. """
+        """ Clear footnotes on reset, and prepare for distinct document. """
         self.footnotes = OrderedDict()
         self.unique_prefix += 1
 
@@ -102,7 +98,7 @@ class FootnoteExtension(Extension):
                         return child, element, False
                 finder(child)
             return None
-                
+
         res = finder(root)
         return res
 
@@ -125,7 +121,8 @@ class FootnoteExtension(Extension):
     def makeFootnoteRefId(self, id):
         """ Return footnote back-link id. """
         if self.getConfig("UNIQUE_IDS"):
-            return 'fnref%s%d-%s' % (self.get_separator(), self.unique_prefix, id)
+            return 'fnref%s%d-%s' % (self.get_separator(),
+                                     self.unique_prefix, id)
         else:
             return 'fnref%s%s' % (self.get_separator(), id)
 
@@ -147,7 +144,7 @@ class FootnoteExtension(Extension):
             backlink = etree.Element("a")
             backlink.set("href", "#" + self.makeFootnoteRefId(id))
             if self.md.output_format not in ['html5', 'xhtml5']:
-                backlink.set("rev", "footnote") # Invalid in HTML5
+                backlink.set("rev", "footnote")  # Invalid in HTML5
             backlink.set("class", "footnote-backref")
             backlink.set("title", "Retourner au texte de la note %d" % \
                             (self.footnotes.index(id)+1))
@@ -167,7 +164,7 @@ class FootnoteExtension(Extension):
 class FootnotePreprocessor(Preprocessor):
     """ Find all footnote references and store for later use. """
 
-    def __init__ (self, footnotes):
+    def __init__(self, footnotes):
         self.footnotes = footnotes
 
     def run(self, lines):
@@ -188,7 +185,7 @@ class FootnotePreprocessor(Preprocessor):
             if m:
                 fn, _i = self.detectTabbed(lines[i+1:])
                 fn.insert(0, m.group(2))
-                i += _i-1 # skip past footnote
+                i += _i-1  # skip past footnote
                 self.footnotes.setFootnote(m.group(1), "\n".join(fn))
             else:
                 newlines.append(lines[i])
@@ -209,16 +206,16 @@ class FootnotePreprocessor(Preprocessor):
 
         """
         items = []
-        blank_line = False # have we encountered a blank line yet?
-        i = 0 # to keep track of where we are
+        blank_line = False  # have we encountered a blank line yet?
+        i = 0  # to keep track of where we are
 
         def detab(line):
             match = TABBED_RE.match(line)
             if match:
-               return match.group(4)
+                return match.group(4)
 
         for line in lines:
-            if line.strip(): # Non-blank line
+            if line.strip():  # Non-blank line
                 detabbed_line = detab(line)
                 if detabbed_line:
                     items.append(detabbed_line)
@@ -232,23 +229,24 @@ class FootnotePreprocessor(Preprocessor):
                 else:
                     return items, i+1
 
-            else: # Blank line: _maybe_ we are done.
+            else:  # Blank line: _maybe_ we are done.
                 blank_line = True
-                i += 1 # advance
+                i += 1  # advance
 
                 # Find the next non-blank line
                 for j in range(i, len(lines)):
                     if lines[j].strip():
-                        next_line = lines[j]; break
+                        next_line = lines[j]
+                        break
                 else:
-                    break # There is no more text; we are done.
+                    break  # There is no more text; we are done.
 
                 # Check if the next non-blank line is tabbed
-                if detab(next_line): # Yes, more work to do.
+                if detab(next_line):  # Yes, more work to do.
                     items.append("")
                     continue
                 else:
-                    break # No, we are done.
+                    break  # No, we are done.
         else:
             i += 1
 
@@ -270,7 +268,7 @@ class FootnotePattern(Pattern):
             sup.set('id', self.footnotes.makeFootnoteRefId(id))
             a.set('href', '#' + self.footnotes.makeFootnoteId(id))
             if self.footnotes.md.output_format not in ['html5', 'xhtml5']:
-                a.set('rel', 'footnote') # invalid in HTML5
+                a.set('rel', 'footnote')  # invalid in HTML5
             a.set('class', 'footnote-ref')
             a.text = text_type(self.footnotes.footnotes.index(id) + 1)
             return sup
@@ -281,12 +279,12 @@ class FootnotePattern(Pattern):
 class FootnoteTreeprocessor(Treeprocessor):
     """ Build and append footnote div to end of document. """
 
-    def __init__ (self, footnotes):
+    def __init__(self, footnotes):
         self.footnotes = footnotes
 
     def run(self, root):
         footnotesDiv = self.footnotes.makeFootnotesDiv(root)
-        if footnotesDiv:
+        if footnotesDiv is not None:
             result = self.footnotes.findFootnotesPlaceholder(root)
             if result:
                 child, parent, isText = result
@@ -300,16 +298,21 @@ class FootnoteTreeprocessor(Treeprocessor):
             else:
                 root.append(footnotesDiv)
 
+
 class FootnotePostprocessor(Postprocessor):
     """ Replace placeholders with html entities. """
     def __init__(self, footnotes):
         self.footnotes = footnotes
 
     def run(self, text):
-        text = text.replace(FN_BACKLINK_TEXT, self.footnotes.getConfig("BACKLINK_TEXT"))
+        text = text.replace(
+            FN_BACKLINK_TEXT, self.footnotes.getConfig("BACKLINK_TEXT")
+        )
         return text.replace(NBSP_PLACEHOLDER, "&#160;")
 
-def makeExtension(configs=[]):
+
+def makeExtension(*args, **kwargs):
     """ Return an instance of the FootnoteExtension """
-    return FootnoteExtension(configs=configs)
+    return FootnoteExtension(*args, **kwargs)
+
 

@@ -15,7 +15,7 @@ class CustomBlockExtension(Extension):
         """ Add CustomBlock to Markdown instance. """
         md.registerExtension(self)
 
-        for key, value in self.configs.iteritems():
+        for key, value in self.configs.items():
             md.parser.blockprocessors.add( 'customblock-'+ key, CustomBlockProcessor(md.parser, key, value), '_begin')
 
 

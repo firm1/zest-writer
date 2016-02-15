@@ -290,6 +290,11 @@ public class MdConvertController {
 
                 int y = getVScrollValue(renderView);
                 int x = getHScrollValue(renderView);
+                System.out.println();
+                System.out.println();
+                System.out.println("<!doctype html><html><head><meta charset='utf-8'><base href='" + MainApp.class.getResource("view").toExternalForm() + "' /></head><body>" + StringEscapeUtils.unescapeHtml(markdownToHtml(SourceText.getText())) + "</body></html>");
+                System.out.println();
+                System.out.println();
                 webEngine.loadContent("<!doctype html><html><head><meta charset='utf-8'><base href='" + MainApp.class.getResource("view").toExternalForm() + "' /></head><body>" + StringEscapeUtils.unescapeHtml(markdownToHtml(SourceText.getText())) + "</body></html>");
                 webEngine.setUserStyleSheetLocation(getClass().getResource("content.css").toExternalForm());
                 webEngine.getLoadWorker().stateProperty().addListener(

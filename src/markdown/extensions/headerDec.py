@@ -8,7 +8,7 @@ def makeExtension(configs=None) :
 class DownHeaderExtension(markdown.Extension):
     def __init__(self, configs):
         self.configs={"OFFSET": 1}
-        for key, value in configs.iteritems():
+        for key, value in configs.items():
             self.configs[key] = value
     
     def extendMarkdown(self, md, md_globals):

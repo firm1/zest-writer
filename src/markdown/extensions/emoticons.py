@@ -17,7 +17,7 @@ class EmoticonExtension(markdown.Extension):
                 }, 'A mapping from emoticon symbols to image names.'],
             }
 
-        for key, value in configs.iteritems() :
+        for key, value in configs.items() :
             self.config[key][0] = value
 
     def extendMarkdown(self, md, md_globals):
