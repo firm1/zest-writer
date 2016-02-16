@@ -1,30 +1,56 @@
 package com.zestedesavoir.zestwriter.view;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Pattern;
+
+import org.codehaus.jackson.map.ObjectMapper;
+import org.python.util.PythonInterpreter;
+
+import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
+import com.sun.javafx.scene.control.skin.TabPaneSkin;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.ExtractFile;
+
 import javafx.collections.MapChangeListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.TreeCell;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.*;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.python.util.PythonInterpreter;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
-import java.util.*;
-import java.util.regex.Pattern;
 
 public class MdTextController {
     private MainApp mainApp;
@@ -124,6 +150,40 @@ public class MdTextController {
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
+            }
+        });
+
+        mainApp.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+
+            @Override
+            public void handle(KeyEvent t) {
+                if (t.getCode().equals(KeyCode.TAB) && t.isControlDown()) {
+                    int size = EditorList.getTabs().size();
+
+                    if (size > 0) {
+                        TabPaneSkin skin = (TabPaneSkin) EditorList.getSkin();
+                        TabPaneBehavior tabPaneBehavior = (TabPaneBehavior) skin.getBehavior();
+
+                        int selectedIndex = EditorList.getSelectionModel().getSelectedIndex();
+
+                        if (!t.isShiftDown()) {
+                            if (selectedIndex < size -1) {
+                                tabPaneBehavior.selectNextTab();
+                            } else {
+                                tabPaneBehavior.selectTab(EditorList.getTabs().get(0));
+                            }
+                        } else {
+                            if (selectedIndex > 0) {
+                                tabPaneBehavior.selectPreviousTab();
+                            } else {
+                                tabPaneBehavior.selectTab(EditorList.getTabs().get(size - 1));
+                            }
+                        }
+
+                        t.consume();
+                    }
+
+                }
             }
         });
 

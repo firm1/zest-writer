@@ -66,9 +66,8 @@ public class MdConvertController {
     private Corrector corrector;
 
     private Service<String> renderTask;
-    private int xRenderPosition=0;
-    private int yRenderPosition=0;
-
+    private int xRenderPosition = 0;
+    private int yRenderPosition = 0;
 
     public MdConvertController() {
         super();
@@ -81,7 +80,7 @@ public class MdConvertController {
 
     @FXML
     private void initialize() {
-    	renderView.getEngine().setUserStyleSheetLocation(getClass().getResource("content.css").toExternalForm());
+        renderView.getEngine().setUserStyleSheetLocation(getClass().getResource("content.css").toExternalForm());
     }
 
     @FXML
@@ -164,7 +163,8 @@ public class MdConvertController {
         dialog.setGraphic(new ImageView(this.getClass().getResource("static/icons/link.png").toString()));
 
         // Set the button types.
-        //ButtonType loginButtonType = new ButtonType("Vali", ButtonData.OK_DONE);
+        // ButtonType loginButtonType = new ButtonType("Vali",
+        // ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         // Create the username and password labels and fields.
@@ -188,7 +188,8 @@ public class MdConvertController {
         // Request focus on the username field by default.
         Platform.runLater(tLink::requestFocus);
 
-        // Convert the result to a username-password-pair when the login button is clicked.
+        // Convert the result to a username-password-pair when the login button
+        // is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == ButtonType.OK) {
                 return new Pair<>(tLink.getText(), tLabel.getText());
@@ -198,7 +199,8 @@ public class MdConvertController {
 
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
-        result.ifPresent(tLinkTLabel -> SourceText.replaceText(SourceText.getSelection(), "[" + tLinkTLabel.getValue() + "](" + tLinkTLabel.getKey() + ")"));
+        result.ifPresent(tLinkTLabel -> SourceText.replaceText(SourceText.getSelection(),
+                "[" + tLinkTLabel.getValue() + "](" + tLinkTLabel.getKey() + ")"));
     }
 
     @FXML
@@ -241,7 +243,8 @@ public class MdConvertController {
         // Request focus on the username field by default.
         Platform.runLater(tLangage::requestFocus);
 
-        // Convert the result to a username-password-pair when the login button is clicked.
+        // Convert the result to a username-password-pair when the login button
+        // is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == ButtonType.OK) {
                 return new Pair<>(tLangage.getText(), tCode.getText());
@@ -251,7 +254,8 @@ public class MdConvertController {
 
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
-        result.ifPresent(tLangageTCode -> SourceText.replaceText(SourceText.getSelection(), "\n```" + tLangageTCode.getKey() + "\n" + tLangageTCode.getValue() + "\n```\n"));
+        result.ifPresent(tLangageTCode -> SourceText.replaceText(SourceText.getSelection(),
+                "\n```" + tLangageTCode.getKey() + "\n" + tLangageTCode.getValue() + "\n```\n"));
     }
 
     @FXML
@@ -284,7 +288,7 @@ public class MdConvertController {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String s2) {
                 tab.setText("! " + extract.getTitle().getValue());
-                //canRefresh = true;
+                // canRefresh = true;
                 updateRender();
             }
         });
@@ -292,59 +296,58 @@ public class MdConvertController {
     }
 
     public void updateRender() {
-        if(renderTask != null) {
-        	if(renderTask.isRunning()) {
-        		renderTask.cancel();
-        	}
+        if (renderTask != null) {
+            if (renderTask.isRunning()) {
+                renderTask.cancel();
+            }
         }
 
         WebEngine webEngine = renderView.getEngine();
 
-        webEngine.getLoadWorker().stateProperty().addListener(
-                (ObservableValue<? extends State> ov, State oldState, State newState) -> {
+        webEngine.getLoadWorker().stateProperty()
+                .addListener((ObservableValue<? extends State> ov, State oldState, State newState) -> {
                     if (newState == State.SUCCEEDED) {
                         scrollTo(renderView, xRenderPosition, yRenderPosition);
                     }
                 });
 
-
-    	renderTask = new Service<String>() {
+        renderTask = new Service<String>() {
             @Override
             protected Task<String> createTask() {
                 return new Task<String>() {
                     @Override
-                    protected String call(){
-                    	StringBuilder content = new StringBuilder();
-                    	content.append("<!doctype html><html><head><meta charset='utf-8'><base href='");
-                    	if(!isCancelled()) {
-                    		content.append(MainApp.class.getResource("view").toExternalForm());
-                    	}
-                    	content.append("' /></head><body>");
-                    	if(!isCancelled()) {
-                    		content.append(StringEscapeUtils.unescapeHtml(markdownToHtml(SourceText.getText())));
-                    	}
-                    	content.append("</body></html>");
-                    	return content.toString();
+                    protected String call() {
+                        StringBuilder content = new StringBuilder();
+                        content.append("<!doctype html><html><head><meta charset='utf-8'><base href='");
+                        if (!isCancelled()) {
+                            content.append(MainApp.class.getResource("view").toExternalForm());
+                        }
+                        content.append("' /></head><body>");
+                        if (!isCancelled()) {
+                            content.append(StringEscapeUtils.unescapeHtml(markdownToHtml(SourceText.getText())));
+                        }
+                        content.append("</body></html>");
+                        return content.toString();
                     }
-
 
                 };
             }
-    	};
-    	renderTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
+        };
+        renderTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue,
+                Worker.State oldValue, Worker.State newValue) -> {
             switch (newValue) {
                 case FAILED:
                     break;
                 case CANCELLED:
-                	break;
+                    break;
                 case SUCCEEDED:
-                	yRenderPosition = getVScrollValue(renderView);
+                    yRenderPosition = getVScrollValue(renderView);
                     xRenderPosition = getHScrollValue(renderView);
-                	webEngine.loadContent(renderTask.valueProperty().getValue());
+                    webEngine.loadContent(renderTask.valueProperty().getValue());
                     break;
             }
         });
-    	renderTask.start();
+        renderTask.start();
     }
 
     public void HandleValidateButtonAction() {
@@ -352,7 +355,8 @@ public class MdConvertController {
         try {
             String result = corrector.checkHtmlContent(s);
             WebEngine webEngine = renderView.getEngine();
-            webEngine.loadContent("<!doctype html><html lang='fr'><head><meta charset='utf-8'><base href='file://" + getClass().getResource(".").getPath() + "' /></head><body>" + result + "</body></html>");
+            webEngine.loadContent("<!doctype html><html lang='fr'><head><meta charset='utf-8'><base href='file://"
+                    + getClass().getResource(".").getPath() + "' /></head><body>" + result + "</body></html>");
             webEngine.setUserStyleSheetLocation(getClass().getResource("content.css").toExternalForm());
         } catch (DOMException e) {
             // TODO Auto-generated catch block
@@ -363,7 +367,8 @@ public class MdConvertController {
     public String markdownToHtml(String chaine) {
         PythonInterpreter console = getMdBox().getPyconsole();
         console.set("text", chaine);
-        console.exec("render = Markdown(extensions=(ZdsExtension({'inline': False, 'emoticons': smileys}),),safe_mode = 'escape', enable_attributes = False, tab_length = 4, output_format = 'html5', smart_emphasis = True, lazy_ol = True).convert(text)");
+        console.exec(
+                "render = Markdown(extensions=(ZdsExtension({'inline': False, 'emoticons': smileys}),),safe_mode = 'escape', enable_attributes = False, tab_length = 4, output_format = 'html5', smart_emphasis = True, lazy_ol = True).convert(text)");
         PyString render = console.get("render", PyString.class);
         return render.toString();
     }
@@ -458,17 +463,20 @@ public class MdConvertController {
     /**
      * Scrolls to the specified position.
      *
-     * @param view web view that shall be scrolled
-     * @param x    horizontal scroll value
-     * @param y    vertical scroll value
+     * @param view
+     *            web view that shall be scrolled
+     * @param x
+     *            horizontal scroll value
+     * @param y
+     *            vertical scroll value
      */
     public void scrollTo(WebView view, int x, int y) {
         view.getEngine().executeScript("window.scrollTo(" + x + ", " + y + ")");
     }
 
     /**
-     * Returns the vertical scroll value, i.e. thumb position.
-     * This is equivalent to {@link javafx.scene.control.ScrollBar#getValue().
+     * Returns the vertical scroll value, i.e. thumb position. This is
+     * equivalent to {@link javafx.scene.control.ScrollBar#getValue().
      *
      * @param view
      * @return vertical scroll value
@@ -478,8 +486,8 @@ public class MdConvertController {
     }
 
     /**
-     * Returns the horizontal scroll value, i.e. thumb position.
-     * This is equivalent to {@link javafx.scene.control.ScrollBar#getValue()}.
+     * Returns the horizontal scroll value, i.e. thumb position. This is
+     * equivalent to {@link javafx.scene.control.ScrollBar#getValue()}.
      *
      * @param view
      * @return horizontal scroll value
