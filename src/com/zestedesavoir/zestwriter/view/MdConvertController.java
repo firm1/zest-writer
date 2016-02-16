@@ -24,6 +24,7 @@ import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -39,6 +40,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
@@ -293,6 +296,40 @@ public class MdConvertController {
             }
         });
         updateRender();
+        tab.getContent().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+
+            @Override
+            public void handle(KeyEvent t) {
+                if (t.getCode().equals(KeyCode.S) && t.isControlDown()) {
+                    HandleSaveButtonAction(null);
+                }else if(t.getCode().equals(KeyCode.G) && t.isControlDown()) {
+                    // put in bold
+                    HandleBoldButtonAction(null);
+                }else if(t.getCode().equals(KeyCode.I) && t.isControlDown()) {
+                    // put in italic
+                    HandleItalicButtonAction(null);
+                }else if(t.getCode().equals(KeyCode.B) && t.isControlDown()) {
+                    // put it barred
+                    HandleBarredButtonAction(null);
+                }else if(t.getCode().equals(KeyCode.T) && t.isControlDown() && t.isShiftDown()) {
+                    // put it touch
+                    HandleTouchButtonAction(null);
+                }else if(t.getCode().equals(KeyCode.PLUS) && t.isControlDown() && t.isShiftDown()) {
+                    // put it exp
+                    HandleExpButtonAction(null);
+                }else if(t.getCode().equals(KeyCode.EQUALS) && t.isControlDown()) {
+                    // put it ind
+                    HandleIndButtonAction(null);
+                }else if(t.getCode().equals(KeyCode.E) && t.isControlDown()) {
+                    // put it center
+                    HandleCenterButtonAction(null);
+                }else if(t.getCode().equals(KeyCode.D) && t.isControlDown() && t.isShiftDown()) {
+                    // put it right
+                    HandleRightButtonAction(null);
+                }
+
+            }
+        });
     }
 
     public void updateRender() {

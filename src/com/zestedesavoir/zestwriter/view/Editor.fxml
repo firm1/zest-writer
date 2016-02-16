@@ -12,6 +12,9 @@
             <ToolBar BorderPane.alignment="CENTER">
               <items>
                   <Button fx:id="SaveButton" mnemonicParsing="false" onAction="#HandleSaveButtonAction">
+                    <tooltip>
+                        <Tooltip text="Enregistrer (CTRL + S)" />
+                    </tooltip>
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -22,7 +25,7 @@
                   <Separator orientation="VERTICAL" />
                 <Button mnemonicParsing="false" onAction="#HandleBoldButtonAction">
                 	<tooltip>
-				        <Tooltip text="Gras" />
+				        <Tooltip text="Gras (CTRL + G)" />
 				    </tooltip>
                 	<graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
@@ -34,7 +37,7 @@
                 </Button>
                 <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleItalicButtonAction">
                 	<tooltip>
-				        <Tooltip text="Italique" />
+				        <Tooltip text="Italique (CTRL + I)" />
 				    </tooltip>
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
@@ -46,7 +49,7 @@
                   <Separator orientation="VERTICAL" />
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBarredButtonAction">
                   	<tooltip>
-				        <Tooltip text="Barrer le texte" />
+				        <Tooltip text="Barrer le texte (CTRL + B)" />
 				    </tooltip>
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
@@ -57,7 +60,7 @@
                      </graphic></Button>
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleTouchButtonAction">
                   	<tooltip>
-				        <Tooltip text="Touche clavier" />
+				        <Tooltip text="Touche clavier (CTRL + T)" />
 				    </tooltip>
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
@@ -68,7 +71,7 @@
                      </graphic></Button>
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleExpButtonAction">
                   	<tooltip>
-				        <Tooltip text="Exposant" />
+				        <Tooltip text="Exposant (CTRL + Maj + '+')" />
 				    </tooltip>
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
@@ -79,7 +82,7 @@
                      </graphic></Button>
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleIndButtonAction">
                   	<tooltip>
-				        <Tooltip text="Indice" />
+				        <Tooltip text="Indice (CTRL + =)" />
 				    </tooltip>
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
@@ -91,7 +94,7 @@
                   <Separator orientation="VERTICAL" />
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleCenterButtonAction">
                   	<tooltip>
-				        <Tooltip text="Centrer le texte" />
+				        <Tooltip text="Centrer le texte (CTRL + E)" />
 				    </tooltip>
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
@@ -102,7 +105,7 @@
                      </graphic></Button>
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleRightButtonAction">
                   	<tooltip>
-				        <Tooltip text="Aligner le texte a droite" />
+				        <Tooltip text="Aligner le texte a droite (CTRL + Maj + D)" />
 				    </tooltip>
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
