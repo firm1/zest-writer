@@ -8,3 +8,4 @@ bin
 *.pyc
 *.pyo
 *.class
+/.nb-gradle/

@@ -6,25 +6,34 @@
 package com.zestedesavoir.zestwriter.utils;
 
 import java.io.IOException;
+import javafx.stage.Stage;
 
 /**
  *
  * @author fdambrine
  */
 public class LocalDirectoryFactory {
-    private String baseDirectory;
 
-    public LocalDirectoryFactory(String baseDirectory) {
-        this.baseDirectory = baseDirectory;
+    private LocalDirectorySaver baseSaver;
+
+    public LocalDirectoryFactory(String baseDirectory){
+        baseSaver = new LocalDirectorySaver(baseDirectory);
     }
-    
-    public StorageSaver getOnlineSaver() throws IOException{
+ 
+    public LocalDirectoryFactory(Stage windows) throws IOException{
+        baseSaver = new FilePickerDirectorySaver(windows);
+    }
+    public String getWorkspaceDir(){
+        return baseSaver.getBaseDirectory();
+    }
+    public LocalDirectorySaver getOnlineSaver() throws IOException{
         
-        return new LocalDirectorySaver(baseDirectory + "/online");
+        return new LocalDirectorySaver(baseSaver.getBaseDirectory() + "/online");
     }
     
-    public StorageSaver getOfflineSaver() throws IOException{
-        return new LocalDirectorySaver(baseDirectory + "/offline");
+    public LocalDirectorySaver getOfflineSaver() throws IOException{
+
+        return new LocalDirectorySaver(baseSaver.getBaseDirectory() + "/offline");
     }
     
 }

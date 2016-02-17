@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import javafx.stage.Stage;
 
 
 public class ZdsHttp {
@@ -63,6 +64,7 @@ public class ZdsHttp {
     private static String USER_AGENT = "Mozilla/5.0";
     private StorageSaver offlineSaver;
     private StorageSaver onlineSaver;
+    LocalDirectoryFactory workspaceFactory;
     
     public String getLogin() {
         return login;
@@ -90,12 +92,12 @@ public class ZdsHttp {
 
 
     public String getWorkspace() {
-        return workspace;
+        return workspaceFactory.getWorkspaceDir();
     }
 
 
-    public void setWorkspace(String workspace) {
-        this.workspace = workspace;
+    public void setWorkspace(String workspace) throws IOException{
+        this.workspaceFactory = new LocalDirectoryFactory(workspace);
     }
 
 
@@ -174,7 +176,7 @@ public class ZdsHttp {
     }
 
     private void initWorkspace() {
-        LocalDirectoryFactory workspaceFactory = new LocalDirectoryFactory(this.workspace);
+        
         try{
             offlineSaver = workspaceFactory.getOfflineSaver();
             onlineSaver = workspaceFactory.getOnlineSaver();
@@ -184,16 +186,26 @@ public class ZdsHttp {
         }
     }
 
-    public ZdsHttp(Properties prop) {
+    public ZdsHttp(Properties prop, Stage stage) throws IOException{
+        this(prop);
+        this.workspaceFactory = new LocalDirectoryFactory(stage);
+        
+    }
+
+    
+    public ZdsHttp(Properties prop){
         super();
         logger = LoggerFactory.getLogger(ZdsHttp.class);
         JFileChooser fr = new JFileChooser();
+        
         FileSystemView fw = fr.getFileSystemView();
+        String workspace;
         if (prop.containsKey("data.directory")) {
-            this.workspace = fw.getDefaultDirectory().getAbsolutePath() + File.separator + prop.getProperty("data.directory");
+            workspace = fw.getDefaultDirectory().getAbsolutePath() + File.separator + prop.getProperty("data.directory");
         } else {
-            this.workspace = fw.getDefaultDirectory().getAbsolutePath() + File.separator + "zwriter-workspace";
+            workspace = fw.getDefaultDirectory().getAbsolutePath() + File.separator + "zwriter-workspace";
         }
+        this.workspaceFactory = new LocalDirectoryFactory(workspace);
         if (prop.containsKey("server.protocol")) {
             this.protocol = prop.getProperty("server.protocol");
         } else {

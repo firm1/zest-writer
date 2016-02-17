@@ -48,7 +48,7 @@ public class MainApp extends Application {
 
         try {
             prop.load(input);
-            zdsutils = new ZdsHttp(prop);
+            zdsutils = new ZdsHttp(prop, this.primaryStage);
         } catch (IOException e) {
             e.printStackTrace();
         }
