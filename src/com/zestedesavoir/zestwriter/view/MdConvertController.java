@@ -165,9 +165,6 @@ public class MdConvertController {
         // Set the icon (must be included in the project).
         dialog.setGraphic(new ImageView(this.getClass().getResource("static/icons/link.png").toString()));
 
-        // Set the button types.
-        // ButtonType loginButtonType = new ButtonType("Vali",
-        // ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         // Create the username and password labels and fields.
@@ -363,6 +360,21 @@ public class MdConvertController {
                         if (!isCancelled()) {
                             content.append(StringEscapeUtils.unescapeHtml(markdownToHtml(SourceText.getText())));
                         }
+                        content.append("<script type=\"text/x-mathjax-config\">"+
+                            "MathJax.Hub.Config({"+
+                                "tex2jax: {"+
+                                    "inlineMath: [['$', '$']],"+
+                                    "displayMath: [['$$','$$']],"+
+                                    "processEscapes: true,"+
+                                "},"+
+                                "\"HTML-CSS\": {matchFontHeight: false},"+
+                                "TeX: { extensions: ['color.js', 'cancel.js', 'enclose.js', 'bbox.js', 'mathchoice.js', 'newcommand.js', 'verb.js', 'unicode.js', 'autobold.js', 'mhchem.js'] },"+
+                                "messageStyle: \"none\","+
+                            "});"+
+                        "</script>");
+                        content.append("<script type='text/javascript' src='");
+                        content.append(MainApp.class.getResource("view").toExternalForm());
+                        content.append("/static/js/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>");
                         content.append("</body></html>");
                         return content.toString();
                     }

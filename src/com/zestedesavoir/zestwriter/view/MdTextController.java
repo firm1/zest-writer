@@ -90,14 +90,6 @@ public class MdTextController {
         }).start();
     }
 
-    public void updateRender() {
-        new Thread(new Runnable() {
-            public void run() {
-
-            }
-        }).start();
-    }
-
     public void loadFonts() {
         new Thread(new Runnable() {
             public void run() {
