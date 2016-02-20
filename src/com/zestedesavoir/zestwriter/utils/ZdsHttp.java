@@ -150,11 +150,11 @@ public class ZdsHttp {
     }
 
     public String getOnlineContentPathDir() {
-        return this.workspace + File.separator + "online";
+        return this.onlineSaver.getBaseDirectory();
     }
 
     public String getOfflineContentPathDir() {
-        return this.workspace + File.separator + "offline";
+        return this.offlineSaver.getBaseDirectory();
     }
 
 
@@ -187,25 +187,25 @@ public class ZdsHttp {
     }
 
     public ZdsHttp(Properties prop, Stage stage) throws IOException{
-        this(prop);
-        this.workspaceFactory = new LocalDirectoryFactory(stage);
-        
+        this(prop, new LocalDirectoryFactory(stage));
     }
-
     
-    public ZdsHttp(Properties prop){
+    private ZdsHttp(Properties prop, LocalDirectoryFactory fact){
         super();
         logger = LoggerFactory.getLogger(ZdsHttp.class);
         JFileChooser fr = new JFileChooser();
-        
+        workspaceFactory = fact;
         FileSystemView fw = fr.getFileSystemView();
-        String workspace;
-        if (prop.containsKey("data.directory")) {
-            workspace = fw.getDefaultDirectory().getAbsolutePath() + File.separator + prop.getProperty("data.directory");
-        } else {
-            workspace = fw.getDefaultDirectory().getAbsolutePath() + File.separator + "zwriter-workspace";
+        if(workspaceFactory == null){
+            String workspace_path;
+            if (prop.containsKey("data.directory")) {
+                workspace_path = fw.getDefaultDirectory().getAbsolutePath() + File.separator + prop.getProperty("data.directory");
+            } else {
+                workspace_path = fw.getDefaultDirectory().getAbsolutePath() + File.separator + "zwriter-workspace";
+            }
+            this.workspaceFactory = new LocalDirectoryFactory(workspace);
         }
-        this.workspaceFactory = new LocalDirectoryFactory(workspace);
+        
         if (prop.containsKey("server.protocol")) {
             this.protocol = prop.getProperty("server.protocol");
         } else {
@@ -222,6 +222,9 @@ public class ZdsHttp {
             this.port = "8000";
         }
         initContext();
+    }
+    public ZdsHttp(Properties prop){
+        this(prop, (LocalDirectoryFactory)null);
     }
 
     private String getCookieValue(CookieStore cookieStore, String cookieName) {
@@ -425,7 +428,7 @@ public class ZdsHttp {
         InputStream is = response.getEntity().getContent();
         String filePath = getOnlineContentPathDir() + File.separator + targetSlug + ".zip";
         FileOutputStream fos = new FileOutputStream(new File(filePath));
-
+        
         int inByte;
         while ((inByte = is.read()) != -1)
             fos.write(inByte);

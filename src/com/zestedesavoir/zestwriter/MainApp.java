@@ -27,7 +27,13 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import javafx.util.Pair;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MainApp extends Application {
 
@@ -38,17 +44,16 @@ public class MainApp extends Application {
     private ObservableMap<String, String> contents = FXCollections.observableMap(new HashMap<>());
     private ZdsHttp zdsutils;
     private MdTextController Index;
-    StringBuilder key = new StringBuilder();
-
+    private Properties props;
 
     public MainApp() {
         super();
-        Properties prop = new Properties();
+        props = new Properties();
         InputStream input = MainApp.class.getClassLoader().getResourceAsStream("config.properties");
 
         try {
-            prop.load(input);
-            zdsutils = new ZdsHttp(prop, this.primaryStage);
+            props.load(input);
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,7 +95,12 @@ public class MainApp extends Application {
             Platform.exit();
             System.exit(0);
         });
-
+        try {
+            zdsutils = new ZdsHttp(props, primaryStage);
+        } catch (IOException ex) {
+            zdsutils = new ZdsHttp(props);
+            Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         initRootLayout();
         showWriter();
     }

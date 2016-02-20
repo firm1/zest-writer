@@ -18,11 +18,8 @@ public class LocalDirectorySaver implements StorageSaver{
     private File baseDirectoryDescriptor;
 
     public LocalDirectorySaver(String baseDirectory)throws RuntimeException{
-        this.baseDirectory = baseDirectory;
-        this.baseDirectoryDescriptor = new File(baseDirectory);
-        if(!this.baseDirectoryDescriptor.exists() && !this.baseDirectoryDescriptor.mkdirs()){
-            throw new RuntimeException("Could not create " + baseDirectory);
-        }
+        this.setBaseDirectory(baseDirectory);
+        
     }
 
     
@@ -34,6 +31,18 @@ public class LocalDirectorySaver implements StorageSaver{
 
     public final void setBaseDirectory(String baseDirectory){
         this.baseDirectory = baseDirectory;
+        openDirCreateIfNecessary();
+        
+    }
+    private void openDirCreateIfNecessary(){
+        try{
+            this.baseDirectoryDescriptor = new File(baseDirectory);
+            if(!this.baseDirectoryDescriptor.exists() && !this.baseDirectoryDescriptor.mkdirs()){
+                throw new RuntimeException("Could not create " + baseDirectory);
+            }
+        }catch(NullPointerException e){
+            
+        }
     }
     
     @Override
