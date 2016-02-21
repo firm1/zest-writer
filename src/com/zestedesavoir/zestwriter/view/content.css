@@ -263,3 +263,11 @@ figure > blockquote ~ figcaption{
 figure > blockquote ~ figcaption p::before{
     content: "— ";
 }
+
+/* Corrections */
+
+.error-french {
+    color:red;
+    text-decoration:underline ;
+    text-decoration-style: wavy;
+}
