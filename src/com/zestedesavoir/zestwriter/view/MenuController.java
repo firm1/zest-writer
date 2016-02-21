@@ -4,6 +4,7 @@ import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.ExtractFile;
 import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.utils.Corrector;
+import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.ZipUtil;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import javafx.application.Platform;
@@ -385,9 +386,7 @@ public class MenuController {
             mainApp.getContents().put("dir", selectedDirectory.getAbsolutePath());
         }
 
-        if (mainApp.getZdsutils().isAuthenticated()) {
-            menuUpload.setDisable(false);
-        }
+        menuUpload.setDisable(false);
 
         menuLisibility.setDisable(false);
         menuReport.setDisable(false);
@@ -404,7 +403,7 @@ public class MenuController {
     }
 
     @FXML
-    private void HandleLoginButtonAction(ActionEvent event) {
+    private Service<Void> HandleLoginButtonAction(ActionEvent event) {
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Connexion");
@@ -457,60 +456,43 @@ public class MenuController {
 
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
-        result.ifPresent(usernamePassword -> {
-            hBottomBox.getChildren().addAll(labelField);
-            Service<Void> loginTask = new Service<Void>() {
-                @Override
-                protected Task<Void> createTask() {
-                    return new Task<Void>() {
-                        @Override
-                        protected Void call() throws Exception {
-                            updateMessage("Connexion au site en cours ...");
-                            mainApp.getZdsutils().login(usernamePassword.getKey(), usernamePassword.getValue());
-                            updateMessage("Recherche des contenus ...");
-                            mainApp.getZdsutils().initInfoOnlineContent("tutorial");
-                            mainApp.getZdsutils().initInfoOnlineContent("article");
-                            return null;
+        hBottomBox.getChildren().addAll(labelField);
+        Service<Void> loginTask = new Service<Void>() {
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+                    @Override
+                    protected Void call() {
+                        result.ifPresent(usernamePassword -> {
+                            try {
+                                if(mainApp.getZdsutils().login(usernamePassword.getKey(), usernamePassword.getValue())) {
+                                    updateMessage("Connexion au site en cours ...");
+                                    updateMessage("Recherche des contenus ...");
+                                    mainApp.getZdsutils().initInfoOnlineContent("tutorial");
+                                    mainApp.getZdsutils().initInfoOnlineContent("article");
+                                }
+                                else {
+                                    cancel();
+                                }
+                            } catch (Exception e) {
+                                cancel();
+                            }
+                        });
+                        if(!result.isPresent()) {
+                            cancel();
                         }
-                    };
-                }
-            };
-            labelField.textProperty().bind(loginTask.messageProperty());
-            loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
-                Alert alert;
-                switch (newValue) {
-                    case FAILED:
-                        alert = new Alert(AlertType.ERROR);
-                        alert.setTitle("Connexion");
-                        alert.setHeaderText("Erreur de connexion");
-                        alert.setContentText("Désolé mais vous n'avez pas été authentifié sur le serveur de Zeste de Savoir.");
+                        return null;
+                    }
+                };
+            }
+        };
+        labelField.textProperty().bind(loginTask.messageProperty());
 
-                        alert.showAndWait();
-                        break;
-                    case CANCELLED:
-                    case SUCCEEDED:
-                        menuDownload.setDisable(false);
-                        menuLogin.setDisable(true);
-                        menuLogout.setDisable(false);
-                        if (mainApp.getContents().containsKey("dir")) {
-                            menuUpload.setDisable(false);
-                        }
-                        alert = new Alert(AlertType.INFORMATION);
-                        alert.setTitle("Connexion");
-                        alert.setHeaderText("Confirmation de connexion");
-                        alert.setContentText("Félicitations, vous êtes a présent connecté.");
-
-                        alert.showAndWait();
-                        hBottomBox.getChildren().clear();
-                        break;
-                }
-            });
-            loginTask.start();
-        });
+        return loginTask;
     }
 
-    @FXML
-    private void HandleDownloadButtonAction(ActionEvent event) {
+    private void downloadContents() {
+        hBottomBox.getChildren().clear();
         hBottomBox.getChildren().addAll(pb, labelField);
 
         Service<Void> downloadContentTask = new Service<Void>() {
@@ -561,11 +543,45 @@ public class MenuController {
                     break;
             }
         });
+
         downloadContentTask.start();
     }
 
     @FXML
-    private void HandleUploadButtonAction(ActionEvent event) {
+    private void HandleDownloadButtonAction(ActionEvent event) {
+        if (!mainApp.getZdsutils().isAuthenticated()) {
+            Service<Void> loginTask = HandleLoginButtonAction(event);
+
+            loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
+                Alert alert;
+                switch (newValue) {
+                    case FAILED:
+                    case CANCELLED:
+                        hBottomBox.getChildren().clear();
+                        alert = new Alert(AlertType.ERROR);
+                        alert.setTitle("Connexion");
+                        alert.setHeaderText("Erreur de connexion");
+                        alert.setContentText("Désolé mais vous n'avez pas été authentifié sur le serveur de Zeste de Savoir.");
+
+                        alert.showAndWait();
+                        break;
+                    case SUCCEEDED:
+                        if (mainApp.getContents().containsKey("dir")) {
+                            menuUpload.setDisable(false);
+                        }
+                        downloadContents();
+                        break;
+                }
+            });
+            loginTask.start();
+        } else {
+            downloadContents();
+        }
+
+    }
+
+    private void uploadContents() {
+        hBottomBox.getChildren().clear();
         hBottomBox.getChildren().addAll(labelField);
 
         List<MetadataContent> contents = mainApp.getZdsutils().getContentListOnline();
@@ -614,6 +630,7 @@ public class MenuController {
                     alert.showAndWait();
                     break;
                 case CANCELLED:
+                    break;
                 case SUCCEEDED:
                     alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("Import de contenu");
@@ -628,6 +645,39 @@ public class MenuController {
         if (result.isPresent()) {
             uploadContentTask.start();
         }
+    }
+    @FXML
+    private void HandleUploadButtonAction(ActionEvent event) {
+        if (!mainApp.getZdsutils().isAuthenticated()) {
+            Service<Void> loginTask = HandleLoginButtonAction(event);
+
+            loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
+                Alert alert;
+                switch (newValue) {
+                    case FAILED:
+                        break;
+                    case CANCELLED:
+                        hBottomBox.getChildren().clear();
+                        alert = new Alert(AlertType.ERROR);
+                        alert.setTitle("Connexion");
+                        alert.setHeaderText("Erreur de connexion");
+                        alert.setContentText("Désolé mais vous n'avez pas été authentifié sur le serveur de Zeste de Savoir.");
+
+                        alert.showAndWait();
+                        break;
+                    case SUCCEEDED:
+                        if (mainApp.getContents().containsKey("dir")) {
+                            menuUpload.setDisable(false);
+                        }
+                        uploadContents();
+                        break;
+                }
+            });
+            loginTask.start();
+        } else {
+            uploadContents();
+        }
+
     }
 
 }

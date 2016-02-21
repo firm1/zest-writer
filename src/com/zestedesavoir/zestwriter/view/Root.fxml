@@ -56,17 +56,7 @@
           </Menu>
             <Menu mnemonicParsing="false" text="Synchronisation">
               <items>
-                <MenuItem fx:id="menuLogin" mnemonicParsing="false" onAction="#HandleLoginButtonAction" text="Connexion">
-                     <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/login.png" />
-                           </image>
-                        </ImageView>
-                     </graphic></MenuItem>
-                  <MenuItem fx:id="menuLogout" disable="true" mnemonicParsing="false" onAction="#HandleLogoutButtonAction" text="Déconnexion" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="menuDownload" disable="true" mnemonicParsing="false" onAction="#HandleDownloadButtonAction" text="Téléchargez vos contenus ZdS">
+                  <MenuItem fx:id="menuDownload" mnemonicParsing="false" onAction="#HandleDownloadButtonAction" text="Téléchargez vos contenus ZdS">
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -74,6 +64,9 @@
                            </image>
                         </ImageView>
                      </graphic>
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="D" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
                   </MenuItem>
                   <MenuItem fx:id="menuUpload" disable="true" mnemonicParsing="false" onAction="#HandleUploadButtonAction" text="Envoyez votre contenu sur ZdS">
                      <graphic>
@@ -83,6 +76,9 @@
                            </image>
                         </ImageView>
                      </graphic>
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="U" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
                   </MenuItem>
               </items>
             </Menu>
