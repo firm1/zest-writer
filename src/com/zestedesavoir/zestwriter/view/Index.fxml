@@ -22,7 +22,7 @@
                <children>
                   <TabPane fx:id="EditorList" prefHeight="410.0" prefWidth="422.0" tabClosingPolicy="ALL_TABS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <tabs>
-                      <Tab text="Accueil">
+                      <Tab text="Accueil" fx:id="Home">
                            <content>
                               <VBox style="-fx-background-color: radial-gradient(center 50% 0%, radius 100%, #fff, transparent 1%, #19516b);">
                                  <children>

@@ -66,6 +66,9 @@ public class MdTextController {
     @FXML
     private SplitPane splitPane;
 
+    @FXML
+    private Tab Home;
+
     private Map<String, Object> jsonData;
     private String baseFilePath;
 

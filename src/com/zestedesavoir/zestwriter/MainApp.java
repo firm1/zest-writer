@@ -1,24 +1,33 @@
 package com.zestedesavoir.zestwriter;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.Properties;
+
 import com.zestedesavoir.zestwriter.model.ExtractFile;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Properties;
+import javafx.util.Pair;
 
 public class MainApp extends Application {
 
@@ -29,6 +38,7 @@ public class MainApp extends Application {
     private ObservableMap<String, String> contents = FXCollections.observableMap(new HashMap<>());
     private ZdsHttp zdsutils;
     private MdTextController Index;
+    StringBuilder key = new StringBuilder();
 
 
     public MainApp() {
@@ -98,6 +108,7 @@ public class MainApp extends Application {
             scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
             primaryStage.show();
+            loadCombinason();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -119,5 +130,38 @@ public class MainApp extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void loadCombinason() {
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent t) {
+                String codeStr = t.getCode().toString();
+                if(!key.toString().endsWith("_"+codeStr)){
+                     key.append("_"+codeStr);
+                }
+            }
+        });
+        scene.addEventFilter(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent t) {
+                if(key.length()>0) {
+                    if(key.toString().equals("_CONTROL_C_L_E_M")){
+                     // Create the custom dialog.
+                        Dialog<Void> dialog = new Dialog<>();
+                        dialog.setTitle("Easter Egg");
+                        dialog.setHeaderText(null);
+                        dialog.setContentText(null);
+
+                        dialog.setGraphic(new ImageView(this.getClass().getResource("view/static/goal.gif").toString()));
+                        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK);
+
+                        dialog.showAndWait();
+                    }
+                    key = new StringBuilder();
+                }
+
+            }
+        });
     }
 }
