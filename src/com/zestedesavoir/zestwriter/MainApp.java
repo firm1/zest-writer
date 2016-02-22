@@ -45,6 +45,7 @@ public class MainApp extends Application {
     private ZdsHttp zdsutils;
     private MdTextController Index;
     private Properties props;
+    StringBuilder key = new StringBuilder();
 
     public MainApp() {
         super();
