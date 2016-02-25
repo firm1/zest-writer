@@ -51,7 +51,6 @@ public class ZdsHttp {
     private String hostname;
     private String port;
     private String protocol;
-    private String workspace;
     private boolean authenticated = false;
     private List<MetadataContent> contentListOnline;
     private HttpClient client;
@@ -65,7 +64,7 @@ public class ZdsHttp {
     private StorageSaver offlineSaver;
     private StorageSaver onlineSaver;
     LocalDirectoryFactory workspaceFactory;
-    
+
     public String getLogin() {
         return login;
     }
@@ -95,6 +94,20 @@ public class ZdsHttp {
         return workspaceFactory.getWorkspaceDir();
     }
 
+
+    public void switchWorkspace(String workspace, Properties prop) throws IOException{
+
+        String workspace_path;
+
+        if (prop.containsKey("data.directory")) {
+            workspace_path = workspace + File.separator + prop.getProperty("data.directory");
+        } else {
+            workspace_path = workspace + File.separator + "zwriter-workspace";
+        }
+        this.workspaceFactory = new LocalDirectoryFactory(workspace_path);
+
+        initWorkspace();
+    }
 
     public void setWorkspace(String workspace) throws IOException{
         this.workspaceFactory = new LocalDirectoryFactory(workspace);
@@ -162,7 +175,7 @@ public class ZdsHttp {
         context = HttpClientContext.create();
         cookieStore = new BasicCookieStore();
         context.setCookieStore(cookieStore);
-        
+
         PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
         // Increase max total connection to 200
         cm.setMaxTotal(500);
@@ -170,13 +183,11 @@ public class ZdsHttp {
         cm.setDefaultMaxPerRoute(20);
         client = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).setConnectionManager(cm).build();
         contentListOnline = new ArrayList<>();
-        // create workspace if doesn't exist
-        initWorkspace();
 
     }
 
     private void initWorkspace() {
-        
+
         try{
             offlineSaver = workspaceFactory.getOfflineSaver();
             onlineSaver = workspaceFactory.getOnlineSaver();
@@ -186,26 +197,19 @@ public class ZdsHttp {
         }
     }
 
-    public ZdsHttp(Properties prop, Stage stage) throws IOException{
-        this(prop, new LocalDirectoryFactory(stage));
-    }
-    
-    private ZdsHttp(Properties prop, LocalDirectoryFactory fact){
+    public ZdsHttp(Properties prop) {
         super();
         logger = LoggerFactory.getLogger(ZdsHttp.class);
         JFileChooser fr = new JFileChooser();
-        workspaceFactory = fact;
+
         FileSystemView fw = fr.getFileSystemView();
-        if(workspaceFactory == null){
-            String workspace_path;
-            if (prop.containsKey("data.directory")) {
-                workspace_path = fw.getDefaultDirectory().getAbsolutePath() + File.separator + prop.getProperty("data.directory");
-            } else {
-                workspace_path = fw.getDefaultDirectory().getAbsolutePath() + File.separator + "zwriter-workspace";
-            }
-            this.workspaceFactory = new LocalDirectoryFactory(workspace);
+
+        try {
+            switchWorkspace(fw.getDefaultDirectory().getAbsolutePath(), prop);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        
+
         if (prop.containsKey("server.protocol")) {
             this.protocol = prop.getProperty("server.protocol");
         } else {
@@ -222,9 +226,6 @@ public class ZdsHttp {
             this.port = "8000";
         }
         initContext();
-    }
-    public ZdsHttp(Properties prop){
-        this(prop, (LocalDirectoryFactory)null);
     }
 
     private String getCookieValue(CookieStore cookieStore, String cookieName) {
@@ -428,7 +429,7 @@ public class ZdsHttp {
         InputStream is = response.getEntity().getContent();
         String filePath = getOnlineContentPathDir() + File.separator + targetSlug + ".zip";
         FileOutputStream fos = new FileOutputStream(new File(filePath));
-        
+
         int inByte;
         while ((inByte = is.read()) != -1)
             fos.write(inByte);
@@ -451,7 +452,6 @@ public class ZdsHttp {
                 ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFilePath));
                 // get the zipped file list entry
                 ZipEntry ze = zis.getNextEntry();
-                System.out.println(ze);
 
                 while (ze != null) {
 

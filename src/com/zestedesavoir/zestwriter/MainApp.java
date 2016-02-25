@@ -3,7 +3,6 @@ package com.zestedesavoir.zestwriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Optional;
 import java.util.Properties;
 
 import com.zestedesavoir.zestwriter.model.ExtractFile;
@@ -21,19 +20,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class MainApp extends Application {
 
@@ -54,7 +45,8 @@ public class MainApp extends Application {
 
         try {
             props.load(input);
-            
+            zdsutils = new ZdsHttp(props);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,6 +54,10 @@ public class MainApp extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public Properties getProps() {
+        return props;
     }
 
     public Stage getPrimaryStage() {
@@ -96,12 +92,7 @@ public class MainApp extends Application {
             Platform.exit();
             System.exit(0);
         });
-        try {
-            zdsutils = new ZdsHttp(props, primaryStage);
-        } catch (IOException ex) {
-            zdsutils = new ZdsHttp(props);
-            Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
         initRootLayout();
         showWriter();
     }

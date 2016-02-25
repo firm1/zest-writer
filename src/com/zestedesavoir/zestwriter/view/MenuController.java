@@ -1,12 +1,29 @@
 package com.zestedesavoir.zestwriter.view;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Scanner;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.python.core.PyString;
+import org.python.util.PythonInterpreter;
+
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.ExtractFile;
 import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.utils.Corrector;
-import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.ZipUtil;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
+
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -18,28 +35,27 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Pair;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.python.core.PyString;
-import org.python.util.PythonInterpreter;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.Map.Entry;
 
 public class MenuController {
     private MainApp mainApp;
@@ -678,6 +694,24 @@ public class MenuController {
             uploadContents();
         }
 
+    }
+
+    @FXML
+    private void HandleSwitchWorkspaceAction(ActionEvent event) throws IOException {
+        String oldStr = mainApp.getZdsutils().getWorkspace();
+        DirectoryChooser fileChooser = new DirectoryChooser();
+        fileChooser.setTitle("Sélectionnez un dossier");
+        File selectedDirectory = fileChooser.showDialog(mainApp.getPrimaryStage());
+        mainApp.getZdsutils().switchWorkspace(selectedDirectory.getAbsolutePath(), mainApp.getProps());
+        String newStr = mainApp.getZdsutils().getWorkspace();
+
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Dossier de travail");
+        alert.setHeaderText("Changement de dossier de travail");
+        alert.setContentText("Votre dossier de travail est maintenant dans "+mainApp.getZdsutils().getWorkspace());
+        alert.setResizable(true);
+
+        alert.showAndWait();
     }
 
 }
