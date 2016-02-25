@@ -204,7 +204,7 @@
          <center>
             <TextArea fx:id="SourceText" wrapText="true" BorderPane.alignment="CENTER">
                <font>
-                  <Font name="Source Code Pro" size="13.0" />
+                  <Font name="Fira Mono" size="13.0" />
                </font>
             </TextArea>
          </center>

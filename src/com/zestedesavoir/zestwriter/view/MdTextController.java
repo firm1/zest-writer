@@ -105,7 +105,7 @@ public class MdTextController {
                 Font.loadFont(this.getClass().getResource("static/fonts/Merriweather-Light.ttf").toExternalForm(), 10);
                 Font.loadFont(this.getClass().getResource("static/fonts/Merriweather-LightItalic.ttf").toExternalForm(), 10);
 
-                Font.loadFont(this.getClass().getResource("static/fonts/SourceCodePro-Regular.ttf").toExternalForm(), 10);
+                Font.loadFont(this.getClass().getResource("static/fonts/FiraMono-Regular.ttf").toExternalForm(), 10);
             }
         }).start();
     }
