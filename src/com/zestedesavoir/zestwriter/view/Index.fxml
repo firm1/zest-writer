@@ -50,8 +50,7 @@
                                           </Text>
                                        </children>
                                     </GridPane>
-                                 </children></VBox>
-                           </content></Tab>
+                                 </children></VBox></content></Tab>
                     </tabs>
                   </TabPane>
                </children>

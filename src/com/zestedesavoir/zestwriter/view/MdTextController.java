@@ -19,6 +19,7 @@ import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
 import com.sun.javafx.scene.control.skin.TabPaneSkin;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.ExtractFile;
+import com.ziclix.python.sql.handler.UpdateCountDataHandler;
 
 import javafx.collections.MapChangeListener;
 import javafx.event.Event;
@@ -322,12 +323,14 @@ public class MdTextController {
             if (mouseEvent.getClickCount() == 2) {
                 TreeItem<ExtractFile> item = Summary.getSelectionModel().getSelectedItem();
 
-                if ((!mainApp.getExtracts().contains(item.getValue()))
-                        && (item.getValue().getFilePath() != null)) {
-                    try {
-                        createTabExtract(item.getValue());
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                if(!item.getValue().isContainer()) {
+                    if ((!mainApp.getExtracts().contains(item.getValue()))
+                            && (item.getValue().getFilePath() != null)) {
+                        try {
+                            createTabExtract(item.getValue());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -540,10 +543,16 @@ public class MdTextController {
 
                 treeCell.setOnDragDone(Event::consume);
 
+
                 treeCell.setOnDragExited(dragEvent -> {
-                    treeCell.setGraphic(null);
+                    if (treeCell.getItem().isContainer()) {
+                        treeCell.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/container.png"), 20, 20, true, true)));
+                    } else {
+                        treeCell.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/child.png"), 20, 20, true, true)));
+                    }
                     dragEvent.consume();
                 });
+
 
                 treeCell.setOnDragOver(new EventHandler<DragEvent>() {
                     @Override
@@ -551,7 +560,13 @@ public class MdTextController {
                         String valueToMove = dragEvent.getDragboard().getString();
                         TreeItem<ExtractFile> itemToMove = search(Summary.getRoot(), valueToMove);
                         TreeItem<ExtractFile> newParent = treeCell.getTreeItem();
-                        if (!itemToMove.getValue().isMoveableIn(treeCell.getItem(), getDescendantContainerCount(itemToMove) + getAncestorContainerCount(treeCell.getTreeItem()))) {
+                        if (!itemToMove.getValue().isMoveableIn(
+                                treeCell.getItem(),
+                                getDescendantContainerCount(itemToMove) + getAncestorContainerCount(newParent),
+                                getDescendantContainerCount(newParent),
+                                getDescendantContainerCount(newParent.getParent()))
+                           )
+                        {
                             treeCell.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/delete.png"))));
                         } else {
                             dragEvent.acceptTransferModes(TransferMode.MOVE);
@@ -614,6 +629,10 @@ public class MdTextController {
         }
     }
 
+    /*
+     * Count container descendants of TreeItem node
+     * List all children of node and count recursively any child which are container
+     */
     public static int getDescendantContainerCount(TreeItem<ExtractFile> node) {
         int maxDepth = 0;
         for (TreeItem<ExtractFile> n : node.getChildren()) {

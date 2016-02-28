@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
 
+import com.sun.javafx.css.Rule;
+import com.zestedesavoir.zestwriter.view.MdTextController;
+
 public class ExtractFile {
     private StringProperty basePath;
     private StringProperty title;
@@ -28,6 +31,7 @@ public class ExtractFile {
     private StringProperty text;
     private StringProperty mdText;
 
+    // for introduction and conclusion
     public ExtractFile(String title, String slug, String basePath) {
         super();
         this.basePath = new SimpleStringProperty(basePath);
@@ -256,15 +260,16 @@ public class ExtractFile {
      * @param depthContainers depth of containers. If extract is leaf, depth equals 0.
      * @return
      */
-    public boolean isMoveableIn(ExtractFile extract, int depthContainers) {
-        boolean rules1 = this.object == null; // introduction and conclusion is not moveable
-        boolean rules2 = extract.isRoot() && (!isContainer()); // can't put section in root container
+    public boolean isMoveableIn(ExtractFile extract, int depthContainers, int countExtractContainer, int countExtractParentContainer) {
+        boolean rules1 = this.object == null; // detect introduction and conclusion
+        boolean rules2 = extract.isRoot() && (!isContainer()); // detect when we put other way that container on root dir
         boolean rules3 = extract.getTitle().getValue().equalsIgnoreCase("Conclusion"); // nothing after conclusion
         boolean rules4 = isContainer() && (depthContainers >= 3); // zds content have 3 levels (contain, part, chapter)
         boolean rules5 = this.getFilePath().equals(extract.getFilePath());
-        //boolean rules6 = (!this.isContainer()) && (extract.isContainer() && depthContainers>0); // no extract on containers of containers
+        boolean rules6 = (!isContainer()) && (extract.isContainer()) && (countExtractContainer > 0); // detect movement of extract in container on container
+        boolean rules7 = extract.getTitle().getValue().equalsIgnoreCase("introduction") && countExtractParentContainer > 0;
 
-        return !(rules1 || rules2 || rules3 || rules4 || rules5);
+        return !(rules1 || rules2 || rules3 || rules4 || rules5 || rules6 || rules7);
 
     }
 
