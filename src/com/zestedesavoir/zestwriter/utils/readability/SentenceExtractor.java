@@ -40,7 +40,7 @@ public class SentenceExtractor {
             // System.out.println("SENTENCE "+(i+1)+": ");
             StringBuilder sb = new StringBuilder();
             for (int j = sentStartTok; j <= sentEndTok; j++) {
-                sb.append(tokens[j] + whites[j + 1]);
+                sb.append(tokens[j]).append(whites[j + 1]);
 
                 // System.out.print(tokens[j]+whites[j+1]);
             }

@@ -55,10 +55,10 @@ public class TextAnalyser {
 
         // check each word for vowels (don't count more than one vowel in a row)
         for (int i = 0; i < length; i++) {
-            if (isVowel(word.charAt(i)) && (vowel == false)) {
+            if (isVowel(word.charAt(i)) && (!vowel)) {
                 vowel = true;
                 syl++;
-            } else vowel = isVowel(word.charAt(i)) && (vowel == true);
+            } else vowel = isVowel(word.charAt(i)) && (vowel);
         }
 
         char tempChar = word.charAt(word.length() - 1);

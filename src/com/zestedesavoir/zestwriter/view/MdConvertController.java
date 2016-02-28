@@ -16,7 +16,6 @@ import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.FlipTable;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
@@ -24,7 +23,6 @@ import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -284,48 +282,41 @@ public class MdConvertController {
         SplitPane writer = loader.load();
 
         SourceText.setText(extract.getMdText().getValue());
-        SourceText.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observableValue, String s, String s2) {
-                tab.setText("! " + extract.getTitle().getValue());
-                // canRefresh = true;
-                updateRender();
-            }
+        SourceText.textProperty().addListener((observableValue, s, s2) -> {
+            tab.setText("! " + extract.getTitle().getValue());
+            // canRefresh = true;
+            updateRender();
         });
         updateRender();
-        tab.getContent().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-
-            @Override
-            public void handle(KeyEvent t) {
-                if (t.getCode().equals(KeyCode.S) && t.isControlDown()) {
-                    HandleSaveButtonAction(null);
-                }else if(t.getCode().equals(KeyCode.G) && t.isControlDown()) {
-                    // put in bold
-                    HandleBoldButtonAction(null);
-                }else if(t.getCode().equals(KeyCode.I) && t.isControlDown()) {
-                    // put in italic
-                    HandleItalicButtonAction(null);
-                }else if(t.getCode().equals(KeyCode.B) && t.isControlDown()) {
-                    // put it barred
-                    HandleBarredButtonAction(null);
-                }else if(t.getCode().equals(KeyCode.T) && t.isControlDown() && t.isShiftDown()) {
-                    // put it touch
-                    HandleTouchButtonAction(null);
-                }else if(t.getCode().equals(KeyCode.PLUS) && t.isControlDown() && t.isShiftDown()) {
-                    // put it exp
-                    HandleExpButtonAction(null);
-                }else if(t.getCode().equals(KeyCode.EQUALS) && t.isControlDown()) {
-                    // put it ind
-                    HandleIndButtonAction(null);
-                }else if(t.getCode().equals(KeyCode.E) && t.isControlDown()) {
-                    // put it center
-                    HandleCenterButtonAction(null);
-                }else if(t.getCode().equals(KeyCode.D) && t.isControlDown() && t.isShiftDown()) {
-                    // put it right
-                    HandleRightButtonAction(null);
-                }
-
+        tab.getContent().addEventFilter(KeyEvent.KEY_PRESSED, t -> {
+            if (t.getCode().equals(KeyCode.S) && t.isControlDown()) {
+                HandleSaveButtonAction(null);
+            }else if(t.getCode().equals(KeyCode.G) && t.isControlDown()) {
+                // put in bold
+                HandleBoldButtonAction(null);
+            }else if(t.getCode().equals(KeyCode.I) && t.isControlDown()) {
+                // put in italic
+                HandleItalicButtonAction(null);
+            }else if(t.getCode().equals(KeyCode.B) && t.isControlDown()) {
+                // put it barred
+                HandleBarredButtonAction(null);
+            }else if(t.getCode().equals(KeyCode.T) && t.isControlDown() && t.isShiftDown()) {
+                // put it touch
+                HandleTouchButtonAction(null);
+            }else if(t.getCode().equals(KeyCode.PLUS) && t.isControlDown() && t.isShiftDown()) {
+                // put it exp
+                HandleExpButtonAction(null);
+            }else if(t.getCode().equals(KeyCode.EQUALS) && t.isControlDown()) {
+                // put it ind
+                HandleIndButtonAction(null);
+            }else if(t.getCode().equals(KeyCode.E) && t.isControlDown()) {
+                // put it center
+                HandleCenterButtonAction(null);
+            }else if(t.getCode().equals(KeyCode.D) && t.isControlDown() && t.isShiftDown()) {
+                // put it right
+                HandleRightButtonAction(null);
             }
+
         });
     }
 
@@ -483,7 +474,6 @@ public class MdConvertController {
 
     @FXML
     private void HandleBlocButtonAction(ActionEvent event) {
-        String type = "";
         String text = "";
         String[] lines = SourceText.getSelectedText().split("\n");
         for (String line : lines) {

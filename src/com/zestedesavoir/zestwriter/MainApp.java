@@ -135,13 +135,10 @@ public class MainApp extends Application {
     }
 
     private void loadCombinason() {
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent t) {
-                String codeStr = t.getCode().toString();
-                if(!key.toString().endsWith("_"+codeStr)){
-                     key.append("_"+codeStr);
-                }
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, t -> {
+            String codeStr = t.getCode().toString();
+            if(!key.toString().endsWith("_"+codeStr)){
+                 key.append("_"+codeStr);
             }
         });
         scene.addEventFilter(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {

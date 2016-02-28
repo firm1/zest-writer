@@ -4,18 +4,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.Scanner;
-
-import com.sun.javafx.css.Rule;
-import com.zestedesavoir.zestwriter.view.MdTextController;
 
 public class ExtractFile {
     private StringProperty basePath;

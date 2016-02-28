@@ -37,7 +37,7 @@ public class Corrector {
         AnnotatedTextBuilder builder = new AnnotatedTextBuilder();
         StringTokenizer tokenizer = new StringTokenizer(htmlText, "<>", true);
         boolean inMarkup = false;
-        int CountCode = 0, CountPre = 0, CountEm = 0, CountSup = 0;
+        int CountCode = 0, CountPre = 0;
         while (tokenizer.hasMoreTokens()) {
             String part = tokenizer.nextToken();
             if (inMarkup) {
@@ -182,19 +182,19 @@ public class Corrector {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        int offset = 0;
+
         for (RuleMatch match : matches) {
             String txt = htmlContent.substring(match.getFromPos(), match.getToPos());
             bf.append("\n\n");
             bf.append("> ");
             bf.append(markup.getPlainText().split("[\n|\r]")[match.getLine()].replace(txt, "**" + txt + "**"));
             bf.append("\n");
-            bf.append("Source : " + source);
+            bf.append("Source : ").append(source);
             bf.append("\n\n");
             bf.append(match.getRule().getDescription());
             bf.append("\n\n");
             for (String s : match.getSuggestedReplacements()) {
-                bf.append("- " + s + "\n");
+                bf.append("- ").append(s).append("\n");
             }
         }
         return bf.toString();

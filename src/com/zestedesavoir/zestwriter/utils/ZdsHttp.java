@@ -6,7 +6,6 @@ import javafx.util.Pair;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -41,7 +40,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import javafx.stage.Stage;
 
 
 public class ZdsHttp {
@@ -268,6 +266,7 @@ public class ZdsHttp {
                 logger.debug("Id Utilisateur trouvé : " + x);
                 return param;
             } catch (NumberFormatException e) {
+                logger.debug("Problème de recherche utilisateur : "+ e.getMessage());
             }
         }
         return null;

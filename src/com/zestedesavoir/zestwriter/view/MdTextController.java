@@ -19,7 +19,6 @@ import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
 import com.sun.javafx.scene.control.skin.TabPaneSkin;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.ExtractFile;
-import com.ziclix.python.sql.handler.UpdateCountDataHandler;
 
 import javafx.collections.MapChangeListener;
 import javafx.event.Event;
@@ -70,7 +69,7 @@ public class MdTextController {
     @FXML
     private Tab Home;
 
-    private Map<String, Object> jsonData;
+    private Map jsonData;
     private String baseFilePath;
 
     @FXML
@@ -149,37 +148,33 @@ public class MdTextController {
             }
         });
 
-        mainApp.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+        mainApp.getScene().addEventFilter(KeyEvent.KEY_PRESSED, t -> {
+            if (t.getCode().equals(KeyCode.TAB) && t.isControlDown()) {
+                int size = EditorList.getTabs().size();
 
-            @Override
-            public void handle(KeyEvent t) {
-                if (t.getCode().equals(KeyCode.TAB) && t.isControlDown()) {
-                    int size = EditorList.getTabs().size();
+                if (size > 0) {
+                    TabPaneSkin skin = (TabPaneSkin) EditorList.getSkin();
+                    TabPaneBehavior tabPaneBehavior = (TabPaneBehavior) skin.getBehavior();
 
-                    if (size > 0) {
-                        TabPaneSkin skin = (TabPaneSkin) EditorList.getSkin();
-                        TabPaneBehavior tabPaneBehavior = (TabPaneBehavior) skin.getBehavior();
+                    int selectedIndex = EditorList.getSelectionModel().getSelectedIndex();
 
-                        int selectedIndex = EditorList.getSelectionModel().getSelectedIndex();
-
-                        if (!t.isShiftDown()) {
-                            if (selectedIndex < size -1) {
-                                tabPaneBehavior.selectNextTab();
-                            } else {
-                                tabPaneBehavior.selectTab(EditorList.getTabs().get(0));
-                            }
+                    if (!t.isShiftDown()) {
+                        if (selectedIndex < size -1) {
+                            tabPaneBehavior.selectNextTab();
                         } else {
-                            if (selectedIndex > 0) {
-                                tabPaneBehavior.selectPreviousTab();
-                            } else {
-                                tabPaneBehavior.selectTab(EditorList.getTabs().get(size - 1));
-                            }
+                            tabPaneBehavior.selectTab(EditorList.getTabs().get(0));
                         }
-
-                        t.consume();
+                    } else {
+                        if (selectedIndex > 0) {
+                            tabPaneBehavior.selectPreviousTab();
+                        } else {
+                            tabPaneBehavior.selectTab(EditorList.getTabs().get(size - 1));
+                        }
                     }
 
+                    t.consume();
                 }
+
             }
         });
 
@@ -280,13 +275,12 @@ public class MdTextController {
             return node;
         } else {
             if (container.get("object").equals("extract")) {
-                TreeItem<ExtractFile> item = new TreeItem<>(
+                return new TreeItem<>(
                         new ExtractFile(
                                 container.get("title").toString(),
                                 container.get("slug").toString(),
                                 baseFilePath,
                                 container.get("text").toString()));
-                return item;
             }
         }
         return null;
