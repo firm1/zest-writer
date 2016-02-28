@@ -1,15 +1,18 @@
 package com.zestedesavoir.zestwriter.model;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
+
+import com.sun.jna.platform.FileUtils;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 public class ExtractFile {
     private StringProperty basePath;
@@ -236,6 +239,35 @@ public class ExtractFile {
 
         return !rule1;
 
+    }
+
+    private void delete(File file) {
+        if(file.isDirectory()) {
+            if(file.list().length==0) {
+                file.delete();
+            }
+            else {
+                String files[] = file.list();
+                for(String temp:files) {
+                    File fileDelete = new File(file, temp);
+                    delete(fileDelete);
+                }
+                if(file.list().length==0) {
+                    file.delete();
+                }
+            }
+        } else {
+            file.delete();
+        }
+    }
+
+    public void deleteExtract() {
+
+        File file = new File(getFilePath());
+
+        if (file.exists()) {
+            delete(file);
+        }
     }
 
     public boolean canEdit() {

@@ -377,6 +377,7 @@ public class MdTextController {
                             Optional<ButtonType> result = alert.showAndWait();
                             if (result.get() == ButtonType.OK) {
                                 getTreeItem().getParent().getChildren().remove(getTreeItem());
+                                getItem().deleteExtract();
                                 saveManifestJson();
                             }
                         });
