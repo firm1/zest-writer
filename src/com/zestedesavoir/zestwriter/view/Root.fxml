@@ -22,7 +22,7 @@
                   <MenuItem mnemonicParsing="false" onAction="#HandleSwitchWorkspaceAction" text="Changer son répertoire de travail" />
               <MenuItem mnemonicParsing="false" onAction="#HandleQuitButtonAction" text="Quitter">
                      <accelerator>
-                        <KeyCodeCombination alt="DOWN" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                        <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
             </items>
           </Menu>
