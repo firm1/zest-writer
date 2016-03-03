@@ -175,6 +175,10 @@ public class MdTextController {
                     t.consume();
                 }
 
+            } else if(t.getCode().equals(KeyCode.W) && t.isControlDown()) {
+                if (EditorList.getTabs().size() > 1) {
+                    EditorList.getTabs().remove(EditorList.getSelectionModel().getSelectedItem());
+                }
             }
         });
 
