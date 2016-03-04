@@ -69,6 +69,7 @@ public class MdConvertController {
     private Service<String> renderTask;
     private int xRenderPosition = 0;
     private int yRenderPosition = 0;
+    private boolean isSaved = true;
 
     public MdConvertController() {
         super();
@@ -77,6 +78,15 @@ public class MdConvertController {
 
     public MdTextController getMdBox() {
         return mdBox;
+    }
+
+
+    public boolean isSaved() {
+        return isSaved;
+    }
+
+    public void setSaved(boolean isSaved) {
+        this.isSaved = isSaved;
     }
 
     @FXML
@@ -257,10 +267,11 @@ public class MdConvertController {
     }
 
     @FXML
-    private void HandleSaveButtonAction(ActionEvent event) {
+    public void HandleSaveButtonAction(ActionEvent event) {
         extract.setMdText(SourceText.getText());
         extract.save();
         tab.setText(extract.getTitle().getValue());
+        this.isSaved = true;
     }
 
     @FXML
@@ -284,7 +295,7 @@ public class MdConvertController {
         SourceText.setText(extract.getMdText().getValue());
         SourceText.textProperty().addListener((observableValue, s, s2) -> {
             tab.setText("! " + extract.getTitle().getValue());
-            // canRefresh = true;
+            this.isSaved = false;
             updateRender();
         });
         updateRender();

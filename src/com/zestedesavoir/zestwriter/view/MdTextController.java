@@ -23,10 +23,12 @@ import com.zestedesavoir.zestwriter.model.ExtractFile;
 import javafx.collections.MapChangeListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -50,6 +52,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.text.Font;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 public class MdTextController {
@@ -177,7 +180,12 @@ public class MdTextController {
 
             } else if(t.getCode().equals(KeyCode.W) && t.isControlDown()) {
                 if (EditorList.getTabs().size() > 1) {
-                    EditorList.getTabs().remove(EditorList.getSelectionModel().getSelectedItem());
+                    Tab selectedTab = EditorList.getSelectionModel().getSelectedItem();
+                    Event closeRequestEvent = new Event(Tab.TAB_CLOSE_REQUEST_EVENT);
+                    Event.fireEvent(selectedTab, closeRequestEvent);
+                    Event closedEvent = new Event(Tab.CLOSED_EVENT);
+                    Event.fireEvent(selectedTab, closedEvent);
+                    EditorList.getTabs().remove(selectedTab);
                 }
             }
         });
@@ -187,7 +195,6 @@ public class MdTextController {
     public void createTabExtract(ExtractFile extract) throws IOException {
 
         extract.loadMarkdown();
-        //Extract extract = new Extract(parent.getTitle().getValue(), parent.getSlug().getValue(), parent.getFilePath(), parent.getContainers());
         mainApp.getExtracts().add(extract);
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MainApp.class.getResource("view/Editor.fxml"));
@@ -198,10 +205,39 @@ public class MdTextController {
         tab.setContent(writer);
         EditorList.getTabs().add(tab);
         EditorList.getSelectionModel().select(tab);
-        tab.setOnClosed(t -> mainApp.getExtracts().remove(extract));
 
         MdConvertController controller = loader.getController();
         controller.setMdBox(this, extract, tab);
+
+        tab.setOnCloseRequest(t -> {
+            if(!controller.isSaved()) {
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation");
+                alert.setHeaderText("Confirmation de fermeture");
+                alert.setContentText("Vous avez modifié cet extrait. Voulez-vous enregistrer les modifications ?");
+
+                ButtonType buttonTypeYes = new ButtonType("Oui");
+                ButtonType buttonTypeNo = new ButtonType("Non");
+                ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+
+                alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo, buttonTypeCancel);
+                alert.setResizable(true);
+                alert.getDialogPane().setPrefSize(480, 320);
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if(result.get() != buttonTypeCancel) {
+                    if (result.get() == buttonTypeYes){
+                        controller.HandleSaveButtonAction(null);
+                    }
+                } else {
+                    t.consume();
+                }
+            }
+        });
+
+        tab.setOnClosed(t -> {
+            mainApp.getExtracts().remove(extract);
+        });
     }
 
     public Map<String, Object> getMapFromTreeItem(TreeItem<ExtractFile> node, Map<String, Object> map) {
