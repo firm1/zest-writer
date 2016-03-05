@@ -311,7 +311,7 @@ public class MdConvertController {
             }else if(t.getCode().equals(KeyCode.B) && t.isControlDown()) {
                 // put it barred
                 HandleBarredButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.T) && t.isControlDown() && t.isShiftDown()) {
+            }else if(t.getCode().equals(KeyCode.K) && t.isControlDown()) {
                 // put it touch
                 HandleTouchButtonAction(null);
             }else if(t.getCode().equals(KeyCode.PLUS) && t.isControlDown() && t.isShiftDown()) {
