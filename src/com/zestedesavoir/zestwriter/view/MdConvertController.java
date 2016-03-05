@@ -326,6 +326,9 @@ public class MdConvertController {
             }else if(t.getCode().equals(KeyCode.D) && t.isControlDown() && t.isShiftDown()) {
                 // put it right
                 HandleRightButtonAction(null);
+            }else if(t.getCode().equals(KeyCode.SPACE) && t.isControlDown() && t.isShiftDown()) {
+                // unbreakable space
+                HandleUnbreakableAction(null);
             }
 
         });
@@ -432,6 +435,10 @@ public class MdConvertController {
     @FXML
     private void HandleTouchButtonAction(ActionEvent event) {
         SourceText.replaceText(SourceText.getSelection(), "||" + SourceText.getSelectedText() + "||");
+    }
+
+    private void HandleUnbreakableAction(ActionEvent event) {
+        SourceText.replaceText(SourceText.getSelection(), SourceText.getSelectedText() + "\u00a0");
     }
 
     @FXML
