@@ -9,7 +9,9 @@ install:
   - set PATH=%JAVA_HOME%\bin;%PATH%
   - echo %PATH%
   - gradlew.bat clean
-  - set JAVA_OPTS=-XX:MaxPermSize=1024m -Xmx1512m
+  - set JAVA_OPTS=-XX:MaxPermSize=1024m -Xmx1512m -Dfile.encoding=UTF-8 
+  - set JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8 
+
   
 build_script:
   - gradlew.bat -u -i clean assemble
@@ -18,7 +20,7 @@ artifacts:
   - path: build\distributions\ZestWriter
     name: "zest-writer-for-windows"
     type: zip
-  - path: build\distributions\ZestWriter\app\zest-writer-0.2.0.jar
+  - path: build\distributions\ZestWriter\app\zest-writer-0.3.0.jar
     name: "zest-writer-jar"
     type: zip
 
