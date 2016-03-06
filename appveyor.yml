@@ -20,7 +20,7 @@ artifacts:
   - path: build\distributions\ZestWriter
     name: "zest-writer-for-windows"
     type: zip
-  - path: build\distributions\ZestWriter\app\zest-writer-0.3.0.jar
+  - path: build\distributions\ZestWriter\app\zest-writer-0.4.0.jar
     name: "zest-writer-jar"
     type: zip
 

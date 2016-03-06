@@ -73,16 +73,7 @@ dependencies {
             'org.codehaus.jackson:jackson-mapper-asl:1.9.2',
             'de.julielab:aliasi-lingpipe:4.1.0',
             'org.python:jython-standalone:2.7.1b3',
-            'org.jsoup:jsoup:1.8.1',
-            'org.yaml:snakeyaml:1.17'
-}
-
-jfxCopyLibs.enabled = false
-
-jar{
-    configurations.compile.collect { it.isDirectory() ? it: zipTree(it)}
-    from(configurations.compile) {
-    }
+            'org.jsoup:jsoup:1.8.1'
 }
 
 task wrapper(type: Wrapper) {
