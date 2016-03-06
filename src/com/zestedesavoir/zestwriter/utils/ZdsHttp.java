@@ -1,8 +1,19 @@
 package com.zestedesavoir.zestwriter.utils;
 
-import com.zestedesavoir.zestwriter.MainApp;
-import com.zestedesavoir.zestwriter.model.MetadataContent;
-import javafx.util.Pair;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -30,16 +41,9 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
-import java.io.*;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import com.zestedesavoir.zestwriter.model.MetadataContent;
+
+import javafx.util.Pair;
 
 
 public class ZdsHttp {
@@ -59,9 +63,7 @@ public class ZdsHttp {
     private String localType;
     private final Logger logger;
     private static String USER_AGENT = "Mozilla/5.0";
-    private StorageSaver offlineSaver;
-    private StorageSaver onlineSaver;
-    LocalDirectoryFactory workspaceFactory;
+    private Configuration config;
 
     public String getLogin() {
         return login;
@@ -85,30 +87,6 @@ public class ZdsHttp {
 
     public void setLocalType(String localType) {
         this.localType = localType;
-    }
-
-
-    public String getWorkspace() {
-        return workspaceFactory.getWorkspaceDir();
-    }
-
-
-    public void switchWorkspace(String workspace, Properties prop) throws IOException{
-
-        String workspace_path;
-
-        if (prop.containsKey("data.directory")) {
-            workspace_path = workspace + File.separator + prop.getProperty("data.directory");
-        } else {
-            workspace_path = workspace + File.separator + "zwriter-workspace";
-        }
-        this.workspaceFactory = new LocalDirectoryFactory(workspace_path);
-
-        initWorkspace();
-    }
-
-    public void setWorkspace(String workspace) throws IOException{
-        this.workspaceFactory = new LocalDirectoryFactory(workspace);
     }
 
 
@@ -161,11 +139,11 @@ public class ZdsHttp {
     }
 
     public String getOnlineContentPathDir() {
-        return this.onlineSaver.getBaseDirectory();
+        return config.getOnlineSaver().getBaseDirectory();
     }
 
     public String getOfflineContentPathDir() {
-        return this.offlineSaver.getBaseDirectory();
+        return config.getOfflineSaver().getBaseDirectory();
     }
 
 
@@ -184,45 +162,21 @@ public class ZdsHttp {
 
     }
 
-    private void initWorkspace() {
-
-        try{
-            offlineSaver = workspaceFactory.getOfflineSaver();
-            onlineSaver = workspaceFactory.getOnlineSaver();
-        }
-        catch(IOException e){
-            logger.error("could not initialize workspace due to " + e.getMessage());
-        }
-    }
-
-    public ZdsHttp(Properties prop) {
+    public ZdsHttp(Configuration config) {
         super();
         logger = LoggerFactory.getLogger(ZdsHttp.class);
-        JFileChooser fr = new JFileChooser();
-
-        FileSystemView fw = fr.getFileSystemView();
+        this.config = config;
 
         try {
-            switchWorkspace(fw.getDefaultDirectory().getAbsolutePath(), prop);
+            config.loadWorkspace();
         } catch (IOException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        this.protocol = config.getProtocol();
+        this.hostname = config.getHost();
+        this.port = config.getPort();
 
-        if (prop.containsKey("server.protocol")) {
-            this.protocol = prop.getProperty("server.protocol");
-        } else {
-            this.protocol = "http";
-        }
-
-        if (prop.containsKey("server.host")) {
-            this.hostname = prop.getProperty("server.host");
-            if (prop.containsKey("server.port")) {
-                this.port = prop.getProperty("server.port");
-            }
-        } else {
-            this.hostname = "localhost";
-            this.port = "8000";
-        }
         initContext();
     }
 
@@ -489,12 +443,10 @@ public class ZdsHttp {
 
 
     public static void main(String[] args) {
-        Properties prop = new Properties();
-        InputStream input = MainApp.class.getClassLoader().getResourceAsStream("config.properties");
+        Configuration config = new Configuration();
 
         try {
-            prop.load(input);
-            ZdsHttp zdsutils = new ZdsHttp(prop);
+            ZdsHttp zdsutils = new ZdsHttp(config);
             if (zdsutils.login("admin", "admin")) {
                 zdsutils.initInfoOnlineContent("tutorial");
                 zdsutils.initInfoOnlineContent("article");

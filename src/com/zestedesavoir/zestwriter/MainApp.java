@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import com.zestedesavoir.zestwriter.model.ExtractFile;
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
@@ -35,29 +36,22 @@ public class MainApp extends Application {
     private ObservableMap<String, String> contents = FXCollections.observableMap(new HashMap<>());
     private ZdsHttp zdsutils;
     private MdTextController Index;
-    private Properties props;
+    private Configuration config;
     StringBuilder key = new StringBuilder();
 
     public MainApp() {
         super();
-        props = new Properties();
-        InputStream input = MainApp.class.getClassLoader().getResourceAsStream("config.properties");
-
-        try {
-            props.load(input);
-            zdsutils = new ZdsHttp(props);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        config = new Configuration();
+        zdsutils = new ZdsHttp(config);
     }
 
     public static void main(String[] args) {
         launch(args);
     }
 
-    public Properties getProps() {
-        return props;
+
+    public Configuration getConfig() {
+        return config;
     }
 
     public Stage getPrimaryStage() {

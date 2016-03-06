@@ -394,7 +394,12 @@ public class MenuController {
     private void HandleOpenButtonAction(ActionEvent event) {
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Contenus Zestueux");
-        File defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
+        File defaultDirectory;
+        if(mainApp.getConfig().getWorkspaceFactory() == null) {
+            defaultDirectory = new File(System.getProperty("user.home"));
+        } else {
+            defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
+        }
         chooser.setInitialDirectory(defaultDirectory);
         File selectedDirectory = chooser.showDialog(mainApp.getPrimaryStage());
 
@@ -508,6 +513,8 @@ public class MenuController {
     }
 
     private void downloadContents() {
+        prerequisitesForData();
+
         hBottomBox.getChildren().clear();
         hBottomBox.getChildren().addAll(pb, labelField);
 
@@ -596,7 +603,20 @@ public class MenuController {
 
     }
 
+    private void prerequisitesForData() {
+        if(mainApp.getConfig().getWorkspaceFactory() == null) {
+            try {
+                mainApp.getConfig().loadWorkspace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void uploadContents() {
+        prerequisitesForData();
+
         hBottomBox.getChildren().clear();
         hBottomBox.getChildren().addAll(labelField);
 
@@ -698,17 +718,16 @@ public class MenuController {
 
     @FXML
     private void HandleSwitchWorkspaceAction(ActionEvent event) throws IOException {
-        String oldStr = mainApp.getZdsutils().getWorkspace();
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setTitle("Sélectionnez un dossier");
         File selectedDirectory = fileChooser.showDialog(mainApp.getPrimaryStage());
-        mainApp.getZdsutils().switchWorkspace(selectedDirectory.getAbsolutePath(), mainApp.getProps());
-        String newStr = mainApp.getZdsutils().getWorkspace();
+        mainApp.getConfig().setWorkspacePath(selectedDirectory.getAbsolutePath());
+        mainApp.getConfig().loadWorkspace();
 
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Dossier de travail");
         alert.setHeaderText("Changement de dossier de travail");
-        alert.setContentText("Votre dossier de travail est maintenant dans "+mainApp.getZdsutils().getWorkspace());
+        alert.setContentText("Votre dossier de travail est maintenant dans "+mainApp.getConfig().getWorkspacePath());
         alert.setResizable(true);
 
         alert.showAndWait();
