@@ -166,13 +166,6 @@ public class ZdsHttp {
         super();
         logger = LoggerFactory.getLogger(ZdsHttp.class);
         this.config = config;
-
-        try {
-            config.loadWorkspace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         this.protocol = config.getProtocol();
         this.hostname = config.getHost();
         this.port = config.getPort();

@@ -57,6 +57,7 @@ public class Configuration {
         else {
             try {
                 conf.load(new FileInputStream(confFile));
+                loadWorkspace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
