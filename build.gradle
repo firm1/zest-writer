@@ -61,6 +61,17 @@ sourceSets {
     }
 }
 
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File',
+            'Implementation-Version': version,
+            'Main-Class': 'com.zestedesavoir.zestwriter.MainApp'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 dependencies {
     compile 'org.languagetool:language-fr:3.1',
             'org.apache.httpcomponents:httpclient:4.5.1',

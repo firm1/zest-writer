@@ -15,12 +15,13 @@ install:
   
 build_script:
   - gradlew.bat -u -i clean assemble
+  - gradlew.bat -u -i fatJar
 
 artifacts:
   - path: build\distributions\ZestWriter
     name: "zest-writer-for-windows"
     type: zip
-  - path: build\distributions\ZestWriter\app\zest-writer-0.4.0.jar
+  - path: build\libs\zest-writer-all-0.4.0.jar
     name: "zest-writer-jar"
     type: zip
 
