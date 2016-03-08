@@ -195,7 +195,6 @@ public class MdTextController {
     public void createTabExtract(ExtractFile extract) throws IOException {
 
         extract.loadMarkdown();
-        mainApp.getExtracts().add(extract);
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MainApp.class.getResource("view/Editor.fxml"));
         SplitPane writer = loader.load();
@@ -238,6 +237,8 @@ public class MdTextController {
         tab.setOnClosed(t -> {
             mainApp.getExtracts().remove(extract);
         });
+
+        mainApp.getExtracts().put(extract, tab);
     }
 
     public Map<String, Object> getMapFromTreeItem(TreeItem<ExtractFile> node, Map<String, Object> map) {
@@ -358,12 +359,17 @@ public class MdTextController {
                 TreeItem<ExtractFile> item = Summary.getSelectionModel().getSelectedItem();
 
                 if(!item.getValue().isContainer()) {
-                    if ((!mainApp.getExtracts().contains(item.getValue()))
-                            && (item.getValue().getFilePath() != null)) {
-                        try {
-                            createTabExtract(item.getValue());
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                    if (item.getValue().getFilePath() != null) {
+                        if (!mainApp.getExtracts().containsKey(item.getValue())) {
+                            try {
+                                createTabExtract(item.getValue());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            TabPaneSkin skin = (TabPaneSkin) EditorList.getSkin();
+                            TabPaneBehavior tabPaneBehavior = (TabPaneBehavior) skin.getBehavior();
+                            tabPaneBehavior.selectTab(mainApp.getExtracts().get(item.getValue()));
                         }
                     }
                 }

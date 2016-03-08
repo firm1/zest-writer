@@ -1,9 +1,7 @@
 package com.zestedesavoir.zestwriter;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Properties;
 
 import com.zestedesavoir.zestwriter.model.ExtractFile;
 import com.zestedesavoir.zestwriter.utils.Configuration;
@@ -21,6 +19,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Tab;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -32,7 +31,7 @@ public class MainApp extends Application {
     private Scene scene;
     private Stage primaryStage;
     private BorderPane rootLayout;
-    private ObservableList<ExtractFile> extracts = FXCollections.observableArrayList();
+    private ObservableMap<ExtractFile, Tab> extracts = FXCollections.observableMap(new HashMap<>());
     private ObservableMap<String, String> contents = FXCollections.observableMap(new HashMap<>());
     private ZdsHttp zdsutils;
     private MdTextController Index;
@@ -74,7 +73,7 @@ public class MainApp extends Application {
         return zdsutils;
     }
 
-    public ObservableList<ExtractFile> getExtracts() {
+    public ObservableMap<ExtractFile, Tab> getExtracts() {
         return extracts;
     }
 
