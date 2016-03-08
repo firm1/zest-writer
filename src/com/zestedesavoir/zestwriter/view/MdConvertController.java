@@ -381,7 +381,6 @@ public class MdConvertController {
                         content.append(MainApp.class.getResource("view").toExternalForm());
                         content.append("/static/js/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>");
                         content.append("</body></html>");
-                        System.out.println(content.toString());
                         return content.toString();
                     }
 
