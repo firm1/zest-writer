@@ -6,10 +6,11 @@ b, optgroup, strong {
 
 body {
     font-family: Merriweather,"Liberation Serif","Times New Roman",Times,Georgia,FreeSerif,serif;
-    font-size: 1rem;
-    line-height: 1.3em;
+    font-size: 0.9em;
+    line-height: 1.9em;
     background-color: #F7F7F7;
 }
+
 h3{
     font-size: 18px;
     margin-bottom: 12px;
@@ -329,4 +330,40 @@ kbd {
     border-bottom-width: 3px;
     text-shadow: 0 1px 0 #fff;
     color: #5e551f;
+}
+
+/* Tables */
+
+.table-wrapper {
+    max-width: 100%;
+    overflow: auto;
+}
+
+table {
+    margin: 15px 0;
+    border-top: 1px solid #ddd;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+table thead {
+    background: #ddd;
+    color: #084561;
+}
+table td:first-child, table th:first-child {
+    border-left: 1px solid #ddd;
+}
+table td, table th {
+    text-align: left;
+    padding: 5px 15px 5px 7px;
+    border-right: 1px solid #ddd;
+}
+table tbody tr:nth-child(2n+1) {
+    background: #f7f7f7;
+}
+table tbody tr {
+    background: #fdfdfd;
+    border-bottom: 1px solid #ddd;
 }

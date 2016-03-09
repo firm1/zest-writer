@@ -98,9 +98,9 @@ public class TableController {
                 row.set(t.getTablePosition().getColumn(), t.getNewValue());
             }
         });
-        tc.setPrefWidth(100);
+        tc.setPrefWidth(150);
         TextField txf = new TextField();
-        txf.setPrefWidth(100);
+        txf.setPrefWidth(150);
         txf.setPromptText("Colonne "+(tableView.getColumns().size()+1));
         tc.setGraphic(txf);
         tableView.getColumns().addAll(tc);

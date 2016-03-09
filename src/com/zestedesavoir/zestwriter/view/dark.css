@@ -10,3 +10,8 @@
     -fx-border-color: #DDD #DDD #F8AD32 #DDD;
     -fx-border-width: 0 0 3px 0;
 }
+
+.table-row-cell {
+    -fx-cell-size: 80px;
+    -fx-padding: 20 5 20 5;
+}
