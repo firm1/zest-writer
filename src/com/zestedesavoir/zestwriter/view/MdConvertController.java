@@ -112,7 +112,7 @@ public class MdConvertController {
     @FXML
     private void HandleTableButtonAction(ActionEvent event) throws IOException {
         // Create the custom dialog.
-        Dialog<Pair<ObservableList, ObservableList<ObservableList>>> dialog = new Dialog<>();
+        Dialog<Pair<ObservableList, ObservableList<ZRow>>> dialog = new Dialog<>();
         dialog.setTitle("Editeur de tableau");
         dialog.setHeaderText("");
 
@@ -125,7 +125,7 @@ public class MdConvertController {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("TableEditor.fxml"));
         BorderPane tableEditor = loader.load();
-        TableView tbView = (TableView) tableEditor.getCenter();
+        TableView<ZRow> tbView = (TableView) tableEditor.getCenter();
 
         TableController controller = loader.getController();
         controller.setEditor(this);
@@ -139,10 +139,10 @@ public class MdConvertController {
             return null;
         });
 
-        Optional<Pair<ObservableList, ObservableList<ObservableList>>> result = dialog.showAndWait();
+        Optional<Pair<ObservableList, ObservableList<ZRow>>> result = dialog.showAndWait();
 
         result.ifPresent(datas -> {
-            String[][] data = new String[datas.getValue().size()][datas.getValue().get(0).size()];
+            String[][] data = new String[datas.getValue().size()][datas.getValue().get(0).getRow().size()];
             String[] headers = new String[datas.getKey().size()];
             int cpt = 0;
             for (Object key : datas.getKey()) {
@@ -151,8 +151,8 @@ public class MdConvertController {
             }
 
             for (int i = 0; i < datas.getValue().size(); i++) {
-                for (int j = 0; j < datas.getValue().get(i).size(); j++) {
-                    data[i][j] = (String) datas.getValue().get(i).get(j);
+                for (int j = 0; j < datas.getValue().get(i).getRow().size(); j++) {
+                    data[i][j] = (String) datas.getValue().get(i).getRow().get(j);
                 }
             }
             String tablestring = FlipTable.of(headers, data);

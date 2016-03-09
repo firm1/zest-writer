@@ -1,5 +1,9 @@
 package com.zestedesavoir.zestwriter.view;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -15,13 +19,43 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 
-import java.util.List;
+class ZRow {
+    private SimpleListProperty<String> row = new SimpleListProperty<>();
 
+    public ZRow() {
+        super();
+    }
+
+    public ZRow(int n) {
+        super();
+        List<String> lst = new ArrayList<>();
+        for(int i=0; i<n; i++) {
+            lst.add(" - ");
+        }
+        ObservableList<String> observableList = FXCollections.observableArrayList(lst);
+        this.row = new SimpleListProperty<String>(observableList);
+
+    }
+
+    public ZRow(ObservableList<String> row) {
+        super();
+        this.row.set(row);
+    }
+
+    public List<String> getRow() {
+        return row.get();
+    }
+
+    public void setRow(ObservableList<String> row) {
+        this.row.set(row);
+    }
+
+}
 public class TableController {
     private MdConvertController editorController;
     @FXML
-    private TableView tableView;
-    private ObservableList<ObservableList> datas = FXCollections.observableArrayList();
+    private TableView<ZRow> tableView;
+    private final ObservableList<ZRow> datas = FXCollections.observableArrayList(new ZRow(1));
 
     public void setEditor(MdConvertController editorController) {
         this.editorController = editorController;
@@ -30,11 +64,11 @@ public class TableController {
     @FXML
     private void initialize() {
 
+        tableView.setItems(datas);
+
         addCol();
 
         addRow();
-
-        tableView.setItems(datas);
     }
 
     @FXML
@@ -50,45 +84,52 @@ public class TableController {
     private void addCol() {
         TableColumn tc = new TableColumn();
         tc.setEditable(true);
-        tc.setCellValueFactory(new Callback<CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
-            public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param) {
-                return new SimpleStringProperty(param.getValue().get(0).toString());
+        tc.setCellValueFactory(new Callback<CellDataFeatures<ZRow, String>, ObservableValue<String>>() {
+            public ObservableValue<String> call(CellDataFeatures<ZRow, String> param) {
+                return new SimpleStringProperty(param.getValue().getRow().get(0).toString());
             }
         });
-        tc.setCellFactory(TextFieldTableCell.forTableColumn());
-        tc.setOnEditCommit(new EventHandler<CellEditEvent<ObservableList, String>>() {
-            @Override
-            public void handle(CellEditEvent<ObservableList, String> t) {
 
-                List row = t.getTableView().getItems().get(t.getTablePosition().getRow());
+        tc.setCellFactory(TextFieldTableCell.forTableColumn());
+        tc.setOnEditCommit(new EventHandler<CellEditEvent<ZRow, String>>() {
+            @Override
+            public void handle(CellEditEvent<ZRow, String> t) {
+                List<String> row = t.getTableView().getItems().get(t.getTablePosition().getRow()).getRow();
                 row.set(t.getTablePosition().getColumn(), t.getNewValue());
             }
         });
         tc.setPrefWidth(100);
         TextField txf = new TextField();
         txf.setPrefWidth(100);
-        txf.setPromptText("Colonne 1");
+        txf.setPromptText("Colonne "+(tableView.getColumns().size()+1));
         tc.setGraphic(txf);
         tableView.getColumns().addAll(tc);
         postAddColumn();
     }
 
     private void addRow() {
-        ObservableList<String> row = FXCollections.observableArrayList();
-        for (Object header : tableView.getColumns()) {
-            row.add("-");
-        }
+        ZRow row = new ZRow(tableView.getColumns().size());
         datas.add(row);
     }
 
     private void postAddColumn() {
 
-        for (ObservableList data : datas) {
+        for (ZRow data : datas) {
             for (int i = 0; i < tableView.getColumns().size(); i++) {
-                if (data.size() <= i) {
-                    data.add(i, "-");
+                if(data.getRow() != null) {
+                    if (data.getRow().size() <= i) {
+                        data.getRow().add(i, " - ");
+                    }
                 }
             }
         }
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for(ZRow data:datas) {
+            sb.append(data.getRow()).append("\n");
+        }
+        return sb.toString();
     }
 }
