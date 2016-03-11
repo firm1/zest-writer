@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.materialdesignicons.*?>
+<?import javafx.scene.paint.*?>
+<?import java.lang.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
-<SplitPane stylesheets="@dark.css" dividerPositions="0.5" prefHeight="633.0" prefWidth="773.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MdConvertController">
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+
+<SplitPane dividerPositions="0.5" prefHeight="633.0" prefWidth="773.0" stylesheets="@dark.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MdConvertController">
    <items>
       <BorderPane>
          <top>
@@ -16,35 +23,23 @@
                         <Tooltip text="Enregistrer (CTRL + S)" />
                     </tooltip>
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/save.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="CONTENT_SAVE" size="1.8em" />
                      </graphic></Button>
                   <Separator orientation="VERTICAL" />
                 <Button mnemonicParsing="false" onAction="#HandleBoldButtonAction">
                 	<tooltip>
 				        <Tooltip text="Gras (CTRL + G)" />
 				    </tooltip>
-                	<graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
-                            <image>
-                                <Image url="@static/icons/bold.png" />
-                            </image>
-                        </ImageView>
-                    </graphic>
+                     <graphic>
+                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_BOLD" size="1.8em" />
+                     </graphic>
                 </Button>
                 <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleItalicButtonAction">
                 	<tooltip>
 				        <Tooltip text="Italique (CTRL + I)" />
 				    </tooltip>
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/italic.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_ITALIC" size="1.8em" />
                      </graphic></Button>
                   <Separator orientation="VERTICAL" />
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBarredButtonAction">
@@ -52,44 +47,28 @@
 				        <Tooltip text="Barrer le texte (CTRL + B)" />
 				    </tooltip>
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/barred.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_STRIKETHROUGH" size="1.8em" />
                      </graphic></Button>
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleTouchButtonAction">
                   	<tooltip>
 				        <Tooltip text="Touche clavier (CTRL + K)" />
 				    </tooltip>
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/touch.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="KEYBOARD" size="1.8em" />
                      </graphic></Button>
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleExpButtonAction">
                   	<tooltip>
 				        <Tooltip text="Exposant (CTRL + Maj + '+')" />
 				    </tooltip>
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/exposant.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_SUPERSCRIPT" size="1.8em" />
                      </graphic></Button>
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleIndButtonAction">
                   	<tooltip>
 				        <Tooltip text="Indice (CTRL + =)" />
 				    </tooltip>
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/indice.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_SUBSCRIPT" size="1.8em" />
                      </graphic></Button>
                   <Separator orientation="VERTICAL" />
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleCenterButtonAction">
@@ -97,22 +76,14 @@
 				        <Tooltip text="Centrer le texte (CTRL + E)" />
 				    </tooltip>
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/center.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_ALIGN_CENTER" size="1.8em" />
                      </graphic></Button>
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleRightButtonAction">
                   	<tooltip>
 				        <Tooltip text="Aligner le texte a droite (CTRL + Maj + D)" />
 				    </tooltip>
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/right.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_ALIGN_RIGHT" size="1.8em" />
                      </graphic></Button>
                   <Separator orientation="VERTICAL" />
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBulletButtonAction">
@@ -120,22 +91,14 @@
 				        <Tooltip text="Liste a puces" />
 				    </tooltip>
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/bullet.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_LIST_BULLETED" size="1.8em" />
                      </graphic></Button>
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleNumberedButtonAction">
                   	<tooltip>
 				        <Tooltip text="Liste ordonnée" />
 				    </tooltip>
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/numbered.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_LIST_NUMBERS" size="1.8em" />
                      </graphic></Button>
                   <Separator orientation="VERTICAL" />
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleHeaderButtonAction">
@@ -143,22 +106,14 @@
 				        <Tooltip text="Titre" />
 				    </tooltip>
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/header.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_HEADER_INCREASE" size="1.8em" />
                      </graphic></Button>
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleQuoteButtonAction">
                   	<tooltip>
 				        <Tooltip text="Citer du texte" />
 				    </tooltip>
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/quote.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_QUOTE" size="1.8em" />
                      </graphic></Button>
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBlocButtonAction">
                   	<tooltip>
@@ -176,27 +131,15 @@
 				        <Tooltip text="Editeur de tableaux" />
 				    </tooltip>
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/table.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="TABLE" size="1.8em" />
                      </graphic></Button>
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleLinkButtonAction">
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/link.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="LINK" size="1.8em" />
                      </graphic></Button>
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleCodeButtonAction">
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/code.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="CODE_TAGS" size="1.8em" />
                      </graphic></Button>
               </items>
             </ToolBar>
@@ -221,23 +164,16 @@
                         <Tooltip text="Plein écran" />
                   </tooltip>
                   <graphic>
-                       <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                          <image>
-                             <Image url="@static/icons/fullscreen.png" />
-                          </image>
-                       </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="CROP_FREE" size="1.8em" />
                     </graphic>
                   </Button>
+
                   <Button fx:id="RefreshButton" mnemonicParsing="false" onAction="#updateRender">
                   <tooltip>
                         <Tooltip text="Actualiser le rendu" />
                   </tooltip>
                   	<graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/refresh.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="REFRESH" size="1.8em" />
                      </graphic>
                   </Button>
                   <Button fx:id="RefreshButton" mnemonicParsing="false" onAction="#HandleValidateButtonAction">
@@ -245,11 +181,7 @@
                         <Tooltip text="Corriger le texte" />
                   </tooltip>
                   	<graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/check.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="SPELLCHECK" size="1.8em" />
                      </graphic>
                   </Button>
                </items>

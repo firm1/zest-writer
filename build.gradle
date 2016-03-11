@@ -84,7 +84,8 @@ dependencies {
             'org.codehaus.jackson:jackson-mapper-asl:1.9.2',
             'de.julielab:aliasi-lingpipe:4.1.0',
             'org.python:jython-standalone:2.7.1b3',
-            'org.jsoup:jsoup:1.8.1'
+            'org.jsoup:jsoup:1.8.1',
+            'de.jensd:fontawesomefx:8.9'
 }
 
 task wrapper(type: Wrapper) {
