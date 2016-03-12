@@ -7,6 +7,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.BorderPane?>
+<?import de.jensd.fx.glyphs.materialdesignicons.*?>
 
 <BorderPane prefHeight="600.0" prefWidth="900.0" stylesheets="@dark.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MenuController">
    <top>
@@ -15,12 +16,22 @@
           <Menu mnemonicParsing="false" text="Fichier">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#HandleOpenButtonAction" text="Ouvrir">
+                     <graphic>
+                        <MaterialDesignIconView fill="#084561" glyphName="FOLDER" size="1.8em" />
+                     </graphic>
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
-                  <MenuItem mnemonicParsing="false" onAction="#HandleSwitchWorkspaceAction" text="Changer son répertoire de travail" />
+                  <MenuItem mnemonicParsing="false" onAction="#HandleSwitchWorkspaceAction" text="Changer son répertoire de travail">
+                    <graphic>
+                        <MaterialDesignIconView fill="#084561" glyphName="FOLDER_MOVE" size="1.8em" />
+                     </graphic>
+                  </MenuItem>
               <MenuItem mnemonicParsing="false" onAction="#HandleQuitButtonAction" text="Quitter">
+                     <graphic>
+                        <MaterialDesignIconView fill="#084561" glyphName="EXIT_TO_APP" size="1.8em" />
+                     </graphic>
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
@@ -30,11 +41,7 @@
             <items>
                   <MenuItem fx:id="menuReport" disable="true" mnemonicParsing="false" onAction="#HandleReportWithoutTypoButtonAction" text="Rapport de correction">
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/editor.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="SPELLCHECK" size="1.8em" />
                      </graphic>
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="F7" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -46,11 +53,7 @@
                       <MenuItem mnemonicParsing="false" onAction="#HandleGunningButtonAction" text="Indice Gunning-Fog" />
                     </items>
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/view.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="READ" size="1.8em" />
                      </graphic>
                   </Menu>
             </items>
@@ -59,11 +62,7 @@
               <items>
                   <MenuItem fx:id="menuDownload" mnemonicParsing="false" onAction="#HandleDownloadButtonAction" text="Téléchargez vos contenus ZdS">
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/download.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="CLOUD_DOWNLOAD" size="1.8em" />
                      </graphic>
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="D" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -71,11 +70,7 @@
                   </MenuItem>
                   <MenuItem fx:id="menuUpload" disable="true" mnemonicParsing="false" onAction="#HandleUploadButtonAction" text="Envoyez votre contenu sur ZdS">
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/upload.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="CLOUD_UPLOAD" size="1.8em" />
                      </graphic>
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="U" control="DOWN" meta="UP" shift="UP" shortcut="UP" />

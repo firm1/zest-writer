@@ -20,10 +20,12 @@ import com.sun.javafx.scene.control.skin.TabPaneSkin;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.ExtractFile;
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.collections.MapChangeListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
@@ -52,7 +54,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.text.Font;
-import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 public class MdTextController {
@@ -77,7 +78,6 @@ public class MdTextController {
 
     @FXML
     private void initialize() {
-
         loadConsolePython();
         loadFonts();
 
@@ -115,6 +115,48 @@ public class MdTextController {
 
     public MdTextController() {
         super();
+    }
+
+    private MaterialDesignIconView createFolderIcon() {
+        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.FOLDER_MULTIPLE);
+        icon.setSize("1.8em");
+        icon.setGlyphStyle("-fx-fill:#084561");
+        return icon;
+    }
+
+    private MaterialDesignIconView createAddFolderIcon() {
+        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.FOLDER_PLUS);
+        icon.setSize("1.8em");
+        icon.setGlyphStyle("-fx-fill:#084561");
+        return icon;
+    }
+
+    private MaterialDesignIconView createDeleteIcon() {
+        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.CLOSE);
+        icon.setSize("1.8em");
+        icon.setGlyphStyle("-fx-fill:#f44336");
+        return icon;
+    }
+
+    private MaterialDesignIconView createRemoveIcon() {
+        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.DELETE);
+        icon.setSize("1.8em");
+        icon.setGlyphStyle("-fx-fill:#f44336");
+        return icon;
+    }
+
+    private MaterialDesignIconView createFileIcon() {
+        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.FILE);
+        icon.setSize("1.8em");
+        icon.setGlyphStyle("-fx-fill:#ef9708");
+        return icon;
+    }
+
+    private MaterialDesignIconView createEditIcon() {
+        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.BORDER_COLOR);
+        icon.setSize("1.8em");
+        icon.setGlyphStyle("-fx-fill:#084561");
+        return icon;
     }
 
     public PythonInterpreter getPyconsole() {
@@ -395,10 +437,15 @@ public class MdTextController {
                     private ContextMenu addMenu = new ContextMenu();
 
                     public void initContextMenu(ExtractFile item) {
-                        MenuItem addMenuItem1 = new MenuItem("Ajouter un extrait", new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/child.png"), 16, 16, true, true)));
-                        MenuItem addMenuItem2 = new MenuItem("Ajouter un conteneur", new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/container.png"), 16, 16, true, true)));
-                        MenuItem addMenuItem3 = new MenuItem("Renommer", new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/editor.png"), 16, 16, true, true)));
-                        MenuItem addMenuItem4 = new MenuItem("Supprimer", new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/delete.png"), 16, 16, true, true)));
+
+                        MenuItem addMenuItem1 = new MenuItem("Ajouter un extrait");
+                        MenuItem addMenuItem2 = new MenuItem("Ajouter un conteneur");
+                        MenuItem addMenuItem3 = new MenuItem("Renommer");
+                        MenuItem addMenuItem4 = new MenuItem("Supprimer");
+                        addMenuItem1.setGraphic(createFileIcon());
+                        addMenuItem2.setGraphic(createAddFolderIcon());
+                        addMenuItem3.setGraphic(createEditIcon());
+                        addMenuItem4.setGraphic(createRemoveIcon());
                         addMenu.getItems().clear();
                         if (item.canTakeContainer(getAncestorContainerCount(getTreeItem()))) {
                             addMenu.getItems().add(addMenuItem2);
@@ -543,9 +590,9 @@ public class MdTextController {
                         } else {
                             setText(getString());
                             if (getItem().isContainer()) {
-                                setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/container.png"), 20, 20, true, true)));
+                                setGraphic(createFolderIcon());
                             } else {
-                                setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/child.png"), 20, 20, true, true)));
+                                setGraphic(createFileIcon());
                             }
                             setContextMenu(addMenu);
                             initContextMenu(item);
@@ -587,9 +634,9 @@ public class MdTextController {
 
                 treeCell.setOnDragExited(dragEvent -> {
                     if (treeCell.getItem().isContainer()) {
-                        treeCell.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/container.png"), 20, 20, true, true)));
+                        treeCell.setGraphic(createFolderIcon());
                     } else {
-                        treeCell.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/child.png"), 20, 20, true, true)));
+                        treeCell.setGraphic(createFileIcon());
                     }
                     dragEvent.consume();
                 });
@@ -608,7 +655,7 @@ public class MdTextController {
                                 getDescendantContainerCount(newParent.getParent()))
                            )
                         {
-                            treeCell.setGraphic(new ImageView(new Image(this.getClass().getResourceAsStream("static/icons/delete.png"))));
+                            treeCell.setGraphic(createDeleteIcon());
                         } else {
                             dragEvent.acceptTransferModes(TransferMode.MOVE);
                         }
@@ -676,9 +723,11 @@ public class MdTextController {
      */
     public static int getDescendantContainerCount(TreeItem<ExtractFile> node) {
         int maxDepth = 0;
-        for (TreeItem<ExtractFile> n : node.getChildren()) {
-            if (n.getValue().isContainer()) {
-                maxDepth = Math.max(maxDepth, getDescendantContainerCount(n) + 1);
+        if(node != null ) {
+            for (TreeItem<ExtractFile> n : node.getChildren()) {
+                if (n.getValue().isContainer()) {
+                    maxDepth = Math.max(maxDepth, getDescendantContainerCount(n) + 1);
+                }
             }
         }
         return maxDepth;

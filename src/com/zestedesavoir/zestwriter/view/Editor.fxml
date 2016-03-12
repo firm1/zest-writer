@@ -120,11 +120,7 @@
 				        <Tooltip text="Bloc spéciaux" />
 				    </tooltip>
                      <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@static/icons/information.png" />
-                           </image>
-                        </ImageView>
+                        <MaterialDesignIconView fill="#084561" glyphName="INFORMATION" size="1.8em" />
                      </graphic></Button>
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleTableButtonAction">
                   	<tooltip>
@@ -164,7 +160,7 @@
                         <Tooltip text="Plein écran" />
                   </tooltip>
                   <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="CROP_FREE" size="1.8em" />
+                        <MaterialDesignIconView fill="#084561" glyphName="FULLSCREEN" size="1.8em" />
                     </graphic>
                   </Button>
 
