@@ -6,14 +6,17 @@ Editeur **Hors-ligne** de contenus au format zMarkdown.
 
 Linux | Windows
 ---|---
-[![](https://img.shields.io/shippable/56bb616d1895ca447473c166.svg)](https://app.shippable.com/projects/56bb616d1895ca447473c166) | [![Build status](https://ci.appveyor.com/api/projects/status/n3aa5h519uxvjufq/branch/master?svg=true)](https://ci.appveyor.com/project/firm1/zest-writer/branch/master)
-- | [![](https://img.shields.io/badge/Download--green.svg)](https://ci.appveyor.com/api/projects/firm1/zest-writer/artifacts/build/zest-writer-for-windows.zip)
+[![Build Status](https://travis-ci.org/firm1/zest-writer.svg?branch=master)](https://travis-ci.org/firm1/zest-writer) | [![Build status](https://ci.appveyor.com/api/projects/status/n3aa5h519uxvjufq/branch/master?svg=true)](https://ci.appveyor.com/project/firm1/zest-writer/branch/master)
+
+## Installation (version stable)
+
+- [Tous les systèmes (jar executable)](doc/install-jar.md)
+- [Debian/Ubuntu](doc/install-deb.md)
+- [Fedora/CentOs/etc.](doc/install-rpm.md)
 
 ## Screenshoot
 
-![](doc/home.png)
-
-![](doc/edit.png)
+![](http://zestedesavoir.com/media/galleries/2958/0796bf63-8ff3-41a1-9550-2c9ff31089b2.png)
 
 ## Fonctionnalités supportées
 
@@ -44,7 +47,6 @@ Linux | Windows
 ### Multiplateforme
 
 - L'application fonctionne sur Windows (32 et 64 bits), Linux et OS X quelque soit la version de la JVM sur votre machine, car l'application embarque sa propre JVM.
-
 
 ## Le developpement
 
