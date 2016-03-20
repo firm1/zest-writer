@@ -501,7 +501,7 @@ public class MenuController {
             File manifest = new File(realLocalPath+File.separator+"manifest.json");
             ObjectMapper mapper = new ObjectMapper();
             paramContent.put("slug", ZdsHttp.toSlug((String)paramContent.get("title")));
-            paramContent.put("version", "2");
+            paramContent.put("version", 2);
             paramContent.put("object", "container");
             paramContent.put("introduction", "introduction.md");
             paramContent.put("conclusion", "conclusion.md");
@@ -787,9 +787,13 @@ public class MenuController {
                                 ZipUtil.zipContent(pathDir, pathDir + ".zip");
                                 updateMessage("Import : "+targetSlug+" en cours ...");
                                 if(targetId == null) {
-                                    mainApp.getZdsutils().importNewContent(pathDir+ ".zip");
+                                    if(!mainApp.getZdsutils().importNewContent(pathDir+ ".zip")) {
+                                        failed();
+                                    };
                                 } else {
-                                    mainApp.getZdsutils().importContent(pathDir + ".zip", targetId, targetSlug);
+                                    if(!mainApp.getZdsutils().importContent(pathDir + ".zip", targetId, targetSlug)) {
+                                        failed();
+                                    };
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();

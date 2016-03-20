@@ -291,7 +291,7 @@ public class MdTextController {
             map.put("title", node.getValue().getTitle().getValue());
             if (node.getValue().isRoot()) {
                 map.put("type", node.getValue().getType().getValue());
-                map.put("version", node.getValue().getVersion().getValue());
+                map.put("version", Integer.parseInt(node.getValue().getVersion().getValue()));
                 map.put("description", node.getValue().getDescription().getValue());
                 map.put("licence", node.getValue().getLicence().getValue());
             }
