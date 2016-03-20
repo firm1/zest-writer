@@ -8,15 +8,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Paths;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -64,6 +70,8 @@ public class ZdsHttp {
     private final Logger logger;
     private static String USER_AGENT = "Mozilla/5.0";
     private Configuration config;
+    private final static Pattern NONLATIN = Pattern.compile("[^\\w-]");
+    private final static Pattern WHITESPACE = Pattern.compile("[\\s]");
 
     public String getLogin() {
         return login;
@@ -134,6 +142,10 @@ public class ZdsHttp {
         return getBaseUrl() + "/contenus/importer/" + idContent + "/" + slugContent + "/";
     }
 
+    private String getImportNewContenttUrl() {
+        return getBaseUrl() + "/contenus/importer/archive/nouveau/";
+    }
+
     public String getViewContenttUrl(String idContent, String slugContent) {
         return getBaseUrl() + "/contenus/" + idContent + "/" + slugContent + "/";
     }
@@ -144,6 +156,13 @@ public class ZdsHttp {
 
     public String getOfflineContentPathDir() {
         return config.getOfflineSaver().getBaseDirectory();
+    }
+
+    public static String toSlug(String input) {
+        String nowhitespace = WHITESPACE.matcher(input).replaceAll("-");
+        String normalized = Normalizer.normalize(nowhitespace, Form.NFD);
+        String slug = NONLATIN.matcher(normalized).replaceAll("");
+        return slug.toLowerCase(Locale.ENGLISH);
     }
 
 
@@ -285,6 +304,33 @@ public class ZdsHttp {
         this.authenticated = false;
     }
 
+    public boolean importNewContent(String filePath) throws ClientProtocolException, IOException {
+
+        logger.debug("Tentative d'import via l'url : " + getImportNewContenttUrl());
+        HttpGet get = new HttpGet(getImportNewContenttUrl());
+        HttpResponse response = client.execute(get, context);
+        this.cookies = response.getFirstHeader("Set-Cookie").getValue();
+
+        // load file in form
+        FileBody cbFile = new FileBody(new File(filePath));
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        builder.addPart("archive", cbFile);
+        builder.addPart("subcategory", new StringBody("15", ContentType.MULTIPART_FORM_DATA));
+        builder.addPart("csrfmiddlewaretoken", new StringBody(getCookieValue(cookieStore, "csrftoken"), ContentType.MULTIPART_FORM_DATA));
+
+        Pair<Integer, String> resultPost = sendPost(getImportNewContenttUrl(), builder.build());
+        int statusCode = resultPost.getKey();
+
+        switch (statusCode) {
+            case 404:
+                logger.debug("Your target id and slug is incorrect, please give us real informations");
+            case 403:
+                logger.debug("Your are not authorize to do this task. Please check if your are login");
+        }
+
+        return statusCode == 200;
+    }
     public boolean importContent(String filePath, String targetId, String targetSlug)
             throws IOException {
         logger.debug("Tentative d'import via l'url : " + getImportContenttUrl(targetId, targetSlug));
@@ -432,6 +478,12 @@ public class ZdsHttp {
 
     public boolean isAuthenticated() {
         return authenticated;
+    }
+
+    public boolean sendNewContent(String localPath, Map<String, String> params) {
+        String localSlug = toSlug(params.get("title"));
+
+        return true;
     }
 
 

@@ -14,13 +14,17 @@ import java.util.Optional;
 import java.util.Scanner;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.ExtractFile;
+import com.zestedesavoir.zestwriter.model.License;
 import com.zestedesavoir.zestwriter.model.MetadataContent;
+import com.zestedesavoir.zestwriter.model.TypeContent;
 import com.zestedesavoir.zestwriter.utils.Corrector;
+import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.ZipUtil;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 
@@ -40,6 +44,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -390,6 +395,140 @@ public class MenuController {
         correctTask.start();
     }
 
+    private Map<String,Object> createContentDialog() {
+     // Create wizard
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Nouveau contenu");
+        dialog.setHeaderText("Créez un nouveau contenus pour ZdS");
+
+        // Set the icon (must be included in the project).
+        dialog.setGraphic(MdTextController.createAddFolderIcon());
+
+        // Set the button types.
+        ButtonType validButtonType = new ButtonType("Créer", ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(validButtonType, ButtonType.CANCEL);
+
+        // Create the username and password labels and fields.
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField title = new TextField();
+        title.setPromptText("Titre du contenu");
+        TextField subtitle = new TextField();
+        subtitle.setPromptText("Description du contenu");
+        ObservableList<TypeContent> typeOptions = FXCollections.observableArrayList(new TypeContent("ARTICLE", "Article"), new TypeContent("TUTORIAL","Tutoriel"));
+        ComboBox<TypeContent> type = new ComboBox<>(typeOptions);
+        ObservableList<License> licOptions = FXCollections.observableArrayList(
+                new License("CC BY", "Licence CC BY"),
+                new License("CC BY-SA", "Licence CC BY-SA"),
+                new License("CC BY-ND", "Licence CC BY-ND"),
+                new License("CC BY-NC", "Licence CC BY-NC"),
+                new License("CC BY-NC-SA", "Licence CC BY-NC-SA"),
+                new License("CC BY-NC-ND", "Licence CC BY-NC-ND"),
+                new License("Tous droits réservés", "Tout droits réservés"),
+                new License("CC 0", "Licence CC 0"));
+        ComboBox<License> license = new ComboBox<>(licOptions);
+
+        grid.add(new Label("Titre du contenu :"), 0, 0);
+        grid.add(title, 1, 0);
+        grid.add(new Label("Description du contenu:"), 0, 1);
+        grid.add(subtitle, 1, 1);
+        grid.add(new Label("Type de contenu:"), 0, 2);
+        grid.add(type, 1, 2);
+        grid.add(new Label("Licence du contenu:"), 0, 3);
+        grid.add(license, 1, 3);
+
+        // Enable/Disable login button depending on whether a username was entered.
+        Node validButton = dialog.getDialogPane().lookupButton(validButtonType);
+        validButton.setDisable(true);
+
+        title.textProperty().addListener((observable, oldValue, newValue) -> {
+            validButton.setDisable(newValue.trim().isEmpty());
+        });
+
+        dialog.getDialogPane().setContent(grid);
+
+        Platform.runLater(title::requestFocus);
+
+        dialog.setResultConverter(dialogButton -> {
+            if(dialogButton == validButtonType) {
+                return new Pair<>("", "");
+            }
+            return null;
+        });
+
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+        if(result.isPresent()) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("title",title.getText());
+            map.put("description",subtitle.getText());
+            map.put("type",type.getValue().getCode());
+            map.put("licence",license.getValue().getCode());
+            return map;
+        } else {
+            return null;
+        }
+
+    }
+    @FXML
+    private void HandleNewButtonAction(ActionEvent event) {
+        File defaultDirectory;
+        if(mainApp.getConfig().getWorkspaceFactory() == null) {
+            defaultDirectory = new File(System.getProperty("user.home"));
+        } else {
+            defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
+        }
+
+        Map<String,Object> paramContent= createContentDialog();
+
+        if(paramContent != null) {
+            // find inexistant directory
+            String localPath = defaultDirectory.getAbsolutePath()+File.separator+ZdsHttp.toSlug((String)paramContent.get("title"));
+            String realLocalPath = localPath;
+            File folder = new File(realLocalPath);
+            int i=1;
+            while(folder.exists()) {
+                realLocalPath = localPath+"-"+i;
+                folder = new File(realLocalPath);
+                i++;
+            }
+            // create directory
+            folder.mkdir();
+
+            // create manifest.json
+            File manifest = new File(realLocalPath+File.separator+"manifest.json");
+            ObjectMapper mapper = new ObjectMapper();
+            paramContent.put("slug", ZdsHttp.toSlug((String)paramContent.get("title")));
+            paramContent.put("version", "2");
+            paramContent.put("object", "container");
+            paramContent.put("introduction", "introduction.md");
+            paramContent.put("conclusion", "conclusion.md");
+            paramContent.put("children", new ArrayList<>());
+
+            try {
+                mapper.writeValue(manifest, paramContent);
+                // create introduction and conclusion
+                File intro = new File(realLocalPath+File.separator+"introduction.md");
+                File conclu = new File(realLocalPath+File.separator+"conclusion.md");
+                intro.createNewFile();
+                conclu.createNewFile();
+                mainApp.getIndex().openContent(folder.getAbsolutePath());
+                mainApp.getContents().put("dir", folder.getAbsolutePath());
+
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            menuUpload.setDisable(false);
+            menuLisibility.setDisable(false);
+            menuReport.setDisable(false);
+        }
+
+    }
+
     @FXML
     private void HandleOpenButtonAction(ActionEvent event) {
         DirectoryChooser chooser = new DirectoryChooser();
@@ -405,12 +544,12 @@ public class MenuController {
 
         if (selectedDirectory != null) {
             mainApp.getContents().put("dir", selectedDirectory.getAbsolutePath());
+
+            menuUpload.setDisable(false);
+
+            menuLisibility.setDisable(false);
+            menuReport.setDisable(false);
         }
-
-        menuUpload.setDisable(false);
-
-        menuLisibility.setDisable(false);
-        menuReport.setDisable(false);
     }
 
     @FXML
@@ -620,7 +759,10 @@ public class MenuController {
         hBottomBox.getChildren().clear();
         hBottomBox.getChildren().addAll(labelField);
 
-        List<MetadataContent> contents = mainApp.getZdsutils().getContentListOnline();
+
+        List<MetadataContent> contents = new ArrayList<>();
+        contents.add(new MetadataContent(null, "*** Nouveau Contenu ***", null));
+        contents.addAll(mainApp.getZdsutils().getContentListOnline());
 
         ChoiceDialog<MetadataContent> dialog = new ChoiceDialog<>(null, contents);
         dialog.setTitle("Choix du tutoriel");
@@ -644,7 +786,11 @@ public class MenuController {
                                 updateMessage("Compression : "+targetSlug+" en cours ...");
                                 ZipUtil.zipContent(pathDir, pathDir + ".zip");
                                 updateMessage("Import : "+targetSlug+" en cours ...");
-                                mainApp.getZdsutils().importContent(pathDir + ".zip", targetId, targetSlug);
+                                if(targetId == null) {
+                                    mainApp.getZdsutils().importNewContent(pathDir+ ".zip");
+                                } else {
+                                    mainApp.getZdsutils().importContent(pathDir + ".zip", targetId, targetSlug);
+                                }
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

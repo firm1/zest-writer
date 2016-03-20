@@ -15,6 +15,14 @@
         <menus>
           <Menu mnemonicParsing="false" text="Fichier">
             <items>
+                  <MenuItem mnemonicParsing="false" onAction="#HandleNewButtonAction" text="Nouveau">
+                     <graphic>
+                        <MaterialDesignIconView fill="#084561" glyphName="FOLDER_PLUS" size="1.8em" />
+                     </graphic>
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#HandleOpenButtonAction" text="Ouvrir">
                      <graphic>
                         <MaterialDesignIconView fill="#084561" glyphName="FOLDER" size="1.8em" />

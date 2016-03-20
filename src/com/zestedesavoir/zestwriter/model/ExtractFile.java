@@ -2,14 +2,13 @@ package com.zestedesavoir.zestwriter.model;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
-
-import com.sun.jna.platform.FileUtils;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -181,9 +180,12 @@ public class ExtractFile {
         this.conclusion.set(conclusion);
     }
 
+
+
     @Override
     public String toString() {
-        return title.getValue();
+        return "ExtractFile [basePath=" + basePath + ", title=" + title + ", slug=" + slug + ", type=" + type
+                + ", object=" + object + ", text=" + text + "]";
     }
 
     public void loadMarkdown() {
@@ -205,8 +207,9 @@ public class ExtractFile {
     public void save() {
         BufferedWriter writer = null;
         try {
-            writer = new BufferedWriter(new FileWriter(getFilePath()));
-            writer.write(getMdText().getValue());
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getFilePath()), "UTF8"));
+            writer.append(getMdText().getValue());
+            writer.flush();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

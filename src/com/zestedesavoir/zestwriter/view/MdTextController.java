@@ -19,6 +19,7 @@ import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
 import com.sun.javafx.scene.control.skin.TabPaneSkin;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.ExtractFile;
+import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
@@ -124,7 +125,7 @@ public class MdTextController {
         return icon;
     }
 
-    private MaterialDesignIconView createAddFolderIcon() {
+    public static MaterialDesignIconView createAddFolderIcon() {
         MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.FOLDER_PLUS);
         icon.setSize("1.8em");
         icon.setGlyphStyle("-fx-fill:#084561");
@@ -424,15 +425,6 @@ public class MdTextController {
             public TreeCell<ExtractFile> call(TreeView<ExtractFile> extractTreeView) {
                 TreeCell<ExtractFile> treeCell = new TreeCell<ExtractFile>() {
                     private TextField textField;
-                    private final Pattern NONLATIN = Pattern.compile("[^\\w-]");
-                    private final Pattern WHITESPACE = Pattern.compile("[\\s]");
-
-                    public String toSlug(String input) {
-                        String nowhitespace = WHITESPACE.matcher(input).replaceAll("-");
-                        String normalized = Normalizer.normalize(nowhitespace, Form.NFD);
-                        String slug = NONLATIN.matcher(normalized).replaceAll("");
-                        return slug.toLowerCase(Locale.ENGLISH);
-                    }
 
                     private ContextMenu addMenu = new ContextMenu();
 
@@ -486,9 +478,9 @@ public class MdTextController {
                             if (result.isPresent()) {
                                 extract = new ExtractFile(
                                         result.get(),
-                                        toSlug(result.get()),
+                                        ZdsHttp.toSlug(result.get()),
                                         baseFilePath,
-                                        (getItem().getFilePath() + File.separator + toSlug(result.get()) + ".md").substring(baseFilePath.length()));
+                                        (getItem().getFilePath() + File.separator + ZdsHttp.toSlug(result.get()) + ".md").substring(baseFilePath.length()+1));
                                 TreeItem<ExtractFile> newChild = new TreeItem<>(extract);
                                 getTreeItem().getChildren().add(newChild);
                                 // create file
@@ -513,26 +505,28 @@ public class MdTextController {
 
                             Optional<String> result = dialog.showAndWait();
                             if (result.isPresent()) {
+                                String slug = ZdsHttp.toSlug(result.get());
+                                String slugRoot = Summary.getRoot().getValue().getSlug().getValue();
                                 ExtractFile extract = new ExtractFile(
                                         result.get(),
-                                        toSlug(result.get()),
+                                        slug,
                                         baseFilePath,
-                                        (getItem().getFilePath() + File.separator + toSlug(result.get()) + File.separator + "introduction.md").substring(baseFilePath.length()),
-                                        (getItem().getFilePath() + File.separator + toSlug(result.get()) + File.separator + "conclusion.md").substring(baseFilePath.length()));
+                                        (getItem().getFilePath() + File.separator + slug + File.separator + "introduction.md").substring(baseFilePath.length()+1),
+                                        (getItem().getFilePath() + File.separator + slug + File.separator + "conclusion.md").substring(baseFilePath.length()+1));
                                 TreeItem<ExtractFile> newChild = new TreeItem<>(extract);
                                 ExtractFile extIntro = new ExtractFile(
                                         "Introduction",
-                                        toSlug(result.get()),
+                                        slug,
                                         baseFilePath,
-                                        (getItem().getFilePath() + File.separator + toSlug(result.get()) + File.separator + "introduction.md").substring(baseFilePath.length()),
+                                        (getItem().getFilePath() + File.separator + slug + File.separator + "introduction.md").substring(baseFilePath.length()+1),
                                         null);
                                 TreeItem<ExtractFile> newChildIntro = new TreeItem<>(extIntro);
                                 ExtractFile extConclu = new ExtractFile(
                                         "Conclusion",
-                                        toSlug(result.get()),
+                                        slug,
                                         baseFilePath,
                                         null,
-                                        (getItem().getFilePath() + File.separator + toSlug(result.get()) + File.separator + "conclusion.md").substring(baseFilePath.length()));
+                                        (getItem().getFilePath() + File.separator + slug + File.separator + "conclusion.md").substring(baseFilePath.length()+1));
                                 TreeItem<ExtractFile> newChildConclu = new TreeItem<>(extConclu);
                                 newChild.getChildren().add(newChildIntro);
                                 newChild.getChildren().add(newChildConclu);
