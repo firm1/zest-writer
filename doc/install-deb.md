@@ -9,5 +9,6 @@ echo "deb https://dl.bintray.com/firm1/deb wheezy main" | sudo tee -a /etc/apt/s
 ```
 
 ```bash
+sudo apt-get update
 sudo apt-get install zestwriter
 ```
