@@ -2,15 +2,11 @@ package com.zestedesavoir.zestwriter.view;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.python.util.PythonInterpreter;
@@ -19,21 +15,30 @@ import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
 import com.sun.javafx.scene.control.skin.TabPaneSkin;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.ExtractFile;
+import com.zestedesavoir.zestwriter.model.License;
+import com.zestedesavoir.zestwriter.model.TypeContent;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SeparatorMenuItem;
@@ -45,8 +50,6 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.DragEvent;
@@ -54,8 +57,10 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
+import javafx.util.Pair;
 
 public class MdTextController {
     private MainApp mainApp;
@@ -76,6 +81,17 @@ public class MdTextController {
 
     private Map jsonData;
     private String baseFilePath;
+
+    private static ObservableList<TypeContent> typeOptions = FXCollections.observableArrayList(new TypeContent("ARTICLE", "Article"), new TypeContent("TUTORIAL","Tutoriel"));
+    private static ObservableList<License> licOptions = FXCollections.observableArrayList(
+            new License("CC BY", "Licence CC BY"),
+            new License("CC BY-SA", "Licence CC BY-SA"),
+            new License("CC BY-ND", "Licence CC BY-ND"),
+            new License("CC BY-NC", "Licence CC BY-NC"),
+            new License("CC BY-NC-SA", "Licence CC BY-NC-SA"),
+            new License("CC BY-NC-ND", "Licence CC BY-NC-ND"),
+            new License("Tous droits réservés", "Tout droits réservés"),
+            new License("CC 0", "Licence CC 0"));
 
     @FXML
     private void initialize() {
@@ -434,10 +450,12 @@ public class MdTextController {
                         MenuItem addMenuItem2 = new MenuItem("Ajouter un conteneur");
                         MenuItem addMenuItem3 = new MenuItem("Renommer");
                         MenuItem addMenuItem4 = new MenuItem("Supprimer");
+                        MenuItem addMenuItem5 = new MenuItem("Editer");
                         addMenuItem1.setGraphic(createFileIcon());
                         addMenuItem2.setGraphic(createAddFolderIcon());
                         addMenuItem3.setGraphic(createEditIcon());
                         addMenuItem4.setGraphic(createRemoveIcon());
+                        addMenuItem5.setGraphic(createEditIcon());
                         addMenu.getItems().clear();
                         if (item.canTakeContainer(getAncestorContainerCount(getTreeItem()), getDirectChildCount(getTreeItem()))) {
                             addMenu.getItems().add(addMenuItem2);
@@ -447,6 +465,9 @@ public class MdTextController {
                         }
                         if (item.isEditable()) {
                             addMenu.getItems().add(addMenuItem3);
+                        }
+                        if (item.isRoot()) {
+                            addMenu.getItems().add(addMenuItem5);
                         }
                         if (item.canDelete()) {
                             addMenu.getItems().add(new SeparatorMenuItem());
@@ -573,6 +594,30 @@ public class MdTextController {
                                 }
                             }
 
+                        });
+
+                        addMenuItem5.setOnAction(t -> {
+                            try {
+                                Map json = mapper.readValue(new File(filePath + File.separator + "manifest.json"), Map.class);
+                                Map<String, Object> mp = new HashMap<>();
+                                License lic = licOptions.get(licOptions.indexOf(new License(json.get("licence").toString(), "")));
+                                TypeContent typco = typeOptions.get(typeOptions.indexOf(new TypeContent(json.get("type").toString(), "")));
+                                mp.put("title", json.get("title").toString());
+                                mp.put("description", json.get("description").toString());
+                                mp.put("type", typco);
+                                mp.put("licence", lic);
+                                Map<String,Object> paramContent= mainApp.getIndex().createContentDialog(mp);
+                                if(paramContent != null) {
+                                    Summary.getRoot().getValue().setTitle(paramContent.get("title").toString());
+                                    Summary.getRoot().getValue().setDescription(paramContent.get("description").toString());
+                                    Summary.getRoot().getValue().setType(paramContent.get("type").toString());
+                                    Summary.getRoot().getValue().setLicence(paramContent.get("licence").toString());
+                                    saveManifestJson();
+                                }
+                            } catch (Exception e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
                         });
                     }
 
@@ -747,6 +792,77 @@ public class MdTextController {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public Map<String,Object> createContentDialog(Map<String, Object> defaultParam) {
+       if(defaultParam == null) {
+           defaultParam = new HashMap<>();
+           defaultParam.put("title", "");
+           defaultParam.put("description", "");
+           defaultParam.put("type", typeOptions.get(1));
+           defaultParam.put("licence", licOptions.get(6));
+       }
+       // Create wizard
+       Dialog<Pair<String, String>> dialog = new Dialog<>();
+       dialog.setTitle("Nouveau contenu");
+       dialog.setHeaderText("Créez un nouveau contenus pour ZdS");
+
+       // Set the icon (must be included in the project).
+       dialog.setGraphic(MdTextController.createAddFolderIcon());
+
+       // Set the button types.
+       ButtonType validButtonType = new ButtonType("Enregistrer", ButtonData.OK_DONE);
+       dialog.getDialogPane().getButtonTypes().addAll(validButtonType, ButtonType.CANCEL);
+
+       // Create the username and password labels and fields.
+       GridPane grid = new GridPane();
+       grid.setHgap(10);
+       grid.setVgap(10);
+       grid.setPadding(new Insets(20, 150, 10, 10));
+
+       TextField title = new TextField(defaultParam.get("title").toString());
+       TextField subtitle = new TextField(defaultParam.get("description").toString());
+       ComboBox<TypeContent> type = new ComboBox<>(typeOptions);
+       type.setValue((TypeContent) defaultParam.get("type"));
+
+       ComboBox<License> license = new ComboBox<>(licOptions);
+       license.setValue((License) defaultParam.get("licence"));
+
+       grid.add(new Label("Titre du contenu :"), 0, 0);
+       grid.add(title, 1, 0);
+       grid.add(new Label("Description du contenu:"), 0, 1);
+       grid.add(subtitle, 1, 1);
+       grid.add(new Label("Type de contenu:"), 0, 2);
+       grid.add(type, 1, 2);
+       grid.add(new Label("Licence du contenu:"), 0, 3);
+       grid.add(license, 1, 3);
+
+       // Enable/Disable login button depending on whether a username was entered.
+       Node validButton = dialog.getDialogPane().lookupButton(validButtonType);
+
+       dialog.getDialogPane().setContent(grid);
+
+       Platform.runLater(title::requestFocus);
+
+       dialog.setResultConverter(dialogButton -> {
+           if(dialogButton == validButtonType) {
+               return new Pair<>("", "");
+           }
+           return null;
+       });
+
+       Optional<Pair<String, String>> result = dialog.showAndWait();
+       if(result.isPresent()) {
+           Map<String, Object> map = new HashMap<>();
+           map.put("title",title.getText());
+           map.put("description",subtitle.getText());
+           map.put("type",type.getValue().getCode());
+           map.put("licence",license.getValue().getCode());
+           return map;
+       } else {
+           return null;
+       }
+
     }
 
 }

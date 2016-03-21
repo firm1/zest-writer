@@ -25,5 +25,13 @@ public class TypeContent {
         return label;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof TypeContent) {
+            return ((TypeContent) obj).getCode().equals(this.getCode());
+        }
+        return false;
+    }
+
 
 }

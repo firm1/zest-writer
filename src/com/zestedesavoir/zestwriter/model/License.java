@@ -38,4 +38,15 @@ public class License {
     }
 
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof License) {
+            return ((License) obj).getCode().equals(this.getCode());
+        }
+        return false;
+    }
+
+
+
+
 }

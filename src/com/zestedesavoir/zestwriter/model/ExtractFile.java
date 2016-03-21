@@ -168,6 +168,18 @@ public class ExtractFile {
         return mdText;
     }
 
+    public void setLicence(String licence) {
+        this.licence.set(licence);
+    }
+
+    public void setDescription(String description) {
+        this.description.set(description);
+    }
+
+    public void setType(String type) {
+        this.type.set(type);
+    }
+
     public void setMdText(String mdText) {
         this.mdText.set(mdText);
     }
@@ -283,7 +295,7 @@ public class ExtractFile {
     }
 
     public boolean isEditable() {
-        return this.object.getValue() != null;
+        return (this.object.getValue() != null) && (!isRoot());
     }
 
     /**
