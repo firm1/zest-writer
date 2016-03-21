@@ -31,6 +31,8 @@ import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -43,8 +45,10 @@ import javafx.concurrent.Worker;
 import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -69,6 +73,7 @@ import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 
 public class MenuController {
@@ -840,6 +845,37 @@ public class MenuController {
         alert.showAndWait();
     }
 
+    @FXML
+    private void HandleSimpleFind(ActionEvent event){
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("Finder.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Rechercher");
+            FinderController controller = loader.getController();
+            Scene scene = new Scene(loader.load(), 450, 450);
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.setAlwaysOnTop(true);
+            stage.show();
+            
+            int i = 1+1;
+        } catch (IOException ex) {
+            Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    @FXML
+    private void HandleGlobalFind(ActionEvent event){
+        
+    }
+    @FXML
+    private void HandleSimpleReplace(ActionEvent event){
+        
+    }
+    @FXML
+    private void HandleGlobalReplace(ActionEvent event){
+        
+    }
     private void HandleGoogleAction(Dialog parent) {
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Authentification via Google");
