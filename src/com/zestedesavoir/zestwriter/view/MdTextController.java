@@ -439,10 +439,10 @@ public class MdTextController {
                         addMenuItem3.setGraphic(createEditIcon());
                         addMenuItem4.setGraphic(createRemoveIcon());
                         addMenu.getItems().clear();
-                        if (item.canTakeContainer(getAncestorContainerCount(getTreeItem()))) {
+                        if (item.canTakeContainer(getAncestorContainerCount(getTreeItem()), getDirectChildCount(getTreeItem()))) {
                             addMenu.getItems().add(addMenuItem2);
                         }
-                        if (item.canTakeExtract()) {
+                        if (item.canTakeExtract(getDescendantContainerCount(getTreeItem()))) {
                             addMenu.getItems().add(addMenuItem1);
                         }
                         if (item.isEditable()) {
@@ -482,7 +482,8 @@ public class MdTextController {
                                         baseFilePath,
                                         (getItem().getFilePath() + File.separator + ZdsHttp.toSlug(result.get()) + ".md").substring(baseFilePath.length()+1));
                                 TreeItem<ExtractFile> newChild = new TreeItem<>(extract);
-                                getTreeItem().getChildren().add(newChild);
+                                int level = Math.max(getTreeItem().getChildren().size() - 1, 0);
+                                getTreeItem().getChildren().add(level, newChild);
                                 // create file
                                 File extFile = new File(extract.getFilePath());
                                 if (!extFile.exists()) {
@@ -709,6 +710,16 @@ public class MdTextController {
         } else {
             return 1;
         }
+    }
+
+    public static int getDirectChildCount(TreeItem<ExtractFile> node) {
+        int sum =0;
+        for(TreeItem<ExtractFile> item:node.getChildren()) {
+            if(!item.getValue().isContainer()) {
+                sum++;
+            }
+        }
+        return sum;
     }
 
     /*

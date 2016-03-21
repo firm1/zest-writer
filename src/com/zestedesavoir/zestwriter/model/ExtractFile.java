@@ -222,18 +222,20 @@ public class ExtractFile {
 
     }
 
-    public boolean canTakeContainer(int depthContainers) {
+    public boolean canTakeContainer(int parentCountContainers, int childCountExtract) {
         boolean rule1 = !isContainer(); // can't create container in extract
-        boolean rule2 = depthContainers >= 3; // max level in zds is 3
+        boolean rule2 = parentCountContainers >= 3; // max level in zds is 3
+        boolean rule3 = childCountExtract > 2; // container with 3 extract can't take container
 
-        return !(rule1 || rule2);
+        return !(rule1 || rule2 || rule3 );
 
     }
 
-    public boolean canTakeExtract() {
+    public boolean canTakeExtract(int childCountContainers) {
         boolean rule1 = !isContainer(); // can't create extract in extract
+        boolean rule2 = isRoot() && childCountContainers > 0;// root with internal container can't have extract
 
-        return !rule1;
+        return !(rule1 || rule2);
 
     }
 
