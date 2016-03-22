@@ -9,3 +9,4 @@ bin
 *.pyo
 *.class
 /.nb-gradle/
+.idea
