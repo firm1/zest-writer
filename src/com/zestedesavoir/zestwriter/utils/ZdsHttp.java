@@ -68,8 +68,9 @@ public class ZdsHttp {
     private String localSlug;
     private String localType;
     private final Logger logger;
-    private static String USER_AGENT = "Mozilla/5.0";
     private Configuration config;
+
+    private final static String USER_AGENT = "ZestWriter";
     private final static Pattern NONLATIN = Pattern.compile("[^\\w-]");
     private final static Pattern WHITESPACE = Pattern.compile("[\\s]");
 

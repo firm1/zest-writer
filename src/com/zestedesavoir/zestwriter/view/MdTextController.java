@@ -62,6 +62,7 @@ import javafx.scene.text.Font;
 import javafx.util.Callback;
 import javafx.util.Pair;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class MdTextController {
     private MainApp mainApp;
 

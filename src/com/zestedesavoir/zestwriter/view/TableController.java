@@ -52,14 +52,9 @@ class ZRow {
 
 }
 public class TableController {
-    private MdConvertController editorController;
     @FXML
     private TableView<ZRow> tableView;
     private final ObservableList<ZRow> datas = FXCollections.observableArrayList(new ZRow(1));
-
-    public void setEditor(MdConvertController editorController) {
-        this.editorController = editorController;
-    }
 
     @FXML
     private void initialize() {
