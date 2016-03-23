@@ -63,13 +63,12 @@ public class Configuration {
             }
         }
 
-        for(Entry<?, ?> entry:props.entrySet()) {
-            if(!conf.containsKey(entry.getKey())) {
+        props.entrySet().stream()
+            .filter(entry -> !conf.containsKey(entry.getKey()))
+            .forEach(entry -> {
                 conf.putIfAbsent(entry.getKey(), entry.getValue());
                 saveConfFile();
-            }
-        }
-
+            });
     }
 
     private void saveConfFile() {
