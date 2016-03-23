@@ -250,23 +250,12 @@ public class ExtractFile {
     }
 
     private void delete(File file) {
-        if(file.isDirectory()) {
-            if(file.list().length==0) {
-                file.delete();
+        if (file.isDirectory()) {
+            for(File f : file.listFiles()) {
+                delete(f);
             }
-            else {
-                String files[] = file.list();
-                for(String temp:files) {
-                    File fileDelete = new File(file, temp);
-                    delete(fileDelete);
-                }
-                if(file.list().length==0) {
-                    file.delete();
-                }
-            }
-        } else {
-            file.delete();
         }
+        file.delete(); // TODO : should probably check boolean
     }
 
     public void deleteExtract() {
