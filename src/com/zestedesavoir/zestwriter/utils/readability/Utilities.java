@@ -252,12 +252,9 @@ public class Utilities {
             if (sxe.getException() != null)
                 x = sxe.getException();
             x.printStackTrace();
-        } catch (ParserConfigurationException | IOException pce) {
+        } catch (ParserConfigurationException | IOException | FactoryConfigurationError pce) {
             // Parser with specified options can't be built
             pce.printStackTrace();
-        } catch (FactoryConfigurationError fce) {
-            // Factory configuration error
-            fce.printStackTrace();
         }
         return MIQuery;
     }
