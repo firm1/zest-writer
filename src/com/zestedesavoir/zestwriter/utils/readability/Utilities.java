@@ -285,23 +285,25 @@ public class Utilities {
             builder.setErrorHandler(new org.xml.sax.ErrorHandler() {
 
                 // ignore fatal errors (an exception is guaranteed)
-                public void fatalError(SAXParseException exception) {
-
-                    System.out.println("** Error" + ", line " + exception.getLineNumber() + ", uri " + exception.getSystemId());
-                    System.out.println("   " + exception.getMessage());
+                @Override
+                public void fatalError(SAXParseException err) {
+                    writeErrorToConsole(err);
                 }
 
                 // treat validation errors as fatal
-                public void error(SAXParseException e) throws SAXParseException {
-
-                    System.out.println("** Error" + ", line " + e.getLineNumber() + ", uri " + e.getSystemId());
-                    System.out.println("   " + e.getMessage());
-                    throw e;
+                @Override
+                public void error(SAXParseException err) throws SAXParseException {
+                    writeErrorToConsole(err);
+                    throw err;
                 }
 
                 // dump warnings too
+                @Override
                 public void warning(SAXParseException err) {
+                    writeErrorToConsole(err);
+                }
 
+                private void writeErrorToConsole(SAXParseException  err) {
                     System.out.println("** Warning" + ", line " + err.getLineNumber() + ", uri " + err.getSystemId());
                     System.out.println("   " + err.getMessage());
                 }

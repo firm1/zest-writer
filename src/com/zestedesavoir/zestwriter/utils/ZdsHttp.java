@@ -310,14 +310,7 @@ public class ZdsHttp {
 
         Pair<Integer, String> resultPost = sendPost(getImportNewContenttUrl(), builder.build());
         int statusCode = resultPost.getKey();
-
-        switch (statusCode) {
-            case 404:
-                logger.debug("Your target id and slug is incorrect, please give us real informations");
-            case 403:
-                logger.debug("Your are not authorize to do this task. Please check if your are login");
-        }
-
+        logHttpErrorCode(statusCode);
         return statusCode == 200;
     }
     public boolean importContent(String filePath, String targetId, String targetSlug)
@@ -336,15 +329,19 @@ public class ZdsHttp {
 
         Pair<Integer, String> resultPost = sendPost(getImportContenttUrl(targetId, targetSlug), builder.build());
         int statusCode = resultPost.getKey();
+        logHttpErrorCode(statusCode);
+        return statusCode == 200;
+    }
 
+    private void logHttpErrorCode(int statusCode) {
         switch (statusCode) {
             case 404:
                 logger.debug("Your target id and slug is incorrect, please give us real informations");
+                break;
             case 403:
                 logger.debug("Your are not authorize to do this task. Please check if your are login");
+                break;
         }
-
-        return statusCode == 200;
     }
 
     public void initInfoOnlineContent(String type) throws IOException {
