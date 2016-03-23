@@ -129,7 +129,8 @@ public class MainApp extends Application {
         scene.addEventFilter(KeyEvent.KEY_PRESSED, t -> {
             String codeStr = t.getCode().toString();
             if(!key.toString().endsWith("_"+codeStr)){
-                 key.append("_"+codeStr);
+                key.append("_");
+                key.append(codeStr);
             }
         });
         scene.addEventFilter(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
