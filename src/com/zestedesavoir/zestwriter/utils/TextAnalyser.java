@@ -7,7 +7,6 @@ public class TextAnalyser {
     public static float getFleshIndex(String content) {
 
         int syllables = 0;
-        int sentences = 0;
         int words = 0;
 
         String delimiters = ".,':;?{}[]=-+_!@#$%^&*() ";
@@ -21,7 +20,7 @@ public class TextAnalyser {
         // look for sentence delimiters
         String sentenceDelim = ".:;?!";
         StringTokenizer sentenceTokenizer = new StringTokenizer(content, sentenceDelim);
-        sentences = sentenceTokenizer.countTokens();
+        int sentences = sentenceTokenizer.countTokens();
 
         // calculate flesch index
         final float f1 = (float) 206.835;

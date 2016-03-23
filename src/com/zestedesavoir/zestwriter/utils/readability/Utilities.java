@@ -44,7 +44,7 @@ public class Utilities {
 	}
 
     public static Document getAmazonResponse(String url) throws FactoryConfigurationError {
-        String page = "";
+        String page;
 
         boolean done = false;
         int trial = 0;

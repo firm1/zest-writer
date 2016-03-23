@@ -206,7 +206,7 @@ public class ZdsHttp {
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         StringBuilder result = new StringBuilder();
-        String line = "";
+        String line;
         while ((line = rd.readLine()) != null) {
             result.append(line);
         }
@@ -247,7 +247,7 @@ public class ZdsHttp {
             BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
             StringBuilder result = new StringBuilder();
-            String line = "";
+            String line;
             while ((line = rd.readLine()) != null) {
                 result.append(line);
             }
@@ -368,7 +368,7 @@ public class ZdsHttp {
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         StringBuilder result = new StringBuilder();
-        String line = "";
+        String line;
         while ((line = rd.readLine()) != null) {
             result.append(line);
         }
@@ -470,7 +470,7 @@ public class ZdsHttp {
     }
 
     public boolean sendNewContent(String localPath, Map<String, String> params) {
-        String localSlug = toSlug(params.get("title"));
+        // String localSlug = toSlug(params.get("title"));
 
         return true;
     }
