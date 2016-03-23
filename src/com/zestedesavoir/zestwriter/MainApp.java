@@ -29,11 +29,11 @@ public class MainApp extends Application {
     private Scene scene;
     private Stage primaryStage;
     private BorderPane rootLayout;
-    private ObservableMap<ExtractFile, Tab> extracts = FXCollections.observableMap(new HashMap<>());
-    private ObservableMap<String, String> contents = FXCollections.observableMap(new HashMap<>());
-    private ZdsHttp zdsutils;
+    private final ObservableMap<ExtractFile, Tab> extracts = FXCollections.observableMap(new HashMap<>());
+    private final ObservableMap<String, String> contents = FXCollections.observableMap(new HashMap<>());
+    private final ZdsHttp zdsutils;
     private MdTextController Index;
-    private Configuration config;
+    private final Configuration config;
     StringBuilder key = new StringBuilder();
 
     public MainApp() {

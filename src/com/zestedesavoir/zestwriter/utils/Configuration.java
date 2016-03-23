@@ -21,8 +21,8 @@ public class Configuration {
     private final static String SERVER_HOST_KEY = "server.host";
     private final static String SERVER_PORT_KEY = "server.port";
 
-    private Properties conf;
-    private File confFile;
+    private final Properties conf;
+    private final File confFile;
     private StorageSaver offlineSaver;
     private StorageSaver onlineSaver;
     private LocalDirectoryFactory workspaceFactory;

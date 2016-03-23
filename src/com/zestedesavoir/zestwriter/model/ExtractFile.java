@@ -10,17 +10,17 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class ExtractFile {
-    private StringProperty basePath;
-    private StringProperty title;
-    private StringProperty slug;
-    private StringProperty version;
-    private StringProperty description;
-    private StringProperty type;
-    private StringProperty object;
-    private StringProperty licence;
-    private StringProperty introduction;
-    private StringProperty conclusion;
-    private StringProperty text;
+    private final StringProperty basePath;
+    private final StringProperty title;
+    private final StringProperty slug;
+    private final StringProperty version;
+    private final StringProperty description;
+    private final StringProperty type;
+    private final StringProperty object;
+    private final StringProperty licence;
+    private final StringProperty introduction;
+    private final StringProperty conclusion;
+    private final StringProperty text;
     private StringProperty mdText;
 
     // for introduction and conclusion

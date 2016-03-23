@@ -14,7 +14,7 @@ import java.io.IOException;
  */
 public class LocalDirectoryFactory {
 
-    private LocalDirectorySaver baseSaver;
+    private final LocalDirectorySaver baseSaver;
 
     public LocalDirectoryFactory(String baseDirectory){
         baseSaver = new LocalDirectorySaver(baseDirectory);

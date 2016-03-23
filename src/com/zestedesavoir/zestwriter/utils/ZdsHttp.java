@@ -44,9 +44,9 @@ public class ZdsHttp {
     private String idUser;
     private String login;
     private String password;
-    private String hostname;
-    private String port;
-    private String protocol;
+    private final String hostname;
+    private final String port;
+    private final String protocol;
     private boolean authenticated = false;
     private List<MetadataContent> contentListOnline;
     private HttpClient client;
@@ -56,7 +56,7 @@ public class ZdsHttp {
     private String localSlug;
     private String localType;
     private final Logger logger;
-    private Configuration config;
+    private final Configuration config;
 
     private final static String USER_AGENT = "ZestWriter";
     private final static Pattern NONLATIN = Pattern.compile("[^\\w-]");
