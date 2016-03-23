@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.materialdesignicons.*?>
-<?import javafx.scene.paint.*?>
-<?import java.lang.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.web.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
-<?import de.jensd.fx.glyphs.fontawesome.*?>
-
 <SplitPane dividerPositions="0.5" prefHeight="633.0" prefWidth="773.0" stylesheets="@dark.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MdConvertController">
    <items>
       <BorderPane>
