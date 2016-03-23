@@ -1,8 +1,5 @@
 package com.zestedesavoir.zestwriter.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -18,6 +15,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 class ZRow {
     private SimpleListProperty<String> row = new SimpleListProperty<>();
@@ -52,14 +52,9 @@ class ZRow {
 
 }
 public class TableController {
-    private MdConvertController editorController;
     @FXML
     private TableView<ZRow> tableView;
     private final ObservableList<ZRow> datas = FXCollections.observableArrayList(new ZRow(1));
-
-    public void setEditor(MdConvertController editorController) {
-        this.editorController = editorController;
-    }
 
     @FXML
     private void initialize() {

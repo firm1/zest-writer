@@ -8,13 +8,13 @@ package com.zestedesavoir.zestwriter.utils.readability;
  */
 public class Readability {
 
-    private static SentenceExtractor se = new SentenceExtractor();
+    private static final SentenceExtractor se = new SentenceExtractor();
 
-    Integer sentences;
-    Integer complex;
-    Integer words;
-    Integer syllables;
-    Integer characters;
+    final Integer sentences;
+    final Integer complex;
+    final Integer words;
+    final Integer syllables;
+    final Integer characters;
 
     public Integer getCharacters() {
         return characters;

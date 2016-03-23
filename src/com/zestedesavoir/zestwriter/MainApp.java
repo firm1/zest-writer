@@ -1,18 +1,13 @@
 package com.zestedesavoir.zestwriter;
 
-import java.io.IOException;
-import java.util.HashMap;
-
 import com.zestedesavoir.zestwriter.model.ExtractFile;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -26,16 +21,19 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.util.HashMap;
+
 public class MainApp extends Application {
 
     private Scene scene;
     private Stage primaryStage;
     private BorderPane rootLayout;
-    private ObservableMap<ExtractFile, Tab> extracts = FXCollections.observableMap(new HashMap<>());
-    private ObservableMap<String, String> contents = FXCollections.observableMap(new HashMap<>());
-    private ZdsHttp zdsutils;
+    private final ObservableMap<ExtractFile, Tab> extracts = FXCollections.observableMap(new HashMap<>());
+    private final ObservableMap<String, String> contents = FXCollections.observableMap(new HashMap<>());
+    private final ZdsHttp zdsutils;
     private MdTextController Index;
-    private Configuration config;
+    private final Configuration config;
     StringBuilder key = new StringBuilder();
 
     public MainApp() {
@@ -131,7 +129,8 @@ public class MainApp extends Application {
         scene.addEventFilter(KeyEvent.KEY_PRESSED, t -> {
             String codeStr = t.getCode().toString();
             if(!key.toString().endsWith("_"+codeStr)){
-                 key.append("_"+codeStr);
+                key.append("_");
+                key.append(codeStr);
             }
         });
         scene.addEventFilter(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {

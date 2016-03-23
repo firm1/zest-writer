@@ -6,6 +6,7 @@
  */
 package com.zestedesavoir.zestwriter.utils.readability;
 
+import com.zestedesavoir.zestwriter.utils.ZestWriterErrorHandler;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -44,7 +45,7 @@ public class Utilities {
 	}
 
     public static Document getAmazonResponse(String url) throws FactoryConfigurationError {
-        String page = "";
+        String page;
 
         boolean done = false;
         int trial = 0;
@@ -220,30 +221,7 @@ public class Utilities {
             factory.setIgnoringComments(true);
             factory.setIgnoringElementContentWhitespace(true);
             DocumentBuilder builder = factory.newDocumentBuilder();
-            builder.setErrorHandler(new org.xml.sax.ErrorHandler() {
-
-                // ignore fatal errors (an exception is guaranteed)
-                public void fatalError(SAXParseException exception) {
-
-                    System.out.println("** Error" + ", line " + exception.getLineNumber() + ", uri " + exception.getSystemId());
-                    System.out.println("   " + exception.getMessage());
-                }
-
-                // treat validation errors as fatal
-                public void error(SAXParseException e) throws SAXParseException {
-
-                    System.out.println("** Error" + ", line " + e.getLineNumber() + ", uri " + e.getSystemId());
-                    System.out.println("   " + e.getMessage());
-                    throw e;
-                }
-
-                // dump warnings too
-                public void warning(SAXParseException err) {
-
-                    System.out.println("** Warning" + ", line " + err.getLineNumber() + ", uri " + err.getSystemId());
-                    System.out.println("   " + err.getMessage());
-                }
-            });
+            builder.setErrorHandler(new ZestWriterErrorHandler());
             InputSource inputSource = new InputSource(new StringReader(file));
             MIQuery = builder.parse(inputSource);
         } catch (SAXException sxe) {
@@ -252,12 +230,9 @@ public class Utilities {
             if (sxe.getException() != null)
                 x = sxe.getException();
             x.printStackTrace();
-        } catch (ParserConfigurationException | IOException pce) {
+        } catch (ParserConfigurationException | IOException | FactoryConfigurationError pce) {
             // Parser with specified options can't be built
             pce.printStackTrace();
-        } catch (FactoryConfigurationError fce) {
-            // Factory configuration error
-            fce.printStackTrace();
         }
         return MIQuery;
     }
@@ -285,31 +260,7 @@ public class Utilities {
             factory.setIgnoringComments(true);
             factory.setIgnoringElementContentWhitespace(true);
             DocumentBuilder builder = factory.newDocumentBuilder();
-            builder.setErrorHandler(new org.xml.sax.ErrorHandler() {
-
-                // ignore fatal errors (an exception is guaranteed)
-                public void fatalError(SAXParseException exception) {
-
-                    System.out.println("** Error" + ", line " + exception.getLineNumber() + ", uri " + exception.getSystemId());
-                    System.out.println("   " + exception.getMessage());
-                }
-
-                // treat validation errors as fatal
-                public void error(SAXParseException e) throws SAXParseException {
-
-                    System.out.println("** Error" + ", line " + e.getLineNumber() + ", uri " + e.getSystemId());
-                    System.out.println("   " + e.getMessage());
-                    throw e;
-                }
-
-                // dump warnings too
-                public void warning(SAXParseException err) {
-
-                    System.out.println("** Warning" + ", line " + err.getLineNumber() + ", uri " + err.getSystemId());
-                    System.out.println("   " + err.getMessage());
-                }
-            });
-
+            builder.setErrorHandler(new ZestWriterErrorHandler());
             MIQuery = builder.newDocument();
         } catch (ParserConfigurationException | FactoryConfigurationError pce) {
             // Parser with specified options can't be built

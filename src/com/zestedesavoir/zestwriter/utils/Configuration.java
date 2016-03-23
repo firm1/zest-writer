@@ -1,36 +1,36 @@
 package com.zestedesavoir.zestwriter.utils;
 
+import com.zestedesavoir.zestwriter.MainApp;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileSystemView;
-
-import com.zestedesavoir.zestwriter.MainApp;
-
 public class Configuration {
-    private Properties conf;
-    private String appName = "zestwriter";
-    private String confFileName = "conf.properties";
-    private File confFile;
+
+    private final static String APP_NAME = "zestwriter";
+    private final static String CONF_FILE_NAME = "conf.properties";
     private final static String WORKSPACE_KEY = "data.workspace";
     private final static String SMART_EDITOR_KEY = "editor.smart";
     private final static String SERVER_PROTOCOL_KEY = "server.protocol";
     private final static String SERVER_HOST_KEY = "server.host";
     private final static String SERVER_PORT_KEY = "server.port";
+
+    private final Properties conf;
+    private final File confFile;
     private StorageSaver offlineSaver;
     private StorageSaver onlineSaver;
     private LocalDirectoryFactory workspaceFactory;
 
     public Configuration() {
         String homeDir = System.getProperty("user.home");
-        String confDirPath = homeDir+File.separator+"."+this.appName;
-        String confFilePath = confDirPath+File.separator+this.confFileName;
+        String confDirPath = homeDir + File.separator + "." + APP_NAME;
+        String confFilePath = confDirPath + File.separator + CONF_FILE_NAME;
         File confDir = new File(confDirPath);
         confFile = new File(confFilePath);
         if(!confDir.exists()) {
@@ -63,13 +63,12 @@ public class Configuration {
             }
         }
 
-        for(Entry<?, ?> entry:props.entrySet()) {
-            if(!conf.containsKey(entry.getKey())) {
+        props.entrySet().stream()
+            .filter(entry -> !conf.containsKey(entry.getKey()))
+            .forEach(entry -> {
                 conf.putIfAbsent(entry.getKey(), entry.getValue());
                 saveConfFile();
-            }
-        }
-
+            });
     }
 
     private void saveConfFile() {

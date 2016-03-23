@@ -16,8 +16,8 @@ import java.util.StringTokenizer;
 
 public class Corrector {
 
-    private JLanguageTool langTool;
-    private List<String> wordsToIgnore;
+    private final JLanguageTool langTool;
+    private final List<String> wordsToIgnore;
 
     public Corrector() {
         langTool = new JLanguageTool(new French());

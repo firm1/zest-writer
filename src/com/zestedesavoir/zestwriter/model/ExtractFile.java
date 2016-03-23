@@ -1,30 +1,26 @@
 package com.zestedesavoir.zestwriter.model;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 public class ExtractFile {
-    private StringProperty basePath;
-    private StringProperty title;
-    private StringProperty slug;
-    private StringProperty version;
-    private StringProperty description;
-    private StringProperty type;
-    private StringProperty object;
-    private StringProperty licence;
-    private StringProperty introduction;
-    private StringProperty conclusion;
-    private StringProperty text;
+    private final StringProperty basePath;
+    private final StringProperty title;
+    private final StringProperty slug;
+    private final StringProperty version;
+    private final StringProperty description;
+    private final StringProperty type;
+    private final StringProperty object;
+    private final StringProperty licence;
+    private final StringProperty introduction;
+    private final StringProperty conclusion;
+    private final StringProperty text;
     private StringProperty mdText;
 
     // for introduction and conclusion
@@ -217,19 +213,14 @@ public class ExtractFile {
     }
 
     public void save() {
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getFilePath()), "UTF8"));
+        try(
+            FileWriter fw = new FileWriter(getFilePath());
+            BufferedWriter writer = new BufferedWriter(fw)
+        ) {
             writer.append(getMdText().getValue());
             writer.flush();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                // Close the writer regardless of what happens...
-                writer.close();
-            } catch (Exception ignored) {
-            }
         }
 
     }
@@ -259,23 +250,12 @@ public class ExtractFile {
     }
 
     private void delete(File file) {
-        if(file.isDirectory()) {
-            if(file.list().length==0) {
-                file.delete();
+        if (file.isDirectory()) {
+            for(File f : file.listFiles()) {
+                delete(f);
             }
-            else {
-                String files[] = file.list();
-                for(String temp:files) {
-                    File fileDelete = new File(file, temp);
-                    delete(fileDelete);
-                }
-                if(file.list().length==0) {
-                    file.delete();
-                }
-            }
-        } else {
-            file.delete();
         }
+        file.delete(); // TODO : should probably check boolean
     }
 
     public void deleteExtract() {

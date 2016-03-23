@@ -1,24 +1,7 @@
 package com.zestedesavoir.zestwriter.utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.file.Paths;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
+import com.zestedesavoir.zestwriter.model.MetadataContent;
+import javafx.util.Pair;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -47,18 +30,23 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zestedesavoir.zestwriter.model.MetadataContent;
-
-import javafx.util.Pair;
+import java.io.*;
+import java.nio.file.Paths;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 
 public class ZdsHttp {
     private String idUser;
     private String login;
     private String password;
-    private String hostname;
-    private String port;
-    private String protocol;
+    private final String hostname;
+    private final String port;
+    private final String protocol;
     private boolean authenticated = false;
     private List<MetadataContent> contentListOnline;
     private HttpClient client;
@@ -68,8 +56,9 @@ public class ZdsHttp {
     private String localSlug;
     private String localType;
     private final Logger logger;
-    private static String USER_AGENT = "Mozilla/5.0";
-    private Configuration config;
+    private final Configuration config;
+
+    private final static String USER_AGENT = "ZestWriter";
     private final static Pattern NONLATIN = Pattern.compile("[^\\w-]");
     private final static Pattern WHITESPACE = Pattern.compile("[\\s]");
 
@@ -217,7 +206,7 @@ public class ZdsHttp {
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         StringBuilder result = new StringBuilder();
-        String line = "";
+        String line;
         while ((line = rd.readLine()) != null) {
             result.append(line);
         }
@@ -258,7 +247,7 @@ public class ZdsHttp {
             BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
             StringBuilder result = new StringBuilder();
-            String line = "";
+            String line;
             while ((line = rd.readLine()) != null) {
                 result.append(line);
             }
@@ -304,7 +293,7 @@ public class ZdsHttp {
         this.authenticated = false;
     }
 
-    public boolean importNewContent(String filePath) throws ClientProtocolException, IOException {
+    public boolean importNewContent(String filePath) throws IOException {
 
         logger.debug("Tentative d'import via l'url : " + getImportNewContenttUrl());
         HttpGet get = new HttpGet(getImportNewContenttUrl());
@@ -321,14 +310,7 @@ public class ZdsHttp {
 
         Pair<Integer, String> resultPost = sendPost(getImportNewContenttUrl(), builder.build());
         int statusCode = resultPost.getKey();
-
-        switch (statusCode) {
-            case 404:
-                logger.debug("Your target id and slug is incorrect, please give us real informations");
-            case 403:
-                logger.debug("Your are not authorize to do this task. Please check if your are login");
-        }
-
+        logHttpErrorCode(statusCode);
         return statusCode == 200;
     }
     public boolean importContent(String filePath, String targetId, String targetSlug)
@@ -347,15 +329,19 @@ public class ZdsHttp {
 
         Pair<Integer, String> resultPost = sendPost(getImportContenttUrl(targetId, targetSlug), builder.build());
         int statusCode = resultPost.getKey();
+        logHttpErrorCode(statusCode);
+        return statusCode == 200;
+    }
 
+    private void logHttpErrorCode(int statusCode) {
         switch (statusCode) {
             case 404:
                 logger.debug("Your target id and slug is incorrect, please give us real informations");
+                break;
             case 403:
                 logger.debug("Your are not authorize to do this task. Please check if your are login");
+                break;
         }
-
-        return statusCode == 200;
     }
 
     public void initInfoOnlineContent(String type) throws IOException {
@@ -379,7 +365,7 @@ public class ZdsHttp {
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         StringBuilder result = new StringBuilder();
-        String line = "";
+        String line;
         while ((line = rd.readLine()) != null) {
             result.append(line);
         }
@@ -481,7 +467,7 @@ public class ZdsHttp {
     }
 
     public boolean sendNewContent(String localPath, Map<String, String> params) {
-        String localSlug = toSlug(params.get("title"));
+        // String localSlug = toSlug(params.get("title"));
 
         return true;
     }
