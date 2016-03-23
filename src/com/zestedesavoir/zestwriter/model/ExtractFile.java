@@ -213,19 +213,14 @@ public class ExtractFile {
     }
 
     public void save() {
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getFilePath()), "UTF8"));
+        try(
+            FileWriter fw = new FileWriter(getFilePath());
+            BufferedWriter writer = new BufferedWriter(fw)
+        ) {
             writer.append(getMdText().getValue());
             writer.flush();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                // Close the writer regardless of what happens...
-                writer.close();
-            } catch (Exception ignored) {
-            }
         }
 
     }
