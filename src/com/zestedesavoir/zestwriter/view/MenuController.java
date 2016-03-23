@@ -691,11 +691,11 @@ public class MenuController {
                                 if(targetId == null) {
                                     if(!mainApp.getZdsutils().importNewContent(pathDir+ ".zip")) {
                                         failed();
-                                    };
+                                    }
                                 } else {
                                     if(!mainApp.getZdsutils().importContent(pathDir + ".zip", targetId, targetSlug)) {
                                         failed();
-                                    };
+                                    }
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
