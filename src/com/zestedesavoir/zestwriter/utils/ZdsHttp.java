@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpCookie;
 import java.nio.file.Paths;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
@@ -39,11 +40,13 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.python.jline.internal.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -192,6 +195,30 @@ public class ZdsHttp {
         initContext();
     }
 
+    public void authToGoogle(List<HttpCookie> cookies, String login, String id) {
+        if(login != null && id != null) {
+            this.login = login;
+            this.idUser = id;
+            logger.info("L'identifiant de l'utilisateur " + this.login + " est : " + idUser);
+            cookieStore = new BasicCookieStore();
+            for(HttpCookie cookie:cookies) {
+                BasicClientCookie c = new BasicClientCookie(cookie.getName(), cookie.getValue());
+                c.setDomain(cookie.getDomain());
+                c.setPath(cookie.getPath());
+                c.setSecure(cookie.getSecure());
+                c.setVersion(cookie.getVersion());
+                c.setComment(cookie.getComment());
+                cookieStore.addCookie(c);
+            }
+            context.setCookieStore(cookieStore);
+            this.authenticated = true;
+        }
+        else {
+            logger.debug("Le login de l'utilisateur n'a pas pu être trouvé");
+        }
+    }
+
+
     private String getCookieValue(CookieStore cookieStore, String cookieName) {
         String value = null;
         for (Cookie cookie : cookieStore.getCookies()) {
@@ -271,10 +298,31 @@ public class ZdsHttp {
         return new Pair<>(500, null);
     }
 
+    public String getId(String homeConnectedContent) {
+        Document doc = Jsoup.parse(homeConnectedContent);
+        Elements sections = doc.getElementsByClass("my-account-dropdown");
+        for (Element section : sections) {
+            Elements links = section.getElementsByTag("a");
+            for (Element link : links) {
+                String ref = link.attr("href").trim();
+                if(ref.startsWith("/contenus/tutoriels")) {
+                    String[] splt = ref.split("/");
+                    if(splt.length >= 4) {
+                        return splt[3];
+                    }
+                    else {
+                        return null;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     public boolean login(String login, String password) throws IOException {
         this.login = login;
         this.password = password;
-        idUser = getIdByUsername(login);
+        //idUser = getIdByUsername(login);
         logger.info("L'identifiant de l'utilisateur " + this.login + " est : " + idUser);
 
         HttpGet get = new HttpGet(getLoginUrl());
@@ -289,6 +337,7 @@ public class ZdsHttp {
         Pair<Integer, String> pair = sendPost(getLoginUrl(), new UrlEncodedFormEntity(urlParameters));
         if (pair.getKey() == 200 && pair.getValue().contains("my-account-dropdown")) {
             this.authenticated = true;
+            this.idUser = getId(pair.getValue());
             logger.info("Utilisateur " + this.login + " connecté");
         } else {
             logger.debug("Utilisateur " + this.login + " non connecté via " + getLoginUrl());
@@ -493,6 +542,7 @@ public class ZdsHttp {
         try {
             ZdsHttp zdsutils = new ZdsHttp(config);
             if (zdsutils.login("admin", "admin")) {
+                System.out.println("Connecté avec l'id : "+zdsutils.idUser);
                 zdsutils.initInfoOnlineContent("tutorial");
                 zdsutils.initInfoOnlineContent("article");
 

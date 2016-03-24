@@ -2,6 +2,8 @@ package com.zestedesavoir.zestwriter.view;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.CookieHandler;
+import java.net.CookieManager;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,40 +19,45 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.ExtractFile;
-import com.zestedesavoir.zestwriter.model.License;
 import com.zestedesavoir.zestwriter.model.MetadataContent;
-import com.zestedesavoir.zestwriter.model.TypeContent;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.ZipUtil;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
+import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
@@ -59,6 +66,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Pair;
 
@@ -79,9 +88,19 @@ public class MenuController {
     @FXML
     MenuItem menuLisibility;
     @FXML
+    MenuItem menuGoogle;
+    @FXML
     HBox hBottomBox;
     final ProgressBar pb = new ProgressBar(0);
     final Text labelField = new Text("");
+    private final Logger logger;
+
+
+
+    public MenuController() {
+        super();
+        logger = LoggerFactory.getLogger(MenuController.class);
+    }
 
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
@@ -121,7 +140,7 @@ public class MenuController {
                 }
                 markdown = bfString.toString();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("", e);
             }
 
             Corrector cr = new Corrector();
@@ -152,7 +171,7 @@ public class MenuController {
                     markdown = bfString.toString();
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    logger.error("", e);
                 }
 
                 String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), markdown));
@@ -185,7 +204,7 @@ public class MenuController {
                     markdown = bfString.toString();
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    logger.error("", e);
                 }
 
                 String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), markdown));
@@ -354,7 +373,7 @@ public class MenuController {
                                 }
                                 markdown = bfString.toString();
                             } catch (IOException e) {
-                                e.printStackTrace();
+                                logger.error("", e);
                             }
 
                             String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mdText, markdown));
@@ -442,7 +461,7 @@ public class MenuController {
 
             } catch (IOException e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                logger.error("", e);
             }
 
             menuUpload.setDisable(false);
@@ -490,7 +509,7 @@ public class MenuController {
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Connexion");
-        dialog.setHeaderText("Connectez vous au site Zeste de Savoir pour synchroniser vos contenus en ligne et hors ligne");
+        dialog.setHeaderText("Connectez vous au site Zeste de Savoir");
 
         // Set the icon (must be included in the project).
         dialog.setGraphic(new ImageView(this.getClass().getResource("static/icons/login.png").toString()));
@@ -498,28 +517,33 @@ public class MenuController {
         // Set the button types.
         ButtonType loginButtonType = new ButtonType("Se connecter", ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+        // Button for google
+        Button googleAuth = new Button("Connexion via Google", MdTextController.createGoogleIcon());
+        googleAuth.setOnAction(t-> {
+            HandleGoogleAction(dialog);
+        });
 
         // Create the username and password labels and fields.
         GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+        grid.setHgap(20);
+        grid.setVgap(20);
+        grid.setPadding(new Insets(20, 10, 10, 10));
 
         TextField username = new TextField();
         username.setPromptText("username");
         PasswordField password = new PasswordField();
         password.setPromptText("password");
 
-        grid.add(new Label("Nom d'utilisateur:"), 0, 0);
-        grid.add(username, 1, 0);
-        grid.add(new Label("Mot de passe:"), 0, 1);
-        grid.add(password, 1, 1);
+        grid.add(googleAuth, 0, 0, 1, 2);
+        grid.add(new Label("Nom d'utilisateur:"), 1, 0);
+        grid.add(username, 2, 0);
+        grid.add(new Label("Mot de passe:"), 1, 1);
+        grid.add(password, 2, 1);
 
         // Enable/Disable login button depending on whether a username was entered.
         Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
         loginButton.setDisable(true);
 
-        // Do some validation (using the Java 8 lambda syntax).
         username.textProperty().addListener((observable, oldValue, newValue) -> {
             loginButton.setDisable(newValue.trim().isEmpty());
         });
@@ -548,8 +572,8 @@ public class MenuController {
                     protected Void call() {
                         result.ifPresent(usernamePassword -> {
                             try {
+                                updateMessage("Connexion au site en cours ...");
                                 if(mainApp.getZdsutils().login(usernamePassword.getKey(), usernamePassword.getValue())) {
-                                    updateMessage("Connexion au site en cours ...");
                                     updateMessage("Recherche des contenus ...");
                                     mainApp.getZdsutils().initInfoOnlineContent("tutorial");
                                     mainApp.getZdsutils().initInfoOnlineContent("article");
@@ -562,7 +586,17 @@ public class MenuController {
                             }
                         });
                         if(!result.isPresent()) {
-                            cancel();
+                            if(mainApp.getZdsutils().isAuthenticated()) {
+                                updateMessage("Recherche des contenus ...");
+                                try {
+                                    mainApp.getZdsutils().initInfoOnlineContent("tutorial");
+                                    mainApp.getZdsutils().initInfoOnlineContent("article");
+                                } catch (IOException e) {
+                                    logger.error("", e);
+                                }
+                            } else {
+                                cancel();
+                            }
                         }
                         return null;
                     }
@@ -671,7 +705,7 @@ public class MenuController {
                 mainApp.getConfig().loadWorkspace();
             } catch (IOException e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                logger.error("", e);
             }
         }
     }
@@ -719,7 +753,7 @@ public class MenuController {
                                     };
                                 }
                             } catch (IOException e) {
-                                e.printStackTrace();
+                                logger.error("", e);
                             }
                         }
                         return null;
@@ -805,5 +839,127 @@ public class MenuController {
 
         alert.showAndWait();
     }
+
+    private void HandleGoogleAction(Dialog parent) {
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Authentification via Google");
+
+        final WebView browser = new WebView();
+        final WebEngine webEngine = browser.getEngine();
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(browser);
+        CookieManager manager = new CookieManager();
+        CookieHandler.setDefault(manager);
+        webEngine.setJavaScriptEnabled(false);
+
+        dialog.getDialogPane().setContent(scrollPane);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+
+        webEngine.getLoadWorker().stateProperty().addListener(new ChangeListener<State>() {
+            @Override public void changed(ObservableValue ov, State oldState, State newState) {
+                if(newState == Worker.State.RUNNING) {
+                    if(webEngine.getLocation().contains("accounts.google.com/ServiceLoginAuth")) {
+                        scrollPane.setVisible(false);
+                    }
+                }
+                if(newState == Worker.State.SUCCEEDED) {
+                    if(webEngine.getLocation().equals("https://zestedesavoir.com/")) {
+                        Element elementary = webEngine.getDocument().getDocumentElement();
+                        Element logbox = getLogBox(elementary);
+                        String pseudo = getPseudo(logbox);
+                        String id = getId(logbox);
+                        mainApp.getZdsutils().authToGoogle(manager.getCookieStore().getCookies(), pseudo, id);
+                        dialog.close();
+                        parent.close();
+                    } else {
+                        if(webEngine.getLocation().contains("accounts.google.com/ServiceLoginAuth")) {
+                            scrollPane.setVisible(true);
+                        }
+                    }
+                }
+            }
+        });
+        webEngine.load("https://zestedesavoir.com/login/google-oauth2/");
+
+        dialog.show();
+    }
+
+    private Element getLogBox(Element el) {
+        NodeList childNodes = el.getChildNodes();
+        if(el.getNodeName().equals("DIV")){
+            String attr = el.getAttribute("class");
+            if(attr != null) {
+                if(attr.contains("my-account-dropdown")) {
+                    return el;
+                }
+            }
+        }
+        for(int i=0; i<childNodes.getLength(); i++){
+            org.w3c.dom.Node item = childNodes.item(i);
+            if(item instanceof Element){
+                Element res = getLogBox((Element)item);
+                if(res != null) return res;
+            }
+        }
+        return null;
+    }
+
+    private String getPseudo(Element logbox){
+        NodeList childNodes = logbox.getChildNodes();
+        for(int i=0; i<childNodes.getLength(); i++){
+            org.w3c.dom.Node item = childNodes.item(i);
+            if(item instanceof Element){
+                Element find = ((Element)item);
+                if(find.getNodeName().equals("SPAN")) {
+                    return find.getTextContent();
+                };
+            }
+        }
+        return null;
+    }
+
+    private String getId(Element logbox){
+        NodeList childNodes = logbox.getChildNodes();
+        for(int i=0; i<childNodes.getLength(); i++){
+            org.w3c.dom.Node item = childNodes.item(i);
+            if(item instanceof Element){
+                Element ulItem = ((Element)item);
+                if(ulItem.getNodeName().equals("UL")) {
+                    NodeList childUlNodes = ulItem.getChildNodes();
+                    for(int j=0; j<childUlNodes.getLength(); j++){
+                        org.w3c.dom.Node jtem = childUlNodes.item(j);
+                        if(jtem instanceof Element){
+                            Element liItem = ((Element)jtem);
+                            if(liItem.getNodeName().equals("LI")) {
+                                NodeList childIlNodes = liItem.getChildNodes();
+                                for(int k=0; k<childIlNodes.getLength(); k++){
+                                    org.w3c.dom.Node ktem = childIlNodes.item(k);
+                                    if(ktem instanceof Element){
+                                        Element aItem = ((Element)ktem);
+                                        //System.out.println("BALISE : "+aItem.getNodeName());
+                                        if(aItem.getNodeName().equals("A")) {
+                                            String ref = aItem.getAttribute("href").toString();
+                                            if(ref.startsWith("/contenus/tutoriels")) {
+                                                String[] splt = ref.split("/");
+                                                if(splt.length >= 4) {
+                                                    return splt[3];
+                                                }
+                                                else {
+                                                    return null;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+            }
+        }
+        return null;
+    }
+
 
 }

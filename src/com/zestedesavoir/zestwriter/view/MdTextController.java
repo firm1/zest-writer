@@ -10,6 +10,8 @@ import java.util.Optional;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.python.util.PythonInterpreter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
 import com.sun.javafx.scene.control.skin.TabPaneSkin;
@@ -64,7 +66,6 @@ import javafx.util.Pair;
 
 public class MdTextController {
     private MainApp mainApp;
-
     private PythonInterpreter pyconsole;
 
     @FXML
@@ -81,6 +82,7 @@ public class MdTextController {
 
     private Map jsonData;
     private String baseFilePath;
+    private final Logger logger;
 
     private static ObservableList<TypeContent> typeOptions = FXCollections.observableArrayList(new TypeContent("ARTICLE", "Article"), new TypeContent("TUTORIAL","Tutoriel"));
     private static ObservableList<License> licOptions = FXCollections.observableArrayList(
@@ -132,6 +134,7 @@ public class MdTextController {
 
     public MdTextController() {
         super();
+        logger = LoggerFactory.getLogger(MdTextController.class);
     }
 
     private MaterialDesignIconView createFolderIcon() {
@@ -176,6 +179,13 @@ public class MdTextController {
         return icon;
     }
 
+    public static MaterialDesignIconView createGoogleIcon() {
+        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.GOOGLE_PLUS);
+        icon.setSize("2em");
+        icon.setGlyphStyle("-fx-fill:#dd4b39");
+        return icon;
+    }
+
     public PythonInterpreter getPyconsole() {
         return pyconsole;
     }
@@ -205,8 +215,7 @@ public class MdTextController {
                     openContent(mainApp.getContents().get("dir"));
                 }
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                logger.error("", e);
             }
         });
 
@@ -253,10 +262,12 @@ public class MdTextController {
 
     public void createTabExtract(ExtractFile extract) throws IOException {
 
+        logger.debug("Tentative de création d'un nouvel onglet pour "+extract.getTitle().getValue());
         extract.loadMarkdown();
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MainApp.class.getResource("view/Editor.fxml"));
         SplitPane writer = loader.load();
+        logger.trace("Fichier Editor.fxml chargé");
 
         Tab tab = new Tab();
         tab.setText(extract.getTitle().getValue());
@@ -298,6 +309,7 @@ public class MdTextController {
         });
 
         mainApp.getExtracts().put(extract, tab);
+        logger.info("Nouvel onglet crée pour "+extract.getTitle().getValue());
     }
 
     public Map<String, Object> getMapFromTreeItem(TreeItem<ExtractFile> node, Map<String, Object> map) {
@@ -388,7 +400,7 @@ public class MdTextController {
     }
 
     public void openContent(String filePath) throws IOException {
-
+        logger.debug("Tentative d'ouverture du contenu stocké dans "+filePath);
         this.baseFilePath = filePath;
         ObjectMapper mapper = new ObjectMapper();
         jsonData = mapper.readValue(new File(filePath + File.separator + "manifest.json"), Map.class);
@@ -423,7 +435,7 @@ public class MdTextController {
                             try {
                                 createTabExtract(item.getValue());
                             } catch (IOException e) {
-                                e.printStackTrace();
+                                logger.error("", e);
                             }
                         } else {
                             TabPaneSkin skin = (TabPaneSkin) EditorList.getSkin();
@@ -489,6 +501,7 @@ public class MdTextController {
                         });
 
                         addMenuItem1.setOnAction(t -> {
+                            logger.debug("Tentative d'ajout d'un nouvel extrait");
                             TextInputDialog dialog = new TextInputDialog("Extrait");
                             ExtractFile extract;
                             dialog.setTitle("Nouvel extrait");
@@ -511,7 +524,7 @@ public class MdTextController {
                                     try {
                                         extFile.createNewFile();
                                     } catch (IOException e) {
-                                        e.printStackTrace();
+                                        logger.error("", e);
                                     }
                                 }
                                 saveManifestJson();
@@ -519,6 +532,7 @@ public class MdTextController {
                         });
 
                         addMenuItem2.setOnAction(t -> {
+                            logger.debug("Tentative d'ajout d'un nouveau conteneur");
                             TextInputDialog dialog = new TextInputDialog("Conteneur");
 
                             dialog.setTitle("Nouveau conteneur");
@@ -565,14 +579,14 @@ public class MdTextController {
                                     try {
                                         introFile.createNewFile();
                                     } catch (IOException e) {
-                                        e.printStackTrace();
+                                        logger.error("", e);
                                     }
                                 }
                                 if (!concluFile.exists()) {
                                     try {
                                         concluFile.createNewFile();
                                     } catch (IOException e) {
-                                        e.printStackTrace();
+                                        logger.error("", e);
                                     }
                                 }
                                 saveManifestJson();
@@ -580,6 +594,7 @@ public class MdTextController {
                         });
 
                         addMenuItem3.setOnAction(t -> {
+                            logger.debug("Tentative de rennomage d'un conteneur ou extrait");
                             TreeItem<ExtractFile> item1 = Summary.getSelectionModel().getSelectedItem();
                             TextInputDialog dialog = new TextInputDialog(item1.getValue().getTitle().getValue());
                             dialog.setTitle("Renommer  " + item1.getValue().getTitle().getValue());
@@ -597,6 +612,7 @@ public class MdTextController {
                         });
 
                         addMenuItem5.setOnAction(t -> {
+                            logger.debug("Tentative d'édition d'un contenu");
                             try {
                                 Map json = mapper.readValue(new File(filePath + File.separator + "manifest.json"), Map.class);
                                 Map<String, Object> mp = new HashMap<>();
@@ -616,7 +632,7 @@ public class MdTextController {
                                 }
                             } catch (Exception e) {
                                 // TODO Auto-generated catch block
-                                e.printStackTrace();
+                                logger.error("", e);
                             }
                         });
                     }
@@ -747,6 +763,7 @@ public class MdTextController {
                 return result;
             }
         });
+        logger.info("Contenu stocké dans "+filePath+" ouvert");
     }
 
     public static int getAncestorContainerCount(TreeItem<ExtractFile> node) {
@@ -788,13 +805,15 @@ public class MdTextController {
         ObjectMapper mapper = new ObjectMapper();
         try {
             mapper.writerWithDefaultPrettyPrinter().writeValue(new File(baseFilePath + File.separator + "manifest.json"), res);
+            logger.info("Fichier manifest sauvegardé");
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("", e);
         }
     }
 
     public Map<String,Object> createContentDialog(Map<String, Object> defaultParam) {
+        logger.debug("Tentative de création d'une boite de dialogue pour éditer un contenu");
        if(defaultParam == null) {
            defaultParam = new HashMap<>();
            defaultParam.put("title", "");
