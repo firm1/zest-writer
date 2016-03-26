@@ -67,6 +67,7 @@ task fatJar(type: Jar) {
             'Main-Class': 'com.zestedesavoir.zestwriter.MainApp'
     }
     baseName = project.name + '-all'
+    zip64 = true
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
