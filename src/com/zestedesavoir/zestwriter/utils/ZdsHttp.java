@@ -537,7 +537,7 @@ public class ZdsHttp {
 
 
     public static void main(String[] args) {
-        Configuration config = new Configuration();
+        Configuration config = new Configuration(System.getProperty("user.home"));
 
         try {
             ZdsHttp zdsutils = new ZdsHttp(config);

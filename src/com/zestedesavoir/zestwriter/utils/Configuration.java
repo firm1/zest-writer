@@ -11,6 +11,9 @@ import java.util.Properties;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.zestedesavoir.zestwriter.MainApp;
 
 public class Configuration {
@@ -26,9 +29,10 @@ public class Configuration {
     private StorageSaver offlineSaver;
     private StorageSaver onlineSaver;
     private LocalDirectoryFactory workspaceFactory;
+    private final Logger logger;
 
-    public Configuration() {
-        String homeDir = System.getProperty("user.home");
+    public Configuration(String homeDir) {
+        logger = LoggerFactory.getLogger(Configuration.class);
         String confDirPath = homeDir+File.separator+"."+this.appName;
         String confFilePath = confDirPath+File.separator+this.confFileName;
         File confDir = new File(confDirPath);
@@ -42,13 +46,13 @@ public class Configuration {
         try {
             props.load(MainApp.class.getClassLoader().getResourceAsStream("config.properties"));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
 
         conf = new Properties(props);
 
         if(!confFile.exists()) {
-            System.out.println("not exist : "+confFile.getAbsolutePath());
+            logger.debug("le fichier de configuartion "+confFile.getAbsolutePath()+" n'existe pas");
             JFileChooser fr = new JFileChooser();
             FileSystemView fw = fr.getFileSystemView();
             conf.setProperty(WORKSPACE_KEY, fw.getDefaultDirectory().getAbsolutePath() + File.separator + "zwriter-workspace");
@@ -59,7 +63,7 @@ public class Configuration {
                 conf.load(new FileInputStream(confFile));
                 loadWorkspace();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("", e);
             }
         }
 
@@ -69,14 +73,14 @@ public class Configuration {
                 saveConfFile();
             }
         }
-
     }
 
     private void saveConfFile() {
         try {
             conf.store(new FileOutputStream(confFile), "");
+            logger.info("Fichier de configuration enregistré");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
     }
 
@@ -152,9 +156,10 @@ public class Configuration {
         try{
             offlineSaver = workspaceFactory.getOfflineSaver();
             onlineSaver = workspaceFactory.getOnlineSaver();
+            logger.info("Espace de travail chargé en mémoire");
         }
         catch(IOException e){
-            e.printStackTrace();
+            logger.error("", e);
         }
 
     }

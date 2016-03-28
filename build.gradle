@@ -26,8 +26,8 @@ javafx {
     // app icons
     icons {
         shortcut = ["src/logo/logo-16.png", "src/logo/logo-32.png", "src/logo/logo-128.png", "src/logo/logo-256.png", "src/logo/logo-16@2x.png", "src/logo/logo-32@2x.png", "src/logo/logo-128@2x.png"]
-        volume = 'javafx-icon.png'
-        setup = 'javafx-icon.png'
+        volume = 'src/logo/logo-128.png'
+        setup = 'src/logo/logo-128.png'
     }
 
     // Keystore credentials for signing JAR

@@ -37,14 +37,20 @@ public class MainApp extends Application {
     private MdTextController Index;
     private Configuration config;
     StringBuilder key = new StringBuilder();
+    public static String[] args;
 
     public MainApp() {
         super();
-        config = new Configuration();
+        if(args.length > 0) {
+            config = new Configuration(args[0]);
+        } else {
+            config = new Configuration(System.getProperty("user.home"));
+        }
         zdsutils = new ZdsHttp(config);
     }
 
     public static void main(String[] args) {
+        MainApp.args  = args;
         launch(args);
     }
 
