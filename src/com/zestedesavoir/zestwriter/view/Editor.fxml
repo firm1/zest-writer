@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.materialdesignicons.*?>
+<?import org.fxmisc.richtext.StyleClassedTextArea ?>
 <?import javafx.scene.paint.*?>
 <?import java.lang.*?>
 <?import javafx.scene.text.*?>
@@ -141,11 +142,8 @@
             </ToolBar>
          </top>
          <center>
-            <TextArea fx:id="SourceText" wrapText="true" BorderPane.alignment="CENTER">
-               <font>
-                  <Font name="Fira Mono" size="13.0" />
-               </font>
-            </TextArea>
+            <StyleClassedTextArea fx:id="SourceText" wrapText="true" BorderPane.alignment="CENTER" >
+            </StyleClassedTextArea>
          </center>
       </BorderPane>
       <BorderPane fx:id="BoxRender" prefHeight="200.0" prefWidth="200.0">

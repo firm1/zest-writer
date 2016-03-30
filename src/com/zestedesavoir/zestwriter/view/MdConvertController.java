@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.fxmisc.richtext.StyleClassedTextArea;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 import org.w3c.dom.DOMException;
@@ -54,7 +55,7 @@ public class MdConvertController {
     @FXML
     private WebView renderView;
     @FXML
-    private TextArea SourceText;
+    private StyleClassedTextArea SourceText;
     @FXML
     private Button SaveButton;
     @FXML
@@ -92,6 +93,8 @@ public class MdConvertController {
     @FXML
     private void initialize() {
         renderView.getEngine().setUserStyleSheetLocation(getClass().getResource("content.css").toExternalForm());
+        SourceText.getStyleClass().add("markdown-editor");
+        SourceText.getStylesheets().add(getClass().getResource("editor.css").toExternalForm());
     }
 
     @FXML
@@ -266,6 +269,14 @@ public class MdConvertController {
                 "\n```" + tLangageTCode.getKey() + "\n" + tLangageTCode.getValue() + "\n```\n"));
     }
 
+    public void undo() {
+    	SourceText.getUndoManager().undo();
+    }
+
+    public void redo() {
+    	SourceText.getUndoManager().redo();
+    }
+
     @FXML
     public void HandleSaveButtonAction(ActionEvent event) {
         extract.setMdText(SourceText.getText());
@@ -292,7 +303,7 @@ public class MdConvertController {
         loader.setLocation(MainApp.class.getResource("view/Editor.fxml"));
         SplitPane writer = loader.load();
 
-        SourceText.setText(extract.getMdText().getValue());
+        SourceText.replaceText(extract.getMdText().getValue());
         SourceText.textProperty().addListener((observableValue, s, s2) -> {
             tab.setText("! " + extract.getTitle().getValue());
             this.isSaved = false;
