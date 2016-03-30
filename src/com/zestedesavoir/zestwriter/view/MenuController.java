@@ -23,13 +23,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.zeroturnaround.zip.ZipUtil;
 
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.ExtractFile;
 import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
-import com.zestedesavoir.zestwriter.utils.ZipUtil;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 
 import javafx.application.Platform;
@@ -741,7 +741,7 @@ public class MenuController {
                             try {
                                 String pathDir = mainApp.getZdsutils().getOfflineContentPathDir() + File.separator + localSlug;
                                 updateMessage("Compression : "+targetSlug+" en cours ...");
-                                ZipUtil.zipContent(pathDir, pathDir + ".zip");
+                                ZipUtil.pack(new File(pathDir), new File(pathDir + ".zip"));
                                 updateMessage("Import : "+targetSlug+" en cours ...");
                                 if(targetId == null) {
                                     if(!mainApp.getZdsutils().importNewContent(pathDir+ ".zip")) {

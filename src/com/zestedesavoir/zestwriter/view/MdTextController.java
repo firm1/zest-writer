@@ -362,7 +362,6 @@ public class MdTextController {
             if (container.containsKey("children")) {
                 List children = (ArrayList) container.get("children");
                 String intro_path = container.get("introduction").toString();
-                String buildPath = baseFilePath + File.separator + intro_path.substring(0, intro_path.length() - 15);
                 for (Object child : children) {
                     Map childMap = (Map) child;
                     TreeItem<ExtractFile> item = new TreeItem<>(
@@ -514,7 +513,7 @@ public class MdTextController {
                                         result.get(),
                                         ZdsHttp.toSlug(result.get()),
                                         baseFilePath,
-                                        (getItem().getFilePath() + File.separator + ZdsHttp.toSlug(result.get()) + ".md").substring(baseFilePath.length()+1));
+                                        (getItem().getFilePath() + "/" + ZdsHttp.toSlug(result.get()) + ".md").substring(baseFilePath.length()+1));
                                 TreeItem<ExtractFile> newChild = new TreeItem<>(extract);
                                 int level = Math.max(getTreeItem().getChildren().size() - 1, 0);
                                 getTreeItem().getChildren().add(level, newChild);
@@ -547,14 +546,14 @@ public class MdTextController {
                                         result.get(),
                                         slug,
                                         baseFilePath,
-                                        (getItem().getFilePath() + File.separator + slug + File.separator + "introduction.md").substring(baseFilePath.length()+1),
-                                        (getItem().getFilePath() + File.separator + slug + File.separator + "conclusion.md").substring(baseFilePath.length()+1));
+                                        (getItem().getFilePath() + "/" + slug + "/" + "introduction.md").substring(baseFilePath.length()+1),
+                                        (getItem().getFilePath() + "/" + slug + "/" + "conclusion.md").substring(baseFilePath.length()+1));
                                 TreeItem<ExtractFile> newChild = new TreeItem<>(extract);
                                 ExtractFile extIntro = new ExtractFile(
                                         "Introduction",
                                         slug,
                                         baseFilePath,
-                                        (getItem().getFilePath() + File.separator + slug + File.separator + "introduction.md").substring(baseFilePath.length()+1),
+                                        (getItem().getFilePath() + "/" + slug + "/" + "introduction.md").substring(baseFilePath.length()+1),
                                         null);
                                 TreeItem<ExtractFile> newChildIntro = new TreeItem<>(extIntro);
                                 ExtractFile extConclu = new ExtractFile(
@@ -562,7 +561,7 @@ public class MdTextController {
                                         slug,
                                         baseFilePath,
                                         null,
-                                        (getItem().getFilePath() + File.separator + slug + File.separator + "conclusion.md").substring(baseFilePath.length()+1));
+                                        (getItem().getFilePath() + "/" + slug + "/" + "conclusion.md").substring(baseFilePath.length()+1));
                                 TreeItem<ExtractFile> newChildConclu = new TreeItem<>(extConclu);
                                 newChild.getChildren().add(newChildIntro);
                                 newChild.getChildren().add(newChildConclu);
