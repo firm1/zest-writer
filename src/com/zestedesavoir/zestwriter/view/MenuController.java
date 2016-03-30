@@ -31,8 +31,10 @@ import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
+import com.zestedesavoir.zestwriter.view.dialogs.FindDialog;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.fxmisc.richtext.CodeArea;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -62,10 +64,13 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -847,21 +852,25 @@ public class MenuController {
 
     @FXML
     private void HandleSimpleFind(ActionEvent event){
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("Finder.fxml"));
-            Stage stage = new Stage();
-            stage.setTitle("Rechercher");
-            FinderController controller = loader.getController();
-            Scene scene = new Scene(loader.load(), 450, 450);
-            stage.setScene(scene);
-            stage.setResizable(false);
-            stage.setAlwaysOnTop(true);
-            stage.show();
+        // TODO: create a method somewhere more apropriate
+        String currentFileText = "";
+        Tab currentTab = null;
+        for(Entry<ExtractFile, Tab> entry: mainApp.getExtracts().entrySet()){
+            if(entry.getValue().isSelected()){
+                currentFileText = entry.getKey().getMdText().get();
+                currentTab = entry.getValue();
+            }
+        }
+        if(currentTab == null){
+            return;
+        }
+        FindDialog dialog = new FindDialog(currentFileText);
+        dialog.show();
+        SplitPane editorPane = (SplitPane)currentTab.getContent();
+        BorderPane editorNode = (BorderPane) editorPane.getItems().get(0);
+        CodeArea editorAera = (CodeArea) editorNode.getCenter();
+        for(Integer coords : dialog.getResult()){
             
-            int i = 1+1;
-        } catch (IOException ex) {
-            Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     @FXML

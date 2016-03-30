@@ -88,7 +88,8 @@ dependencies {
             'org.slf4j:slf4j-api:1.7.12',
             'org.slf4j:slf4j-log4j12:1.7.12',
             'de.jensd:fontawesomefx:8.9',
-            'org.zeroturnaround:zt-zip:1.9'
+            'org.zeroturnaround:zt-zip:1.9',
+            'org.fxmisc.richtext:richtextfx:0.6.10'
 }
 
 task wrapper(type: Wrapper) {
