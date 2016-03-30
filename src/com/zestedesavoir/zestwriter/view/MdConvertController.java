@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
@@ -95,6 +96,7 @@ public class MdConvertController {
         renderView.getEngine().setUserStyleSheetLocation(getClass().getResource("content.css").toExternalForm());
         SourceText.getStyleClass().add("markdown-editor");
         SourceText.getStylesheets().add(getClass().getResource("editor.css").toExternalForm());
+        SourceText.setParagraphGraphicFactory(LineNumberFactory.get(SourceText));
     }
 
     @FXML
