@@ -30,6 +30,7 @@ import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.dialogs.GoogleLoginDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.LoginDialog;
+import com.zestedesavoir.zestwriter.view.task.LoginService;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -503,7 +504,6 @@ public class MenuController {
 
     @FXML
     private Service<Void> HandleLoginButtonAction(ActionEvent event) {
-        // Create the custom dialog.
     	// Button for google
         Button googleAuth = new Button("Connexion via Google", MdTextController.createGoogleIcon());
         LoginDialog dialog = new LoginDialog(googleAuth);
@@ -514,45 +514,7 @@ public class MenuController {
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
         hBottomBox.getChildren().addAll(labelField);
-        Service<Void> loginTask = new Service<Void>() {
-            @Override
-            protected Task<Void> createTask() {
-                return new Task<Void>() {
-                    @Override
-                    protected Void call() {
-                        result.ifPresent(usernamePassword -> {
-                            try {
-                                updateMessage("Connexion au site en cours ...");
-                                if(mainApp.getZdsutils().login(usernamePassword.getKey(), usernamePassword.getValue())) {
-                                    updateMessage("Recherche des contenus ...");
-                                    mainApp.getZdsutils().initInfoOnlineContent("tutorial");
-                                    mainApp.getZdsutils().initInfoOnlineContent("article");
-                                }
-                                else {
-                                    cancel();
-                                }
-                            } catch (Exception e) {
-                                cancel();
-                            }
-                        });
-                        if(!result.isPresent()) {
-                            if(mainApp.getZdsutils().isAuthenticated()) {
-                                updateMessage("Recherche des contenus ...");
-                                try {
-                                    mainApp.getZdsutils().initInfoOnlineContent("tutorial");
-                                    mainApp.getZdsutils().initInfoOnlineContent("article");
-                                } catch (IOException e) {
-                                    logger.error("", e);
-                                }
-                            } else {
-                                cancel();
-                            }
-                        }
-                        return null;
-                    }
-                };
-            }
-        };
+        LoginService loginTask = new LoginService(result, mainApp.getZdsutils());
         labelField.textProperty().bind(loginTask.messageProperty());
 
         return loginTask;
