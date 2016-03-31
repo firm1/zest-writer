@@ -30,6 +30,7 @@ import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.dialogs.GoogleLoginDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.LoginDialog;
+import com.zestedesavoir.zestwriter.view.task.DownloadContentService;
 import com.zestedesavoir.zestwriter.view.task.LoginService;
 
 import javafx.beans.value.ObservableValue;
@@ -525,38 +526,7 @@ public class MenuController {
 
         hBottomBox.getChildren().clear();
         hBottomBox.getChildren().addAll(pb, labelField);
-
-        Service<Void> downloadContentTask = new Service<Void>() {
-            @Override
-            protected Task<Void> createTask() {
-                return new Task<Void>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        int max = mainApp.getZdsutils().getContentListOnline().size();
-                        int iterations = 0;
-                        if (mainApp.getZdsutils().isAuthenticated()) {
-                            for (MetadataContent meta : mainApp.getZdsutils().getContentListOnline()) {
-                                updateMessage("Téléchargement : " + meta.getSlug());
-                                updateProgress(iterations, max);
-                                mainApp.getZdsutils().downloaDraft(meta.getId(), meta.getType());
-                                iterations++;
-                            }
-
-                            iterations = 0;
-                            for (MetadataContent meta : mainApp.getZdsutils().getContentListOnline()) {
-                                updateMessage("Décompression : " + meta.getSlug());
-                                updateProgress(iterations, max);
-                                mainApp.getZdsutils().unzipOnlineContent(mainApp.getZdsutils().getOnlineContentPathDir() + File.separator + meta.getSlug() + ".zip");
-                                iterations++;
-                            }
-                            updateMessage("Terminé");
-                            updateProgress(iterations, max);
-                        }
-                        return null;
-                    }
-                };
-            }
-        };
+        DownloadContentService downloadContentTask = new DownloadContentService(mainApp.getZdsutils());
         labelField.textProperty().bind(downloadContentTask.messageProperty());
         pb.progressProperty().bind(downloadContentTask.progressProperty());
         downloadContentTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
