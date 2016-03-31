@@ -1,9 +1,7 @@
-package com.zestedesavoir.zestwriter.view;
+﻿package com.zestedesavoir.zestwriter.view;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.CookieHandler;
-import java.net.CookieManager;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,11 +16,10 @@ import java.util.Scanner;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.python.core.PyString;
+import org.python.jline.internal.Log;
 import org.python.util.PythonInterpreter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.zeroturnaround.zip.ZipUtil;
 
 import com.zestedesavoir.zestwriter.MainApp;
@@ -31,43 +28,33 @@ import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
+import com.zestedesavoir.zestwriter.view.dialogs.GoogleLoginDialog;
+import com.zestedesavoir.zestwriter.view.dialogs.LoginDialog;
 
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
-import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Pair;
 
@@ -416,58 +403,64 @@ public class MenuController {
 
     @FXML
     private void HandleNewButtonAction(ActionEvent event) {
+
         File defaultDirectory;
-        if(mainApp.getConfig().getWorkspaceFactory() == null) {
-            defaultDirectory = new File(System.getProperty("user.home"));
-        } else {
-            defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
-        }
 
-        Map<String,Object> paramContent= mainApp.getIndex().createContentDialog(null);
+        try {
+	        if(mainApp.getConfig().getWorkspaceFactory() == null) {
+	        	mainApp.getConfig().loadWorkspace();
+	        }
 
-        if(paramContent != null) {
-            // find inexistant directory
-            String localPath = defaultDirectory.getAbsolutePath()+File.separator+ZdsHttp.toSlug((String)paramContent.get("title"));
-            String realLocalPath = localPath;
-            File folder = new File(realLocalPath);
-            int i=1;
-            while(folder.exists()) {
-                realLocalPath = localPath+"-"+i;
-                folder = new File(realLocalPath);
-                i++;
-            }
-            // create directory
-            folder.mkdir();
+	        defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
 
-            // create manifest.json
-            File manifest = new File(realLocalPath+File.separator+"manifest.json");
-            ObjectMapper mapper = new ObjectMapper();
-            paramContent.put("slug", ZdsHttp.toSlug((String)paramContent.get("title")));
-            paramContent.put("version", 2);
-            paramContent.put("object", "container");
-            paramContent.put("introduction", "introduction.md");
-            paramContent.put("conclusion", "conclusion.md");
-            paramContent.put("children", new ArrayList<>());
+	        Map<String,Object> paramContent= mainApp.getIndex().createContentDialog(null);
 
-            try {
-                mapper.writeValue(manifest, paramContent);
-                // create introduction and conclusion
-                File intro = new File(realLocalPath+File.separator+"introduction.md");
-                File conclu = new File(realLocalPath+File.separator+"conclusion.md");
-                intro.createNewFile();
-                conclu.createNewFile();
-                mainApp.getIndex().openContent(folder.getAbsolutePath());
-                mainApp.getContents().put("dir", folder.getAbsolutePath());
+	        if(paramContent != null) {
+	            // find inexistant directory
+	            String localPath = defaultDirectory.getAbsolutePath()+File.separator+ZdsHttp.toSlug((String)paramContent.get("title"));
+	            String realLocalPath = localPath;
+	            File folder = new File(realLocalPath);
+	            int i=1;
+	            while(folder.exists()) {
+	                realLocalPath = localPath+"-"+i;
+	                folder = new File(realLocalPath);
+	                i++;
+	            }
+	            // create directory
+	            folder.mkdir();
 
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                logger.error("", e);
-            }
+	            // create manifest.json
+	            File manifest = new File(realLocalPath+File.separator+"manifest.json");
+	            ObjectMapper mapper = new ObjectMapper();
+	            paramContent.put("slug", ZdsHttp.toSlug((String)paramContent.get("title")));
+	            paramContent.put("version", 2);
+	            paramContent.put("object", "container");
+	            paramContent.put("introduction", "introduction.md");
+	            paramContent.put("conclusion", "conclusion.md");
+	            paramContent.put("children", new ArrayList<>());
 
-            menuUpload.setDisable(false);
-            menuLisibility.setDisable(false);
-            menuReport.setDisable(false);
-        }
+	            try {
+	                mapper.writeValue(manifest, paramContent);
+	                // create introduction and conclusion
+	                File intro = new File(realLocalPath+File.separator+"introduction.md");
+	                File conclu = new File(realLocalPath+File.separator+"conclusion.md");
+	                intro.createNewFile();
+	                conclu.createNewFile();
+	                mainApp.getIndex().openContent(folder.getAbsolutePath());
+	                mainApp.getContents().put("dir", folder.getAbsolutePath());
+
+	            } catch (IOException e) {
+	                // TODO Auto-generated catch block
+	                logger.error("", e);
+	            }
+
+	            menuUpload.setDisable(false);
+	            menuLisibility.setDisable(false);
+	            menuReport.setDisable(false);
+	        }
+        } catch(IOException e) {
+	    	Log.error(e.getMessage(), e);
+	    }
 
     }
 
@@ -476,13 +469,17 @@ public class MenuController {
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Contenus Zestueux");
         File defaultDirectory;
-        if(mainApp.getConfig().getWorkspaceFactory() == null) {
-            defaultDirectory = new File(System.getProperty("user.home"));
-        } else {
-            defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
-        }
-        chooser.setInitialDirectory(defaultDirectory);
-        File selectedDirectory = chooser.showDialog(mainApp.getPrimaryStage());
+        File selectedDirectory = null;
+        try {
+	        if(mainApp.getConfig().getWorkspaceFactory() == null) {
+				mainApp.getConfig().loadWorkspace();
+	        }
+	        defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
+	        chooser.setInitialDirectory(defaultDirectory);
+	        selectedDirectory = chooser.showDialog(mainApp.getPrimaryStage());
+    	} catch (IOException e) {
+    		Log.error(e.getMessage(), e);
+    	}
 
         if (selectedDirectory != null) {
             mainApp.getContents().put("dir", selectedDirectory.getAbsolutePath());
@@ -507,60 +504,13 @@ public class MenuController {
     @FXML
     private Service<Void> HandleLoginButtonAction(ActionEvent event) {
         // Create the custom dialog.
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Connexion");
-        dialog.setHeaderText("Connectez vous au site Zeste de Savoir");
-
-        // Set the icon (must be included in the project).
-        dialog.setGraphic(new ImageView(this.getClass().getResource("static/icons/login.png").toString()));
-
-        // Set the button types.
-        ButtonType loginButtonType = new ButtonType("Se connecter", ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
-        // Button for google
+    	// Button for google
         Button googleAuth = new Button("Connexion via Google", MdTextController.createGoogleIcon());
+        LoginDialog dialog = new LoginDialog(googleAuth);
         googleAuth.setOnAction(t-> {
-            HandleGoogleAction(dialog);
+            GoogleLoginDialog googleDialog = new GoogleLoginDialog(dialog, mainApp.getZdsutils());
+            googleDialog.show();
         });
-
-        // Create the username and password labels and fields.
-        GridPane grid = new GridPane();
-        grid.setHgap(20);
-        grid.setVgap(20);
-        grid.setPadding(new Insets(20, 10, 10, 10));
-
-        TextField username = new TextField();
-        username.setPromptText("username");
-        PasswordField password = new PasswordField();
-        password.setPromptText("password");
-
-        grid.add(googleAuth, 0, 0, 1, 2);
-        grid.add(new Label("Nom d'utilisateur:"), 1, 0);
-        grid.add(username, 2, 0);
-        grid.add(new Label("Mot de passe:"), 1, 1);
-        grid.add(password, 2, 1);
-
-        // Enable/Disable login button depending on whether a username was entered.
-        Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
-        loginButton.setDisable(true);
-
-        username.textProperty().addListener((observable, oldValue, newValue) -> {
-            loginButton.setDisable(newValue.trim().isEmpty());
-        });
-
-        dialog.getDialogPane().setContent(grid);
-
-        // Request focus on the username field by default.
-        Platform.runLater(username::requestFocus);
-
-        // Convert the result to a username-password-pair when the login button is clicked.
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == loginButtonType) {
-                return new Pair<>(username.getText(), password.getText());
-            }
-            return null;
-        });
-
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
         hBottomBox.getChildren().addAll(labelField);
@@ -839,127 +789,4 @@ public class MenuController {
 
         alert.showAndWait();
     }
-
-    private void HandleGoogleAction(Dialog parent) {
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Authentification via Google");
-
-        final WebView browser = new WebView();
-        final WebEngine webEngine = browser.getEngine();
-
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(browser);
-        CookieManager manager = new CookieManager();
-        CookieHandler.setDefault(manager);
-        webEngine.setJavaScriptEnabled(false);
-
-        dialog.getDialogPane().setContent(scrollPane);
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
-
-        webEngine.getLoadWorker().stateProperty().addListener(new ChangeListener<State>() {
-            @Override public void changed(ObservableValue ov, State oldState, State newState) {
-                if(newState == Worker.State.RUNNING) {
-                    if(webEngine.getLocation().contains("accounts.google.com/ServiceLoginAuth")) {
-                        scrollPane.setVisible(false);
-                    }
-                }
-                if(newState == Worker.State.SUCCEEDED) {
-                    if(webEngine.getLocation().equals("https://zestedesavoir.com/")) {
-                        Element elementary = webEngine.getDocument().getDocumentElement();
-                        Element logbox = getLogBox(elementary);
-                        String pseudo = getPseudo(logbox);
-                        String id = getId(logbox);
-                        mainApp.getZdsutils().authToGoogle(manager.getCookieStore().getCookies(), pseudo, id);
-                        dialog.close();
-                        parent.close();
-                    } else {
-                        if(webEngine.getLocation().contains("accounts.google.com/ServiceLoginAuth")) {
-                            scrollPane.setVisible(true);
-                        }
-                    }
-                }
-            }
-        });
-        webEngine.load("https://zestedesavoir.com/login/google-oauth2/");
-
-        dialog.show();
-    }
-
-    private Element getLogBox(Element el) {
-        NodeList childNodes = el.getChildNodes();
-        if(el.getNodeName().equals("DIV")){
-            String attr = el.getAttribute("class");
-            if(attr != null) {
-                if(attr.contains("my-account-dropdown")) {
-                    return el;
-                }
-            }
-        }
-        for(int i=0; i<childNodes.getLength(); i++){
-            org.w3c.dom.Node item = childNodes.item(i);
-            if(item instanceof Element){
-                Element res = getLogBox((Element)item);
-                if(res != null) return res;
-            }
-        }
-        return null;
-    }
-
-    private String getPseudo(Element logbox){
-        NodeList childNodes = logbox.getChildNodes();
-        for(int i=0; i<childNodes.getLength(); i++){
-            org.w3c.dom.Node item = childNodes.item(i);
-            if(item instanceof Element){
-                Element find = ((Element)item);
-                if(find.getNodeName().equals("SPAN")) {
-                    return find.getTextContent();
-                };
-            }
-        }
-        return null;
-    }
-
-    private String getId(Element logbox){
-        NodeList childNodes = logbox.getChildNodes();
-        for(int i=0; i<childNodes.getLength(); i++){
-            org.w3c.dom.Node item = childNodes.item(i);
-            if(item instanceof Element){
-                Element ulItem = ((Element)item);
-                if(ulItem.getNodeName().equals("UL")) {
-                    NodeList childUlNodes = ulItem.getChildNodes();
-                    for(int j=0; j<childUlNodes.getLength(); j++){
-                        org.w3c.dom.Node jtem = childUlNodes.item(j);
-                        if(jtem instanceof Element){
-                            Element liItem = ((Element)jtem);
-                            if(liItem.getNodeName().equals("LI")) {
-                                NodeList childIlNodes = liItem.getChildNodes();
-                                for(int k=0; k<childIlNodes.getLength(); k++){
-                                    org.w3c.dom.Node ktem = childIlNodes.item(k);
-                                    if(ktem instanceof Element){
-                                        Element aItem = ((Element)ktem);
-                                        //System.out.println("BALISE : "+aItem.getNodeName());
-                                        if(aItem.getNodeName().equals("A")) {
-                                            String ref = aItem.getAttribute("href").toString();
-                                            if(ref.startsWith("/contenus/tutoriels")) {
-                                                String[] splt = ref.split("/");
-                                                if(splt.length >= 4) {
-                                                    return splt[3];
-                                                }
-                                                else {
-                                                    return null;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                };
-            }
-        }
-        return null;
-    }
-
-
 }

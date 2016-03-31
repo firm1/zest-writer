@@ -1,4 +1,4 @@
-package com.zestedesavoir.zestwriter.view;
+﻿package com.zestedesavoir.zestwriter.view;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +20,7 @@ import com.zestedesavoir.zestwriter.model.ExtractFile;
 import com.zestedesavoir.zestwriter.model.License;
 import com.zestedesavoir.zestwriter.model.TypeContent;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
+import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
@@ -84,16 +85,7 @@ public class MdTextController {
     private String baseFilePath;
     private final Logger logger;
 
-    private static ObservableList<TypeContent> typeOptions = FXCollections.observableArrayList(new TypeContent("ARTICLE", "Article"), new TypeContent("TUTORIAL","Tutoriel"));
-    private static ObservableList<License> licOptions = FXCollections.observableArrayList(
-            new License("CC BY", "Licence CC BY"),
-            new License("CC BY-SA", "Licence CC BY-SA"),
-            new License("CC BY-ND", "Licence CC BY-ND"),
-            new License("CC BY-NC", "Licence CC BY-NC"),
-            new License("CC BY-NC-SA", "Licence CC BY-NC-SA"),
-            new License("CC BY-NC-ND", "Licence CC BY-NC-ND"),
-            new License("Tous droits réservés", "Tout droits réservés"),
-            new License("CC 0", "Licence CC 0"));
+
 
     @FXML
     private void initialize() {
@@ -615,8 +607,8 @@ public class MdTextController {
                             try {
                                 Map json = mapper.readValue(new File(filePath + File.separator + "manifest.json"), Map.class);
                                 Map<String, Object> mp = new HashMap<>();
-                                License lic = licOptions.get(licOptions.indexOf(new License(json.get("licence").toString(), "")));
-                                TypeContent typco = typeOptions.get(typeOptions.indexOf(new TypeContent(json.get("type").toString(), "")));
+                                License lic = EditContentDialog.licOptions.get(EditContentDialog.licOptions.indexOf(new License(json.get("licence").toString(), "")));
+                                TypeContent typco = EditContentDialog.typeOptions.get(EditContentDialog.typeOptions.indexOf(new TypeContent(json.get("type").toString(), "")));
                                 mp.put("title", json.get("title").toString());
                                 mp.put("description", json.get("description").toString());
                                 mp.put("type", typco);
@@ -812,71 +804,20 @@ public class MdTextController {
     }
 
     public Map<String,Object> createContentDialog(Map<String, Object> defaultParam) {
-        logger.debug("Tentative de création d'une boite de dialogue pour éditer un contenu");
+       logger.debug("Tentative de création d'une boite de dialogue pour éditer un contenu");
        if(defaultParam == null) {
            defaultParam = new HashMap<>();
            defaultParam.put("title", "");
            defaultParam.put("description", "");
-           defaultParam.put("type", typeOptions.get(1));
-           defaultParam.put("licence", licOptions.get(6));
+           defaultParam.put("type", EditContentDialog.typeOptions.get(1));
+           defaultParam.put("licence", EditContentDialog.licOptions.get(6));
        }
        // Create wizard
-       Dialog<Pair<String, String>> dialog = new Dialog<>();
-       dialog.setTitle("Nouveau contenu");
-       dialog.setHeaderText("Créez un nouveau contenus pour ZdS");
+       EditContentDialog dialog = new EditContentDialog(defaultParam);
 
-       // Set the icon (must be included in the project).
-       dialog.setGraphic(MdTextController.createAddFolderIcon());
-
-       // Set the button types.
-       ButtonType validButtonType = new ButtonType("Enregistrer", ButtonData.OK_DONE);
-       dialog.getDialogPane().getButtonTypes().addAll(validButtonType, ButtonType.CANCEL);
-
-       // Create the username and password labels and fields.
-       GridPane grid = new GridPane();
-       grid.setHgap(10);
-       grid.setVgap(10);
-       grid.setPadding(new Insets(20, 150, 10, 10));
-
-       TextField title = new TextField(defaultParam.get("title").toString());
-       TextField subtitle = new TextField(defaultParam.get("description").toString());
-       ComboBox<TypeContent> type = new ComboBox<>(typeOptions);
-       type.setValue((TypeContent) defaultParam.get("type"));
-
-       ComboBox<License> license = new ComboBox<>(licOptions);
-       license.setValue((License) defaultParam.get("licence"));
-
-       grid.add(new Label("Titre du contenu :"), 0, 0);
-       grid.add(title, 1, 0);
-       grid.add(new Label("Description du contenu:"), 0, 1);
-       grid.add(subtitle, 1, 1);
-       grid.add(new Label("Type de contenu:"), 0, 2);
-       grid.add(type, 1, 2);
-       grid.add(new Label("Licence du contenu:"), 0, 3);
-       grid.add(license, 1, 3);
-
-       // Enable/Disable login button depending on whether a username was entered.
-       Node validButton = dialog.getDialogPane().lookupButton(validButtonType);
-
-       dialog.getDialogPane().setContent(grid);
-
-       Platform.runLater(title::requestFocus);
-
-       dialog.setResultConverter(dialogButton -> {
-           if(dialogButton == validButtonType) {
-               return new Pair<>("", "");
-           }
-           return null;
-       });
-
-       Optional<Pair<String, String>> result = dialog.showAndWait();
+       Optional<Pair<String, Map<String, Object>>> result = dialog.showAndWait();
        if(result.isPresent()) {
-           Map<String, Object> map = new HashMap<>();
-           map.put("title",title.getText());
-           map.put("description",subtitle.getText());
-           map.put("type",type.getValue().getCode());
-           map.put("licence",license.getValue().getCode());
-           return map;
+           return result.get().getValue();
        } else {
            return null;
        }

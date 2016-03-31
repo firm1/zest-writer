@@ -1,4 +1,4 @@
-package com.zestedesavoir.zestwriter.model;
+﻿package com.zestedesavoir.zestwriter.model;
 
 import java.io.BufferedWriter;
 import java.io.File;

@@ -1,4 +1,4 @@
-package com.zestedesavoir.zestwriter.view;
+﻿package com.zestedesavoir.zestwriter.view;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,6 +39,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -172,7 +173,7 @@ public class MdConvertController {
 
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Détail du lien");
+        dialog.setTitle("DÃ©tail du lien");
         dialog.setHeaderText("");
 
         // Set the icon (must be included in the project).
@@ -342,6 +343,9 @@ public class MdConvertController {
             }else if(t.getCode().equals(KeyCode.SPACE) && t.isControlDown() && t.isShiftDown()) {
                 // unbreakable space
                 HandleUnbreakableAction(null);
+            } else if(t.getCode().equals(KeyCode.L) && t.isControlDown()) {
+                // go to line
+                HandleGoToLineAction();
             }
 
         });
@@ -429,6 +433,17 @@ public class MdConvertController {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public void HandleGoToLineAction() {
+    	TextInputDialog dialog = new TextInputDialog();
+    	dialog.setTitle("Aller à la ligne");
+    	dialog.setContentText("Numéro de ligne: ");
+
+    	Optional<String> result = dialog.showAndWait();
+    	result.ifPresent(line -> {
+    		SourceText.position(Integer.parseInt(line), 0);
+    	});
     }
 
     public String markdownToHtml(String chaine) {

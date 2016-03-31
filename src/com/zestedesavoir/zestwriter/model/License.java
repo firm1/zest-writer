@@ -1,4 +1,4 @@
-package com.zestedesavoir.zestwriter.model;
+﻿package com.zestedesavoir.zestwriter.model;
 
 public class License {
     private String code;

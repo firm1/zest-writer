@@ -1,4 +1,4 @@
-package com.zestedesavoir.zestwriter.utils;
+﻿package com.zestedesavoir.zestwriter.utils;
 
 import org.languagetool.JLanguageTool;
 import org.languagetool.language.French;
