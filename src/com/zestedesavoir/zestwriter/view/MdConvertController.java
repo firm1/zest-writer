@@ -310,6 +310,7 @@ public class MdConvertController {
         SourceText.textProperty().addListener((observableValue, s, s2) -> {
             tab.setText("! " + extract.getTitle().getValue());
             this.isSaved = false;
+            SourceText.getUndoManager().mark();
             updateRender();
         });
         updateRender();
