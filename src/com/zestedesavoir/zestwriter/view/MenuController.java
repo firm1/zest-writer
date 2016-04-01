@@ -31,6 +31,10 @@ import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
+import com.zestedesavoir.zestwriter.view.dialogs.FindDialog;
+import java.util.logging.Level;
+
+import org.fxmisc.richtext.CodeArea;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -43,8 +47,10 @@ import javafx.concurrent.Worker;
 import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -58,10 +64,13 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -69,6 +78,7 @@ import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 
 public class MenuController {
@@ -840,6 +850,41 @@ public class MenuController {
         alert.showAndWait();
     }
 
+    @FXML
+    private void HandleSimpleFind(ActionEvent event){
+        // TODO: create a method somewhere more apropriate
+        String currentFileText = "";
+        Tab currentTab = null;
+        for(Entry<ExtractFile, Tab> entry: mainApp.getExtracts().entrySet()){
+            if(entry.getValue().isSelected()){
+                currentFileText = entry.getKey().getMdText().get();
+                currentTab = entry.getValue();
+            }
+        }
+        if(currentTab == null){
+            return;
+        }
+        FindDialog dialog = new FindDialog(currentFileText);
+        dialog.show();
+        SplitPane editorPane = (SplitPane)currentTab.getContent();
+        BorderPane editorNode = (BorderPane) editorPane.getItems().get(0);
+        CodeArea editorAera = (CodeArea) editorNode.getCenter();
+        for(Integer coords : dialog.getResult()){
+            
+        }
+    }
+    @FXML
+    private void HandleGlobalFind(ActionEvent event){
+        
+    }
+    @FXML
+    private void HandleSimpleReplace(ActionEvent event){
+        
+    }
+    @FXML
+    private void HandleGlobalReplace(ActionEvent event){
+        
+    }
     private void HandleGoogleAction(Dialog parent) {
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Authentification via Google");
