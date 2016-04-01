@@ -30,8 +30,10 @@ import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.dialogs.GoogleLoginDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.LoginDialog;
+import com.zestedesavoir.zestwriter.view.task.CorrectionService;
 import com.zestedesavoir.zestwriter.view.task.DownloadContentService;
 import com.zestedesavoir.zestwriter.view.task.LoginService;
+import com.zestedesavoir.zestwriter.view.task.UploadContentService;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -207,7 +209,7 @@ public class MenuController {
         return map;
     }
 
-    public String markdownToHtml(MdTextController index, String chaine) {
+    public static String markdownToHtml(MdTextController index, String chaine) {
         PythonInterpreter console = index.getPyconsole();
         console.set("text", chaine);
         console.exec("render = Markdown(extensions=(ZdsExtension({'inline': False, 'emoticons': smileys}),),safe_mode = 'escape', enable_attributes = False, tab_length = 4, output_format = 'html5', smart_emphasis = True, lazy_ol = True).convert(text)");
@@ -335,45 +337,7 @@ public class MenuController {
 
         hBottomBox.getChildren().addAll(labelField);
         List<ExtractFile> myExtracts = getExtractFilesFromTree(mainApp.getIndex().getSummary().getRoot());
-        MdTextController mdText = mainApp.getIndex();
-        Corrector corrector = new Corrector();
-        corrector.ignoreRule("FRENCH_WHITESPACE");
-
-        Service<String> correctTask = new Service<String>() {
-            @Override
-            protected Task<String> createTask() {
-                return new Task<String>() {
-                    @Override
-                    protected String call(){
-                        updateMessage("Préparation du rapport de validation ...");
-                        StringBuilder resultCorrect = new StringBuilder();
-                        for(ExtractFile extract:myExtracts) {
-                            updateMessage("Préparation du rapport de validation de "+extract.getTitle().getValue());
-                            String markdown = "";
-                            // load mdText
-                            Path path = Paths.get(extract.getFilePath());
-                            Scanner scanner;
-                            StringBuilder bfString = new StringBuilder();
-                            try {
-                                scanner = new Scanner(path, StandardCharsets.UTF_8.name());
-                                while (scanner.hasNextLine()) {
-                                    bfString.append(scanner.nextLine());
-                                    bfString.append("\n");
-                                }
-                                markdown = bfString.toString();
-                            } catch (IOException e) {
-                                logger.error("", e);
-                            }
-
-                            String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mdText, markdown));
-                            String note = corrector.checkHtmlContentToText(htmlText, extract.getTitle().getValue());
-                            resultCorrect.append(note);
-                        }
-                        return resultCorrect.toString();
-                    }
-                };
-            }
-        };
+        CorrectionService correctTask=new CorrectionService(mainApp.getIndex(), myExtracts);
         labelField.textProperty().bind(correctTask.messageProperty());
         textArea.textProperty().bind(correctTask.valueProperty());
         correctTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
@@ -609,40 +573,7 @@ public class MenuController {
         dialog.setContentText("Tutoriel: ");
 
         Optional<MetadataContent> result = dialog.showAndWait();
-
-        Service<Void> uploadContentTask = new Service<Void>() {
-            @Override
-            protected Task<Void> createTask() {
-                return new Task<Void>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        if (mainApp.getZdsutils().isAuthenticated()) {
-                            String targetId = result.get().getId();
-                            String localSlug = mainApp.getZdsutils().getLocalSlug();
-                            String targetSlug = result.get().getSlug();
-                            try {
-                                String pathDir = mainApp.getZdsutils().getOfflineContentPathDir() + File.separator + localSlug;
-                                updateMessage("Compression : "+targetSlug+" en cours ...");
-                                ZipUtil.pack(new File(pathDir), new File(pathDir + ".zip"));
-                                updateMessage("Import : "+targetSlug+" en cours ...");
-                                if(targetId == null) {
-                                    if(!mainApp.getZdsutils().importNewContent(pathDir+ ".zip")) {
-                                        failed();
-                                    };
-                                } else {
-                                    if(!mainApp.getZdsutils().importContent(pathDir + ".zip", targetId, targetSlug)) {
-                                        failed();
-                                    };
-                                }
-                            } catch (IOException e) {
-                                logger.error("", e);
-                            }
-                        }
-                        return null;
-                    }
-                };
-            }
-        };
+        UploadContentService uploadContentTask = new UploadContentService(mainApp.getZdsutils(), result);
         labelField.textProperty().bind(uploadContentTask.messageProperty());
         uploadContentTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
             Alert alert;
