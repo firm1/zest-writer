@@ -64,26 +64,30 @@
                         <MaterialDesignIconView fill="#084561" glyphName="READ" size="1.8em" />
                      </graphic>
                   </Menu>
-                  <MenuItem fx:id="menuFind" disable="false" mnemonicParsing="true" onAction="#HandleSimpleFind" text="Chercher">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="F" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator>
-                  </MenuItem>
-                  <MenuItem fx:id="menuFindAll" disable="false" mnemonicParsing="true" onAction="#HandleGlobalFind" text="Chercher dans tous le contenu">
-                     <accelerator>
-                        <KeyCodeCombination alt="DOWN" code="F" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator>
-                  </MenuItem>
-                  <MenuItem fx:id="menuReplace" disable="false" mnemonicParsing="true" onAction="#HandleSimpleReplace" text="Remplacer">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="H" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator>
-                  </MenuItem>
-                  <MenuItem fx:id="menuReplaceAll" disable="false" mnemonicParsing="true" onAction="#HandleGlobalReplace" text="Remplacer dans tous le contenu">
-                     <accelerator>
-                        <KeyCodeCombination alt="DOWN" code="H" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator>
-                  </MenuItem>
+                  <Menu text="Recherche" mnemonicParsing="false" >
+                      <items>
+                            <MenuItem fx:id="menuFind" disable="false" mnemonicParsing="true" onAction="#HandleSimpleFind" text="Chercher">
+                               <accelerator>
+                                  <KeyCodeCombination alt="UP" code="F" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                               </accelerator>
+                            </MenuItem>
+                            <MenuItem fx:id="menuFindAll" disable="false" mnemonicParsing="true" onAction="#HandleGlobalFind" text="Chercher dans tous le contenu">
+                               <accelerator>
+                                  <KeyCodeCombination alt="DOWN" code="F" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                               </accelerator>
+                            </MenuItem>
+                            <MenuItem fx:id="menuReplace" disable="false" mnemonicParsing="true" onAction="#HandleSimpleReplace" text="Remplacer">
+                               <accelerator>
+                                  <KeyCodeCombination alt="UP" code="H" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                               </accelerator>
+                            </MenuItem>
+                            <MenuItem fx:id="menuReplaceAll" disable="false" mnemonicParsing="true" onAction="#HandleGlobalReplace" text="Remplacer dans tous le contenu">
+                               <accelerator>
+                                  <KeyCodeCombination alt="DOWN" code="H" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                               </accelerator>
+                            </MenuItem>
+                      </items>
+                  </Menu>
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Synchronisation">
