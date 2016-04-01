@@ -3,9 +3,9 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -17,39 +17,24 @@ import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
 import com.sun.javafx.scene.control.skin.TabPaneSkin;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.ExtractFile;
-import com.zestedesavoir.zestwriter.model.License;
-import com.zestedesavoir.zestwriter.model.TypeContent;
-import com.zestedesavoir.zestwriter.utils.ZdsHttp;
-import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
+import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
+import com.zestedesavoir.zestwriter.view.com.IconFactory;
+import com.zestedesavoir.zestwriter.view.com.MdTreeCell;
 
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
-import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -60,10 +45,8 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
-import javafx.util.Pair;
 
 public class MdTextController {
     private MainApp mainApp;
@@ -98,11 +81,8 @@ public class MdTextController {
         new Thread(() -> {
             pyconsole = new PythonInterpreter();
             pyconsole.exec("from markdown import Markdown");
-            System.out.print("1 .. ");
             pyconsole.exec("from markdown.extensions.zds import ZdsExtension");
-            System.out.print("2 .. ");
             pyconsole.exec("from smileys_definition import smileys");
-            System.out.print("3 .. ");
             System.out.println("PYTHON START");
         }).start();
     }
@@ -127,55 +107,6 @@ public class MdTextController {
     public MdTextController() {
         super();
         logger = LoggerFactory.getLogger(MdTextController.class);
-    }
-
-    private MaterialDesignIconView createFolderIcon() {
-        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.FOLDER_MULTIPLE);
-        icon.setSize("1.8em");
-        icon.setGlyphStyle("-fx-fill:#084561");
-        return icon;
-    }
-
-    public static MaterialDesignIconView createAddFolderIcon() {
-        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.FOLDER_PLUS);
-        icon.setSize("1.8em");
-        icon.setGlyphStyle("-fx-fill:#084561");
-        return icon;
-    }
-
-    private MaterialDesignIconView createDeleteIcon() {
-        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.CLOSE);
-        icon.setSize("1.8em");
-        icon.setGlyphStyle("-fx-fill:#f44336");
-        return icon;
-    }
-
-    private MaterialDesignIconView createRemoveIcon() {
-        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.DELETE);
-        icon.setSize("1.8em");
-        icon.setGlyphStyle("-fx-fill:#f44336");
-        return icon;
-    }
-
-    private MaterialDesignIconView createFileIcon() {
-        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.FILE);
-        icon.setSize("1.8em");
-        icon.setGlyphStyle("-fx-fill:#ef9708");
-        return icon;
-    }
-
-    private MaterialDesignIconView createEditIcon() {
-        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.BORDER_COLOR);
-        icon.setSize("1.8em");
-        icon.setGlyphStyle("-fx-fill:#084561");
-        return icon;
-    }
-
-    public static MaterialDesignIconView createGoogleIcon() {
-        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.GOOGLE_PLUS);
-        icon.setSize("2em");
-        icon.setGlyphStyle("-fx-fill:#dd4b39");
-        return icon;
     }
 
     public PythonInterpreter getPyconsole() {
@@ -298,45 +229,14 @@ public class MdTextController {
 
         tab.setOnClosed(t -> {
             mainApp.getExtracts().remove(extract);
+            t.consume();
         });
 
         mainApp.getExtracts().put(extract, tab);
         logger.info("Nouvel onglet crée pour "+extract.getTitle().getValue());
     }
 
-    public Map<String, Object> getMapFromTreeItem(TreeItem<ExtractFile> node, Map<String, Object> map) {
-        if (node.getValue().getOject().getValue() != null) {
-            map.put("slug", node.getValue().getSlug().getValue());
-            map.put("object", node.getValue().getOject().getValue());
-            map.put("title", node.getValue().getTitle().getValue());
-            if (node.getValue().isRoot()) {
-                map.put("type", node.getValue().getType().getValue());
-                map.put("version", Integer.parseInt(node.getValue().getVersion().getValue()));
-                map.put("description", node.getValue().getDescription().getValue());
-                map.put("licence", node.getValue().getLicence().getValue());
-            }
-            if (node.getValue().isContainer()) {
-                map.put("introduction", node.getValue().getIntroduction().getValue());
-                map.put("conclusion", node.getValue().getConclusion().getValue());
-            } else {
-                map.put("text", node.getValue().getText().getValue());
-            }
 
-            List<Map<String, Object>> tabs = new ArrayList<>();
-            for (TreeItem<ExtractFile> child : node.getChildren()) {
-                Map<String, Object> h = getMapFromTreeItem(child, new HashMap<>());
-                if (h != null) {
-                    tabs.add(h);
-                }
-            }
-
-            if (tabs.size() > 0) {
-                map.put("children", tabs);
-            }
-            return map;
-        }
-        return null;
-    }
 
     public TreeItem<ExtractFile> addChild(TreeItem<ExtractFile> node, Map container, String path) {
         if (container.get("object").equals("container")) {
@@ -391,6 +291,15 @@ public class MdTextController {
     }
 
     public void openContent(String filePath) throws IOException {
+
+    	for(Entry<ExtractFile, Tab> entry:mainApp.getExtracts().entrySet()) {
+    		Platform.runLater(() -> {
+    			Event.fireEvent(entry.getValue(), new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
+	            Event.fireEvent(entry.getValue(), new Event(Tab.CLOSED_EVENT));
+	            EditorList.getTabs().remove(entry.getValue());
+    		});
+    	}
+    	mainApp.getExtracts().clear();
         logger.debug("Tentative d'ouverture du contenu stocké dans "+filePath);
         this.baseFilePath = filePath;
         ObjectMapper mapper = new ObjectMapper();
@@ -442,228 +351,7 @@ public class MdTextController {
 
             @Override
             public TreeCell<ExtractFile> call(TreeView<ExtractFile> extractTreeView) {
-                TreeCell<ExtractFile> treeCell = new TreeCell<ExtractFile>() {
-                    private TextField textField;
-
-                    private ContextMenu addMenu = new ContextMenu();
-
-                    public void initContextMenu(ExtractFile item) {
-
-                        MenuItem addMenuItem1 = new MenuItem("Ajouter un extrait");
-                        MenuItem addMenuItem2 = new MenuItem("Ajouter un conteneur");
-                        MenuItem addMenuItem3 = new MenuItem("Renommer");
-                        MenuItem addMenuItem4 = new MenuItem("Supprimer");
-                        MenuItem addMenuItem5 = new MenuItem("Editer");
-                        addMenuItem1.setGraphic(createFileIcon());
-                        addMenuItem2.setGraphic(createAddFolderIcon());
-                        addMenuItem3.setGraphic(createEditIcon());
-                        addMenuItem4.setGraphic(createRemoveIcon());
-                        addMenuItem5.setGraphic(createEditIcon());
-                        addMenu.getItems().clear();
-                        if (item.canTakeContainer(getAncestorContainerCount(getTreeItem()), getDirectChildCount(getTreeItem()))) {
-                            addMenu.getItems().add(addMenuItem2);
-                        }
-                        if (item.canTakeExtract(getDescendantContainerCount(getTreeItem()))) {
-                            addMenu.getItems().add(addMenuItem1);
-                        }
-                        if (item.isEditable()) {
-                            addMenu.getItems().add(addMenuItem3);
-                        }
-                        if (item.isRoot()) {
-                            addMenu.getItems().add(addMenuItem5);
-                        }
-                        if (item.canDelete()) {
-                            addMenu.getItems().add(new SeparatorMenuItem());
-                            addMenu.getItems().add(addMenuItem4);
-                        }
-
-                        addMenuItem4.setOnAction(t -> {
-                            Alert alert = new Alert(AlertType.CONFIRMATION);
-                            alert.setTitle("Confirmation de suppression");
-                            alert.setHeaderText(null);
-                            alert.setContentText("Êtes vous sur de vouloir supprimer ?");
-
-                            Optional<ButtonType> result = alert.showAndWait();
-                            if (result.get() == ButtonType.OK) {
-                                getTreeItem().getParent().getChildren().remove(getTreeItem());
-                                getItem().deleteExtract();
-                                saveManifestJson();
-                            }
-                        });
-
-                        addMenuItem1.setOnAction(t -> {
-                            logger.debug("Tentative d'ajout d'un nouvel extrait");
-                            TextInputDialog dialog = new TextInputDialog("Extrait");
-                            ExtractFile extract;
-                            dialog.setTitle("Nouvel extrait");
-                            dialog.setHeaderText(null);
-                            dialog.setContentText("Titre de l'extrait:");
-
-                            Optional<String> result = dialog.showAndWait();
-                            if (result.isPresent()) {
-                                extract = new ExtractFile(
-                                        result.get(),
-                                        ZdsHttp.toSlug(result.get()),
-                                        baseFilePath,
-                                        (getItem().getFilePath() + "/" + ZdsHttp.toSlug(result.get()) + ".md").substring(baseFilePath.length()+1));
-                                TreeItem<ExtractFile> newChild = new TreeItem<>(extract);
-                                int level = Math.max(getTreeItem().getChildren().size() - 1, 0);
-                                getTreeItem().getChildren().add(level, newChild);
-                                // create file
-                                File extFile = new File(extract.getFilePath());
-                                if (!extFile.exists()) {
-                                    try {
-                                        extFile.createNewFile();
-                                    } catch (IOException e) {
-                                        logger.error("", e);
-                                    }
-                                }
-                                saveManifestJson();
-                            }
-                        });
-
-                        addMenuItem2.setOnAction(t -> {
-                            logger.debug("Tentative d'ajout d'un nouveau conteneur");
-                            TextInputDialog dialog = new TextInputDialog("Conteneur");
-
-                            dialog.setTitle("Nouveau conteneur");
-                            dialog.setHeaderText(null);
-                            dialog.setContentText("Titre du conteneur:");
-
-                            Optional<String> result = dialog.showAndWait();
-                            if (result.isPresent()) {
-                                String slug = ZdsHttp.toSlug(result.get());
-                                String slugRoot = Summary.getRoot().getValue().getSlug().getValue();
-                                ExtractFile extract = new ExtractFile(
-                                        result.get(),
-                                        slug,
-                                        baseFilePath,
-                                        (getItem().getFilePath() + "/" + slug + "/" + "introduction.md").substring(baseFilePath.length()+1),
-                                        (getItem().getFilePath() + "/" + slug + "/" + "conclusion.md").substring(baseFilePath.length()+1));
-                                TreeItem<ExtractFile> newChild = new TreeItem<>(extract);
-                                ExtractFile extIntro = new ExtractFile(
-                                        "Introduction",
-                                        slug,
-                                        baseFilePath,
-                                        (getItem().getFilePath() + "/" + slug + "/" + "introduction.md").substring(baseFilePath.length()+1),
-                                        null);
-                                TreeItem<ExtractFile> newChildIntro = new TreeItem<>(extIntro);
-                                ExtractFile extConclu = new ExtractFile(
-                                        "Conclusion",
-                                        slug,
-                                        baseFilePath,
-                                        null,
-                                        (getItem().getFilePath() + "/" + slug + "/" + "conclusion.md").substring(baseFilePath.length()+1));
-                                TreeItem<ExtractFile> newChildConclu = new TreeItem<>(extConclu);
-                                newChild.getChildren().add(newChildIntro);
-                                newChild.getChildren().add(newChildConclu);
-                                getTreeItem().getChildren().add(getTreeItem().getChildren().size() - 1, newChild);
-                                // create files
-                                File dirFile = new File(extract.getFilePath());
-                                File introFile = new File(extIntro.getFilePath());
-                                File concluFile = new File(extConclu.getFilePath());
-
-                                if (!dirFile.exists() && !dirFile.isDirectory()) {
-                                    dirFile.mkdir();
-                                }
-                                if (!introFile.exists()) {
-                                    try {
-                                        introFile.createNewFile();
-                                    } catch (IOException e) {
-                                        logger.error("", e);
-                                    }
-                                }
-                                if (!concluFile.exists()) {
-                                    try {
-                                        concluFile.createNewFile();
-                                    } catch (IOException e) {
-                                        logger.error("", e);
-                                    }
-                                }
-                                saveManifestJson();
-                            }
-                        });
-
-                        addMenuItem3.setOnAction(t -> {
-                            logger.debug("Tentative de rennomage d'un conteneur ou extrait");
-                            TreeItem<ExtractFile> item1 = Summary.getSelectionModel().getSelectedItem();
-                            TextInputDialog dialog = new TextInputDialog(item1.getValue().getTitle().getValue());
-                            dialog.setTitle("Renommer  " + item1.getValue().getTitle().getValue());
-                            dialog.setHeaderText(null);
-                            dialog.setContentText("Nouveau titre : ");
-
-                            Optional<String> result = dialog.showAndWait();
-                            if (result.isPresent()) {
-                                if (!result.get().trim().equals("")) {
-                                    item1.getValue().setTitle(result.get());
-                                    setText(result.get());
-                                }
-                            }
-
-                        });
-
-                        addMenuItem5.setOnAction(t -> {
-                            logger.debug("Tentative d'édition d'un contenu");
-                            try {
-                                Map json = mapper.readValue(new File(filePath + File.separator + "manifest.json"), Map.class);
-                                Map<String, Object> mp = new HashMap<>();
-                                License lic = EditContentDialog.licOptions.get(EditContentDialog.licOptions.indexOf(new License(json.get("licence").toString(), "")));
-                                TypeContent typco = EditContentDialog.typeOptions.get(EditContentDialog.typeOptions.indexOf(new TypeContent(json.get("type").toString(), "")));
-                                mp.put("title", json.get("title").toString());
-                                mp.put("description", json.get("description").toString());
-                                mp.put("type", typco);
-                                mp.put("licence", lic);
-                                Map<String,Object> paramContent= mainApp.getIndex().createContentDialog(mp);
-                                if(paramContent != null) {
-                                    Summary.getRoot().getValue().setTitle(paramContent.get("title").toString());
-                                    Summary.getRoot().getValue().setDescription(paramContent.get("description").toString());
-                                    Summary.getRoot().getValue().setType(paramContent.get("type").toString());
-                                    Summary.getRoot().getValue().setLicence(paramContent.get("licence").toString());
-                                    saveManifestJson();
-                                }
-                            } catch (Exception e) {
-                                // TODO Auto-generated catch block
-                                logger.error("", e);
-                            }
-                        });
-                    }
-
-                    protected void updateItem(ExtractFile item, boolean empty) {
-                        super.updateItem(item, empty);
-
-                        if (empty) {
-                            setText(null);
-                            setGraphic(null);
-                        } else {
-                            setText(getString());
-                            if (getItem().isContainer()) {
-                                setGraphic(createFolderIcon());
-                            } else {
-                                setGraphic(createFileIcon());
-                            }
-                            setContextMenu(addMenu);
-                            initContextMenu(item);
-                        }
-                    }
-
-                    private void createTextField() {
-                        textField = new TextField(getString());
-                        textField.setOnKeyReleased(t -> {
-                            if (t.getCode() == KeyCode.ENTER) {
-                                ExtractFile extract = getItem();
-                                extract.setTitle(textField.getText());
-                                commitEdit(extract);
-                                saveManifestJson();
-                            } else if (t.getCode() == KeyCode.ESCAPE) {
-                                cancelEdit();
-                            }
-                        });
-                    }
-
-                    private String getString() {
-                        return getItem() == null ? "" : getItem().getTitle().getValue();
-                    }
-                };
+            	MdTreeCell treeCell = new MdTreeCell(Summary, baseFilePath, mapper);
 
                 treeCell.setOnDragDetected(mouseEvent -> {
                     if (treeCell.getItem() == null) {
@@ -681,9 +369,9 @@ public class MdTextController {
 
                 treeCell.setOnDragExited(dragEvent -> {
                     if (treeCell.getItem().isContainer()) {
-                        treeCell.setGraphic(createFolderIcon());
+                        treeCell.setGraphic(IconFactory.createFolderIcon());
                     } else {
-                        treeCell.setGraphic(createFileIcon());
+                        treeCell.setGraphic(IconFactory.createFileIcon());
                     }
                     dragEvent.consume();
                 });
@@ -697,12 +385,12 @@ public class MdTextController {
                         TreeItem<ExtractFile> newParent = treeCell.getTreeItem();
                         if (!itemToMove.getValue().isMoveableIn(
                                 treeCell.getItem(),
-                                getDescendantContainerCount(itemToMove) + getAncestorContainerCount(newParent),
-                                getDescendantContainerCount(newParent),
-                                getDescendantContainerCount(newParent.getParent()))
+                                FunctionTreeFactory.getDescendantContainerCount(itemToMove) + FunctionTreeFactory.getAncestorContainerCount(newParent),
+                                FunctionTreeFactory.getDescendantContainerCount(newParent),
+                                FunctionTreeFactory.getDescendantContainerCount(newParent.getParent()))
                            )
                         {
-                            treeCell.setGraphic(createDeleteIcon());
+                            treeCell.setGraphic(IconFactory.createDeleteIcon());
                         } else {
                             dragEvent.acceptTransferModes(TransferMode.MOVE);
                         }
@@ -733,7 +421,7 @@ public class MdTextController {
                     dragEvent.consume();
 
                     // save json file
-                    saveManifestJson();
+                    treeCell.saveManifestJson();
                 });
 
                 return treeCell;
@@ -756,72 +444,4 @@ public class MdTextController {
         });
         logger.info("Contenu stocké dans "+filePath+" ouvert");
     }
-
-    public static int getAncestorContainerCount(TreeItem<ExtractFile> node) {
-        if (node.getParent() != null) {
-            return getAncestorContainerCount(node.getParent()) + 1;
-        } else {
-            return 1;
-        }
-    }
-
-    public static int getDirectChildCount(TreeItem<ExtractFile> node) {
-        int sum =0;
-        for(TreeItem<ExtractFile> item:node.getChildren()) {
-            if(!item.getValue().isContainer()) {
-                sum++;
-            }
-        }
-        return sum;
-    }
-
-    /*
-     * Count container descendants of TreeItem node
-     * List all children of node and count recursively any child which are container
-     */
-    public static int getDescendantContainerCount(TreeItem<ExtractFile> node) {
-        int maxDepth = 0;
-        if(node != null ) {
-            for (TreeItem<ExtractFile> n : node.getChildren()) {
-                if (n.getValue().isContainer()) {
-                    maxDepth = Math.max(maxDepth, getDescendantContainerCount(n) + 1);
-                }
-            }
-        }
-        return maxDepth;
-    }
-
-    public void saveManifestJson() {
-        Map<String, Object> res = getMapFromTreeItem(Summary.getRoot(), new HashMap<>());
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(baseFilePath + File.separator + "manifest.json"), res);
-            logger.info("Fichier manifest sauvegardé");
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            logger.error("", e);
-        }
-    }
-
-    public Map<String,Object> createContentDialog(Map<String, Object> defaultParam) {
-       logger.debug("Tentative de création d'une boite de dialogue pour éditer un contenu");
-       if(defaultParam == null) {
-           defaultParam = new HashMap<>();
-           defaultParam.put("title", "");
-           defaultParam.put("description", "");
-           defaultParam.put("type", EditContentDialog.typeOptions.get(1));
-           defaultParam.put("licence", EditContentDialog.licOptions.get(6));
-       }
-       // Create wizard
-       EditContentDialog dialog = new EditContentDialog(defaultParam);
-
-       Optional<Pair<String, Map<String, Object>>> result = dialog.showAndWait();
-       if(result.isPresent()) {
-           return result.get().getValue();
-       } else {
-           return null;
-       }
-
-    }
-
 }

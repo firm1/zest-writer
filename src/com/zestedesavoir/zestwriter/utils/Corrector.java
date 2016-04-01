@@ -20,6 +20,7 @@ public class Corrector {
     private List<String> wordsToIgnore;
 
     public Corrector() {
+    	System.out.println("OOOOOOO");
         langTool = new JLanguageTool(new French());
         wordsToIgnore = new ArrayList<>();
         for (Rule rule : langTool.getAllRules()) {

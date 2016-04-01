@@ -5,18 +5,18 @@ import java.util.Map;
 
 import com.zestedesavoir.zestwriter.model.License;
 import com.zestedesavoir.zestwriter.model.TypeContent;
-import com.zestedesavoir.zestwriter.view.MdTextController;
+import com.zestedesavoir.zestwriter.view.com.IconFactory;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
@@ -36,7 +36,7 @@ public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Objec
 		super("Nouveau contenu", "Créez un nouveau contenus pour ZdS");
 
 		// Set the icon (must be included in the project).
-	    this.setGraphic(MdTextController.createAddFolderIcon());
+	    this.setGraphic(IconFactory.createAddFolderIcon());
 
 	    // Set the button types.
 	    ButtonType validButtonType = new ButtonType("Enregistrer", ButtonData.OK_DONE);

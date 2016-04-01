@@ -76,7 +76,6 @@ public class MdConvertController {
 
     public MdConvertController() {
         super();
-        corrector = new Corrector();
     }
 
     public MdTextController getMdBox() {
@@ -422,8 +421,12 @@ public class MdConvertController {
         renderTask.start();
     }
 
-    public void HandleValidateButtonAction() {
+    @FXML
+    public void HandleValidateButtonAction(ActionEvent event) {
         String s = StringEscapeUtils.unescapeHtml(markdownToHtml(SourceText.getText()));
+        if(corrector == null) {
+        	corrector = new Corrector();
+        }
         try {
             String result = corrector.checkHtmlContent(s);
             WebEngine webEngine = renderView.getEngine();

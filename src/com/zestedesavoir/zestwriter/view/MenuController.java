@@ -20,7 +20,6 @@ import org.python.jline.internal.Log;
 import org.python.util.PythonInterpreter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.zeroturnaround.zip.ZipUtil;
 
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.ExtractFile;
@@ -28,6 +27,8 @@ import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
+import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
+import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import com.zestedesavoir.zestwriter.view.dialogs.GoogleLoginDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.LoginDialog;
 import com.zestedesavoir.zestwriter.view.task.CorrectionService;
@@ -39,7 +40,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -379,7 +379,7 @@ public class MenuController {
 
 	        defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
 
-	        Map<String,Object> paramContent= mainApp.getIndex().createContentDialog(null);
+	        Map<String,Object> paramContent= FunctionTreeFactory.initContentDialog(null);
 
 	        if(paramContent != null) {
 	            // find inexistant directory
@@ -470,7 +470,7 @@ public class MenuController {
     @FXML
     private Service<Void> HandleLoginButtonAction(ActionEvent event) {
     	// Button for google
-        Button googleAuth = new Button("Connexion via Google", MdTextController.createGoogleIcon());
+        Button googleAuth = new Button("Connexion via Google", IconFactory.createGoogleIcon());
         LoginDialog dialog = new LoginDialog(googleAuth);
         googleAuth.setOnAction(t-> {
             GoogleLoginDialog googleDialog = new GoogleLoginDialog(dialog, mainApp.getZdsutils());
