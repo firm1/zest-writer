@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.zestedesavoir.zestwriter.model.ContentNode;
 import com.zestedesavoir.zestwriter.model.ExtractFile;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.view.MdTextController;
@@ -22,11 +23,11 @@ import javafx.concurrent.Task;
 public class CorrectionService extends Service<String>{
 
 	private final Logger logger;
-	private List<ExtractFile> myExtracts;
+	private List<ContentNode> myExtracts;
 	private Corrector corrector;
 	private MdTextController mdText;
 
-	public CorrectionService(MdTextController mdText, List<ExtractFile> myExtracts) {
+	public CorrectionService(MdTextController mdText, List<ContentNode> myExtracts) {
 		logger = LoggerFactory.getLogger(getClass());
 		this.mdText = mdText;
 		this.myExtracts = myExtracts;
@@ -43,8 +44,8 @@ public class CorrectionService extends Service<String>{
             protected String call(){
                 updateMessage("Préparation du rapport de validation ...");
                 StringBuilder resultCorrect = new StringBuilder();
-                for(ExtractFile extract:myExtracts) {
-                    updateMessage("Préparation du rapport de validation de "+extract.getTitle().getValue());
+                for(ContentNode extract:myExtracts) {
+                    updateMessage("Préparation du rapport de validation de "+extract.getTitle());
                     String markdown = "";
                     // load mdText
                     Path path = Paths.get(extract.getFilePath());
@@ -62,7 +63,7 @@ public class CorrectionService extends Service<String>{
                     }
 
                     String htmlText = StringEscapeUtils.unescapeHtml(MenuController.markdownToHtml(mdText, markdown));
-                    String note = corrector.checkHtmlContentToText(htmlText, extract.getTitle().getValue());
+                    String note = corrector.checkHtmlContentToText(htmlText, extract.getTitle());
                     resultCorrect.append(note);
                 }
                 return resultCorrect.toString();

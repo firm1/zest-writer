@@ -39,6 +39,13 @@ public class IconFactory {
         return icon;
     }
 
+    public static MaterialDesignIconView createFileBlankIcon() {
+        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.FILE_OUTLINE);
+        icon.setSize("1.8em");
+        icon.setGlyphStyle("-fx-fill:#ef9708");
+        return icon;
+    }
+
     public static MaterialDesignIconView createEditIcon() {
         MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.BORDER_COLOR);
         icon.setSize("1.8em");
@@ -50,6 +57,13 @@ public class IconFactory {
         MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.GOOGLE_PLUS);
         icon.setSize("2em");
         icon.setGlyphStyle("-fx-fill:#dd4b39");
+        return icon;
+    }
+
+    public static MaterialDesignIconView createArrowDownIcon() {
+        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.ARROW_DOWN);
+        icon.setSize("2em");
+        icon.setGlyphStyle("-fx-fill:#48a200");
         return icon;
     }
 }

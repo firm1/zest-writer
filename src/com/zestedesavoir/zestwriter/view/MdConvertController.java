@@ -13,7 +13,7 @@ import org.python.util.PythonInterpreter;
 import org.w3c.dom.DOMException;
 
 import com.zestedesavoir.zestwriter.MainApp;
-import com.zestedesavoir.zestwriter.model.ExtractFile;
+import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.FlipTable;
 
@@ -52,7 +52,7 @@ import javafx.util.Pair;
 public class MdConvertController {
     private MdTextController mdBox;
     private Tab tab;
-    private ExtractFile extract;
+    private Textual extract;
 
     @FXML
     private WebView renderView;
@@ -281,9 +281,9 @@ public class MdConvertController {
 
     @FXML
     public void HandleSaveButtonAction(ActionEvent event) {
-        extract.setMdText(SourceText.getText());
+        extract.setMarkdown(SourceText.getText());
         extract.save();
-        tab.setText(extract.getTitle().getValue());
+        tab.setText(extract.getTitle());
         this.isSaved = true;
     }
 
@@ -296,7 +296,7 @@ public class MdConvertController {
         }
     }
 
-    public void setMdBox(MdTextController mdBox, ExtractFile extract, Tab tab) throws IOException {
+    public void setMdBox(MdTextController mdBox, Textual extract, Tab tab) throws IOException {
         this.mdBox = mdBox;
         this.tab = tab;
         this.extract = extract;
@@ -305,9 +305,9 @@ public class MdConvertController {
         loader.setLocation(MainApp.class.getResource("view/Editor.fxml"));
         SplitPane writer = loader.load();
 
-        SourceText.replaceText(extract.getMdText().getValue());
+        SourceText.replaceText(extract.getMarkdown());
         SourceText.textProperty().addListener((observableValue, s, s2) -> {
-            tab.setText("! " + extract.getTitle().getValue());
+            tab.setText("! " + extract.getTitle());
             this.isSaved = false;
             SourceText.getUndoManager().mark();
             updateRender();

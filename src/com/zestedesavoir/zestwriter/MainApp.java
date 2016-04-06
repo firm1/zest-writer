@@ -3,7 +3,8 @@
 import java.io.IOException;
 import java.util.HashMap;
 
-import com.zestedesavoir.zestwriter.model.ExtractFile;
+import com.zestedesavoir.zestwriter.model.Content;
+import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
@@ -12,6 +13,7 @@ import com.zestedesavoir.zestwriter.view.MenuController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -31,8 +33,8 @@ public class MainApp extends Application {
     private Scene scene;
     private Stage primaryStage;
     private BorderPane rootLayout;
-    private ObservableMap<ExtractFile, Tab> extracts = FXCollections.observableMap(new HashMap<>());
-    private ObservableMap<String, String> contents = FXCollections.observableMap(new HashMap<>());
+    private ObservableMap<Textual, Tab> extracts = FXCollections.observableMap(new HashMap<>());
+    private ObservableList<Content> contents = FXCollections.observableArrayList();
     private ZdsHttp zdsutils;
     private MdTextController Index;
     private Configuration config;
@@ -71,7 +73,7 @@ public class MainApp extends Application {
         return Index;
     }
 
-    public ObservableMap<String, String> getContents() {
+    public ObservableList<Content> getContents() {
         return contents;
     }
 
@@ -79,7 +81,7 @@ public class MainApp extends Application {
         return zdsutils;
     }
 
-    public ObservableMap<ExtractFile, Tab> getExtracts() {
+    public ObservableMap<Textual, Tab> getExtracts() {
         return extracts;
     }
 

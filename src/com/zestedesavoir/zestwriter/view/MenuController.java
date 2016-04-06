@@ -14,14 +14,16 @@ import java.util.Optional;
 import java.util.Scanner;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.python.core.PyString;
 import org.python.jline.internal.Log;
 import org.python.util.PythonInterpreter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
+import com.zestedesavoir.zestwriter.model.Content;
+import com.zestedesavoir.zestwriter.model.ContentNode;
 import com.zestedesavoir.zestwriter.model.ExtractFile;
 import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.utils.Corrector;
@@ -102,9 +104,9 @@ public class MenuController {
         System.exit(0);
     }
 
-    private List<ExtractFile> getExtractFilesFromTree(TreeItem<ExtractFile> node) {
-        List<ExtractFile> extractFiles = new ArrayList<>();
-        for (TreeItem<ExtractFile> child : node.getChildren()) {
+    private List<ContentNode> getExtractFilesFromTree(TreeItem<ContentNode> node) {
+        List<ContentNode> extractFiles = new ArrayList<>();
+        for (TreeItem<ContentNode> child : node.getChildren()) {
             if (child.getChildren().isEmpty()) {
                 extractFiles.add(child.getValue());
             }
@@ -115,9 +117,9 @@ public class MenuController {
         return extractFiles;
     }
 
-    private void correctChildren(TreeItem<ExtractFile> root, boolean typo) throws IOException {
-        List<ExtractFile> myExtracts = getExtractFilesFromTree(root);
-        for(ExtractFile extract:myExtracts) {
+    private void correctChildren(TreeItem<ContentNode> root, boolean typo) throws IOException {
+        List<ContentNode> myExtracts = getExtractFilesFromTree(root);
+        for(ContentNode extract:myExtracts) {
             String markdown = "";
             // load mdText
             Path path = Paths.get(extract.getFilePath());
@@ -139,14 +141,14 @@ public class MenuController {
                 cr.ignoreRule("FRENCH_WHITESPACE");
             }
             String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), markdown));
-            textArea.appendText(cr.checkHtmlContentToText(htmlText, extract.getTitle().getValue()));
+            textArea.appendText(cr.checkHtmlContentToText(htmlText, extract.getTitle()));
         }
     }
 
-    public Map<ExtractFile, Double> getGunning(TreeItem<ExtractFile> root) {
+    public Map<ContentNode, Double> getGunning(TreeItem<ContentNode> root) {
 
-        Map<ExtractFile, Double> map = new HashMap<>();
-        for (TreeItem<ExtractFile> child : root.getChildren()) {
+        Map<ContentNode, Double> map = new HashMap<>();
+        for (TreeItem<ContentNode> child : root.getChildren()) {
             String markdown = "";
             if (child.getChildren().isEmpty()) {
                 // load mdText
@@ -176,10 +178,10 @@ public class MenuController {
         return map;
     }
 
-    public Map<ExtractFile, Double> getFlesch(TreeItem<ExtractFile> root) {
+    public Map<ContentNode, Double> getFlesch(TreeItem<ContentNode> root) {
 
-        Map<ExtractFile, Double> map = new HashMap<>();
-        for (TreeItem<ExtractFile> child : root.getChildren()) {
+        Map<ContentNode, Double> map = new HashMap<>();
+        for (TreeItem<ContentNode> child : root.getChildren()) {
             String markdown = "";
             if (child.getChildren().isEmpty()) {
                 // load mdText
@@ -203,7 +205,7 @@ public class MenuController {
                 Readability rd = new Readability(plainText);
                 map.put(child.getValue(), rd.getFleschReadingEase());
             } else {
-                map.putAll(getGunning(child));
+                map.putAll(getFlesch(child));
             }
         }
         return map;
@@ -219,10 +221,10 @@ public class MenuController {
 
     @FXML
     private void HandleFleshButtonAction(ActionEvent event) {
-        Map<ExtractFile, Double> results = getFlesch(mainApp.getIndex().getSummary().getRoot());
+        Map<ContentNode, Double> results = getFlesch(mainApp.getIndex().getSummary().getRoot());
 
         ObservableList<String> rows = FXCollections.observableArrayList();
-        for (Entry<ExtractFile, Double> entry : results.entrySet()) {
+        for (Entry<ContentNode, Double> entry : results.entrySet()) {
             String easy;
             if (entry.getValue() < 30) {
                 easy = "très difficile";
@@ -238,7 +240,7 @@ public class MenuController {
                 easy = "très facile";
             }
 
-            String v1 = entry.getKey().getTitle().getValue();
+            String v1 = entry.getKey().getTitle();
             String v2 = entry.getValue().toString() + " (" + easy + ")";
             rows.add(v1 + " => " + v2);
         }
@@ -270,10 +272,10 @@ public class MenuController {
 
     @FXML
     private void HandleGunningButtonAction(ActionEvent event) {
-        Map<ExtractFile, Double> results = getGunning(mainApp.getIndex().getSummary().getRoot());
+        Map<ContentNode, Double> results = getGunning(mainApp.getIndex().getSummary().getRoot());
 
         ObservableList<String> rows = FXCollections.observableArrayList();
-        for (Entry<ExtractFile, Double> entry : results.entrySet()) {
+        for (Entry<ContentNode, Double> entry : results.entrySet()) {
             String easy;
             if (entry.getValue() >= 15) {
                 easy = "très difficile";
@@ -289,7 +291,7 @@ public class MenuController {
                 easy = "très facile";
             }
 
-            String v1 = entry.getKey().getTitle().getValue();
+            String v1 = entry.getKey().getTitle();
             String v2 = entry.getValue().toString() + " (" + easy + ")";
             rows.add(v1 + " => " + v2);
         }
@@ -336,7 +338,7 @@ public class MenuController {
         expContent.add(textArea, 0, 1);
 
         hBottomBox.getChildren().addAll(labelField);
-        List<ExtractFile> myExtracts = getExtractFilesFromTree(mainApp.getIndex().getSummary().getRoot());
+        List<ContentNode> myExtracts = getExtractFilesFromTree(mainApp.getIndex().getSummary().getRoot());
         CorrectionService correctTask=new CorrectionService(mainApp.getIndex(), myExtracts);
         labelField.textProperty().bind(correctTask.messageProperty());
         textArea.textProperty().bind(correctTask.valueProperty());
@@ -412,12 +414,15 @@ public class MenuController {
 	                File conclu = new File(realLocalPath+File.separator+"conclusion.md");
 	                intro.createNewFile();
 	                conclu.createNewFile();
-	                mainApp.getIndex().openContent(folder.getAbsolutePath());
-	                mainApp.getContents().put("dir", folder.getAbsolutePath());
+	                Content content = mapper.readValue(manifest, Content.class);
+	                content.setRootContent(content, realLocalPath);
+	                //content.setBasePath(realLocalPath);
+	                mainApp.getContents().clear();
+	                FunctionTreeFactory.clearContent(mainApp.getExtracts(), mainApp.getIndex().getEditorList());
+	                mainApp.getContents().add(content);
 
 	            } catch (IOException e) {
-	                // TODO Auto-generated catch block
-	                logger.error("", e);
+	                logger.error(e.getMessage(), e);
 	            }
 
 	            menuUpload.setDisable(false);
@@ -448,12 +453,21 @@ public class MenuController {
     	}
 
         if (selectedDirectory != null) {
-            mainApp.getContents().put("dir", selectedDirectory.getAbsolutePath());
-
-            menuUpload.setDisable(false);
-
-            menuLisibility.setDisable(false);
-            menuReport.setDisable(false);
+            File manifest = new File(selectedDirectory.getAbsolutePath()+File.separator+"manifest.json");
+            ObjectMapper mapper = new ObjectMapper();
+            Content content;
+            try {
+                content = mapper.readValue(manifest, Content.class);
+                content.setRootContent(content, selectedDirectory.getAbsolutePath());
+                mainApp.getContents().clear();
+                FunctionTreeFactory.clearContent(mainApp.getExtracts(), mainApp.getIndex().getEditorList());
+                mainApp.getContents().add(content);
+                menuUpload.setDisable(false);
+                menuLisibility.setDisable(false);
+                menuReport.setDisable(false);
+            } catch (IOException e) {
+                logger.error(e.getMessage(), e);
+            }
         }
     }
 
@@ -531,7 +545,7 @@ public class MenuController {
                         alert.showAndWait();
                         break;
                     case SUCCEEDED:
-                        if (mainApp.getContents().containsKey("dir")) {
+                        if (mainApp.getContents().size() > 0) {
                             menuUpload.setDisable(false);
                         }
                         downloadContents();
@@ -622,7 +636,7 @@ public class MenuController {
                         alert.showAndWait();
                         break;
                     case SUCCEEDED:
-                        if (mainApp.getContents().containsKey("dir")) {
+                        if (mainApp.getContents().size() > 0) {
                             menuUpload.setDisable(false);
                         }
                         uploadContents();

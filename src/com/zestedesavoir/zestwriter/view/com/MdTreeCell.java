@@ -4,22 +4,26 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zestedesavoir.zestwriter.model.ExtractFile;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zestedesavoir.zestwriter.model.Container;
+import com.zestedesavoir.zestwriter.model.Content;
+import com.zestedesavoir.zestwriter.model.ContentNode;
+import com.zestedesavoir.zestwriter.model.Extract;
 import com.zestedesavoir.zestwriter.model.License;
+import com.zestedesavoir.zestwriter.model.MetaContent;
 import com.zestedesavoir.zestwriter.model.TypeContent;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
-import com.zestedesavoir.zestwriter.view.MenuController;
+import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -28,27 +32,22 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.input.KeyCode;
 
-public class MdTreeCell extends TreeCell<ExtractFile>{
+public class MdTreeCell extends TreeCell<ContentNode>{
 	private TextField textField;
-	private TreeView<ExtractFile> Summary;
+	private MdTextController index;
 	private String baseFilePath;
 	private final Logger logger;
-	private ObjectMapper mapper;
     private ContextMenu addMenu = new ContextMenu();
 
 
-    public MdTreeCell(TreeView<ExtractFile> summary, String baseFilePath, ObjectMapper mapper) {
-		Summary = summary;
-		this.baseFilePath = baseFilePath;
+    public MdTreeCell(MdTextController index) {
+		this.index = index;
+		this.baseFilePath = ((Content) index.getSummary().getRoot().getValue()).getBasePath();
 		this.logger = LoggerFactory.getLogger(getClass());
-		this.mapper = mapper;
 	}
 
-	public void initContextMenu(ExtractFile item) {
+	public void initContextMenu(ContentNode item) {
 
         MenuItem addMenuItem1 = new MenuItem("Ajouter un extrait");
         MenuItem addMenuItem2 = new MenuItem("Ajouter un conteneur");
@@ -61,16 +60,16 @@ public class MdTreeCell extends TreeCell<ExtractFile>{
         addMenuItem4.setGraphic(IconFactory.createRemoveIcon());
         addMenuItem5.setGraphic(IconFactory.createEditIcon());
         addMenu.getItems().clear();
-        if (item.canTakeContainer(FunctionTreeFactory.getAncestorContainerCount(getTreeItem()), FunctionTreeFactory.getDirectChildCount(getTreeItem()))) {
+        if (item.canTakeContainer(((Content)index.getSummary().getRoot().getValue()))) {
             addMenu.getItems().add(addMenuItem2);
         }
-        if (item.canTakeExtract(FunctionTreeFactory.getDescendantContainerCount(getTreeItem()))) {
+        if (item.canTakeExtract()) {
             addMenu.getItems().add(addMenuItem1);
         }
         if (item.isEditable()) {
             addMenu.getItems().add(addMenuItem3);
         }
-        if (item.isRoot()) {
+        if (item instanceof Content) {
             addMenu.getItems().add(addMenuItem5);
         }
         if (item.canDelete()) {
@@ -87,7 +86,7 @@ public class MdTreeCell extends TreeCell<ExtractFile>{
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
                 getTreeItem().getParent().getChildren().remove(getTreeItem());
-                getItem().deleteExtract();
+                getItem().delete();
                 saveManifestJson();
             }
         });
@@ -95,31 +94,30 @@ public class MdTreeCell extends TreeCell<ExtractFile>{
         addMenuItem1.setOnAction(t -> {
             logger.debug("Tentative d'ajout d'un nouvel extrait");
             TextInputDialog dialog = new TextInputDialog("Extrait");
-            ExtractFile extract;
+            Extract extract;
             dialog.setTitle("Nouvel extrait");
             dialog.setHeaderText(null);
             dialog.setContentText("Titre de l'extrait:");
 
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
-                extract = new ExtractFile(
-                        result.get(),
+                extract = new Extract("extract",
                         ZdsHttp.toSlug(result.get()),
+                        result.get(),
                         baseFilePath,
                         (getItem().getFilePath() + "/" + ZdsHttp.toSlug(result.get()) + ".md").substring(baseFilePath.length()+1));
-                TreeItem<ExtractFile> newChild = new TreeItem<>(extract);
-                int level = Math.max(getTreeItem().getChildren().size() - 1, 0);
-                getTreeItem().getChildren().add(level, newChild);
+                ((Container)getItem()).getChildren().add(extract);
                 // create file
                 File extFile = new File(extract.getFilePath());
                 if (!extFile.exists()) {
                     try {
                         extFile.createNewFile();
                     } catch (IOException e) {
-                        logger.error("", e);
+                        logger.error(e.getMessage(), e);
                     }
                 }
                 saveManifestJson();
+                index.openContent();
             }
         });
 
@@ -134,70 +132,52 @@ public class MdTreeCell extends TreeCell<ExtractFile>{
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
                 String slug = ZdsHttp.toSlug(result.get());
-                String slugRoot = Summary.getRoot().getValue().getSlug().getValue();
-                ExtractFile extract = new ExtractFile(
+                Container container = new Container("container",
+                        slug,
                         result.get(),
-                        slug,
-                        baseFilePath,
                         (getItem().getFilePath() + "/" + slug + "/" + "introduction.md").substring(baseFilePath.length()+1),
-                        (getItem().getFilePath() + "/" + slug + "/" + "conclusion.md").substring(baseFilePath.length()+1));
-                TreeItem<ExtractFile> newChild = new TreeItem<>(extract);
-                ExtractFile extIntro = new ExtractFile(
-                        "Introduction",
-                        slug,
-                        baseFilePath,
-                        (getItem().getFilePath() + "/" + slug + "/" + "introduction.md").substring(baseFilePath.length()+1),
-                        null);
-                TreeItem<ExtractFile> newChildIntro = new TreeItem<>(extIntro);
-                ExtractFile extConclu = new ExtractFile(
-                        "Conclusion",
-                        slug,
-                        baseFilePath,
-                        null,
-                        (getItem().getFilePath() + "/" + slug + "/" + "conclusion.md").substring(baseFilePath.length()+1));
-                TreeItem<ExtractFile> newChildConclu = new TreeItem<>(extConclu);
-                newChild.getChildren().add(newChildIntro);
-                newChild.getChildren().add(newChildConclu);
-                getTreeItem().getChildren().add(getTreeItem().getChildren().size() - 1, newChild);
+                        (getItem().getFilePath() + "/" + slug + "/" + "conclusion.md").substring(baseFilePath.length()+1),
+                        new ArrayList<>());
+                container.setBasePath(baseFilePath);
+                ((Container)getItem()).getChildren().add(container);
+
                 // create files
-                File dirFile = new File(extract.getFilePath());
-                File introFile = new File(extIntro.getFilePath());
-                File concluFile = new File(extConclu.getFilePath());
+                File dirFile = new File(container.getFilePath());
+                File introFile = new File(container.getIntroduction().getFilePath());
+                File concluFile = new File(container.getConclusion().getFilePath());
 
                 if (!dirFile.exists() && !dirFile.isDirectory()) {
                     dirFile.mkdir();
                 }
-                if (!introFile.exists()) {
-                    try {
+                try {
+                    if (!introFile.exists()) {
                         introFile.createNewFile();
-                    } catch (IOException e) {
-                        logger.error("", e);
                     }
-                }
-                if (!concluFile.exists()) {
-                    try {
+                    if (!concluFile.exists()) {
                         concluFile.createNewFile();
-                    } catch (IOException e) {
-                        logger.error("", e);
                     }
+                } catch (IOException e) {
+                    logger.error(e.getMessage(), e);
                 }
                 saveManifestJson();
+                index.openContent();
             }
         });
 
         addMenuItem3.setOnAction(t -> {
             logger.debug("Tentative de rennomage d'un conteneur ou extrait");
-            TreeItem<ExtractFile> item1 = Summary.getSelectionModel().getSelectedItem();
-            TextInputDialog dialog = new TextInputDialog(item1.getValue().getTitle().getValue());
-            dialog.setTitle("Renommer  " + item1.getValue().getTitle().getValue());
+            TreeItem<ContentNode> item1 = index.getSummary().getSelectionModel().getSelectedItem();
+            TextInputDialog dialog = new TextInputDialog(item1.getValue().getTitle());
+            dialog.setTitle("Renommer  " + item1.getValue().getTitle());
             dialog.setHeaderText(null);
             dialog.setContentText("Nouveau titre : ");
 
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
                 if (!result.get().trim().equals("")) {
-                    item1.getValue().setTitle(result.get());
-                    setText(result.get());
+                    ((MetaContent)item1.getValue()).setTitle(result.get());
+                    saveManifestJson();
+                    index.openContent();
                 }
             }
 
@@ -206,6 +186,7 @@ public class MdTreeCell extends TreeCell<ExtractFile>{
         addMenuItem5.setOnAction(t -> {
             logger.debug("Tentative d'édition d'un contenu");
             try {
+                ObjectMapper mapper = new ObjectMapper();
                 Map json = mapper.readValue(new File(baseFilePath + File.separator + "manifest.json"), Map.class);
                 Map<String, Object> mp = new HashMap<>();
                 License lic = EditContentDialog.licOptions.get(EditContentDialog.licOptions.indexOf(new License(json.get("licence").toString(), "")));
@@ -216,20 +197,20 @@ public class MdTreeCell extends TreeCell<ExtractFile>{
                 mp.put("licence", lic);
                 Map<String,Object> paramContent= FunctionTreeFactory.initContentDialog(mp);
                 if(paramContent != null) {
-                    Summary.getRoot().getValue().setTitle(paramContent.get("title").toString());
-                    Summary.getRoot().getValue().setDescription(paramContent.get("description").toString());
-                    Summary.getRoot().getValue().setType(paramContent.get("type").toString());
-                    Summary.getRoot().getValue().setLicence(paramContent.get("licence").toString());
+                    ((Content) index.getSummary().getRoot().getValue()).setTitle(paramContent.get("title").toString());
+                    ((Content) index.getSummary().getRoot().getValue()).setDescription(paramContent.get("description").toString());
+                    ((Content) index.getSummary().getRoot().getValue()).setType(paramContent.get("type").toString());
+                    ((Content) index.getSummary().getRoot().getValue()).setLicence(paramContent.get("licence").toString());
                     saveManifestJson();
+                    index.openContent();
                 }
             } catch (Exception e) {
-                // TODO Auto-generated catch block
-                logger.error("", e);
+                logger.error(e.getMessage(), e);
             }
         });
     }
 
-    protected void updateItem(ExtractFile item, boolean empty) {
+    protected void updateItem(ContentNode item, boolean empty) {
         super.updateItem(item, empty);
 
         if (empty) {
@@ -237,77 +218,26 @@ public class MdTreeCell extends TreeCell<ExtractFile>{
             setGraphic(null);
         } else {
             setText(getString());
-            if (getItem().isContainer()) {
-                setGraphic(IconFactory.createFolderIcon());
-            } else {
-                setGraphic(IconFactory.createFileIcon());
-            }
+            setGraphic(getItem().buildIcon());
             setContextMenu(addMenu);
             initContextMenu(item);
         }
     }
 
-    private void createTextField() {
-        textField = new TextField(getString());
-        textField.setOnKeyReleased(t -> {
-            if (t.getCode() == KeyCode.ENTER) {
-                ExtractFile extract = getItem();
-                extract.setTitle(textField.getText());
-                commitEdit(extract);
-                saveManifestJson();
-            } else if (t.getCode() == KeyCode.ESCAPE) {
-                cancelEdit();
-            }
-        });
-    }
-
     private String getString() {
-        return getItem() == null ? "" : getItem().getTitle().getValue();
+        return getItem() == null ? "" : getItem().getTitle();
     }
 
     public void saveManifestJson() {
-        Map<String, Object> res = getMapFromTreeItem(Summary.getRoot(), new HashMap<>());
+        Content c = (Content) index.getSummary().getRoot().getValue();
+
         ObjectMapper mapper = new ObjectMapper();
         try {
-            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(baseFilePath + File.separator + "manifest.json"), res);
+            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(baseFilePath + File.separator + "manifest.json"), c);
             logger.info("Fichier manifest sauvegardé");
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            logger.error("", e);
+            logger.error(e.getMessage(), e);
         }
-    }
-
-    public Map<String, Object> getMapFromTreeItem(TreeItem<ExtractFile> node, Map<String, Object> map) {
-        if (node.getValue().getOject().getValue() != null) {
-            map.put("slug", node.getValue().getSlug().getValue());
-            map.put("object", node.getValue().getOject().getValue());
-            map.put("title", node.getValue().getTitle().getValue());
-            if (node.getValue().isRoot()) {
-                map.put("type", node.getValue().getType().getValue());
-                map.put("version", Integer.parseInt(node.getValue().getVersion().getValue()));
-                map.put("description", node.getValue().getDescription().getValue());
-                map.put("licence", node.getValue().getLicence().getValue());
-            }
-            if (node.getValue().isContainer()) {
-                map.put("introduction", node.getValue().getIntroduction().getValue());
-                map.put("conclusion", node.getValue().getConclusion().getValue());
-            } else {
-                map.put("text", node.getValue().getText().getValue());
-            }
-
-            List<Map<String, Object>> tabs = new ArrayList<>();
-            for (TreeItem<ExtractFile> child : node.getChildren()) {
-                Map<String, Object> h = getMapFromTreeItem(child, new HashMap<>());
-                if (h != null) {
-                    tabs.add(h);
-                }
-            }
-
-            if (tabs.size() > 0) {
-                map.put("children", tabs);
-            }
-            return map;
-        }
-        return null;
     }
 }

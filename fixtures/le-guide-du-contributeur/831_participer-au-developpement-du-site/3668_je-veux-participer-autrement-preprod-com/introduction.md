@@ -1,0 +1,1 @@
+Vous n’êtes pas un grand rédacteur ni un grand pédagogue ? Vous ne maîtrisez pas les langages de programmation utilisés pour le développement du site ? Qu'à cela ne tienne, il y a toujours un moyen de participer à la vie du site d'une manière ou d'une autre !
