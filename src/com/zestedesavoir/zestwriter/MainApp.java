@@ -1,4 +1,4 @@
-﻿package com.zestedesavoir.zestwriter;
+package com.zestedesavoir.zestwriter;
 
 import java.io.IOException;
 import java.util.HashMap;

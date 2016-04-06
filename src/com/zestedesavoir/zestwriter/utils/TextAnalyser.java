@@ -1,4 +1,4 @@
-﻿package com.zestedesavoir.zestwriter.utils;
+package com.zestedesavoir.zestwriter.utils;
 
 import java.util.StringTokenizer;
 

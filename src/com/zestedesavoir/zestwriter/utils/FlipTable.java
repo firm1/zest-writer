@@ -1,4 +1,4 @@
-﻿package com.zestedesavoir.zestwriter.utils;
+package com.zestedesavoir.zestwriter.utils;
 
 public final class FlipTable {
     private static final String EMPTY = "(empty)";

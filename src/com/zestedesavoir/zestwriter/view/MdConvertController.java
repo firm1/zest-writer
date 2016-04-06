@@ -1,4 +1,4 @@
-﻿package com.zestedesavoir.zestwriter.view;
+package com.zestedesavoir.zestwriter.view;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -442,6 +442,7 @@ public class MdConvertController {
     public void HandleGoToLineAction() {
     	TextInputDialog dialog = new TextInputDialog();
     	dialog.setTitle("Aller à la ligne");
+    	dialog.setHeaderText(null);
     	dialog.setContentText("Numéro de ligne: ");
 
     	Optional<String> result = dialog.showAndWait();

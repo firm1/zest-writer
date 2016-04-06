@@ -1,4 +1,4 @@
-﻿package com.zestedesavoir.zestwriter.view;
+package com.zestedesavoir.zestwriter.view;
 
 import java.io.IOException;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-﻿package com.zestedesavoir.zestwriter.view.dialogs;
+package com.zestedesavoir.zestwriter.view.dialogs;
 
 import com.zestedesavoir.zestwriter.view.MenuController;
 

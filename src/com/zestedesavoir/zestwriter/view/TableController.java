@@ -1,4 +1,4 @@
-﻿package com.zestedesavoir.zestwriter.view;
+package com.zestedesavoir.zestwriter.view;
 
 import java.util.ArrayList;
 import java.util.List;

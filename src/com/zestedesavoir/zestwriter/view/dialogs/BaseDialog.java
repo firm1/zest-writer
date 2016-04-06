@@ -1,4 +1,4 @@
-﻿package com.zestedesavoir.zestwriter.view.dialogs;
+package com.zestedesavoir.zestwriter.view.dialogs;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Dialog;
