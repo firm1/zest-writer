@@ -1,4 +1,4 @@
-package com.zestedesavoir.zestwriter.tests;
+
 
 import static org.junit.Assert.assertEquals;
 
@@ -28,7 +28,7 @@ public class TestModel {
     @Before
     public void setUp() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        File manifest = new File("fixtures/le-guide-du-contributeur/manifest.json");
+        File manifest = new File(getClass().getResource("fixtures").getFile()+File.separator+"le-guide-du-contributeur"+File.separator+"manifest.json");
         content = mapper.readValue(manifest, Content.class);
         content.setBasePath(manifest.getParentFile().getAbsolutePath());
     }
@@ -74,6 +74,7 @@ public class TestModel {
         loadParts();
         loadChapters();
         assertEquals("Un chapitre ne peut pas être déplacé dans lui même", chapter11.isMoveableIn(chapter11, content), false);
+        assertEquals("Un chapitre ne peut pas être déplacé dans un conteneur qui a déjà des extraits", chapter11.isMoveableIn(chapter12, content), false);
         assertEquals("Un chapitre (niveau 3) ne peut pas aller dans un autre chapitre", chapter11.isMoveableIn(chapter12, content), false);
         assertEquals("Un chapitre (niveau 3) ne peut pas aller dans un autre chapitre", chapter11.isMoveableIn(chapter16, content), false);
         assertEquals("Le chapitre 1.1 (niveau 3) est déplaceable dans une partie (niveau2)", chapter11.isMoveableIn(part2, content), true);
