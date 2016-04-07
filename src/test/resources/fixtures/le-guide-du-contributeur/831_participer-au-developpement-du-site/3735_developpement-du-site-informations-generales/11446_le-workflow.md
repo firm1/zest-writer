@@ -1,0 +1,1 @@
+Le workflow utilisé est le gitflow.

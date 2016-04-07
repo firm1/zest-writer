@@ -1,5 +1,5 @@
 // Declares binary plugin and its required JavaFX classpath
-
+apply plugin: 'java'
 apply from: "http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.plugin"
 
 // Configures plugin
@@ -52,10 +52,18 @@ repositories {
 sourceSets {
     main {
         java {
-            srcDir 'src/'
+            srcDir 'src/main/java'
         }
         resources {
-            srcDir 'src/'
+            srcDir 'src/main/resources'
+        }
+    }
+    test {
+        java {
+            srcDir 'src/test/java'
+        }
+        resources {
+            srcDir 'src/test/resources'
         }
     }
 }
@@ -73,6 +81,7 @@ task fatJar(type: Jar) {
 }
 
 dependencies {
+    testCompile 'junit:junit:4.12'
     compile 'org.languagetool:language-fr:3.1',
             'org.apache.httpcomponents:httpclient:4.5.1',
             'org.apache.httpcomponents:httpcore:4.4.3',
@@ -80,15 +89,21 @@ dependencies {
             'org.apache.httpcomponents:httpmime:4.5.1',
             'org.apache.httpcomponents:httpclient-cache:4.5.1',
             'org.apache.httpcomponents:httpclient-win:4.5.1',
-            'org.codehaus.jackson:jackson-core-asl:1.9.2',
-            'org.codehaus.jackson:jackson-mapper-asl:1.9.2',
+            'com.fasterxml.jackson.core:jackson-databind:2.7.3',
             'de.julielab:aliasi-lingpipe:4.1.0',
             'org.python:jython-standalone:2.7.1b3',
             'org.jsoup:jsoup:1.8.1',
             'org.slf4j:slf4j-api:1.7.12',
             'org.slf4j:slf4j-log4j12:1.7.12',
+            'org.fxmisc.richtext:richtextfx:0.6.10',
             'de.jensd:fontawesomefx:8.9',
             'org.zeroturnaround:zt-zip:1.9'
+}
+
+test {
+    filter {
+        includeTestsMatching "*Test*"
+    }
 }
 
 task wrapper(type: Wrapper) {
