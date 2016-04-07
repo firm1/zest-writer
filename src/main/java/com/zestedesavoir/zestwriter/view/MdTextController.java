@@ -90,16 +90,16 @@ public class MdTextController {
     public void loadFonts() {
         new Thread(new Runnable() {
             public void run() {
-                Font.loadFont(this.getClass().getResource("static/fonts/Merriweather-Regular.ttf").toExternalForm(), 10);
-                Font.loadFont(this.getClass().getResource("static/fonts/Merriweather-Black.ttf").toExternalForm(), 10);
-                Font.loadFont(this.getClass().getResource("static/fonts/Merriweather-Bold.ttf").toExternalForm(), 10);
-                Font.loadFont(this.getClass().getResource("static/fonts/Merriweather-BoldItalic.ttf").toExternalForm(), 10);
-                Font.loadFont(this.getClass().getResource("static/fonts/Merriweather-HeavyItalic.ttf").toExternalForm(), 10);
-                Font.loadFont(this.getClass().getResource("static/fonts/Merriweather-Italic.ttf").toExternalForm(), 10);
-                Font.loadFont(this.getClass().getResource("static/fonts/Merriweather-Light.ttf").toExternalForm(), 10);
-                Font.loadFont(this.getClass().getResource("static/fonts/Merriweather-LightItalic.ttf").toExternalForm(), 10);
+                Font.loadFont(MainApp.class.getResource("static/fonts/Merriweather-Regular.ttf").toExternalForm(), 10);
+                Font.loadFont(MainApp.class.getResource("static/fonts/Merriweather-Black.ttf").toExternalForm(), 10);
+                Font.loadFont(MainApp.class.getResource("static/fonts/Merriweather-Bold.ttf").toExternalForm(), 10);
+                Font.loadFont(MainApp.class.getResource("static/fonts/Merriweather-BoldItalic.ttf").toExternalForm(), 10);
+                Font.loadFont(MainApp.class.getResource("static/fonts/Merriweather-HeavyItalic.ttf").toExternalForm(), 10);
+                Font.loadFont(MainApp.class.getResource("static/fonts/Merriweather-Italic.ttf").toExternalForm(), 10);
+                Font.loadFont(MainApp.class.getResource("static/fonts/Merriweather-Light.ttf").toExternalForm(), 10);
+                Font.loadFont(MainApp.class.getResource("static/fonts/Merriweather-LightItalic.ttf").toExternalForm(), 10);
 
-                Font.loadFont(this.getClass().getResource("static/fonts/FiraMono-Regular.ttf").toExternalForm(), 10);
+                Font.loadFont(MainApp.class.getResource("static/fonts/FiraMono-Regular.ttf").toExternalForm(), 10);
             }
         }).start();
     }
@@ -185,7 +185,7 @@ public class MdTextController {
         logger.debug("Tentative de création d'un nouvel onglet pour "+extract.getTitle());
         extract.loadMarkdown();
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("view/Editor.fxml"));
+        loader.setLocation(MainApp.class.getResource("fxml/Editor.fxml"));
         SplitPane writer = loader.load();
         logger.trace("Fichier Editor.fxml chargé");
 

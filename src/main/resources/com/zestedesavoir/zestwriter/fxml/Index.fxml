@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane stylesheets="@dark.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MdTextController">
+<AnchorPane stylesheets="@../css/dark.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MdTextController">
    <children>
       <SplitPane fx:id="splitPane" dividerPositions="0.11440984793627806" layoutX="-315.0" layoutY="-210.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <items>
@@ -45,7 +45,7 @@
                                        <children>
                                           <ImageView fitHeight="134.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER">
                                              <image>
-                                                <Image url="@static/icons/clem.png" />
+                                                <Image url="@../static/icons/clem.png" />
                                              </image>
                                           </ImageView>
                                           <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Bienvenue dans ZestWriter" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">

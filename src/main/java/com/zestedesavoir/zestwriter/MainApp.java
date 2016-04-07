@@ -89,7 +89,7 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Zest Writer");
-        this.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("view/static/icons/logo.png")));
+        this.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("static/icons/logo.png")));
         primaryStage.setOnCloseRequest(t -> {
             Platform.exit();
             System.exit(0);
@@ -103,7 +103,7 @@ public class MainApp extends Application {
         try {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("view/Root.fxml"));
+            loader.setLocation(MainApp.class.getResource("fxml/Root.fxml"));
             rootLayout = loader.load();
 
             MenuController controller = loader.getController();
@@ -121,7 +121,7 @@ public class MainApp extends Application {
     public void showWriter() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("view/Index.fxml"));
+            loader.setLocation(MainApp.class.getResource("fxml/Index.fxml"));
             AnchorPane writerLayout = loader.load();
 
             rootLayout.setCenter(writerLayout);
@@ -154,7 +154,7 @@ public class MainApp extends Application {
                         dialog.setHeaderText(null);
                         dialog.setContentText(null);
 
-                        dialog.setGraphic(new ImageView(this.getClass().getResource("view/static/goal.gif").toString()));
+                        dialog.setGraphic(new ImageView(this.getClass().getResource("static/goal.gif").toString()));
                         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK);
 
                         dialog.showAndWait();

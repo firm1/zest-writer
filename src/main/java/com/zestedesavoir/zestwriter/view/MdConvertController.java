@@ -93,9 +93,9 @@ public class MdConvertController {
 
     @FXML
     private void initialize() {
-        renderView.getEngine().setUserStyleSheetLocation(getClass().getResource("content.css").toExternalForm());
+        renderView.getEngine().setUserStyleSheetLocation(MainApp.class.getResource("css/content.css").toExternalForm());
         SourceText.getStyleClass().add("markdown-editor");
-        SourceText.getStylesheets().add(getClass().getResource("editor.css").toExternalForm());
+        SourceText.getStylesheets().add(MainApp.class.getResource("css/editor.css").toExternalForm());
         SourceText.setParagraphGraphicFactory(LineNumberFactory.get(SourceText));
     }
 
@@ -122,13 +122,13 @@ public class MdConvertController {
         dialog.setHeaderText("");
 
         // Set the icon (must be included in the project).
-        dialog.setGraphic(new ImageView(this.getClass().getResource("static/icons/table.png").toString()));
+        dialog.setGraphic(new ImageView(MainApp.class.getResource("static/icons/table.png").toString()));
 
         // Set the button types.
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("TableEditor.fxml"));
+        loader.setLocation(MainApp.class.getResource("fxml/TableEditor.fxml"));
         BorderPane tableEditor = loader.load();
         TableView<ZRow> tbView = (TableView) tableEditor.getCenter();
 
@@ -176,7 +176,7 @@ public class MdConvertController {
         dialog.setHeaderText("");
 
         // Set the icon (must be included in the project).
-        dialog.setGraphic(new ImageView(this.getClass().getResource("static/icons/link.png").toString()));
+        dialog.setGraphic(new ImageView(MainApp.class.getResource("static/icons/link.png").toString()));
 
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
@@ -231,7 +231,7 @@ public class MdConvertController {
         dialog.setHeaderText("");
 
         // Set the icon (must be included in the project).
-        dialog.setGraphic(new ImageView(this.getClass().getResource("static/icons/code.png").toString()));
+        dialog.setGraphic(new ImageView(MainApp.class.getResource("static/icons/code.png").toString()));
 
         // Set the button types.
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
@@ -302,7 +302,7 @@ public class MdConvertController {
         this.extract = extract;
 
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("view/Editor.fxml"));
+        loader.setLocation(MainApp.class.getResource("fxml/Editor.fxml"));
         SplitPane writer = loader.load();
 
         SourceText.replaceText(extract.getMarkdown());
@@ -431,8 +431,8 @@ public class MdConvertController {
             String result = corrector.checkHtmlContent(s);
             WebEngine webEngine = renderView.getEngine();
             webEngine.loadContent("<!doctype html><html lang='fr'><head><meta charset='utf-8'><base href='file://"
-                    + getClass().getResource(".").getPath() + "' /></head><body>" + result + "</body></html>");
-            webEngine.setUserStyleSheetLocation(getClass().getResource("content.css").toExternalForm());
+                    + MainApp.class.getResource(".").getPath() + "' /></head><body>" + result + "</body></html>");
+            webEngine.setUserStyleSheetLocation(MainApp.class.getResource("css/content.css").toExternalForm());
         } catch (DOMException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
