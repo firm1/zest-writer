@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.dialogs.AboutDialog">
+   <children>
+      <Label layoutX="200.0" layoutY="100.0" text="Zest-Writer">
+         <font>
+            <Font name="Calibri" size="33.0" />
+         </font>
+      </Label>
+      <Label layoutX="30.0" layoutY="224.0" text="Version" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="225.0">
+         <font>
+            <Font name="Calibri Bold" size="16.0" />
+         </font>
+         <padding>
+            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+         </padding>
+      </Label>
+      <Label layoutX="30.0" layoutY="254.0" text="Licence" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="255.0">
+         <font>
+            <Font name="Calibri Bold" size="16.0" />
+         </font>
+         <padding>
+            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+         </padding>
+      </Label>
+      <Label layoutX="30.0" layoutY="284.0" text="Source" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="285.0">
+         <font>
+            <Font name="Calibri Bold" size="16.0" />
+         </font>
+         <padding>
+            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+         </padding>
+      </Label>
+      <Label layoutX="30.0" layoutY="358.0" prefHeight="91.0" prefWidth="340.0" text="Zest-writer est un éditeur de texte spécialement conçu pour la rédaction d'article et de tutoriel sur la plateforme de partage zestedesavoir.com" wrapText="true" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="350.0">
+         <font>
+            <Font name="Calibri" size="16.0" />
+         </font>
+         <padding>
+            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+         </padding>
+      </Label>
+      <Label layoutX="94.0" layoutY="224.0" text="0.8.0" AnchorPane.leftAnchor="90.0" AnchorPane.topAnchor="225.0">
+         <font>
+            <Font name="Calibri" size="16.0" />
+         </font>
+         <padding>
+            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+         </padding>
+      </Label>
+      <Hyperlink layoutX="83.0" layoutY="250.0" onAction="#HandleGplHyperlinkAction" style="-fx-border-width: 0;" text="GNU, General Public License V3" textFill="#656565" AnchorPane.leftAnchor="90.0" AnchorPane.topAnchor="255.0">
+         <font>
+            <Font name="Calibri" size="16.0" />
+         </font>
+      </Hyperlink>
+      <Hyperlink layoutX="83.0" layoutY="280.0" onAction="#HandleSourceHyperlinkAction" style="-fx-border-width: 0;" text="Github" textFill="#656565" AnchorPane.leftAnchor="90.0" AnchorPane.topAnchor="285.0">
+         <font>
+            <Font name="Calibri" size="16.0" />
+         </font>
+      </Hyperlink>
+      <Hyperlink layoutX="30.0" layoutY="449.0" onAction="#HandleZdsHyperlinkAction" style="-fx-border-width: 0;" text="Accéder à zestedesavoir.com" textFill="#656565" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="450.0">
+         <font>
+            <Font name="Calibri" size="16.0" />
+         </font>
+      </Hyperlink>
+      <ImageView fitHeight="120.0" fitWidth="128.0" layoutX="43.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="50.0">
+         <image>
+            <Image url="@../../../../logo/logo-128.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

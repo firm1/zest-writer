@@ -14,6 +14,14 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.Function;
 
+import com.zestedesavoir.zestwriter.view.dialogs.AboutDialog;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.python.core.PyString;
 import org.python.jline.internal.Log;
@@ -46,7 +54,6 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -66,7 +73,7 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Pair;
 
-public class MenuController {
+public class MenuController{
     private MainApp mainApp;
     TextArea textArea;
 
@@ -83,6 +90,8 @@ public class MenuController {
     @FXML
     MenuItem menuLisibility;
     @FXML
+    MenuItem menuAbout;
+    @FXML
     MenuItem menuGoogle;
     @FXML
     HBox hBottomBox;
@@ -93,22 +102,21 @@ public class MenuController {
     private final Logger logger;
 
 
-
-    public MenuController() {
+    public MenuController(){
         super();
         logger = LoggerFactory.getLogger(MenuController.class);
     }
 
-    public void setMainApp(MainApp mainApp) {
+    public void setMainApp(MainApp mainApp){
         this.mainApp = mainApp;
     }
 
     @FXML
-    private void HandleQuitButtonAction(ActionEvent event) {
+    private void HandleQuitButtonAction(ActionEvent event){
         System.exit(0);
     }
 
-    public static String markdownToHtml(MdTextController index, String chaine) {
+    public static String markdownToHtml(MdTextController index, String chaine){
         PythonInterpreter console = index.getPyconsole();
         console.set("text", chaine);
         console.exec("render = Markdown(extensions=(ZdsExtension({'inline': False, 'emoticons': smileys}),),safe_mode = 'escape', enable_attributes = False, tab_length = 4, output_format = 'html5', smart_emphasis = True, lazy_ol = True).convert(text)");
@@ -117,13 +125,13 @@ public class MenuController {
     }
 
     @FXML
-    private void HandleFleshButtonAction(ActionEvent event) {
+    private void HandleFleshButtonAction(ActionEvent event){
         Function<Textual, Double> calFlesh = (Textual ch) -> {
             String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
             String plainText = Corrector.HtmlToTextWithoutCode(htmlText);
-            if(plainText.trim().equals("")) {
+            if(plainText.trim().equals("")){
                 return 100.0;
-            } else {
+            }else{
                 Readability rd = new Readability(plainText);
                 return rd.getFleschReadingEase();
             }
@@ -131,19 +139,19 @@ public class MenuController {
         Map<Textual, Double> fleshResult = ((Content)mainApp.getIndex().getSummary().getRoot().getValue()).doOnTextual(calFlesh);
 
         ObservableList<String> rows = FXCollections.observableArrayList();
-        for (Entry<Textual, Double> entry : fleshResult.entrySet()) {
+        for(Entry<Textual, Double> entry : fleshResult.entrySet()){
             String easy;
-            if (entry.getValue() < 30) {
+            if(entry.getValue() < 30){
                 easy = "très difficile";
-            } else if (entry.getValue() < 50) {
+            }else if(entry.getValue() < 50){
                 easy = "difficile";
-            } else if (entry.getValue() < 60) {
+            }else if(entry.getValue() < 60){
                 easy = "assez difficile";
-            } else if (entry.getValue() < 70) {
+            }else if(entry.getValue() < 70){
                 easy = "standard";
-            } else if (entry.getValue() < 80) {
+            }else if(entry.getValue() < 80){
                 easy = "assez facile";
-            } else {
+            }else{
                 easy = "très facile";
             }
 
@@ -168,7 +176,7 @@ public class MenuController {
         dialog.getDialogPane().setContent(list);
 
         dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK) {
+            if(dialogButton == ButtonType.OK){
                 return null;
             }
             return null;
@@ -178,14 +186,14 @@ public class MenuController {
     }
 
     @FXML
-    private void HandleGunningButtonAction(ActionEvent event) {
+    private void HandleGunningButtonAction(ActionEvent event){
 
         Function<Textual, Double> calFlesh = (Textual ch) -> {
             String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
             String plainText = Corrector.HtmlToTextWithoutCode(htmlText);
-            if(plainText.trim().equals("")) {
+            if(plainText.trim().equals("")){
                 return 100.0;
-            } else {
+            }else{
                 Readability rd = new Readability(plainText);
                 return rd.getGunningFog();
             }
@@ -193,19 +201,19 @@ public class MenuController {
         Map<Textual, Double> gunningResult = ((Content)mainApp.getIndex().getSummary().getRoot().getValue()).doOnTextual(calFlesh);
 
         ObservableList<String> rows = FXCollections.observableArrayList();
-        for (Entry<Textual, Double> entry : gunningResult.entrySet()) {
+        for(Entry<Textual, Double> entry : gunningResult.entrySet()){
             String easy;
-            if (entry.getValue() >= 15) {
+            if(entry.getValue() >= 15){
                 easy = "très difficile";
-            } else if (entry.getValue() >= 12) {
+            }else if(entry.getValue() >= 12){
                 easy = "difficile";
-            } else if (entry.getValue() >= 10) {
+            }else if(entry.getValue() >= 10){
                 easy = "assez difficile";
-            } else if (entry.getValue() >= 8) {
+            }else if(entry.getValue() >= 8){
                 easy = "standard";
-            } else if (entry.getValue() >= 6) {
+            }else if(entry.getValue() >= 6){
                 easy = "assez facile";
-            } else {
+            }else{
                 easy = "très facile";
             }
 
@@ -230,7 +238,7 @@ public class MenuController {
         dialog.getDialogPane().setContent(list);
 
         dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK) {
+            if(dialogButton == ButtonType.OK){
                 return null;
             }
             return null;
@@ -240,7 +248,7 @@ public class MenuController {
     }
 
     @FXML
-    private void HandleReportWithoutTypoButtonAction(ActionEvent event) {
+    private void HandleReportWithoutTypoButtonAction(ActionEvent event){
         textArea = new TextArea();
         textArea.setEditable(true);
         textArea.setWrapText(true);
@@ -256,15 +264,15 @@ public class MenuController {
         expContent.add(textArea, 0, 1);
 
         hBottomBox.getChildren().addAll(labelField);
-        CorrectionService correctTask=new CorrectionService(mainApp.getIndex());
+        CorrectionService correctTask = new CorrectionService(mainApp.getIndex());
         labelField.textProperty().bind(correctTask.messageProperty());
         textArea.textProperty().bind(correctTask.valueProperty());
         correctTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
-        	Alert alert;
-            switch (newValue) {
+            Alert alert;
+            switch(newValue){
                 case FAILED:
-                	alert = new Alert(AlertType.ERROR);
-                	alert.setTitle("Validation du contenu");
+                    alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Validation du contenu");
                     alert.setHeaderText("Erreur de validation");
                     alert.setContentText("Désolé une erreur nous empêche de trouver les erreurs dans votre contenu");
 
@@ -287,93 +295,93 @@ public class MenuController {
     }
 
     @FXML
-    private void HandleNewButtonAction(ActionEvent event) {
+    private void HandleNewButtonAction(ActionEvent event){
 
         File defaultDirectory;
 
-        try {
-	        if(mainApp.getConfig().getWorkspaceFactory() == null) {
-	        	mainApp.getConfig().loadWorkspace();
-	        }
+        try{
+            if(mainApp.getConfig().getWorkspaceFactory() == null){
+                mainApp.getConfig().loadWorkspace();
+            }
 
-	        defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
+            defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
 
-	        Map<String,Object> paramContent= FunctionTreeFactory.initContentDialog(null);
+            Map<String, Object> paramContent = FunctionTreeFactory.initContentDialog(null);
 
-	        if(paramContent != null) {
-	            // find inexistant directory
-	            String localPath = defaultDirectory.getAbsolutePath()+File.separator+ZdsHttp.toSlug((String)paramContent.get("title"));
-	            String realLocalPath = localPath;
-	            File folder = new File(realLocalPath);
-	            int i=1;
-	            while(folder.exists()) {
-	                realLocalPath = localPath+"-"+i;
-	                folder = new File(realLocalPath);
-	                i++;
-	            }
-	            // create directory
-	            folder.mkdir();
+            if(paramContent != null){
+                // find inexistant directory
+                String localPath = defaultDirectory.getAbsolutePath() + File.separator + ZdsHttp.toSlug((String)paramContent.get("title"));
+                String realLocalPath = localPath;
+                File folder = new File(realLocalPath);
+                int i = 1;
+                while(folder.exists()){
+                    realLocalPath = localPath + "-" + i;
+                    folder = new File(realLocalPath);
+                    i++;
+                }
+                // create directory
+                folder.mkdir();
 
-	            // create manifest.json
-	            File manifest = new File(realLocalPath+File.separator+"manifest.json");
-	            ObjectMapper mapper = new ObjectMapper();
-	            paramContent.put("slug", ZdsHttp.toSlug((String)paramContent.get("title")));
-	            paramContent.put("version", 2);
-	            paramContent.put("object", "container");
-	            paramContent.put("introduction", "introduction.md");
-	            paramContent.put("conclusion", "conclusion.md");
-	            paramContent.put("children", new ArrayList<>());
+                // create manifest.json
+                File manifest = new File(realLocalPath + File.separator + "manifest.json");
+                ObjectMapper mapper = new ObjectMapper();
+                paramContent.put("slug", ZdsHttp.toSlug((String)paramContent.get("title")));
+                paramContent.put("version", 2);
+                paramContent.put("object", "container");
+                paramContent.put("introduction", "introduction.md");
+                paramContent.put("conclusion", "conclusion.md");
+                paramContent.put("children", new ArrayList<>());
 
-	            try {
-	                mapper.writeValue(manifest, paramContent);
-	                // create introduction and conclusion
-	                File intro = new File(realLocalPath+File.separator+"introduction.md");
-	                File conclu = new File(realLocalPath+File.separator+"conclusion.md");
-	                intro.createNewFile();
-	                conclu.createNewFile();
-	                Content content = mapper.readValue(manifest, Content.class);
-	                content.setRootContent(content, realLocalPath);
-	                mainApp.getContents().clear();
-	                FunctionTreeFactory.clearContent(mainApp.getExtracts(), mainApp.getIndex().getEditorList());
-	                mainApp.getContents().add(content);
+                try{
+                    mapper.writeValue(manifest, paramContent);
+                    // create introduction and conclusion
+                    File intro = new File(realLocalPath + File.separator + "introduction.md");
+                    File conclu = new File(realLocalPath + File.separator + "conclusion.md");
+                    intro.createNewFile();
+                    conclu.createNewFile();
+                    Content content = mapper.readValue(manifest, Content.class);
+                    content.setRootContent(content, realLocalPath);
+                    mainApp.getContents().clear();
+                    FunctionTreeFactory.clearContent(mainApp.getExtracts(), mainApp.getIndex().getEditorList());
+                    mainApp.getContents().add(content);
 
-	            } catch (IOException e) {
-	                logger.error(e.getMessage(), e);
-	            }
+                }catch(IOException e){
+                    logger.error(e.getMessage(), e);
+                }
 
-	            menuUpload.setDisable(false);
-	            menuLisibility.setDisable(false);
-	            menuReport.setDisable(false);
-	            menuExport.setDisable(false);
-	        }
-        } catch(IOException e) {
-	    	Log.error(e.getMessage(), e);
-	    }
+                menuUpload.setDisable(false);
+                menuLisibility.setDisable(false);
+                menuReport.setDisable(false);
+                menuExport.setDisable(false);
+            }
+        }catch(IOException e){
+            Log.error(e.getMessage(), e);
+        }
 
     }
 
     @FXML
-    private void HandleOpenButtonAction(ActionEvent event) {
+    private void HandleOpenButtonAction(ActionEvent event){
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Contenus Zestueux");
         File defaultDirectory;
         File selectedDirectory = null;
-        try {
-	        if(mainApp.getConfig().getWorkspaceFactory() == null) {
-				mainApp.getConfig().loadWorkspace();
-	        }
-	        defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
-	        chooser.setInitialDirectory(defaultDirectory);
-	        selectedDirectory = chooser.showDialog(mainApp.getPrimaryStage());
-    	} catch (IOException e) {
-    		Log.error(e.getMessage(), e);
-    	}
+        try{
+            if(mainApp.getConfig().getWorkspaceFactory() == null){
+                mainApp.getConfig().loadWorkspace();
+            }
+            defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
+            chooser.setInitialDirectory(defaultDirectory);
+            selectedDirectory = chooser.showDialog(mainApp.getPrimaryStage());
+        }catch(IOException e){
+            Log.error(e.getMessage(), e);
+        }
 
-        if (selectedDirectory != null) {
-            File manifest = new File(selectedDirectory.getAbsolutePath()+File.separator+"manifest.json");
+        if(selectedDirectory != null){
+            File manifest = new File(selectedDirectory.getAbsolutePath() + File.separator + "manifest.json");
             ObjectMapper mapper = new ObjectMapper();
             Content content;
-            try {
+            try{
                 content = mapper.readValue(manifest, Content.class);
                 content.setRootContent(content, selectedDirectory.getAbsolutePath());
                 mainApp.getContents().clear();
@@ -383,18 +391,18 @@ public class MenuController {
                 menuLisibility.setDisable(false);
                 menuReport.setDisable(false);
                 menuExport.setDisable(false);
-            } catch (IOException e) {
+            }catch(IOException e){
                 logger.error(e.getMessage(), e);
             }
         }
     }
 
     @FXML
-    private Service<Void> HandleLoginButtonAction(ActionEvent event) {
-    	// Button for google
+    private Service<Void> HandleLoginButtonAction(ActionEvent event){
+        // Button for google
         Button googleAuth = new Button("Connexion via Google", IconFactory.createGoogleIcon());
         LoginDialog dialog = new LoginDialog(googleAuth);
-        googleAuth.setOnAction(t-> {
+        googleAuth.setOnAction(t -> {
             GoogleLoginDialog googleDialog = new GoogleLoginDialog(dialog, mainApp.getZdsutils());
             googleDialog.show();
         });
@@ -407,7 +415,7 @@ public class MenuController {
         return loginTask;
     }
 
-    private void downloadContents() {
+    private void downloadContents(){
         prerequisitesForData();
 
         hBottomBox.getChildren().clear();
@@ -416,7 +424,7 @@ public class MenuController {
         labelField.textProperty().bind(downloadContentTask.messageProperty());
         pb.progressProperty().bind(downloadContentTask.progressProperty());
         downloadContentTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
-            switch (newValue) {
+            switch(newValue){
                 case FAILED:
                 case CANCELLED:
                 case SUCCEEDED:
@@ -435,13 +443,13 @@ public class MenuController {
     }
 
     @FXML
-    private void HandleDownloadButtonAction(ActionEvent event) {
-        if (!mainApp.getZdsutils().isAuthenticated()) {
+    private void HandleDownloadButtonAction(ActionEvent event){
+        if(! mainApp.getZdsutils().isAuthenticated()){
             Service<Void> loginTask = HandleLoginButtonAction(event);
 
             loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
                 Alert alert;
-                switch (newValue) {
+                switch(newValue){
                     case FAILED:
                     case CANCELLED:
                         hBottomBox.getChildren().clear();
@@ -453,7 +461,7 @@ public class MenuController {
                         alert.showAndWait();
                         break;
                     case SUCCEEDED:
-                        if (mainApp.getContents().size() > 0) {
+                        if(mainApp.getContents().size() > 0){
                             menuUpload.setDisable(false);
                         }
                         downloadContents();
@@ -461,24 +469,24 @@ public class MenuController {
                 }
             });
             loginTask.start();
-        } else {
+        }else{
             downloadContents();
         }
 
     }
 
-    private void prerequisitesForData() {
-        if(mainApp.getConfig().getWorkspaceFactory() == null) {
-            try {
+    private void prerequisitesForData(){
+        if(mainApp.getConfig().getWorkspaceFactory() == null){
+            try{
                 mainApp.getConfig().loadWorkspace();
-            } catch (IOException e) {
+            }catch(IOException e){
                 // TODO Auto-generated catch block
                 logger.error("", e);
             }
         }
     }
 
-    private void uploadContents() {
+    private void uploadContents(){
         prerequisitesForData();
 
         hBottomBox.getChildren().clear();
@@ -499,7 +507,7 @@ public class MenuController {
         labelField.textProperty().bind(uploadContentTask.messageProperty());
         uploadContentTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
             Alert alert;
-            switch (newValue) {
+            switch(newValue){
                 case FAILED:
                     alert = new Alert(AlertType.ERROR);
                     alert.setTitle("Import de contenu");
@@ -520,18 +528,19 @@ public class MenuController {
             }
         });
 
-        if (result.isPresent()) {
+        if(result.isPresent()){
             uploadContentTask.start();
         }
     }
+
     @FXML
-    private void HandleUploadButtonAction(ActionEvent event) {
-        if (!mainApp.getZdsutils().isAuthenticated()) {
+    private void HandleUploadButtonAction(ActionEvent event){
+        if(! mainApp.getZdsutils().isAuthenticated()){
             Service<Void> loginTask = HandleLoginButtonAction(event);
 
             loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
                 Alert alert;
-                switch (newValue) {
+                switch(newValue){
                     case FAILED:
                         break;
                     case CANCELLED:
@@ -544,7 +553,7 @@ public class MenuController {
                         alert.showAndWait();
                         break;
                     case SUCCEEDED:
-                        if (mainApp.getContents().size() > 0) {
+                        if(mainApp.getContents().size() > 0){
                             menuUpload.setDisable(false);
                         }
                         uploadContents();
@@ -552,14 +561,14 @@ public class MenuController {
                 }
             });
             loginTask.start();
-        } else {
+        }else{
             uploadContents();
         }
 
     }
 
     @FXML
-    private void HandleSwitchWorkspaceAction(ActionEvent event) throws IOException {
+    private void HandleSwitchWorkspaceAction(ActionEvent event) throws IOException{
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setTitle("Sélectionnez un dossier");
         File selectedDirectory = fileChooser.showDialog(mainApp.getPrimaryStage());
@@ -569,33 +578,58 @@ public class MenuController {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Dossier de travail");
         alert.setHeaderText("Changement de dossier de travail");
-        alert.setContentText("Votre dossier de travail est maintenant dans "+mainApp.getConfig().getWorkspacePath());
+        alert.setContentText("Votre dossier de travail est maintenant dans " + mainApp.getConfig().getWorkspacePath());
         alert.setResizable(true);
 
         alert.showAndWait();
     }
 
     @FXML
-    private void HandleExportMarkdownButtonAction(ActionEvent event) {
+    private void HandleExportMarkdownButtonAction(ActionEvent event){
         Content content = mainApp.getContents().get(0);
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setTitle("Dossier d'export");
         File selectedDirectory = fileChooser.showDialog(mainApp.getPrimaryStage());
-        File selectedFile = new File(selectedDirectory, content.getTitle()+".md");
-        logger.debug("Tentative d'export vers le fichier "+selectedFile.getAbsolutePath());
+        File selectedFile = new File(selectedDirectory, content.getTitle() + ".md");
+        logger.debug("Tentative d'export vers le fichier " + selectedFile.getAbsolutePath());
 
-        if(selectedFile != null) {
+        if(selectedFile != null){
 
             content.saveToMarkdown(selectedFile);
-            logger.debug("Export réussi vers "+selectedFile.getAbsolutePath());
+            logger.debug("Export réussi vers " + selectedFile.getAbsolutePath());
 
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("Confirmation");
             alert.setHeaderText("Confirmation de l'export");
-            alert.setContentText("Le contenu \""+content.getTitle()+"\" a été exporté dans \""+selectedFile.getAbsolutePath()+"\"");
+            alert.setContentText("Le contenu \"" + content.getTitle() + "\" a été exporté dans \"" + selectedFile.getAbsolutePath() + "\"");
             alert.setResizable(true);
 
             alert.showAndWait();
+        }
+    }
+
+    @FXML
+    private void HandleAboutButtonAction(ActionEvent event){
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainApp.class.getResource("fxml/AboutDialog.fxml"));
+
+        try{
+            AnchorPane aboutDialog = loader.load();
+            AboutDialog aboutController = loader.getController();
+            aboutController.setMainApp(mainApp);
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("A propos");
+
+            Scene scene = new Scene(aboutDialog);
+            dialogStage.setScene(scene);
+            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+            dialogStage.setResizable(false);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+
+            dialogStage.show();
+        }catch(IOException e){
+            logger.error(e.getMessage(), e);
         }
     }
 }
