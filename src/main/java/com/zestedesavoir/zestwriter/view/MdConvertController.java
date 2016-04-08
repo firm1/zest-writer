@@ -380,7 +380,7 @@ public class MdConvertController {
                         }
                         content.append("' /></head><body>");
                         if (!isCancelled()) {
-                            content.append(StringEscapeUtils.unescapeHtml(markdownToHtml(SourceText.getText())));
+                            content.append(markdownToHtml(SourceText.getText()));
                         }
                         content.append("<script type=\"text/x-mathjax-config\">"+
                             "MathJax.Hub.Config({"+
