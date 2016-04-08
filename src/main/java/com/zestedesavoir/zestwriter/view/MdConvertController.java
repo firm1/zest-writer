@@ -93,7 +93,6 @@ public class MdConvertController {
 
     @FXML
     private void initialize() {
-        renderView.getEngine().setUserStyleSheetLocation(MainApp.class.getResource("css/content.css").toExternalForm());
         SourceText.getStyleClass().add("markdown-editor");
         SourceText.getStylesheets().add(MainApp.class.getResource("css/editor.css").toExternalForm());
         SourceText.setParagraphGraphicFactory(LineNumberFactory.get(SourceText));
@@ -378,7 +377,11 @@ public class MdConvertController {
                         if (!isCancelled()) {
                             content.append(MainApp.class.getResource("view").toExternalForm());
                         }
-                        content.append("' /></head><body>");
+                        content.append("' />");
+                        content.append("<link rel=\"stylesheet\" href=\"");
+                        content.append(MainApp.class.getResource("css/content.css").toExternalForm());
+                        content.append("\" />");
+                        content.append("</head><body>");
                         if (!isCancelled()) {
                             content.append(markdownToHtml(SourceText.getText()));
                         }
@@ -398,6 +401,7 @@ public class MdConvertController {
                         content.append(MainApp.class.getResource("view").toExternalForm());
                         content.append("/static/js/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>");
                         content.append("</body></html>");
+                        System.out.println("\n\n"+content.toString()+"\n\n");
                         return content.toString();
                     }
 
