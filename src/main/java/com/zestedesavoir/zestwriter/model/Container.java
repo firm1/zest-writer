@@ -223,16 +223,16 @@ public class Container extends MetaContent implements ContentNode {
     }
 
     @Override
-    public <R> Map<Textual, R> doOnTextual(Function<String,R> f) {
+    public <R> Map<Textual, R> doOnTextual(Function<Textual,R> f) {
         Map<Textual, R> map = new HashMap<>();
 
-        map.put(getIntroduction(), f.apply(getIntroduction().readMarkdown()));
+        map.put(getIntroduction(), f.apply(getIntroduction()));
 
         for(MetaContent c:getChildren()) {
             map.putAll(c.doOnTextual(f));
         }
 
-        map.put(getConclusion(), f.apply(getConclusion().readMarkdown()));
+        map.put(getConclusion(), f.apply(getConclusion()));
 
         return map;
     }

@@ -1,18 +1,15 @@
 package com.zestedesavoir.zestwriter.view.task;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Scanner;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.Function;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zestedesavoir.zestwriter.model.ContentNode;
-import com.zestedesavoir.zestwriter.model.ExtractFile;
+import com.zestedesavoir.zestwriter.model.Content;
+import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
@@ -22,19 +19,16 @@ import javafx.concurrent.Task;
 
 public class CorrectionService extends Service<String>{
 
-	private final Logger logger;
-	private List<ContentNode> myExtracts;
 	private Corrector corrector;
 	private MdTextController mdText;
+	private Content content;
 
-	public CorrectionService(MdTextController mdText, List<ContentNode> myExtracts) {
-		logger = LoggerFactory.getLogger(getClass());
+	public CorrectionService(MdTextController mdText) {
 		this.mdText = mdText;
-		this.myExtracts = myExtracts;
+		this.content = (Content) mdText.getSummary().getRoot().getValue();
 		corrector = new Corrector();
-        corrector.ignoreRule("FRENCH_WHITESPACE");
+        corrector.getLangTool().disableRule("FRENCH_WHITESPACE");
 	}
-
 
 
 	@Override
@@ -43,28 +37,18 @@ public class CorrectionService extends Service<String>{
             @Override
             protected String call(){
                 updateMessage("Préparation du rapport de validation ...");
-                StringBuilder resultCorrect = new StringBuilder();
-                for(ContentNode extract:myExtracts) {
-                    updateMessage("Préparation du rapport de validation de "+extract.getTitle());
-                    String markdown = "";
-                    // load mdText
-                    Path path = Paths.get(extract.getFilePath());
-                    Scanner scanner;
-                    StringBuilder bfString = new StringBuilder();
-                    try {
-                        scanner = new Scanner(path, StandardCharsets.UTF_8.name());
-                        while (scanner.hasNextLine()) {
-                            bfString.append(scanner.nextLine());
-                            bfString.append("\n");
-                        }
-                        markdown = bfString.toString();
-                    } catch (IOException e) {
-                        logger.error("", e);
-                    }
 
+                Function<Textual, String> prepareValidationReport = (Textual ext) -> {
+                    updateMessage("Préparation du rapport de validation de "+ext.getTitle());
+                    String markdown = ext.readMarkdown();
                     String htmlText = StringEscapeUtils.unescapeHtml(MenuController.markdownToHtml(mdText, markdown));
-                    String note = corrector.checkHtmlContentToText(htmlText, extract.getTitle());
-                    resultCorrect.append(note);
+                    return corrector.checkHtmlContentToText(htmlText, ext.getTitle());
+                };
+                Map<Textual, String> validationResult = (content.doOnTextual(prepareValidationReport));
+
+                StringBuilder resultCorrect = new StringBuilder();
+                for (Entry<Textual, String> entry : validationResult.entrySet()) {
+                    resultCorrect.append(entry.getValue());
                 }
                 return resultCorrect.toString();
             }

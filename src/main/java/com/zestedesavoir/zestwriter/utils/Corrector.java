@@ -20,18 +20,13 @@ public class Corrector {
     private List<String> wordsToIgnore;
 
     public Corrector() {
-    	System.out.println("OOOOOOO");
         langTool = new JLanguageTool(new French());
         wordsToIgnore = new ArrayList<>();
-        for (Rule rule : langTool.getAllRules()) {
-            langTool.disableRule("WHITESPACE_RULE");
-        }
+        langTool.disableRule("WHITESPACE_RULE");
     }
 
-    public void ignoreRule(String str) {
-        for (Rule rule : langTool.getAllRules()) {
-            langTool.disableRule(str);
-        }
+    public JLanguageTool getLangTool() {
+        return langTool;
     }
 
     public static String HtmlToTextWithoutCode(String htmlText) {
@@ -204,6 +199,6 @@ public class Corrector {
     public static void main(String[] args) throws IOException {
         Corrector cr = new Corrector();
         String html = "Je vais au <code>sea sex and sun</code>, <i>car</i> je n'<strong>aime</strong> \n<pre>pas</pre>\n la source du coeur coeur:";
-        cr.checkHtmlContent(html);
+        System.out.println(cr.checkHtmlContent(html));
     }
 }

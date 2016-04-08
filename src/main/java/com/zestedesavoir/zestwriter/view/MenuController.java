@@ -108,19 +108,6 @@ public class MenuController {
         System.exit(0);
     }
 
-    private List<ContentNode> getExtractFilesFromTree(TreeItem<ContentNode> node) {
-        List<ContentNode> extractFiles = new ArrayList<>();
-        for (TreeItem<ContentNode> child : node.getChildren()) {
-            if (child.getChildren().isEmpty()) {
-                extractFiles.add(child.getValue());
-            }
-            else {
-                extractFiles.addAll(getExtractFilesFromTree(child));
-            }
-        }
-        return extractFiles;
-    }
-
     public static String markdownToHtml(MdTextController index, String chaine) {
         PythonInterpreter console = index.getPyconsole();
         console.set("text", chaine);
@@ -131,8 +118,8 @@ public class MenuController {
 
     @FXML
     private void HandleFleshButtonAction(ActionEvent event) {
-        Function<String, Double> calFlesh = (String ch) -> {
-            String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), ch));
+        Function<Textual, Double> calFlesh = (Textual ch) -> {
+            String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
             String plainText = Corrector.HtmlToTextWithoutCode(htmlText);
             if(plainText.trim().equals("")) {
                 return 100.0;
@@ -193,8 +180,8 @@ public class MenuController {
     @FXML
     private void HandleGunningButtonAction(ActionEvent event) {
 
-        Function<String, Double> calFlesh = (String ch) -> {
-            String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), ch));
+        Function<Textual, Double> calFlesh = (Textual ch) -> {
+            String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
             String plainText = Corrector.HtmlToTextWithoutCode(htmlText);
             if(plainText.trim().equals("")) {
                 return 100.0;
@@ -269,8 +256,7 @@ public class MenuController {
         expContent.add(textArea, 0, 1);
 
         hBottomBox.getChildren().addAll(labelField);
-        List<ContentNode> myExtracts = getExtractFilesFromTree(mainApp.getIndex().getSummary().getRoot());
-        CorrectionService correctTask=new CorrectionService(mainApp.getIndex(), myExtracts);
+        CorrectionService correctTask=new CorrectionService(mainApp.getIndex());
         labelField.textProperty().bind(correctTask.messageProperty());
         textArea.textProperty().bind(correctTask.valueProperty());
         correctTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {

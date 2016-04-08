@@ -166,10 +166,10 @@ public class Extract extends MetaContent implements Textual, ContentNode{
     }
 
     @Override
-    public <R> Map<Textual, R> doOnTextual(Function<String,R> f) {
+    public <R> Map<Textual, R> doOnTextual(Function<Textual,R> f) {
         Map<Textual, R> map = new HashMap<>();
 
-        map.put(this, f.apply(readMarkdown()));
+        map.put(this, f.apply(this));
 
         return map;
     }
