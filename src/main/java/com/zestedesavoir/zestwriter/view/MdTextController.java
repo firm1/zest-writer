@@ -10,10 +10,8 @@ import org.slf4j.LoggerFactory;
 import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
 import com.sun.javafx.scene.control.skin.TabPaneSkin;
 import com.zestedesavoir.zestwriter.MainApp;
-import com.zestedesavoir.zestwriter.model.Container;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
-import com.zestedesavoir.zestwriter.model.MetaContent;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
@@ -83,7 +81,7 @@ public class MdTextController {
             pyconsole.exec("from markdown import Markdown");
             pyconsole.exec("from markdown.extensions.zds import ZdsExtension");
             pyconsole.exec("from smileys_definition import smileys");
-            System.out.println("PYTHON START");
+            logger.info("PYTHON STARTED");
         }).start();
     }
 
@@ -135,7 +133,7 @@ public class MdTextController {
         mainApp.getContents().addListener((ListChangeListener<Content>) change -> {
             for(Content content:mainApp.getContents()) {
                 FunctionTreeFactory.clearContent(mainApp.getExtracts(), EditorList);
-                openContent();
+                openContent(content);
             }
         });
 
@@ -236,16 +234,7 @@ public class MdTextController {
     public MdTextController getThis() {
         return this;
     }
-    public void openContent() {
-
-        TreeItem<ContentNode> node = Summary.getRoot();
-        Content content;
-        if(node == null) {
-            content = mainApp.getContents().get(0);
-        } else {
-            content = (Content)node.getValue();
-        }
-
+    public void openContent(Content content) {
     	String filePath = content.getBasePath();
         logger.debug("Tentative d'ouverture du contenu stocké dans "+filePath);
 

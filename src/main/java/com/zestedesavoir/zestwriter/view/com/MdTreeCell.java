@@ -39,10 +39,12 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 	private String baseFilePath;
 	private final Logger logger;
     private ContextMenu addMenu = new ContextMenu();
+    private Content content;
 
 
     public MdTreeCell(MdTextController index) {
 		this.index = index;
+		this.content = index.getMainApp().getContents().get(0);
 		this.baseFilePath = ((Content) index.getSummary().getRoot().getValue()).getBasePath();
 		this.logger = LoggerFactory.getLogger(getClass());
 	}
@@ -117,7 +119,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                     }
                 }
                 saveManifestJson();
-                index.openContent();
+                index.openContent(content);
             }
         });
 
@@ -160,7 +162,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                     logger.error(e.getMessage(), e);
                 }
                 saveManifestJson();
-                index.openContent();
+                index.openContent(content);
             }
         });
 
@@ -177,7 +179,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 if (!result.get().trim().equals("")) {
                     ((MetaContent)item1.getValue()).setTitle(result.get());
                     saveManifestJson();
-                    index.openContent();
+                    index.openContent(content);
                 }
             }
 
@@ -202,7 +204,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                     ((Content) index.getSummary().getRoot().getValue()).setType(paramContent.get("type").toString());
                     ((Content) index.getSummary().getRoot().getValue()).setLicence(paramContent.get("licence").toString());
                     saveManifestJson();
-                    index.openContent();
+                    index.openContent(content);
                 }
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);

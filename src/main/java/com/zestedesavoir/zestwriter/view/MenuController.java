@@ -390,16 +390,6 @@ public class MenuController {
     }
 
     @FXML
-    private void HandleLogoutButtonAction(ActionEvent event) {
-        if (mainApp.getZdsutils().isAuthenticated()) {
-            mainApp.getZdsutils().logout();
-            menuDownload.setDisable(true);
-            menuLogin.setDisable(false);
-            menuLogout.setDisable(true);
-        }
-    }
-
-    @FXML
     private Service<Void> HandleLoginButtonAction(ActionEvent event) {
     	// Button for google
         Button googleAuth = new Button("Connexion via Google", IconFactory.createGoogleIcon());
