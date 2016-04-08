@@ -1,6 +1,6 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
-import com.zestedesavoir.zestwriter.view.MenuController;
+import com.zestedesavoir.zestwriter.view.com.IconFactory;
 
 import javafx.application.Platform;
 import javafx.scene.Node;
@@ -10,14 +10,13 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.util.Pair;
 
 public class LoginDialog extends BaseDialog<Pair<String, String>> {
 	public LoginDialog(Button googleButton) {
 		super("Connexion", "Connectez vous au site Zeste de Savoir");
 
-        this.setGraphic(new ImageView(MenuController.class.getResource("static/icons/login.png").toString()));
+        this.setGraphic(IconFactory.createLoginIcon());
 
         // Set the button types.
         ButtonType loginButtonType = new ButtonType("Se connecter", ButtonData.OK_DONE);

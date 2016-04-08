@@ -4,66 +4,51 @@ import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 
 public class IconFactory {
-	public static MaterialDesignIconView createFolderIcon() {
-        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.FOLDER_MULTIPLE);
+
+    public static MaterialDesignIconView makeIcon(MaterialDesignIcon type, String hexColor) {
+        MaterialDesignIconView icon = new MaterialDesignIconView(type);
         icon.setSize("1.8em");
-        icon.setGlyphStyle("-fx-fill:#084561");
+        icon.setGlyphStyle("-fx-fill:"+hexColor);
         return icon;
+    }
+
+    public static MaterialDesignIconView createLoginIcon() {
+        return makeIcon(MaterialDesignIcon.ACCOUNT_KEY, "#084561");
+    }
+
+	public static MaterialDesignIconView createFolderIcon() {
+	    return makeIcon(MaterialDesignIcon.FOLDER_MULTIPLE, "#084561");
     }
 
     public static MaterialDesignIconView createAddFolderIcon() {
-        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.FOLDER_PLUS);
-        icon.setSize("1.8em");
-        icon.setGlyphStyle("-fx-fill:#084561");
-        return icon;
+        return makeIcon(MaterialDesignIcon.FOLDER_PLUS, "#084561");
     }
 
     public static MaterialDesignIconView createDeleteIcon() {
-        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.CLOSE);
-        icon.setSize("1.8em");
-        icon.setGlyphStyle("-fx-fill:#f44336");
-        return icon;
+        return makeIcon(MaterialDesignIcon.CLOSE, "#f44336");
     }
 
     public static MaterialDesignIconView createRemoveIcon() {
-        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.DELETE);
-        icon.setSize("1.8em");
-        icon.setGlyphStyle("-fx-fill:#f44336");
-        return icon;
+        return makeIcon(MaterialDesignIcon.CLOSE, "#f44336");
     }
 
     public static MaterialDesignIconView createFileIcon() {
-        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.FILE);
-        icon.setSize("1.8em");
-        icon.setGlyphStyle("-fx-fill:#ef9708");
-        return icon;
+        return makeIcon(MaterialDesignIcon.FILE, "#ef9708");
     }
 
     public static MaterialDesignIconView createFileBlankIcon() {
-        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.FILE_OUTLINE);
-        icon.setSize("1.8em");
-        icon.setGlyphStyle("-fx-fill:#ef9708");
-        return icon;
+        return makeIcon(MaterialDesignIcon.FILE_OUTLINE, "#ef9708");
     }
 
     public static MaterialDesignIconView createEditIcon() {
-        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.BORDER_COLOR);
-        icon.setSize("1.8em");
-        icon.setGlyphStyle("-fx-fill:#084561");
-        return icon;
+        return makeIcon(MaterialDesignIcon.BORDER_COLOR, "#084561");
     }
 
     public static MaterialDesignIconView createGoogleIcon() {
-        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.GOOGLE_PLUS);
-        icon.setSize("2em");
-        icon.setGlyphStyle("-fx-fill:#dd4b39");
-        return icon;
+        return makeIcon(MaterialDesignIcon.GOOGLE_PLUS, "#dd4b39");
     }
 
     public static MaterialDesignIconView createArrowDownIcon() {
-        MaterialDesignIconView icon = new MaterialDesignIconView(MaterialDesignIcon.ARROW_DOWN);
-        icon.setSize("2em");
-        icon.setGlyphStyle("-fx-fill:#48a200");
-        return icon;
+        return makeIcon(MaterialDesignIcon.ARROW_DOWN, "#48a200");
     }
 }
