@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.function.Function;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -98,6 +100,7 @@ public abstract class MetaContent{
 
     public abstract String getFilePath();
     public abstract String exportContentToMarkdown(int level, int levelDepth);
+    public abstract <R> Map<Textual, R> doOnTextual(Function<String,R> f);
 
     public static void loadMarkdown(Textual textual) {
         Path path = Paths.get(textual.getFilePath());

@@ -7,7 +7,10 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.function.Function;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -160,6 +163,15 @@ public class Extract extends MetaContent implements Textual, ContentNode{
         sb.append(" ").append(getTitle()).append("\n\n");
         sb.append(FunctionTreeFactory.offsetHeaderMarkdown(readMarkdown(), levelDepth)).append("\n\n");
         return sb.toString();
+    }
+
+    @Override
+    public <R> Map<Textual, R> doOnTextual(Function<String,R> f) {
+        Map<Textual, R> map = new HashMap<>();
+
+        map.put(this, f.apply(readMarkdown()));
+
+        return map;
     }
 
 }

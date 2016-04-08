@@ -3,7 +3,10 @@ package com.zestedesavoir.zestwriter.model;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -217,5 +220,20 @@ public class Container extends MetaContent implements ContentNode {
         }
         sb.append(FunctionTreeFactory.offsetHeaderMarkdown(getConclusion().readMarkdown(), levelDepth)).append("\n\n");
         return sb.toString();
+    }
+
+    @Override
+    public <R> Map<Textual, R> doOnTextual(Function<String,R> f) {
+        Map<Textual, R> map = new HashMap<>();
+
+        map.put(getIntroduction(), f.apply(getIntroduction().readMarkdown()));
+
+        for(MetaContent c:getChildren()) {
+            map.putAll(c.doOnTextual(f));
+        }
+
+        map.put(getConclusion(), f.apply(getConclusion().readMarkdown()));
+
+        return map;
     }
 }

@@ -1,10 +1,7 @@
 package com.zestedesavoir.zestwriter.view;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,6 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.function.Function;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.python.core.PyString;
@@ -28,6 +26,7 @@ import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
 import com.zestedesavoir.zestwriter.model.MetadataContent;
+import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
@@ -65,8 +64,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Pair;
 
 public class MenuController {
@@ -124,100 +121,6 @@ public class MenuController {
         return extractFiles;
     }
 
-    private void correctChildren(TreeItem<ContentNode> root, boolean typo) throws IOException {
-        List<ContentNode> myExtracts = getExtractFilesFromTree(root);
-        for(ContentNode extract:myExtracts) {
-            String markdown = "";
-            // load mdText
-            Path path = Paths.get(extract.getFilePath());
-            Scanner scanner;
-            StringBuilder bfString = new StringBuilder();
-            try {
-                scanner = new Scanner(path, StandardCharsets.UTF_8.name());
-                while (scanner.hasNextLine()) {
-                    bfString.append(scanner.nextLine());
-                    bfString.append("\n");
-                }
-                markdown = bfString.toString();
-            } catch (IOException e) {
-                logger.error("", e);
-            }
-
-            Corrector cr = new Corrector();
-            if (!typo) {
-                cr.ignoreRule("FRENCH_WHITESPACE");
-            }
-            String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), markdown));
-            textArea.appendText(cr.checkHtmlContentToText(htmlText, extract.getTitle()));
-        }
-    }
-
-    public Map<ContentNode, Double> getGunning(TreeItem<ContentNode> root) {
-
-        Map<ContentNode, Double> map = new HashMap<>();
-        for (TreeItem<ContentNode> child : root.getChildren()) {
-            String markdown = "";
-            if (child.getChildren().isEmpty()) {
-                // load mdText
-                Path path = Paths.get(child.getValue().getFilePath());
-                Scanner scanner;
-                StringBuilder bfString = new StringBuilder();
-                try {
-                    scanner = new Scanner(path, StandardCharsets.UTF_8.name());
-                    while (scanner.hasNextLine()) {
-                        bfString.append(scanner.nextLine());
-                        bfString.append("\n");
-                    }
-                    markdown = bfString.toString();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    logger.error("", e);
-                }
-
-                String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), markdown));
-                String plainText = Corrector.HtmlToTextWithoutCode(htmlText);
-                Readability rd = new Readability(plainText);
-                map.put(child.getValue(), rd.getGunningFog());
-            } else {
-                map.putAll(getGunning(child));
-            }
-        }
-        return map;
-    }
-
-    public Map<ContentNode, Double> getFlesch(TreeItem<ContentNode> root) {
-
-        Map<ContentNode, Double> map = new HashMap<>();
-        for (TreeItem<ContentNode> child : root.getChildren()) {
-            String markdown = "";
-            if (child.getChildren().isEmpty()) {
-                // load mdText
-                Path path = Paths.get(child.getValue().getFilePath());
-                Scanner scanner;
-                StringBuilder bfString = new StringBuilder();
-                try {
-                    scanner = new Scanner(path, StandardCharsets.UTF_8.name());
-                    while (scanner.hasNextLine()) {
-                        bfString.append(scanner.nextLine());
-                        bfString.append("\n");
-                    }
-                    markdown = bfString.toString();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    logger.error("", e);
-                }
-
-                String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), markdown));
-                String plainText = Corrector.HtmlToTextWithoutCode(htmlText);
-                Readability rd = new Readability(plainText);
-                map.put(child.getValue(), rd.getFleschReadingEase());
-            } else {
-                map.putAll(getFlesch(child));
-            }
-        }
-        return map;
-    }
-
     public static String markdownToHtml(MdTextController index, String chaine) {
         PythonInterpreter console = index.getPyconsole();
         console.set("text", chaine);
@@ -228,10 +131,20 @@ public class MenuController {
 
     @FXML
     private void HandleFleshButtonAction(ActionEvent event) {
-        Map<ContentNode, Double> results = getFlesch(mainApp.getIndex().getSummary().getRoot());
+        Function<String, Double> calFlesh = (String ch) -> {
+            String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), ch));
+            String plainText = Corrector.HtmlToTextWithoutCode(htmlText);
+            if(plainText.trim().equals("")) {
+                return 100.0;
+            } else {
+                Readability rd = new Readability(plainText);
+                return rd.getFleschReadingEase();
+            }
+        };
+        Map<Textual, Double> fleshResult = ((Content)mainApp.getIndex().getSummary().getRoot().getValue()).doOnTextual(calFlesh);
 
         ObservableList<String> rows = FXCollections.observableArrayList();
-        for (Entry<ContentNode, Double> entry : results.entrySet()) {
+        for (Entry<Textual, Double> entry : fleshResult.entrySet()) {
             String easy;
             if (entry.getValue() < 30) {
                 easy = "très difficile";
@@ -279,10 +192,21 @@ public class MenuController {
 
     @FXML
     private void HandleGunningButtonAction(ActionEvent event) {
-        Map<ContentNode, Double> results = getGunning(mainApp.getIndex().getSummary().getRoot());
+
+        Function<String, Double> calFlesh = (String ch) -> {
+            String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), ch));
+            String plainText = Corrector.HtmlToTextWithoutCode(htmlText);
+            if(plainText.trim().equals("")) {
+                return 100.0;
+            } else {
+                Readability rd = new Readability(plainText);
+                return rd.getGunningFog();
+            }
+        };
+        Map<Textual, Double> gunningResult = ((Content)mainApp.getIndex().getSummary().getRoot().getValue()).doOnTextual(calFlesh);
 
         ObservableList<String> rows = FXCollections.observableArrayList();
-        for (Entry<ContentNode, Double> entry : results.entrySet()) {
+        for (Entry<Textual, Double> entry : gunningResult.entrySet()) {
             String easy;
             if (entry.getValue() >= 15) {
                 easy = "très difficile";
