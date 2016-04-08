@@ -48,7 +48,6 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 	}
 
 	public void initContextMenu(ContentNode item) {
-
         MenuItem addMenuItem1 = new MenuItem("Ajouter un extrait");
         MenuItem addMenuItem2 = new MenuItem("Ajouter un conteneur");
         MenuItem addMenuItem3 = new MenuItem("Renommer");
@@ -60,6 +59,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         addMenuItem4.setGraphic(IconFactory.createRemoveIcon());
         addMenuItem5.setGraphic(IconFactory.createEditIcon());
         addMenu.getItems().clear();
+
         if (item.canTakeContainer(((Content)index.getSummary().getRoot().getValue()))) {
             addMenu.getItems().add(addMenuItem2);
         }
@@ -236,7 +236,6 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             mapper.writerWithDefaultPrettyPrinter().writeValue(new File(baseFilePath + File.separator + "manifest.json"), c);
             logger.info("Fichier manifest sauvegardé");
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             logger.error(e.getMessage(), e);
         }
     }

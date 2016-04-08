@@ -42,11 +42,11 @@ public class UploadContentService extends Service<Void>{
                         if(targetId == null) {
                             if(!zdsUtils.importNewContent(pathDir+ ".zip")) {
                                 failed();
-                            };
+                            }
                         } else {
                             if(!zdsUtils.importContent(pathDir + ".zip", targetId, targetSlug)) {
                                 failed();
-                            };
+                            }
                         }
                     } catch (IOException e) {
                         logger.error("", e);

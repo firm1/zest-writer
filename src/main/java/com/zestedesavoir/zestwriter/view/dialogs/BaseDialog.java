@@ -6,8 +6,7 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
 public class BaseDialog<T> extends Dialog<T>{
-
-	GridPane gridPane = new GridPane();
+	private GridPane gridPane = new GridPane();
 
 	public BaseDialog(String title) {
 		this.setTitle(title);
@@ -32,6 +31,4 @@ public class BaseDialog<T> extends Dialog<T>{
 	public void setGridPane(GridPane gridPane) {
 		this.gridPane = gridPane;
 	}
-
-
 }

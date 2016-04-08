@@ -22,6 +22,7 @@ public class LoginService extends Service<Void>{
 		this.zdsUtils = zdsUtils;
 		logger = LoggerFactory.getLogger(getClass());
 	}
+
 	@Override
     protected Task<Void> createTask() {
         return new Task<Void>() {
@@ -42,6 +43,7 @@ public class LoginService extends Service<Void>{
                         cancel();
                     }
                 });
+
                 if(!result.isPresent()) {
                     if(zdsUtils.isAuthenticated()) {
                         updateMessage("Recherche des contenus ...");

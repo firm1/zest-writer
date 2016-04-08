@@ -29,7 +29,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
-
     private Scene scene;
     private Stage primaryStage;
     private BorderPane rootLayout;
@@ -38,7 +37,7 @@ public class MainApp extends Application {
     private ZdsHttp zdsutils;
     private MdTextController Index;
     private Configuration config;
-    StringBuilder key = new StringBuilder();
+    private StringBuilder key = new StringBuilder();
     public static String[] args;
 
     public MainApp() {

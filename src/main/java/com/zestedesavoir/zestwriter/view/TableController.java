@@ -51,18 +51,17 @@ class ZRow {
     }
 
 }
+
 public class TableController {
     private MdConvertController editorController;
-    @FXML
-    private TableView<ZRow> tableView;
+    @FXML private TableView<ZRow> tableView;
     private final ObservableList<ZRow> datas = FXCollections.observableArrayList(new ZRow(1));
 
     public void setEditor(MdConvertController editorController) {
         this.editorController = editorController;
     }
 
-    @FXML
-    private void initialize() {
+    @FXML private void initialize() {
 
         tableView.setItems(datas);
 
@@ -71,13 +70,11 @@ public class TableController {
         addRow();
     }
 
-    @FXML
-    private void HandleAddRowButtonAction(ActionEvent event) {
+    @FXML private void HandleAddRowButtonAction(ActionEvent event) {
         addRow();
     }
 
-    @FXML
-    private void HandleAddColumnButtonAction(ActionEvent event) {
+    @FXML private void HandleAddColumnButtonAction(ActionEvent event) {
         addCol();
     }
 

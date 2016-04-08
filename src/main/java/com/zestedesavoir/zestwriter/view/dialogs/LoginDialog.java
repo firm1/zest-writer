@@ -24,7 +24,6 @@ public class LoginDialog extends BaseDialog<Pair<String, String>> {
         this.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
 
-
         TextField username = new TextField();
         username.setPromptText("username");
         PasswordField password = new PasswordField();

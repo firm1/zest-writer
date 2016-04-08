@@ -21,7 +21,6 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 public class CorrectionService extends Service<String>{
-
 	private final Logger logger;
 	private List<ContentNode> myExtracts;
 	private Corrector corrector;
@@ -34,8 +33,6 @@ public class CorrectionService extends Service<String>{
 		corrector = new Corrector();
         corrector.ignoreRule("FRENCH_WHITESPACE");
 	}
-
-
 
 	@Override
     protected Task<String> createTask() {
