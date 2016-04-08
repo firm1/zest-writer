@@ -14,11 +14,13 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.Function;
 
+import com.zestedesavoir.zestwriter.view.dialogs.AboutDialog;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.python.core.PyString;
@@ -613,6 +615,8 @@ public class MenuController{
 
         try{
             AnchorPane aboutDialog = loader.load();
+            AboutDialog aboutController = loader.getController();
+            aboutController.setMainApp(mainApp);
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle("A propos");
@@ -621,6 +625,7 @@ public class MenuController{
             dialogStage.setScene(scene);
             dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
             dialogStage.setResizable(false);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
 
             dialogStage.show();
         }catch(IOException e){
