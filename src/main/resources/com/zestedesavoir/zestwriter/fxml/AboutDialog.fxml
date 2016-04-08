@@ -10,11 +10,6 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.dialogs.AboutDialog">
    <children>
-      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../logo/logo-256.png" />
-         </image>
-      </ImageView>
       <Label layoutX="200.0" layoutY="100.0" text="Zest-Writer">
          <font>
             <Font name="Calibri" size="33.0" />
@@ -75,5 +70,10 @@
             <Font name="Calibri" size="16.0" />
          </font>
       </Hyperlink>
+      <ImageView fitHeight="120.0" fitWidth="128.0" layoutX="43.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="50.0">
+         <image>
+            <Image url="@../../../../logo/logo-128.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

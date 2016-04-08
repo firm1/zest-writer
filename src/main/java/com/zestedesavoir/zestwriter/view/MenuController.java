@@ -17,6 +17,7 @@ import java.util.function.Function;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -618,10 +619,12 @@ public class MenuController{
 
             Scene scene = new Scene(aboutDialog);
             dialogStage.setScene(scene);
+            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+            dialogStage.setResizable(false);
 
             dialogStage.show();
         }catch(IOException e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 }
