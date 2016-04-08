@@ -97,6 +97,7 @@ public abstract class MetaContent{
     }
 
     public abstract String getFilePath();
+    public abstract String exportContentToMarkdown(int level, int levelDepth);
 
     public static void loadMarkdown(Textual textual) {
         Path path = Paths.get(textual.getFilePath());

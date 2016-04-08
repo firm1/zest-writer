@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
@@ -199,5 +200,22 @@ public class Container extends MetaContent implements ContentNode {
             return getFilePath().equals(((Container)obj).getFilePath());
         }
         return super.equals(obj);
+    }
+
+    @Override
+    public String exportContentToMarkdown(int level, int levelDepth) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(FunctionTreeFactory.padding(level, '#'));
+        sb.append(" ").append(getTitle()).append("\n\n");
+        sb.append(FunctionTreeFactory.offsetHeaderMarkdown(getIntroduction().readMarkdown(), levelDepth)).append("\n\n");
+        for(MetaContent c:getChildren()) {
+            if(c instanceof Container) {
+                sb.append(((Container) c).exportContentToMarkdown(level+1, levelDepth));
+            } else if (c instanceof Extract) {
+                sb.append(((Extract) c).exportContentToMarkdown(level +1, levelDepth));
+            }
+        }
+        sb.append(FunctionTreeFactory.offsetHeaderMarkdown(getConclusion().readMarkdown(), levelDepth)).append("\n\n");
+        return sb.toString();
     }
 }

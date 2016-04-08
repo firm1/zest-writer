@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import com.zestedesavoir.zestwriter.model.Container;
 import com.zestedesavoir.zestwriter.model.ContentNode;
@@ -98,4 +99,16 @@ public class FunctionTreeFactory {
         }
     }
 
+    public static String padding(int number, char car) {
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<number;i++) {
+            sb.append(car);
+        }
+        return sb.toString();
+    }
+
+    public static String offsetHeaderMarkdown(String text, int level) {
+        String regex = "^(#+)(.{0,}?)(#*)$";
+        return Pattern.compile(regex, Pattern.MULTILINE).matcher(text).replaceAll(padding(level,'#')+"$1$2");
+    }
 }

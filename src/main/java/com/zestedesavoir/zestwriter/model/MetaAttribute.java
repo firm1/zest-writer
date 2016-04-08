@@ -96,10 +96,9 @@ public class MetaAttribute implements Textual, ContentNode{
         return getTitle();
     }
 
-    @Override
-    public void loadMarkdown() {
+    public String readMarkdown() {
         Path path = Paths.get(this.getFilePath());
-        Scanner scanner;
+        Scanner scanner  = null;
         StringBuilder bfString = new StringBuilder();
         try {
             scanner = new Scanner(path, StandardCharsets.UTF_8.name());
@@ -107,10 +106,18 @@ public class MetaAttribute implements Textual, ContentNode{
                 bfString.append(scanner.nextLine());
                 bfString.append("\n");
             }
-            setMarkdown(bfString.toString());
+            return bfString.toString();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            scanner.close();
         }
+        return null;
+    }
+
+    @Override
+    public void loadMarkdown() {
+        setMarkdown(readMarkdown());
     }
 
     @Override

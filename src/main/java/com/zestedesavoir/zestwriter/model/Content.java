@@ -1,7 +1,14 @@
 package com.zestedesavoir.zestwriter.model;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -86,6 +93,35 @@ public class Content extends Container implements ContentNode{
     @Override
     public boolean isMoveableIn(ContentNode receiver, Content root) {
         return false;
+    }
+
+    public String exportContentToMarkdown(int level, int levelDepth) {
+        DateFormat dateFormat = new SimpleDateFormat("dd MMMMM yyyy");
+        StringBuilder sb = new StringBuilder();
+        sb.append("% ").append(getTitle());
+        sb.append("% ").append(dateFormat.format(new Date())).append("\n\n");
+        sb.append(getIntroduction().readMarkdown()).append("\n\n");
+        for(MetaContent c:getChildren()) {
+            sb.append(c.exportContentToMarkdown(level+1, levelDepth));
+        }
+        sb.append(getConclusion().readMarkdown());
+        return sb.toString();
+    }
+
+    public void saveToMarkdown(File file) {
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
+            writer.append(exportContentToMarkdown(0, 2));
+            writer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                writer.close();
+            } catch (Exception ignored) {
+            }
+        }
     }
 
 }

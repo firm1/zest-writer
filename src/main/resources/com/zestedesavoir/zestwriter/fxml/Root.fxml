@@ -36,6 +36,18 @@
                         <MaterialDesignIconView fill="#084561" glyphName="FOLDER_MOVE" size="1.8em" />
                      </graphic>
                   </MenuItem>
+                  <Menu fx:id="menuExport" mnemonicParsing="false" text="Exporter le contenu" disable="true">
+                    <graphic>
+                       <MaterialDesignIconView fill="#084561" glyphName="FILE_EXPORT" size="1.8em" />
+                    </graphic>
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#HandleExportMarkdownButtonAction" text="Markdown">
+                        <graphic>
+	                        <MaterialDesignIconView fill="#084561" glyphName="MARKDOWN" size="1.8em" />
+	                     </graphic>
+                      </MenuItem>
+                    </items>
+                  </Menu>
               <MenuItem mnemonicParsing="false" onAction="#HandleQuitButtonAction" text="Quitter">
                      <graphic>
                         <MaterialDesignIconView fill="#084561" glyphName="EXIT_TO_APP" size="1.8em" />

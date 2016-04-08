@@ -1,7 +1,10 @@
 package com.zestedesavoir.zestwriter.view;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,7 +27,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
-import com.zestedesavoir.zestwriter.model.ExtractFile;
 import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
@@ -53,6 +55,7 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
@@ -62,6 +65,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Pair;
 
 public class MenuController {
@@ -84,6 +89,8 @@ public class MenuController {
     MenuItem menuGoogle;
     @FXML
     HBox hBottomBox;
+    @FXML
+    Menu menuExport;
     final ProgressBar pb = new ProgressBar(0);
     final Text labelField = new Text("");
     private final Logger logger;
@@ -416,7 +423,6 @@ public class MenuController {
 	                conclu.createNewFile();
 	                Content content = mapper.readValue(manifest, Content.class);
 	                content.setRootContent(content, realLocalPath);
-	                //content.setBasePath(realLocalPath);
 	                mainApp.getContents().clear();
 	                FunctionTreeFactory.clearContent(mainApp.getExtracts(), mainApp.getIndex().getEditorList());
 	                mainApp.getContents().add(content);
@@ -428,6 +434,7 @@ public class MenuController {
 	            menuUpload.setDisable(false);
 	            menuLisibility.setDisable(false);
 	            menuReport.setDisable(false);
+	            menuExport.setDisable(false);
 	        }
         } catch(IOException e) {
 	    	Log.error(e.getMessage(), e);
@@ -465,6 +472,7 @@ public class MenuController {
                 menuUpload.setDisable(false);
                 menuLisibility.setDisable(false);
                 menuReport.setDisable(false);
+                menuExport.setDisable(false);
             } catch (IOException e) {
                 logger.error(e.getMessage(), e);
             }
@@ -665,5 +673,29 @@ public class MenuController {
         alert.setResizable(true);
 
         alert.showAndWait();
+    }
+
+    @FXML
+    private void HandleExportMarkdownButtonAction(ActionEvent event) {
+        Content content = mainApp.getContents().get(0);
+        DirectoryChooser fileChooser = new DirectoryChooser();
+        fileChooser.setTitle("Dossier d'export");
+        File selectedDirectory = fileChooser.showDialog(mainApp.getPrimaryStage());
+        File selectedFile = new File(selectedDirectory, content.getTitle()+".md");
+        logger.debug("Tentative d'export vers le fichier "+selectedFile.getAbsolutePath());
+
+        if(selectedFile != null) {
+
+            content.saveToMarkdown(selectedFile);
+            logger.debug("Export réussi vers "+selectedFile.getAbsolutePath());
+
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Confirmation");
+            alert.setHeaderText("Confirmation de l'export");
+            alert.setContentText("Le contenu \""+content.getTitle()+"\" a été exporté dans \""+selectedFile.getAbsolutePath()+"\"");
+            alert.setResizable(true);
+
+            alert.showAndWait();
+        }
     }
 }

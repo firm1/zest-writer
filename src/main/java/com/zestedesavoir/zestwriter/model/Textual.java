@@ -3,6 +3,7 @@ package com.zestedesavoir.zestwriter.model;
 public interface Textual{
     public void save();
     public String getMarkdown();
+    public String readMarkdown();
     public void loadMarkdown();
     public String getTitle();
     public void setMarkdown(String markdown);
