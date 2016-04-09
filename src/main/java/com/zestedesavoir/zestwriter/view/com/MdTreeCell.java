@@ -3,7 +3,6 @@ package com.zestedesavoir.zestwriter.view.com;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -15,12 +14,9 @@ import com.zestedesavoir.zestwriter.model.Container;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
 import com.zestedesavoir.zestwriter.model.Extract;
-import com.zestedesavoir.zestwriter.model.License;
 import com.zestedesavoir.zestwriter.model.MetaContent;
-import com.zestedesavoir.zestwriter.model.TypeContent;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
-import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -28,13 +24,11 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 
 public class MdTreeCell extends TreeCell<ContentNode>{
-	private TextField textField;
 	private MdTextController index;
 	private String baseFilePath;
 	private final Logger logger;
@@ -188,16 +182,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         addMenuItem5.setOnAction(t -> {
             logger.debug("Tentative d'édition d'un contenu");
             try {
-                ObjectMapper mapper = new ObjectMapper();
-                Map json = mapper.readValue(new File(baseFilePath + File.separator + "manifest.json"), Map.class);
-                Map<String, Object> mp = new HashMap<>();
-                License lic = EditContentDialog.licOptions.get(EditContentDialog.licOptions.indexOf(new License(json.get("licence").toString(), "")));
-                TypeContent typco = EditContentDialog.typeOptions.get(EditContentDialog.typeOptions.indexOf(new TypeContent(json.get("type").toString(), "")));
-                mp.put("title", json.get("title").toString());
-                mp.put("description", json.get("description").toString());
-                mp.put("type", typco);
-                mp.put("licence", lic);
-                Map<String,Object> paramContent= FunctionTreeFactory.initContentDialog(mp);
+                Map<String,Object> paramContent= FunctionTreeFactory.initContentDialog(content);
                 if(paramContent != null) {
                     ((Content) index.getSummary().getRoot().getValue()).setTitle(paramContent.get("title").toString());
                     ((Content) index.getSummary().getRoot().getValue()).setDescription(paramContent.get("description").toString());
