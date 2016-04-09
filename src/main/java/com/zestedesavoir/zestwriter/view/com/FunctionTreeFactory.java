@@ -1,12 +1,13 @@
 package com.zestedesavoir.zestwriter.view.com;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 import com.zestedesavoir.zestwriter.model.Container;
+import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
 import com.zestedesavoir.zestwriter.model.Extract;
 import com.zestedesavoir.zestwriter.model.MetaContent;
@@ -22,16 +23,21 @@ import javafx.scene.control.TreeItem;
 import javafx.util.Pair;
 
 public class FunctionTreeFactory {
-    public static Map<String,Object> initContentDialog(Map<String, Object> defaultParam) {
-        if(defaultParam == null) {
-            defaultParam = new HashMap<>();
-            defaultParam.put("title", "");
-            defaultParam.put("description", "");
-            defaultParam.put("type", EditContentDialog.typeOptions.get(1));
-            defaultParam.put("licence", EditContentDialog.licOptions.get(6));
+    public static Map<String,Object> initContentDialog(Content defaultContent) {
+        if(defaultContent == null) {
+            defaultContent = new Content("container",
+                    "",
+                    "",
+                    "introduction.md",
+                    "conclusion.md",
+                    new ArrayList<>(),
+                    2,
+                    EditContentDialog.licOptions.get(6).getCode(),
+                    "",
+                    EditContentDialog.typeOptions.get(1).getCode());
         }
         // Create wizard
-        EditContentDialog dialog = new EditContentDialog(defaultParam);
+        EditContentDialog dialog = new EditContentDialog(defaultContent);
 
         Optional<Pair<String, Map<String, Object>>> result = dialog.showAndWait();
         if(result.isPresent()) {

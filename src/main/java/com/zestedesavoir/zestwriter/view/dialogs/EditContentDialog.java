@@ -3,6 +3,7 @@ package com.zestedesavoir.zestwriter.view.dialogs;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.License;
 import com.zestedesavoir.zestwriter.model.TypeContent;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
@@ -33,7 +34,7 @@ public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Objec
         new License("CC 0", "Licence CC 0")
     );
 
-	public EditContentDialog(Map<String, Object> defaultParam) {
+	public EditContentDialog(Content defaultContent) {
 		super("Nouveau contenu", "Créez un nouveau contenus pour ZdS");
 
 		// Set the icon (must be included in the project).
@@ -49,13 +50,13 @@ public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Objec
 	    grid.setVgap(10);
 	    grid.setPadding(new Insets(20, 150, 10, 10));
 
-	    TextField title = new TextField(defaultParam.get("title").toString());
-	    TextField subtitle = new TextField(defaultParam.get("description").toString());
+	    TextField title = new TextField(defaultContent.getTitle());
+	    TextField subtitle = new TextField(defaultContent.getDescription());
 	    ComboBox<TypeContent> type = new ComboBox<>(typeOptions);
-	    type.setValue((TypeContent) defaultParam.get("type"));
+	    type.setValue((TypeContent) typeOptions.get(typeOptions.indexOf(new TypeContent(defaultContent.getType(), ""))));
 
 	    ComboBox<License> license = new ComboBox<>(licOptions);
-	    license.setValue((License) defaultParam.get("licence"));
+	    license.setValue((License) licOptions.get(licOptions.indexOf(new License(defaultContent.getLicence(), ""))));
 
 	    grid.add(new Label("Titre du contenu :"), 0, 0);
 	    grid.add(title, 1, 0);
