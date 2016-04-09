@@ -4,6 +4,7 @@ bin
 .gradle
 .project
 .settings
+.idea
 *.iml
 *.pyc
 *.pyo
