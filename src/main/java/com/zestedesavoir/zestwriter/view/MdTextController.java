@@ -56,7 +56,6 @@ public class MdTextController {
     @FXML private void initialize() {
         loadConsolePython();
         loadFonts();
-
     }
 
     public TabPane getEditorList() {
@@ -167,7 +166,6 @@ public class MdTextController {
     }
 
     public void createTabExtract(Textual extract) throws IOException {
-
         logger.debug("Tentative de création d'un nouvel onglet pour "+extract.getTitle());
         extract.loadMarkdown();
         FXMLLoader loader = new FXMLLoader();
@@ -222,6 +220,7 @@ public class MdTextController {
     public MdTextController getThis() {
         return this;
     }
+
     public void openContent(Content content) {
     	String filePath = content.getBasePath();
         logger.debug("Tentative d'ouverture du contenu stocké dans "+filePath);

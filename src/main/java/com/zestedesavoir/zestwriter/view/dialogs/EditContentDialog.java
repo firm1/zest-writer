@@ -23,14 +23,15 @@ import javafx.util.Pair;
 public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Object>>>{
 	public static ObservableList<TypeContent> typeOptions = FXCollections.observableArrayList(new TypeContent("ARTICLE", "Article"), new TypeContent("TUTORIAL","Tutoriel"));
     public static ObservableList<License> licOptions = FXCollections.observableArrayList(
-            new License("CC BY", "Licence CC BY"),
-            new License("CC BY-SA", "Licence CC BY-SA"),
-            new License("CC BY-ND", "Licence CC BY-ND"),
-            new License("CC BY-NC", "Licence CC BY-NC"),
-            new License("CC BY-NC-SA", "Licence CC BY-NC-SA"),
-            new License("CC BY-NC-ND", "Licence CC BY-NC-ND"),
-            new License("Tous droits réservés", "Tout droits réservés"),
-            new License("CC 0", "Licence CC 0"));
+        new License("CC BY", "Licence CC BY"),
+        new License("CC BY-SA", "Licence CC BY-SA"),
+        new License("CC BY-ND", "Licence CC BY-ND"),
+        new License("CC BY-NC", "Licence CC BY-NC"),
+        new License("CC BY-NC-SA", "Licence CC BY-NC-SA"),
+        new License("CC BY-NC-ND", "Licence CC BY-NC-ND"),
+        new License("Tous droits réservés", "Tout droits réservés"),
+        new License("CC 0", "Licence CC 0")
+    );
 
 	public EditContentDialog(Map<String, Object> defaultParam) {
 		super("Nouveau contenu", "Créez un nouveau contenus pour ZdS");

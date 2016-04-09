@@ -4,7 +4,6 @@ import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 
 public class IconFactory {
-
     public static MaterialDesignIconView makeIcon(MaterialDesignIcon type, String hexColor) {
         MaterialDesignIconView icon = new MaterialDesignIconView(type);
         icon.setSize("1.8em");

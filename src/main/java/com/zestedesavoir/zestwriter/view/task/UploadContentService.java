@@ -34,6 +34,7 @@ public class UploadContentService extends Service<Void>{
                     String targetId = result.get().getId();
                     String localSlug = zdsUtils.getLocalSlug();
                     String targetSlug = result.get().getSlug();
+
                     try {
                         String pathDir = zdsUtils.getOfflineContentPathDir() + File.separator + localSlug;
                         updateMessage("Compression : "+targetSlug+" en cours ...");
@@ -42,14 +43,14 @@ public class UploadContentService extends Service<Void>{
                         if(targetId == null) {
                             if(!zdsUtils.importNewContent(pathDir+ ".zip")) {
                                 failed();
-                            };
+                            }
                         } else {
                             if(!zdsUtils.importContent(pathDir + ".zip", targetId, targetSlug)) {
                                 failed();
-                            };
+                            }
                         }
                     } catch (IOException e) {
-                        logger.error("", e);
+                        logger.error(e.getMessage(), e);
                     }
                 }
                 return null;

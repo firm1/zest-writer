@@ -62,11 +62,9 @@ public class TableController {
     }
 
     @FXML private void initialize() {
-
         tableView.setItems(datas);
 
         addCol();
-
         addRow();
     }
 

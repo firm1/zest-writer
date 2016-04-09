@@ -22,7 +22,6 @@ import javafx.scene.control.TreeItem;
 import javafx.util.Pair;
 
 public class FunctionTreeFactory {
-
     public static Map<String,Object> initContentDialog(Map<String, Object> defaultParam) {
         if(defaultParam == null) {
             defaultParam = new HashMap<>();
@@ -94,7 +93,6 @@ public class FunctionTreeFactory {
             // update model
             destParent.getChildren().add(position + 1, (MetaContent)src.getValue());
             // update ui
-            System.out.println("position = "+position);
             dest.getParent().getChildren().add(position + 2, src);
         }
     }

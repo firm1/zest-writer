@@ -27,9 +27,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MainApp extends Application {
-
     private Scene scene;
     private Stage primaryStage;
     private BorderPane rootLayout;
@@ -38,11 +39,14 @@ public class MainApp extends Application {
     private ZdsHttp zdsutils;
     private MdTextController Index;
     private Configuration config;
-    StringBuilder key = new StringBuilder();
+    private StringBuilder key = new StringBuilder();
+    private Logger logger;
     public static String[] args;
 
     public MainApp() {
         super();
+        logger = LoggerFactory.getLogger(MenuController.class);
+
         if(args.length > 0) {
             config = new Configuration(args[0]);
         } else {
@@ -114,7 +118,7 @@ public class MainApp extends Application {
             primaryStage.show();
             loadCombinason();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -132,7 +136,7 @@ public class MainApp extends Application {
             Index = controller;
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 

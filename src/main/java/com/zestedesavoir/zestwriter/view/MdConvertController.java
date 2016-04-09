@@ -10,6 +10,8 @@ import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMException;
 
 import com.zestedesavoir.zestwriter.MainApp;
@@ -55,6 +57,7 @@ public class MdConvertController {
     private Textual extract;
     private Corrector corrector;
     private Service<String> renderTask;
+    private final Logger logger;
     private int xRenderPosition = 0;
     private int yRenderPosition = 0;
     private boolean isSaved = true;
@@ -68,6 +71,7 @@ public class MdConvertController {
 
     public MdConvertController() {
         super();
+        logger = LoggerFactory.getLogger(MdConvertController.class);
     }
 
     public MdTextController getMdBox() {
@@ -157,7 +161,7 @@ public class MdConvertController {
 
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("DÃ©tail du lien");
+        dialog.setTitle("Détail du lien");
         dialog.setHeaderText("");
 
         // Set the icon (must be included in the project).
@@ -419,8 +423,7 @@ public class MdConvertController {
                     + MainApp.class.getResource(".").getPath() + "' /></head><body>" + result + "</body></html>");
             webEngine.setUserStyleSheetLocation(MainApp.class.getResource("css/content.css").toExternalForm());
         } catch (DOMException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 

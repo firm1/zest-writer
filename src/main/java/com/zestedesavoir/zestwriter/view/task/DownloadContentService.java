@@ -12,8 +12,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 public class DownloadContentService extends Service<Void>{
-
-	ZdsHttp zdsUtils;
+	private ZdsHttp zdsUtils;
 	private final Logger logger;
 
 	public DownloadContentService(ZdsHttp zdsUtils) {

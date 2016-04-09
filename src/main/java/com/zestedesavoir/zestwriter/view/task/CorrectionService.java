@@ -18,7 +18,6 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 public class CorrectionService extends Service<String>{
-
 	private Corrector corrector;
 	private MdTextController mdText;
 	private Content content;
@@ -29,7 +28,6 @@ public class CorrectionService extends Service<String>{
 		corrector = new Corrector();
         corrector.getLangTool().disableRule("FRENCH_WHITESPACE");
 	}
-
 
 	@Override
     protected Task<String> createTask() {

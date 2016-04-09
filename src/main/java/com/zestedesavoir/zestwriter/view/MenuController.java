@@ -174,7 +174,6 @@ public class MenuController{
     }
 
     @FXML private void HandleGunningButtonAction(ActionEvent event){
-
         Function<Textual, Double> calFlesh = (Textual ch) -> {
             String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
             String plainText = Corrector.HtmlToTextWithoutCode(htmlText);
@@ -281,7 +280,6 @@ public class MenuController{
     }
 
     @FXML private void HandleNewButtonAction(ActionEvent event){
-
         File defaultDirectory;
 
         try{
@@ -350,6 +348,7 @@ public class MenuController{
         chooser.setTitle("Contenus Zestueux");
         File defaultDirectory;
         File selectedDirectory = null;
+
         try{
             if(mainApp.getConfig().getWorkspaceFactory() == null){
                 mainApp.getConfig().loadWorkspace();
@@ -462,8 +461,7 @@ public class MenuController{
             try{
                 mainApp.getConfig().loadWorkspace();
             }catch(IOException e){
-                // TODO Auto-generated catch block
-                logger.error("", e);
+                logger.error(e.getMessage(), e);
             }
         }
     }
