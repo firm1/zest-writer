@@ -20,7 +20,6 @@ import javafx.scene.web.WebView;
 import javafx.util.Pair;
 
 public class GoogleLoginDialog extends Dialog<Pair<String, String>>{
-
 	public GoogleLoginDialog(LoginDialog parent, ZdsHttp zdsUtils) {
 		this.setTitle("Authentification via Google");
 
@@ -136,7 +135,7 @@ public class GoogleLoginDialog extends Dialog<Pair<String, String>>{
                             }
                         }
                     }
-                };
+                }
             }
         }
         return null;

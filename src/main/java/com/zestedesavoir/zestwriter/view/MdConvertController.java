@@ -10,6 +10,8 @@ import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMException;
 
 import com.zestedesavoir.zestwriter.MainApp;
@@ -53,29 +55,23 @@ public class MdConvertController {
     private MdTextController mdBox;
     private Tab tab;
     private Textual extract;
-
-    @FXML
-    private WebView renderView;
-    @FXML
-    private StyleClassedTextArea SourceText;
-    @FXML
-    private Button SaveButton;
-    @FXML
-    private Button RefreshButton;
-    @FXML
-    private BorderPane BoxRender;
-    @FXML
-    private Button FullScreeen;
-
     private Corrector corrector;
-
     private Service<String> renderTask;
+    private final Logger logger;
     private int xRenderPosition = 0;
     private int yRenderPosition = 0;
     private boolean isSaved = true;
 
+    @FXML private WebView renderView;
+    @FXML private StyleClassedTextArea SourceText;
+    @FXML private Button SaveButton;
+    @FXML private Button RefreshButton;
+    @FXML private BorderPane BoxRender;
+    @FXML private Button FullScreeen;
+
     public MdConvertController() {
         super();
+        logger = LoggerFactory.getLogger(MdConvertController.class);
     }
 
     public MdTextController getMdBox() {
@@ -91,30 +87,25 @@ public class MdConvertController {
         this.isSaved = isSaved;
     }
 
-    @FXML
-    private void initialize() {
+    @FXML private void initialize() {
         SourceText.getStyleClass().add("markdown-editor");
         SourceText.getStylesheets().add(MainApp.class.getResource("css/editor.css").toExternalForm());
         SourceText.setParagraphGraphicFactory(LineNumberFactory.get(SourceText));
     }
 
-    @FXML
-    private void HandleBoldButtonAction(ActionEvent event) {
+    @FXML private void HandleBoldButtonAction(ActionEvent event) {
         SourceText.replaceText(SourceText.getSelection(), "**" + SourceText.getSelectedText() + "**");
     }
 
-    @FXML
-    private void HandleItalicButtonAction(ActionEvent event) {
+    @FXML private void HandleItalicButtonAction(ActionEvent event) {
         SourceText.replaceText(SourceText.getSelection(), "*" + SourceText.getSelectedText() + "*");
     }
 
-    @FXML
-    private void HandleQuoteButtonAction(ActionEvent event) {
+    @FXML private void HandleQuoteButtonAction(ActionEvent event) {
         SourceText.replaceText(SourceText.getSelection(), "\n\n>" + SourceText.getSelectedText() + "\n\n");
     }
 
-    @FXML
-    private void HandleTableButtonAction(ActionEvent event) throws IOException {
+    @FXML private void HandleTableButtonAction(ActionEvent event) throws IOException {
         // Create the custom dialog.
         Dialog<Pair<ObservableList, ObservableList<ZRow>>> dialog = new Dialog<>();
         dialog.setTitle("Editeur de tableau");
@@ -165,13 +156,12 @@ public class MdConvertController {
         });
     }
 
-    @FXML
-    private void HandleLinkButtonAction(ActionEvent event) {
+    @FXML private void HandleLinkButtonAction(ActionEvent event) {
         String link = SourceText.getSelectedText();
 
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("DÃ©tail du lien");
+        dialog.setTitle("Détail du lien");
         dialog.setHeaderText("");
 
         // Set the icon (must be included in the project).
@@ -215,8 +205,7 @@ public class MdConvertController {
                 "[" + tLinkTLabel.getValue() + "](" + tLinkTLabel.getKey() + ")"));
     }
 
-    @FXML
-    private void HandleCodeButtonAction(ActionEvent event) {
+    @FXML private void HandleCodeButtonAction(ActionEvent event) {
         String code = SourceText.getSelectedText();
         if (code.trim().startsWith("```") && code.trim().endsWith("```")) {
             int start = code.trim().indexOf('\n') + 1;
@@ -278,16 +267,14 @@ public class MdConvertController {
     	SourceText.getUndoManager().redo();
     }
 
-    @FXML
-    public void HandleSaveButtonAction(ActionEvent event) {
+    @FXML public void HandleSaveButtonAction(ActionEvent event) {
         extract.setMarkdown(SourceText.getText());
         extract.save();
         tab.setText(extract.getTitle());
         this.isSaved = true;
     }
 
-    @FXML
-    private void HandleFullScreeenButtonAction(ActionEvent event) {
+    @FXML private void HandleFullScreeenButtonAction(ActionEvent event) {
         if (mdBox.getSplitPane().getItems().size() > 1) {
             mdBox.getSplitPane().getItems().remove(0);
         } else {
@@ -424,8 +411,7 @@ public class MdConvertController {
         renderTask.start();
     }
 
-    @FXML
-    public void HandleValidateButtonAction(ActionEvent event) {
+    @FXML public void HandleValidateButtonAction(ActionEvent event) {
         String s = StringEscapeUtils.unescapeHtml(markdownToHtml(SourceText.getText()));
         if(corrector == null) {
         	corrector = new Corrector();
@@ -437,8 +423,7 @@ public class MdConvertController {
                     + MainApp.class.getResource(".").getPath() + "' /></head><body>" + result + "</body></html>");
             webEngine.setUserStyleSheetLocation(MainApp.class.getResource("css/content.css").toExternalForm());
         } catch (DOMException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -463,13 +448,11 @@ public class MdConvertController {
         return render.toString();
     }
 
-    @FXML
-    private void HandleBarredButtonAction(ActionEvent event) {
+    @FXML private void HandleBarredButtonAction(ActionEvent event) {
         SourceText.replaceText(SourceText.getSelection(), "~~" + SourceText.getSelectedText() + "~~");
     }
 
-    @FXML
-    private void HandleTouchButtonAction(ActionEvent event) {
+    @FXML private void HandleTouchButtonAction(ActionEvent event) {
         SourceText.replaceText(SourceText.getSelection(), "||" + SourceText.getSelectedText() + "||");
     }
 
@@ -477,28 +460,23 @@ public class MdConvertController {
         SourceText.replaceText(SourceText.getSelection(), SourceText.getSelectedText() + "\u00a0");
     }
 
-    @FXML
-    private void HandleExpButtonAction(ActionEvent event) {
+    @FXML private void HandleExpButtonAction(ActionEvent event) {
         SourceText.replaceText(SourceText.getSelection(), "^" + SourceText.getSelectedText() + "^");
     }
 
-    @FXML
-    private void HandleIndButtonAction(ActionEvent event) {
+    @FXML private void HandleIndButtonAction(ActionEvent event) {
         SourceText.replaceText(SourceText.getSelection(), "~" + SourceText.getSelectedText() + "~");
     }
 
-    @FXML
-    private void HandleCenterButtonAction(ActionEvent event) {
+    @FXML private void HandleCenterButtonAction(ActionEvent event) {
         SourceText.replaceText(SourceText.getSelection(), "\n-> " + SourceText.getSelectedText() + " <-");
     }
 
-    @FXML
-    private void HandleRightButtonAction(ActionEvent event) {
+    @FXML private void HandleRightButtonAction(ActionEvent event) {
         SourceText.replaceText(SourceText.getSelection(), "\n-> " + SourceText.getSelectedText() + " ->");
     }
 
-    @FXML
-    private void HandleBulletButtonAction(ActionEvent event) {
+    @FXML private void HandleBulletButtonAction(ActionEvent event) {
         String text = "";
         String[] lines = SourceText.getSelectedText().split("\n");
         for (String line : lines) {
@@ -508,8 +486,7 @@ public class MdConvertController {
         SourceText.replaceText(SourceText.getSelection(), text);
     }
 
-    @FXML
-    private void HandleNumberedButtonAction(ActionEvent event) {
+    @FXML private void HandleNumberedButtonAction(ActionEvent event) {
         String text = "";
         String[] lines = SourceText.getSelectedText().split("\n");
         int i = 1;
@@ -521,13 +498,11 @@ public class MdConvertController {
         SourceText.replaceText(SourceText.getSelection(), text);
     }
 
-    @FXML
-    private void HandleHeaderButtonAction(ActionEvent event) {
+    @FXML private void HandleHeaderButtonAction(ActionEvent event) {
         SourceText.replaceText(SourceText.getSelection(), "\n# " + SourceText.getSelectedText());
     }
 
-    @FXML
-    private void HandleBlocButtonAction(ActionEvent event) {
+    @FXML private void HandleBlocButtonAction(ActionEvent event) {
         String text = "";
         String[] lines = SourceText.getSelectedText().split("\n");
         for (String line : lines) {

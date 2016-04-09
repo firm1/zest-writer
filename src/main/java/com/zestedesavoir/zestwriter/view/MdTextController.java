@@ -46,34 +46,21 @@ import javafx.util.Callback;
 public class MdTextController {
     private MainApp mainApp;
     private PythonInterpreter pyconsole;
-
-    @FXML
-    private TabPane EditorList;
-
-    @FXML
-    private TreeView<ContentNode> Summary;
-
-    @FXML
-    private SplitPane splitPane;
-
-    @FXML
-    private Tab Home;
     private final Logger logger;
 
+    @FXML private TabPane EditorList;
+    @FXML private TreeView<ContentNode> Summary;
+    @FXML private SplitPane splitPane;
+    @FXML private Tab Home;
 
-
-    @FXML
-    private void initialize() {
+    @FXML private void initialize() {
         loadConsolePython();
         loadFonts();
-
     }
 
     public TabPane getEditorList() {
         return EditorList;
     }
-
-
 
     public void loadConsolePython() {
         new Thread(() -> {
@@ -179,7 +166,6 @@ public class MdTextController {
     }
 
     public void createTabExtract(Textual extract) throws IOException {
-
         logger.debug("Tentative de création d'un nouvel onglet pour "+extract.getTitle());
         extract.loadMarkdown();
         FXMLLoader loader = new FXMLLoader();
@@ -234,6 +220,7 @@ public class MdTextController {
     public MdTextController getThis() {
         return this;
     }
+
     public void openContent(Content content) {
     	String filePath = content.getBasePath();
         logger.debug("Tentative d'ouverture du contenu stocké dans "+filePath);

@@ -13,8 +13,8 @@ import javafx.concurrent.Task;
 import javafx.util.Pair;
 
 public class LoginService extends Service<Void>{
-	Optional<Pair<String, String>> result;
-	ZdsHttp zdsUtils;
+	private Optional<Pair<String, String>> result;
+	private ZdsHttp zdsUtils;
 	private final Logger logger;
 
 	public LoginService(Optional<Pair<String, String>> result, ZdsHttp zdsUtils) {
@@ -22,6 +22,7 @@ public class LoginService extends Service<Void>{
 		this.zdsUtils = zdsUtils;
 		logger = LoggerFactory.getLogger(getClass());
 	}
+
 	@Override
     protected Task<Void> createTask() {
         return new Task<Void>() {
@@ -42,6 +43,7 @@ public class LoginService extends Service<Void>{
                         cancel();
                     }
                 });
+
                 if(!result.isPresent()) {
                     if(zdsUtils.isAuthenticated()) {
                         updateMessage("Recherche des contenus ...");
