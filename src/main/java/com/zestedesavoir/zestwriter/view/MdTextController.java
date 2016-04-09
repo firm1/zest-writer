@@ -46,24 +46,14 @@ import javafx.util.Callback;
 public class MdTextController {
     private MainApp mainApp;
     private PythonInterpreter pyconsole;
-
-    @FXML
-    private TabPane EditorList;
-
-    @FXML
-    private TreeView<ContentNode> Summary;
-
-    @FXML
-    private SplitPane splitPane;
-
-    @FXML
-    private Tab Home;
     private final Logger logger;
 
+    @FXML private TabPane EditorList;
+    @FXML private TreeView<ContentNode> Summary;
+    @FXML private SplitPane splitPane;
+    @FXML private Tab Home;
 
-
-    @FXML
-    private void initialize() {
+    @FXML private void initialize() {
         loadConsolePython();
         loadFonts();
 
@@ -72,8 +62,6 @@ public class MdTextController {
     public TabPane getEditorList() {
         return EditorList;
     }
-
-
 
     public void loadConsolePython() {
         new Thread(() -> {

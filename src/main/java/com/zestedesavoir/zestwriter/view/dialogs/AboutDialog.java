@@ -11,18 +11,15 @@ public class AboutDialog{
         this.mainApp = mainApp;
     }
 
-    @FXML
-    private void HandleGplHyperlinkAction(){
+    @FXML private void HandleGplHyperlinkAction(){
         mainApp.getHostServices().showDocument("https://github.com/firm1/zest-writer/blob/master/LICENSE");
     }
 
-    @FXML
-    private void HandleSourceHyperlinkAction(){
+    @FXML private void HandleSourceHyperlinkAction(){
         mainApp.getHostServices().showDocument("https://github.com/firm1/zest-writer");
     }
 
-    @FXML
-    private void HandleZdsHyperlinkAction(){
+    @FXML private void HandleZdsHyperlinkAction(){
         mainApp.getHostServices().showDocument("https://zestedesavoir.com/");
     }
 }
