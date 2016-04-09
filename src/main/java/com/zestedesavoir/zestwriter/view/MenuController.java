@@ -15,6 +15,7 @@ import java.util.Scanner;
 import java.util.function.Function;
 
 import com.zestedesavoir.zestwriter.view.dialogs.AboutDialog;
+import com.zestedesavoir.zestwriter.view.dialogs.OptionsDialog;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -602,6 +603,32 @@ public class MenuController{
             dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
             dialogStage.setResizable(false);
             dialogStage.initModality(Modality.APPLICATION_MODAL);
+
+            dialogStage.show();
+        }catch(IOException e){
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    @FXML private void HandleOptionsButtonAction(ActionEvent evnet){
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainApp.class.getResource("fxml/OptionsDialog.fxml"));
+
+        try{
+            AnchorPane optionsDialog = loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Options");
+
+            Scene scene = new Scene(optionsDialog);
+            dialogStage.setScene(scene);
+            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+            dialogStage.setResizable(false);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+
+            OptionsDialog optionsController = loader.getController();
+            optionsController.setMainApp(mainApp);
+            optionsController.setWindow(dialogStage);
 
             dialogStage.show();
         }catch(IOException e){
