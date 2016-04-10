@@ -12,7 +12,7 @@ javafx {
     // JVM arguments, system properties, application command line arguments
     jvmArgs = ['-XX:+AggressiveOpts', '-XX:CompileThreshold=1']
     systemProperties = ['prism.disableRegionCaching': 'true']
-    arguments = ['-l', '--fast']
+    arguments = []
 
     // informations |  grep eclipse
     category = "Editor"
