@@ -43,7 +43,9 @@ public class OptionsDialog{
 
     public enum EditorFonts{
         Arial("Arial"),
-        ComicSansMs("Comic Sans MS");
+        ComicSansMs("Comic Sans MS"),
+        Serif("Serif"),
+        SansSerif("Sans Serif");
 
         protected String fontName;
 
@@ -90,6 +92,7 @@ public class OptionsDialog{
 
     @FXML private void HandleSaveButtonAction(){
         config.setEditorFont(optEditorFont.getValue());
+        System.out.println("Set " + optEditorFont.getValue());
         config.setEditorFontSize(String.valueOf(optEditorFontSize.getValue()));
 
         config.setDisplayTheme(optDisplayTheme.getValue());

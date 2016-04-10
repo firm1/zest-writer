@@ -285,6 +285,6 @@ public class Configuration {
     }
 
     public void setAdvancedServerPort(String port){
-        conf.setProperty(Options.EditorFont.getKey(), port);
+        conf.setProperty(Options.AdvancedServerPort.getKey(), port);
     }
 }
