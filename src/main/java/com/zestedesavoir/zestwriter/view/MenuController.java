@@ -570,7 +570,7 @@ public class MenuController{
         File selectedFile = new File(selectedDirectory, content.getTitle() + ".md");
         logger.debug("Tentative d'export vers le fichier " + selectedFile.getAbsolutePath());
 
-        if(selectedFile != null){
+        if(selectedDirectory != null){
 
             content.saveToMarkdown(selectedFile);
             logger.debug("Export réussi vers " + selectedFile.getAbsolutePath());
