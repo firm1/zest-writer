@@ -435,7 +435,7 @@ public class MdConvertController {
 
     	Optional<String> result = dialog.showAndWait();
     	result.ifPresent(line -> {
-    		SourceText.selectRange(Integer.parseInt(line), 0);
+    		SourceText.positionCaret(SourceText.position(Integer.parseInt(line)-1, 0).toOffset());
     	});
     }
 
