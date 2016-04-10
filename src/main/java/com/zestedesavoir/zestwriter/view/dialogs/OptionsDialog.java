@@ -4,13 +4,14 @@ package com.zestedesavoir.zestwriter.view.dialogs;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
+import java.util.Optional;
 
 public class OptionsDialog{
     private MainApp mainApp;
@@ -88,11 +89,37 @@ public class OptionsDialog{
     }
 
     @FXML private void HandleSaveButtonAction(){
+        config.setEditorFont(optEditorFont.getValue());
+        config.setEditorFontSize(String.valueOf(optEditorFontSize.getValue()));
+
+        config.setDisplayTheme(optDisplayTheme.getValue());
+
+        config.setAuthentificationUsername(optAuthentificationUsername.getText());
+        config.setAuthentificationPassword(optAuthentificationPassword.getText());
+
+        config.setAdvancedServerProtocol(optAdvancedProtocol.getValue());
+        config.setAdvancedServerHost(optAdvancedHost.getText());
+        config.setAdvancedServerPort(optAdvancedPort.getText());
+
+        config.saveConfFile();
         optionsWindow.close();
     }
 
     @FXML private void HandleCancelButtonAction(){
-        optionsWindow.close();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmer l'annulation");
+        alert.setHeaderText(null);
+        alert.setContentText("Voulez-vous vraiment annuler ? Les modifications apportés ne seront pas enregistré.");
+        Stage stage= (Stage)alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if(result.isPresent()){
+            if(result.get() == ButtonType.OK){
+                optionsWindow.close();
+            }
+        }
     }
 
     @FXML private void HandleHyperlinkGeneralLabel(){

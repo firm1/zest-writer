@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.ziclix.python.sql.pipe.Source;
+import javafx.scene.text.Font;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleClassedTextArea;
@@ -52,6 +55,8 @@ import javafx.scene.web.WebView;
 import javafx.util.Pair;
 
 public class MdConvertController {
+    private MainApp mainApp;
+    private Configuration config;
     private MdTextController mdBox;
     private Tab tab;
     private Textual extract;
@@ -283,6 +288,8 @@ public class MdConvertController {
     }
 
     public void setMdBox(MdTextController mdBox, Textual extract, Tab tab) throws IOException {
+        this.mainApp = mdBox.getMainApp();
+        this.config = mainApp.getConfig();
         this.mdBox = mdBox;
         this.tab = tab;
         this.extract = extract;
@@ -291,6 +298,7 @@ public class MdConvertController {
         loader.setLocation(MainApp.class.getResource("fxml/Editor.fxml"));
         SplitPane writer = loader.load();
 
+        SourceText.setFont(new Font(config.getEditorFont(), config.getEditorFontsize()));
         SourceText.replaceText(extract.getMarkdown());
         SourceText.textProperty().addListener((observableValue, s, s2) -> {
             tab.setText("! " + extract.getTitle());

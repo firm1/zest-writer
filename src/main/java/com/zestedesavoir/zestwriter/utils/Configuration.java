@@ -32,11 +32,11 @@ public class Configuration {
     private final static String SERVER_PROTOCOL_KEY = "server.protocol";
     private final static String SERVER_HOST_KEY = "server.host";
     private final static String SERVER_PORT_KEY = "server.port";
-    
+
 
     public enum Options{
         EditorFont("options.editor.font", "Arial"),
-        EditorFontSize("options.editor.fontSize", "10"),
+        EditorFontSize("options.editor.fontSize", "14"),
         DisplayTheme("options.display.theme", "Standard"),
         AuthentificationUsername("options.authentification.username", ""),
         AuthentificationPassword("options.authentification.password", ""),
@@ -106,7 +106,7 @@ public class Configuration {
         }
     }
 
-    private void saveConfFile() {
+    public void saveConfFile() {
         try {
             conf.store(new FileOutputStream(confFile), "");
             logger.info("Fichier de configuration enregistré");
@@ -206,6 +206,10 @@ public class Configuration {
             return Options.EditorFont.getDefaultValue();
     }
 
+    public void setEditorFont(String font){
+        conf.setProperty(Options.EditorFont.getKey(), font);
+    }
+
     public double getEditorFontsize(){
         if(conf.containsKey(Options.EditorFontSize.getKey())){
             if(NumberUtils.isNumber(conf.getProperty(Options.EditorFontSize.getKey())))
@@ -216,6 +220,9 @@ public class Configuration {
             return Double.parseDouble(Options.EditorFontSize.getDefaultValue());
         }
     }
+    public void setEditorFontSize(String fontSize){
+        conf.setProperty(Options.EditorFontSize.getKey(), fontSize);
+    }
 
     public String getDisplayTheme(){
         if(conf.containsKey(Options.DisplayTheme.getKey()))
@@ -223,12 +230,18 @@ public class Configuration {
         else
             return Options.DisplayTheme.getDefaultValue();
     }
+    public void setDisplayTheme(String displayTheme){
+        conf.setProperty(Options.DisplayTheme.getKey(), displayTheme);
+    }
 
     public String getAuthentificationUsername(){
         if(conf.containsKey(Options.AuthentificationUsername.getKey()))
             return conf.getProperty(Options.AuthentificationUsername.getKey());
         else
             return Options.AuthentificationUsername.getDefaultValue();
+    }
+    public void setAuthentificationUsername(String username){
+        conf.setProperty(Options.AuthentificationUsername.getKey(), username);
     }
 
     public String getAuthentificationPassword(){
@@ -238,11 +251,19 @@ public class Configuration {
             return Options.AuthentificationPassword.getDefaultValue();
     }
 
+    public void setAuthentificationPassword(String password){
+        conf.setProperty(Options.AuthentificationPassword.getKey(), password);
+    }
+
     public String getAdvancedServerProtocol(){
         if(conf.containsKey(Options.AdvancedServerProtocol.getKey()))
             return conf.getProperty(Options.AdvancedServerProtocol.getKey());
         else
             return Options.AdvancedServerProtocol.getDefaultValue();
+    }
+
+    public void setAdvancedServerProtocol(String protocol){
+        conf.setProperty(Options.AdvancedServerProtocol.getKey(), protocol);
     }
 
     public String getAdvancedServerHost(){
@@ -252,10 +273,18 @@ public class Configuration {
             return Options.AdvancedServerHost.getDefaultValue();
     }
 
+    public void setAdvancedServerHost(String host){
+        conf.setProperty(Options.AdvancedServerHost.getKey(), host);
+    }
+
     public String getAdvancedServerPort(){
         if(conf.containsKey(Options.AdvancedServerPort.getKey()))
             return conf.getProperty(Options.AdvancedServerPort.getKey());
         else
             return Options.AdvancedServerPort.getDefaultValue();
+    }
+
+    public void setAdvancedServerPort(String port){
+        conf.setProperty(Options.EditorFont.getKey(), port);
     }
 }

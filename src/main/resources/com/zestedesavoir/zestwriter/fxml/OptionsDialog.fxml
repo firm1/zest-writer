@@ -16,11 +16,6 @@
                      <children>
                         <VBox prefHeight="410.0" prefWidth="144.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <Hyperlink fx:id="optionGeneral" onAction="#HandleHyperlinkGeneralLabel" style="-fx-border-width: 0;" text="Générale" textFill="#656565">
-                                 <padding>
-                                    <Insets bottom="5.0" top="5.0" />
-                                 </padding>
-                              </Hyperlink>
                               <Hyperlink fx:id="optionEditor" onAction="#HandleHyperlinkEditorLabel" style="-fx-border-width: 0;" text="Editeur" textFill="#656565">
                                  <padding>
                                     <Insets bottom="5.0" top="5.0" />
@@ -31,17 +26,22 @@
                                     <Insets bottom="5.0" top="5.0" />
                                  </padding>
                               </Hyperlink>
-                              <Hyperlink fx:id="optionShortcut" onAction="#HandleHyperlinkShortcutLabel" style="-fx-border-width: 0;" text="Raccourcis" textFill="#656565">
-                                 <padding>
-                                    <Insets bottom="5.0" top="5.0" />
-                                 </padding>
-                              </Hyperlink>
                               <Hyperlink fx:id="optionAuthentification" onAction="#HandleHyperlinkAuthentificationLabel" style="-fx-border-width: 0;" text="Authentification" textFill="#656565">
                                  <padding>
                                     <Insets bottom="5.0" top="5.0" />
                                  </padding>
                               </Hyperlink>
                               <Hyperlink fx:id="optionAdvanced" onAction="#HandleHyperlinkAdvancedLabel" style="-fx-border-width: 0;" text="Avancé" textFill="#656565">
+                                 <padding>
+                                    <Insets bottom="5.0" top="5.0" />
+                                 </padding>
+                              </Hyperlink>
+                              <Hyperlink fx:id="optionShortcut" onAction="#HandleHyperlinkShortcutLabel" style="-fx-border-width: 0;" text="Raccourcis" textFill="#656565" visible="false">
+                                 <padding>
+                                    <Insets bottom="5.0" top="5.0" />
+                                 </padding>
+                              </Hyperlink>
+                              <Hyperlink fx:id="optionGeneral" onAction="#HandleHyperlinkGeneralLabel" style="-fx-border-width: 0;" text="Générale" textFill="#656565" visible="false">
                                  <padding>
                                     <Insets bottom="5.0" top="5.0" />
                                  </padding>
@@ -138,7 +138,7 @@
                                     </VBox>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="optionDisplayPane" prefHeight="200.0" prefWidth="450.0">
+                              <AnchorPane fx:id="optionDisplayPane" prefHeight="200.0" prefWidth="450.0" visible="false">
                                  <children>
                                     <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
@@ -204,7 +204,7 @@
                                     </VBox>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="optionAuthentificationPane" prefHeight="200.0" prefWidth="450.0" visible="false">
+                              <AnchorPane fx:id="optionAuthentificationPane" prefHeight="200.0" prefWidth="450.0">
                                  <children>
                                     <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
