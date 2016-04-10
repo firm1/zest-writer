@@ -11,6 +11,7 @@ import java.util.Properties;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,15 +22,45 @@ public class Configuration {
     private String appName = "zestwriter";
     private String confFileName = "conf.properties";
     private File confFile;
+    private StorageSaver offlineSaver;
+    private StorageSaver onlineSaver;
+    private LocalDirectoryFactory workspaceFactory;
+    private final Logger logger;
+
     private final static String WORKSPACE_KEY = "data.workspace";
     private final static String SMART_EDITOR_KEY = "editor.smart";
     private final static String SERVER_PROTOCOL_KEY = "server.protocol";
     private final static String SERVER_HOST_KEY = "server.host";
     private final static String SERVER_PORT_KEY = "server.port";
-    private StorageSaver offlineSaver;
-    private StorageSaver onlineSaver;
-    private LocalDirectoryFactory workspaceFactory;
-    private final Logger logger;
+    
+
+    public enum Options{
+        EditorFont("options.editor.font", "Arial"),
+        EditorFontSize("options.editor.fontSize", "10"),
+        DisplayTheme("options.display.theme", "Standard"),
+        AuthentificationUsername("options.authentification.username", ""),
+        AuthentificationPassword("options.authentification.password", ""),
+        AdvancedServerProtocol("options.advanced.protocol", "https"),
+        AdvancedServerHost("options.advanced.host", "zestedesavoir.com"),
+        AdvancedServerPort("options.advanced.port", "80");
+
+        private String key;
+        private String defaultValue;
+
+        Options(String key, String defaultValue){
+            this.key = key;
+            this.defaultValue = defaultValue;
+        }
+
+        public String getKey(){
+            return key;
+        }
+
+        public String getDefaultValue(){
+            return defaultValue;
+        }
+    }
+
 
     public Configuration(String homeDir) {
         logger = LoggerFactory.getLogger(Configuration.class);
@@ -164,4 +195,67 @@ public class Configuration {
 
     }
 
+
+    /*
+     * Zest-Writer options
+     */
+    public String getEditorFont(){
+        if(conf.containsKey(Options.EditorFont.getKey()))
+            return conf.getProperty(Options.EditorFont.getKey());
+        else
+            return Options.EditorFont.getDefaultValue();
+    }
+
+    public double getEditorFontsize(){
+        if(conf.containsKey(Options.EditorFontSize.getKey())){
+            if(NumberUtils.isNumber(conf.getProperty(Options.EditorFontSize.getKey())))
+                return Double.parseDouble(conf.getProperty(Options.EditorFontSize.getKey()));
+            else
+                return Double.parseDouble(Options.EditorFontSize.getDefaultValue());
+        }else{
+            return Double.parseDouble(Options.EditorFontSize.getDefaultValue());
+        }
+    }
+
+    public String getDisplayTheme(){
+        if(conf.containsKey(Options.DisplayTheme.getKey()))
+            return conf.getProperty(Options.DisplayTheme.getKey());
+        else
+            return Options.DisplayTheme.getDefaultValue();
+    }
+
+    public String getAuthentificationUsername(){
+        if(conf.containsKey(Options.AuthentificationUsername.getKey()))
+            return conf.getProperty(Options.AuthentificationUsername.getKey());
+        else
+            return Options.AuthentificationUsername.getDefaultValue();
+    }
+
+    public String getAuthentificationPassword(){
+        if(conf.containsKey(Options.AuthentificationPassword.getKey()))
+            return conf.getProperty(Options.AuthentificationPassword.getKey());
+        else
+            return Options.AuthentificationPassword.getDefaultValue();
+    }
+
+    public String getAdvancedServerProtocol(){
+        if(conf.containsKey(Options.AdvancedServerProtocol.getKey()))
+            return conf.getProperty(Options.AdvancedServerProtocol.getKey());
+        else
+            return Options.AdvancedServerProtocol.getDefaultValue();
+    }
+
+    public String getAdvancedServerHost(){
+        if(conf.containsKey(Options.AdvancedServerHost.getKey()))
+            return conf.getProperty(Options.AdvancedServerHost.getKey());
+        else
+            return Options.AdvancedServerHost.getDefaultValue();
+    }
+
+    public String getAdvancedServerPort(){
+        if(conf.containsKey(Options.AdvancedServerPort.getKey()))
+            return conf.getProperty(Options.AdvancedServerPort.getKey());
+        else
+            return Options.AdvancedServerPort.getDefaultValue();
+    }
 }

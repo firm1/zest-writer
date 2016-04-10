@@ -154,13 +154,13 @@ public class OptionsDialog{
             optEditorFontSize.getItems().add((int)font.fontSize);
         }
 
-        optEditorFont.setValue("Arial");
-        optEditorFontSize.setValue(10);
+        optEditorFont.setValue(config.getEditorFont());
+        optEditorFontSize.setValue((int)config.getEditorFontsize());
     }
 
     private void setDisplayOptions(){
         optDisplayTheme.getItems().add("Standard");
-        optDisplayTheme.setValue("Standard");
+        optDisplayTheme.setValue(config.getDisplayTheme());
     }
 
     private void setShortcutOptions(){
@@ -168,14 +168,15 @@ public class OptionsDialog{
     }
 
     private void setAuthentificationOptions(){
-
+        optAuthentificationUsername.setText(config.getAuthentificationUsername());
+        optAuthentificationPassword.setText(config.getAuthentificationPassword());
     }
 
     private void setAdvancedOptions(){
         optAdvancedProtocol.getItems().addAll("https", "http");
-        optAdvancedProtocol.setValue(config.getProtocol());
-        optAdvancedHost.setText(config.getHost());
-        optAdvancedPort.setText(config.getPort());
+        optAdvancedProtocol.setValue(config.getAdvancedServerProtocol());
+        optAdvancedHost.setText(config.getAdvancedServerHost());
+        optAdvancedPort.setText(config.getAdvancedServerPort());
     }
 
     private void resetHyperlinkColor(){
