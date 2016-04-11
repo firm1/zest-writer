@@ -98,7 +98,7 @@ public class Container extends MetaContent implements ContentNode {
     }
 
     public String getFilePath() {
-        Path path = Paths.get(getBasePath(), getIntroduction().getFilePath());
+        Path path = Paths.get(getIntroduction().getFilePath());
         path = path.getParent();
 
         return path.toAbsolutePath().toString();
@@ -187,6 +187,7 @@ public class Container extends MetaContent implements ContentNode {
             }
         }
         if(receiver instanceof Container) {
+
             int ancestors = ((Container) receiver).getCountAncestorsContainer(root);
             int descendants = getCountDescendantContainer();
             int childrenExtracts = ((Container) receiver).getCountChildrenExtract();
