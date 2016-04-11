@@ -64,6 +64,7 @@ sourceSets {
         }
         resources {
             srcDir 'src/test/resources'
+            exclude 'src/test/resources/log4j.properties'
         }
     }
 }
