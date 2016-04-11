@@ -9,6 +9,7 @@ before_install:
   - sudo apt-get install -y rpm
 
 script:
+  - gradle check
   - gradle fatJar
 
 after_success:
