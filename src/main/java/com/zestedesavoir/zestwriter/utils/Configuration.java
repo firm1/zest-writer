@@ -30,6 +30,7 @@ public class Configuration {
     private StorageSaver onlineSaver;
     private LocalDirectoryFactory workspaceFactory;
     private final Logger logger;
+    private Properties props;
 
     public Configuration(String homeDir) {
         logger = LoggerFactory.getLogger(Configuration.class);
@@ -42,7 +43,7 @@ public class Configuration {
         }
 
         // defaults config
-        Properties props = new Properties();
+        props = new Properties();
         try {
             props.load(MainApp.class.getClassLoader().getResourceAsStream("config.properties"));
         } catch (IOException e) {
@@ -163,5 +164,11 @@ public class Configuration {
         }
 
     }
+
+    public Properties getProps() {
+        return props;
+    }
+
+
 
 }

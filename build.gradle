@@ -2,6 +2,12 @@
 apply plugin: 'java'
 apply from: "http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.plugin"
 
+processResources {
+    filesMatching('*.properties') {
+        expand(project.properties)
+    }
+}
+
 // Configures plugin
 javafx {
     // Application name and ID presented by target OS
@@ -56,6 +62,7 @@ sourceSets {
         }
         resources {
             srcDir 'src/main/resources'
+            exclude '*.pyc'
         }
     }
     test {
