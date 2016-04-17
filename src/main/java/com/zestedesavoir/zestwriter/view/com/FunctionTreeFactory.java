@@ -115,4 +115,14 @@ public class FunctionTreeFactory {
         String regex = "^(#+)(.{0,}?)(#*)$";
         return Pattern.compile(regex, Pattern.MULTILINE).matcher(text).replaceAll(padding(level,'#')+"$1$2");
     }
+
+    public static String changeLocationImages(String text) {
+        String regex = "()(!\\[.*?\\]\\()([^http])(.+?)(\\))";
+        return Pattern.compile(regex, Pattern.MULTILINE).matcher(text).replaceAll("$1$2http://zestedesavoir.com/$3$4$5");
+    }
+
+    public static void main (String[] args) {
+        String chaine = "fiers de nous.\n\n![Illustration de Piwit](http://zestedesavoir.com/media/galleries/2765/88fae8a0-76c8-40d2-9cd2-13d08a3eff3e.jpeg)\n![Illustration de Piwit](media/galleries/2765/88fae8a0-76c8-40d2-9cd2-13d08a3eff3e.jpeg)";
+        System.out.println(changeLocationImages(chaine));
+    }
 }

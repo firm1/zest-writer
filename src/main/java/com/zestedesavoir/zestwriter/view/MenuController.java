@@ -44,6 +44,7 @@ import com.zestedesavoir.zestwriter.view.dialogs.GoogleLoginDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.LoginDialog;
 import com.zestedesavoir.zestwriter.view.task.CorrectionService;
 import com.zestedesavoir.zestwriter.view.task.DownloadContentService;
+import com.zestedesavoir.zestwriter.view.task.ExportPdfService;
 import com.zestedesavoir.zestwriter.view.task.LoginService;
 import com.zestedesavoir.zestwriter.view.task.UploadContentService;
 
@@ -567,7 +568,7 @@ public class MenuController{
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setTitle("Dossier d'export");
         File selectedDirectory = fileChooser.showDialog(mainApp.getPrimaryStage());
-        File selectedFile = new File(selectedDirectory, content.getTitle() + ".md");
+        File selectedFile = new File(selectedDirectory, ZdsHttp.toSlug(content.getTitle()) + ".md");
         logger.debug("Tentative d'export vers le fichier " + selectedFile.getAbsolutePath());
 
         if(selectedDirectory != null){
@@ -582,6 +583,47 @@ public class MenuController{
             alert.setResizable(true);
 
             alert.showAndWait();
+        }
+    }
+
+    @FXML private void HandleExportPdfButtonAction(ActionEvent event){
+        Content content = mainApp.getContents().get(0);
+        DirectoryChooser fileChooser = new DirectoryChooser();
+        fileChooser.setTitle("Dossier d'export");
+        File selectedDirectory = fileChooser.showDialog(mainApp.getPrimaryStage());
+        File selectedFile = new File(selectedDirectory, ZdsHttp.toSlug(content.getTitle()) + ".pdf");
+        logger.debug("Tentative d'export vers le fichier " + selectedFile.getAbsolutePath());
+
+        if(selectedDirectory != null){
+            hBottomBox.getChildren().clear();
+            hBottomBox.getChildren().addAll(pb, labelField);
+            ExportPdfService exportPdfTask = new ExportPdfService(mainApp.getConfig().getPandocProvider(), content, selectedFile);
+            labelField.textProperty().bind(exportPdfTask.messageProperty());
+            pb.progressProperty().bind(exportPdfTask.progressProperty());
+            exportPdfTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
+                Alert alert;
+                switch(newValue) {
+                    case FAILED:
+                        alert = new Alert(AlertType.ERROR);
+                        alert.setTitle("Echec");
+                        alert.setHeaderText("Echec de l'export");
+                        alert.setContentText("Le contenu \"" + content.getTitle() + "\" n'a pas pu être exporté");
+                        alert.showAndWait();
+                        hBottomBox.getChildren().clear();
+                        break;
+                    case CANCELLED:
+                    case SUCCEEDED:
+                        alert = new Alert(AlertType.INFORMATION);
+                        alert.setTitle("Confirmation");
+                        alert.setHeaderText("Confirmation de l'export");
+                        alert.setContentText("Le contenu \"" + content.getTitle() + "\" a été exporté");
+                        alert.showAndWait();
+                        hBottomBox.getChildren().clear();
+                        break;
+                }
+            });
+
+            exportPdfTask.start();
         }
     }
 

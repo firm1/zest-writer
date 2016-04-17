@@ -211,7 +211,7 @@ public class Container extends MetaContent implements ContentNode {
         StringBuilder sb = new StringBuilder();
         sb.append(FunctionTreeFactory.padding(level, '#'));
         sb.append(" ").append(getTitle()).append("\n\n");
-        sb.append(FunctionTreeFactory.offsetHeaderMarkdown(getIntroduction().readMarkdown(), levelDepth)).append("\n\n");
+        sb.append(FunctionTreeFactory.changeLocationImages(FunctionTreeFactory.offsetHeaderMarkdown(getIntroduction().readMarkdown(), levelDepth))).append("\n\n");
         for(MetaContent c:getChildren()) {
             if(c instanceof Container) {
                 sb.append(((Container) c).exportContentToMarkdown(level+1, levelDepth));
@@ -219,7 +219,7 @@ public class Container extends MetaContent implements ContentNode {
                 sb.append(((Extract) c).exportContentToMarkdown(level +1, levelDepth));
             }
         }
-        sb.append(FunctionTreeFactory.offsetHeaderMarkdown(getConclusion().readMarkdown(), levelDepth)).append("\n\n");
+        sb.append(FunctionTreeFactory.changeLocationImages(FunctionTreeFactory.offsetHeaderMarkdown(getConclusion().readMarkdown(), levelDepth))).append("\n\n");
         return sb.toString();
     }
 

@@ -101,12 +101,14 @@ public class Content extends Container implements ContentNode{
     public String exportContentToMarkdown(int level, int levelDepth) {
         DateFormat dateFormat = new SimpleDateFormat("dd MMMMM yyyy");
         StringBuilder sb = new StringBuilder();
-        sb.append("% ").append(getTitle());
+        sb.append("% ").append(getTitle().toUpperCase()).append("\n");
         sb.append("% ").append(dateFormat.format(new Date())).append("\n\n");
+        sb.append("# ").append(getIntroduction().getTitle()).append("\n\n");
         sb.append(getIntroduction().readMarkdown()).append("\n\n");
         for(MetaContent c:getChildren()) {
             sb.append(c.exportContentToMarkdown(level+1, levelDepth));
         }
+        sb.append("# ").append(getConclusion().getTitle()).append("\n\n");
         sb.append(getConclusion().readMarkdown());
         return sb.toString();
     }

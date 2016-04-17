@@ -112,6 +112,10 @@ public class Configuration {
         }
     }
 
+    public String getPandocProvider() {
+        return "http://vps146092.ovh.net/2pdf/";
+    }
+
     public String getPort() {
         if(conf.containsKey(SERVER_PORT_KEY)) {
             return conf.getProperty(SERVER_PORT_KEY);
