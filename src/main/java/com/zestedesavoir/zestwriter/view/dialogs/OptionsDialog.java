@@ -1,6 +1,8 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
 
+import org.controlsfx.dialog.FontSelectorDialog;
+
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import javafx.application.Application;
@@ -175,7 +177,7 @@ public class OptionsDialog{
     }
 
     @FXML private void HandleEditorFontChoice(){
-        //ControlFX
+        //Voir pour "Font selector"
     }
 
     private void setGeneralOptions(){
