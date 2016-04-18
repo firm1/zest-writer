@@ -21,6 +21,9 @@ public class OptionsDialog{
     private Stage optionsWindow;
     private Configuration config;
 
+    private String optEditorFont;
+    private double optEditorFontSize;
+
     @FXML private Hyperlink optionGeneral;
     @FXML private Hyperlink optionEditor;
     @FXML private Hyperlink optionDisplay;
@@ -35,8 +38,7 @@ public class OptionsDialog{
     @FXML private AnchorPane optionAuthentificationPane;
     @FXML private AnchorPane optionAdvancedPane;
 
-    //@FXML private ComboBox<String> optEditorFont;
-    @FXML private ComboBox<Integer> optEditorFontSize;
+    @FXML private Button optEditorFontButton;
     @FXML private ComboBox<String> optDisplayTheme;
     @FXML private TextField optAuthentificationUsername;
     @FXML private TextField optAuthentificationPassword;
@@ -44,33 +46,6 @@ public class OptionsDialog{
     @FXML private TextField optAdvancedHost;
     @FXML private TextField optAdvancedPort;
 
-    public enum EditorFonts{
-        Arial("Arial"),
-        ComicSansMs("Comic Sans MS"),
-        Serif("Serif"),
-        SansSerif("Sans Serif");
-
-        protected String fontName;
-
-        EditorFonts(String fontName){
-            this.fontName = fontName;
-        }
-    }
-
-    public enum EditorFontsSize{
-        Size10(10),
-        Size11(11),
-        Size12(12),
-        Size14(14),
-        Size16(16),
-        Size18(18);
-
-        protected double fontSize;
-
-        EditorFontsSize(double fontSize){
-            this.fontSize = fontSize;
-        }
-    }
 
     public void setMainApp(MainApp mainApp){
         this.mainApp = mainApp;
@@ -94,9 +69,8 @@ public class OptionsDialog{
     }
 
     @FXML private void HandleSaveButtonAction(){
-        //config.setEditorFont(optEditorFont.getValue());
-        //System.out.println("Set " + optEditorFont.getValue());
-        config.setEditorFontSize(String.valueOf(optEditorFontSize.getValue()));
+        config.setEditorFont(optEditorFont);
+        config.setEditorFontSize(String.valueOf(optEditorFontSize));
 
         config.setDisplayTheme(optDisplayTheme.getValue());
 
@@ -177,22 +151,25 @@ public class OptionsDialog{
     }
 
     @FXML private void HandleEditorFontChoice(){
-        //Voir pour "Font selector"
+        Dialog<Font> fontSelector = new FontSelectorDialog(new Font(config.getEditorFont(), config.getEditorFontsize()));
+        Optional<Font> result = fontSelector.showAndWait();
+
+        if(result.isPresent()){
+            Font newFont = result.get();
+
+            optEditorFont = newFont.getName();
+            optEditorFontSize = newFont.getSize();
+        }
     }
 
     private void setGeneralOptions(){
     }
 
     private void setEditorOptions(){
-        for(EditorFonts font : EditorFonts.values()){
-            //optEditorFont.getItems().add(font.fontName);
-        }
-        for(EditorFontsSize font : EditorFontsSize.values()){
-            optEditorFontSize.getItems().add((int)font.fontSize);
-        }
+        optEditorFontButton.setText(config.getEditorFont() + " - " + config.getEditorFontsize());
 
-        //optEditorFont.setValue(config.getEditorFont());
-        optEditorFontSize.setValue((int)config.getEditorFontsize());
+        optEditorFont = config.getEditorFont();
+        optEditorFontSize = config.getEditorFontsize();
     }
 
     private void setDisplayOptions(){
