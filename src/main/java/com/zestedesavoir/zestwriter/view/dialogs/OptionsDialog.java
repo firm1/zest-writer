@@ -3,6 +3,7 @@ package com.zestedesavoir.zestwriter.view.dialogs;
 
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
+import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -32,7 +33,7 @@ public class OptionsDialog{
     @FXML private AnchorPane optionAuthentificationPane;
     @FXML private AnchorPane optionAdvancedPane;
 
-    @FXML private ComboBox<String> optEditorFont;
+    //@FXML private ComboBox<String> optEditorFont;
     @FXML private ComboBox<Integer> optEditorFontSize;
     @FXML private ComboBox<String> optDisplayTheme;
     @FXML private TextField optAuthentificationUsername;
@@ -91,8 +92,8 @@ public class OptionsDialog{
     }
 
     @FXML private void HandleSaveButtonAction(){
-        config.setEditorFont(optEditorFont.getValue());
-        System.out.println("Set " + optEditorFont.getValue());
+        //config.setEditorFont(optEditorFont.getValue());
+        //System.out.println("Set " + optEditorFont.getValue());
         config.setEditorFontSize(String.valueOf(optEditorFontSize.getValue()));
 
         config.setDisplayTheme(optDisplayTheme.getValue());
@@ -173,23 +174,29 @@ public class OptionsDialog{
         optionAdvanced.setTextFill(Color.BLACK);
     }
 
+    @FXML private void HandleEditorFontChoice(){
+        //ControlFX
+    }
+
     private void setGeneralOptions(){
     }
 
     private void setEditorOptions(){
         for(EditorFonts font : EditorFonts.values()){
-            optEditorFont.getItems().add(font.fontName);
+            //optEditorFont.getItems().add(font.fontName);
         }
         for(EditorFontsSize font : EditorFontsSize.values()){
             optEditorFontSize.getItems().add((int)font.fontSize);
         }
 
-        optEditorFont.setValue(config.getEditorFont());
+        //optEditorFont.setValue(config.getEditorFont());
         optEditorFontSize.setValue((int)config.getEditorFontsize());
     }
 
     private void setDisplayOptions(){
         optDisplayTheme.getItems().add("Standard");
+        optDisplayTheme.setValue(config.getDisplayTheme());
+
         optDisplayTheme.setValue(config.getDisplayTheme());
     }
 

@@ -88,7 +88,7 @@
                                     </VBox>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="optionEditorPane" prefHeight="200.0" prefWidth="450.0" visible="false">
+                              <AnchorPane fx:id="optionEditorPane" prefHeight="200.0" prefWidth="450.0">
                                  <children>
                                     <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
@@ -103,8 +103,8 @@
                                           </HBox>
                                           <GridPane>
                                              <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="210.0" minWidth="10.0" prefWidth="151.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="294.0" minWidth="10.0" prefWidth="279.0" />
                                              </columnConstraints>
                                              <rowConstraints>
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -123,12 +123,12 @@
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin></Label>
-                                                <ComboBox fx:id="optEditorFont" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                 <Label text="Taille d'écriture" GridPane.rowIndex="2">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin></Label>
-                                                <ComboBox fx:id="optEditorFontSize" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                <ComboBox fx:id="optEditorFontSize" prefHeight="25.0" prefWidth="346.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                <Button mnemonicParsing="false" onAction="#HandleEditorFontChoice" prefHeight="25.0" prefWidth="352.0" text="Arial" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                              </children>
                                           </GridPane>
                                        </children>
@@ -204,7 +204,7 @@
                                     </VBox>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="optionAuthentificationPane" prefHeight="200.0" prefWidth="450.0">
+                              <AnchorPane fx:id="optionAuthentificationPane" prefHeight="200.0" prefWidth="450.0" visible="false">
                                  <children>
                                     <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
