@@ -90,7 +90,12 @@ public class Container extends MetaContent implements ContentNode {
     }
 
     public List<MetaContent> getChildren() {
-        return _children;
+        if( _children !=null) {
+            return _children;
+        }
+        else {
+            return new ArrayList<MetaContent>();
+        }
     }
 
     public void setChildren(List<MetaContent> children) {
