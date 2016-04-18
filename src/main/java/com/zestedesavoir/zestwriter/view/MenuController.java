@@ -384,7 +384,7 @@ public class MenuController{
     @FXML private Service<Void> HandleLoginButtonAction(ActionEvent event){
         // Button for google
         Button googleAuth = new Button("Connexion via Google", IconFactory.createGoogleIcon());
-        LoginDialog dialog = new LoginDialog(googleAuth);
+        LoginDialog dialog = new LoginDialog(googleAuth, mainApp);
         googleAuth.setOnAction(t -> {
             GoogleLoginDialog googleDialog = new GoogleLoginDialog(dialog, mainApp.getZdsutils());
             googleDialog.show();
@@ -392,7 +392,7 @@ public class MenuController{
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
         hBottomBox.getChildren().addAll(labelField);
-        LoginService loginTask = new LoginService(result, mainApp.getZdsutils());
+        LoginService loginTask = new LoginService(result, mainApp.getZdsutils(), mainApp.getConfig());
         labelField.textProperty().bind(loginTask.messageProperty());
 
         return loginTask;

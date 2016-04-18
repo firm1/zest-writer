@@ -242,6 +242,7 @@ public class Configuration {
     }
     public void setAuthentificationUsername(String username){
         conf.setProperty(Options.AuthentificationUsername.getKey(), username);
+        System.out.println("set username");
     }
 
     public String getAuthentificationPassword(){
@@ -253,6 +254,7 @@ public class Configuration {
 
     public void setAuthentificationPassword(String password){
         conf.setProperty(Options.AuthentificationPassword.getKey(), password);
+        System.out.println("set password");
     }
 
     public String getAdvancedServerProtocol(){
@@ -286,5 +288,11 @@ public class Configuration {
 
     public void setAdvancedServerPort(String port){
         conf.setProperty(Options.AdvancedServerPort.getKey(), port);
+    }
+
+    public void resetAuthentification(){
+        System.out.println("Reset identifiant");
+        setAuthentificationUsername("");
+        setAuthentificationPassword("");
     }
 }

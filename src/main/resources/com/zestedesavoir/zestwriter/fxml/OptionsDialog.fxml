@@ -88,7 +88,7 @@
                                     </VBox>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="optionEditorPane" prefHeight="200.0" prefWidth="450.0">
+                              <AnchorPane fx:id="optionEditorPane" prefHeight="200.0" prefWidth="450.0" visible="false">
                                  <children>
                                     <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
@@ -199,7 +199,7 @@
                                     </VBox>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="optionAuthentificationPane" prefHeight="200.0" prefWidth="450.0" visible="false">
+                              <AnchorPane fx:id="optionAuthentificationPane" prefHeight="200.0" prefWidth="450.0">
                                  <children>
                                     <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
@@ -212,36 +212,42 @@
                                                 </Label>
                                              </children>
                                           </HBox>
-                                          <GridPane>
-                                             <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="210.0" minWidth="10.0" prefWidth="150.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="327.0" minWidth="10.0" prefWidth="325.0" />
-                                             </columnConstraints>
-                                             <rowConstraints>
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                             </rowConstraints>
+                                          <VBox>
                                              <children>
-                                                <Label text="Connexion">
-                                                   <font>
-                                                      <Font name="System Bold" size="12.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label text="Nom d'utilisateur" GridPane.rowIndex="1">
-                                                   <padding>
-                                                      <Insets left="10.0" />
-                                                   </padding>
-                                                </Label>
-                                                <Label text="Mot de passe" GridPane.rowIndex="2">
-                                                   <padding>
-                                                      <Insets left="10.0" />
-                                                   </padding>
-                                                </Label>
-                                                <TextField fx:id="optAuthentificationUsername" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <TextField fx:id="optAuthentificationPassword" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                <GridPane>
+                                                   <columnConstraints>
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="210.0" minWidth="10.0" prefWidth="150.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="327.0" minWidth="10.0" prefWidth="325.0" />
+                                                   </columnConstraints>
+                                                   <rowConstraints>
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                   </rowConstraints>
+                                                   <children>
+                                                      <Label text="Connexion">
+                                                         <font>
+                                                            <Font name="System Bold" size="12.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label text="Nom d'utilisateur" GridPane.rowIndex="1">
+                                                         <padding>
+                                                            <Insets left="10.0" />
+                                                         </padding>
+                                                      </Label>
+                                                      <Label text="Mot de passe" GridPane.rowIndex="2">
+                                                         <padding>
+                                                            <Insets left="10.0" />
+                                                         </padding>
+                                                      </Label>
+                                                      <TextField fx:id="optAuthentificationUsername" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                      <PasswordField fx:id="optAuthentificationPassword" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                   </children>
+                                                </GridPane>
+                                                <Label text="Attention, votre identification n'est pas crypté dans le fichier de configuration et peuvent être lisible pour un humain" textAlignment="CENTER" textFill="RED" wrapText="true" />
                                              </children>
-                                          </GridPane>
+                                          </VBox>
                                        </children>
                                        <padding>
                                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

@@ -3,6 +3,7 @@ package com.zestedesavoir.zestwriter.view.task;
 import java.io.IOException;
 import java.util.Optional;
 
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,11 +16,13 @@ import javafx.util.Pair;
 public class LoginService extends Service<Void>{
 	private Optional<Pair<String, String>> result;
 	private ZdsHttp zdsUtils;
+    private Configuration config;
 	private final Logger logger;
 
-	public LoginService(Optional<Pair<String, String>> result, ZdsHttp zdsUtils) {
+	public LoginService(Optional<Pair<String, String>> result, ZdsHttp zdsUtils, Configuration config) {
 		this.result = result;
 		this.zdsUtils = zdsUtils;
+        this.config = config;
 		logger = LoggerFactory.getLogger(getClass());
 	}
 
@@ -37,9 +40,11 @@ public class LoginService extends Service<Void>{
                             zdsUtils.initInfoOnlineContent("article");
                         }
                         else {
+                            config.resetAuthentification();
                             cancel();
                         }
                     } catch (Exception e) {
+                        config.resetAuthentification();
                         cancel();
                     }
                 });
@@ -54,6 +59,7 @@ public class LoginService extends Service<Void>{
                             logger.error("", e);
                         }
                     } else {
+                        config.resetAuthentification();
                         cancel();
                     }
                 }
