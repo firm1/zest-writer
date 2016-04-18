@@ -299,6 +299,7 @@ public class MdConvertController {
         SplitPane writer = loader.load();
 
         SourceText.setFont(new Font(config.getEditorFont(), config.getEditorFontsize()));
+        SourceText.setStyle("-fx-font-family: \"" + config.getEditorFont() + "\";");
         SourceText.replaceText(extract.getMarkdown());
         SourceText.textProperty().addListener((observableValue, s, s2) -> {
             tab.setText("! " + extract.getTitle());
