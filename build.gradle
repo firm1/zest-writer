@@ -3,7 +3,7 @@ apply plugin: 'java'
 apply from: "http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.plugin"
 
 processResources {
-    filesMatching('*.properties') {
+    filesMatching('config.properties') {
         expand(project.properties)
     }
 }
