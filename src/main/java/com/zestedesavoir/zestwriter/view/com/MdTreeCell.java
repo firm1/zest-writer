@@ -81,7 +81,13 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
+                logger.debug("Tentative de suppression");
+                // delete in logical tree
+                Container parentContainer = (Container) getTreeItem().getParent().getValue();
+                parentContainer.getChildren().remove(getItem());
+                // delete in gui tree
                 getTreeItem().getParent().getChildren().remove(getTreeItem());
+                // delete physically file
                 getItem().delete();
                 saveManifestJson();
             }
