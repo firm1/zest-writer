@@ -82,16 +82,26 @@ public class MenuController{
     private final Text labelField = new Text("");
     private final Logger logger;
 
-    @FXML private MenuItem menuDownload;
-    @FXML private MenuItem menuUpload;
-    @FXML private MenuItem menuLogin;
-    @FXML private MenuItem menuLogout;
-    @FXML private MenuItem menuReport;
-    @FXML private MenuItem menuLisibility;
-    @FXML private MenuItem menuAbout;
-    @FXML private MenuItem menuGoogle;
-    @FXML private HBox hBottomBox;
-    @FXML private Menu menuExport;
+    @FXML
+    private MenuItem menuDownload;
+    @FXML
+    private MenuItem menuUpload;
+    @FXML
+    private MenuItem menuLogin;
+    @FXML
+    private MenuItem menuLogout;
+    @FXML
+    private MenuItem menuReport;
+    @FXML
+    private MenuItem menuLisibility;
+    @FXML
+    private MenuItem menuAbout;
+    @FXML
+    private MenuItem menuGoogle;
+    @FXML
+    private HBox hBottomBox;
+    @FXML
+    private Menu menuExport;
 
 
     public MenuController(){
@@ -103,7 +113,8 @@ public class MenuController{
         this.mainApp = mainApp;
     }
 
-    @FXML private void HandleQuitButtonAction(ActionEvent event){
+    @FXML
+    private void HandleQuitButtonAction(ActionEvent event){
         System.exit(0);
     }
 
@@ -115,7 +126,8 @@ public class MenuController{
         return render.toString();
     }
 
-    @FXML private void HandleFleshButtonAction(ActionEvent event){
+    @FXML
+    private void HandleFleshButtonAction(ActionEvent event){
         Function<Textual, Double> calFlesh = (Textual ch) -> {
             String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
             String plainText = Corrector.HtmlToTextWithoutCode(htmlText);
@@ -175,7 +187,8 @@ public class MenuController{
         Optional<Pair<String, String>> result = dialog.showAndWait();
     }
 
-    @FXML private void HandleGunningButtonAction(ActionEvent event){
+    @FXML
+    private void HandleGunningButtonAction(ActionEvent event){
         Function<Textual, Double> calFlesh = (Textual ch) -> {
             String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
             String plainText = Corrector.HtmlToTextWithoutCode(htmlText);
@@ -235,7 +248,8 @@ public class MenuController{
         Optional<Pair<String, String>> result = dialog.showAndWait();
     }
 
-    @FXML private void HandleReportWithoutTypoButtonAction(ActionEvent event){
+    @FXML
+    private void HandleReportWithoutTypoButtonAction(ActionEvent event){
         textArea = new TextArea();
         textArea.setEditable(true);
         textArea.setWrapText(true);
@@ -281,7 +295,8 @@ public class MenuController{
         correctTask.start();
     }
 
-    @FXML private void HandleNewButtonAction(ActionEvent event){
+    @FXML
+    private void HandleNewButtonAction(ActionEvent event){
         File defaultDirectory;
 
         try{
@@ -345,7 +360,8 @@ public class MenuController{
 
     }
 
-    @FXML private void HandleOpenButtonAction(ActionEvent event){
+    @FXML
+    private void HandleOpenButtonAction(ActionEvent event){
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Contenus Zestueux");
         File defaultDirectory;
@@ -382,7 +398,8 @@ public class MenuController{
         }
     }
 
-    @FXML private Service<Void> HandleLoginButtonAction(ActionEvent event){
+    @FXML
+    private Service<Void> HandleLoginButtonAction(ActionEvent event){
         // Button for google
         Button googleAuth = new Button("Connexion via Google", IconFactory.createGoogleIcon());
         LoginDialog dialog = new LoginDialog(googleAuth, mainApp);
@@ -429,7 +446,8 @@ public class MenuController{
         downloadContentTask.start();
     }
 
-    @FXML private void HandleDownloadButtonAction(ActionEvent event){
+    @FXML
+    private void HandleDownloadButtonAction(ActionEvent event){
         if(! mainApp.getZdsutils().isAuthenticated()){
             Service<Void> loginTask = HandleLoginButtonAction(event);
 
@@ -521,7 +539,8 @@ public class MenuController{
         }
     }
 
-    @FXML private void HandleUploadButtonAction(ActionEvent event){
+    @FXML
+    private void HandleUploadButtonAction(ActionEvent event){
         if(! mainApp.getZdsutils().isAuthenticated()){
             Service<Void> loginTask = HandleLoginButtonAction(event);
 
@@ -554,7 +573,8 @@ public class MenuController{
 
     }
 
-    @FXML private void HandleSwitchWorkspaceAction(ActionEvent event) throws IOException{
+    @FXML
+    private void HandleSwitchWorkspaceAction(ActionEvent event) throws IOException{
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setTitle("Sélectionnez un dossier");
         File selectedDirectory = fileChooser.showDialog(mainApp.getPrimaryStage());
@@ -570,7 +590,8 @@ public class MenuController{
         alert.showAndWait();
     }
 
-    @FXML private void HandleExportMarkdownButtonAction(ActionEvent event){
+    @FXML
+    private void HandleExportMarkdownButtonAction(ActionEvent event){
         Content content = mainApp.getContents().get(0);
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setTitle("Dossier d'export");
@@ -593,7 +614,8 @@ public class MenuController{
         }
     }
 
-    @FXML private void HandleExportPdfButtonAction(ActionEvent event){
+    @FXML
+    private void HandleExportPdfButtonAction(ActionEvent event){
         Content content = mainApp.getContents().get(0);
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setTitle("Dossier d'export");
@@ -609,7 +631,7 @@ public class MenuController{
             pb.progressProperty().bind(exportPdfTask.progressProperty());
             exportPdfTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
                 Alert alert;
-                switch(newValue) {
+                switch(newValue){
                     case FAILED:
                         alert = new Alert(AlertType.ERROR);
                         alert.setTitle("Echec");
@@ -634,7 +656,8 @@ public class MenuController{
         }
     }
 
-    @FXML private void HandleAboutButtonAction(ActionEvent event){
+    @FXML
+    private void HandleAboutButtonAction(ActionEvent event){
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MainApp.class.getResource("fxml/AboutDialog.fxml"));
 
@@ -656,7 +679,7 @@ public class MenuController{
             logger.error(e.getMessage(), e);
         }
     }
-
+    
     @FXML private void HandleOptionsButtonAction(ActionEvent evnet){
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MainApp.class.getResource("fxml/OptionsDialog.fxml"));
@@ -681,6 +704,32 @@ public class MenuController{
         }catch(IOException e){
             logger.error(e.getMessage(), e);
         }
+    }
+
+    @FXML private void HandleCheckUpdateButtonAction(ActionEvent event){
+        Alert alert;
+        String versionOnline = mainApp.getConfig().getLastRelease();
+        String current = mainApp.getConfig().getProps().getProperty("version", "Inconnue");
+
+        if(versionOnline == null) {
+            alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Erreur lors du contact du serveur");
+            alert.setContentText("Une erreur est survenue lors de la tentative de vérification des mises à jours. Vérifiez votre connexion à internet !");
+        } else {
+            if(!versionOnline.equals(current)) {
+                alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Mise à jour");
+                alert.setHeaderText("Version obsolète");
+                alert.setContentText("La version de Zest Writer que vous utilisez ("+current+") n'est pas à jour. Pensez à faire la mise à jour vers la "+versionOnline+" pour profiter des dernières nouveautés");
+            } else {
+                alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Mise à jour");
+                alert.setHeaderText("Version à jour");
+                alert.setContentText("Vous utilisez actuellement la dernière version publiée de Zest Writer");
+            }
+        }
+        alert.showAndWait();
     }
 
     public Text getLabelField(){
