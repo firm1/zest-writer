@@ -635,4 +635,8 @@ public class MenuController{
             logger.error(e.getMessage(), e);
         }
     }
+
+    public Text getLabelField(){
+        return labelField;
+    }
 }

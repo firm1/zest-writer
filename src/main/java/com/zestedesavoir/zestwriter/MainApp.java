@@ -2,6 +2,7 @@ package com.zestedesavoir.zestwriter;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Optional;
 
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
@@ -10,6 +11,7 @@ import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
 
+import com.zestedesavoir.zestwriter.view.task.LoginService;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -27,6 +29,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +44,7 @@ public class MainApp extends Application {
     private Configuration config;
     private StringBuilder key = new StringBuilder();
     private Logger logger;
+    private MenuController menuController;
     public static String[] args;
 
     public MainApp() {
@@ -101,6 +105,7 @@ public class MainApp extends Application {
 
         initRootLayout();
         showWriter();
+        initConnection();
     }
 
     public void initRootLayout() {
@@ -110,8 +115,8 @@ public class MainApp extends Application {
             loader.setLocation(MainApp.class.getResource("fxml/Root.fxml"));
             rootLayout = loader.load();
 
-            MenuController controller = loader.getController();
-            controller.setMainApp(this);
+            menuController = loader.getController();
+            menuController.setMainApp(this);
 
             scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
@@ -137,6 +142,13 @@ public class MainApp extends Application {
 
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
+        }
+    }
+
+    public void initConnection(){
+        if(!config.getAuthentificationUsername().isEmpty() && !config.getAuthentificationPassword().isEmpty()){
+            LoginService loginTask = new LoginService(config.getAuthentificationUsername(), config.getAuthentificationPassword(), zdsutils, config);
+            menuController.getLabelField().textProperty().bind(loginTask.messageProperty());
         }
     }
 
