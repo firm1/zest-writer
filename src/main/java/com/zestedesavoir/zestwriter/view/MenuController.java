@@ -392,9 +392,12 @@ public class MenuController{
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
         hBottomBox.getChildren().addAll(labelField);
-        LoginService loginTask = new LoginService(result, mainApp.getZdsutils(), mainApp.getConfig());
+        LoginService loginTask = new LoginService(mainApp.getZdsutils(), mainApp.getConfig());
+        result.ifPresent(usernamePassword -> {
+            loginTask.setUsername(usernamePassword.getKey());
+            loginTask.setPassword(usernamePassword.getValue());
+        });
         labelField.textProperty().bind(loginTask.messageProperty());
-
         return loginTask;
     }
 
