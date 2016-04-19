@@ -48,7 +48,7 @@
                         <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                      </padding>
                   </Label>
-                  <Label text="0.8.0" GridPane.columnIndex="1">
+                  <Label fx:id="version" GridPane.columnIndex="1">
                      <font>
                         <Font name="Calibri" size="16.0" />
                      </font>

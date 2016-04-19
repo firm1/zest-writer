@@ -46,6 +46,11 @@
 	                        <MaterialDesignIconView fill="#084561" glyphName="MARKDOWN" size="1.8em" />
 	                     </graphic>
                       </MenuItem>
+                      <MenuItem mnemonicParsing="false" onAction="#HandleExportPdfButtonAction" text="Pdf">
+                        <graphic>
+                            <MaterialDesignIconView fill="#084561" glyphName="FILE_PDF" size="1.8em" />
+                         </graphic>
+                      </MenuItem>
                     </items>
                   </Menu>
               <MenuItem mnemonicParsing="false" onAction="#HandleQuitButtonAction" text="Quitter">

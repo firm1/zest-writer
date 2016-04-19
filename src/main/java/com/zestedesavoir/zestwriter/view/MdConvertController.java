@@ -394,8 +394,8 @@ public class MdConvertController {
                             "});"+
                         "</script>");
                         content.append("<script type='text/javascript' src='");
-                        content.append(MainApp.class.getResource("view").toExternalForm());
-                        content.append("/static/js/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>");
+                        content.append(MainApp.class.getResource("static").toExternalForm());
+                        content.append("/js/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>");
                         content.append("</body></html>");
                         return content.toString();
                     }
@@ -444,7 +444,7 @@ public class MdConvertController {
 
     	Optional<String> result = dialog.showAndWait();
     	result.ifPresent(line -> {
-    		SourceText.selectRange(Integer.parseInt(line), 0);
+    		SourceText.positionCaret(SourceText.position(Integer.parseInt(line)-1, 0).toOffset());
     	});
     }
 

@@ -26,6 +26,7 @@ public class Configuration {
     private StorageSaver onlineSaver;
     private LocalDirectoryFactory workspaceFactory;
     private final Logger logger;
+    private Properties props;
 
     private final static String WORKSPACE_KEY = "data.workspace";
     private final static String SMART_EDITOR_KEY = "editor.smart";
@@ -61,7 +62,6 @@ public class Configuration {
         }
     }
 
-
     public Configuration(String homeDir) {
         logger = LoggerFactory.getLogger(Configuration.class);
         String confDirPath = homeDir+File.separator+"."+this.appName;
@@ -73,7 +73,7 @@ public class Configuration {
         }
 
         // defaults config
-        Properties props = new Properties();
+        props = new Properties();
         try {
             props.load(MainApp.class.getClassLoader().getResourceAsStream("config.properties"));
         } catch (IOException e) {
@@ -142,6 +142,10 @@ public class Configuration {
         }
     }
 
+    public String getPandocProvider() {
+        return "http://vps146092.ovh.net/2pdf/";
+    }
+
     public String getPort() {
         if(conf.containsKey(SERVER_PORT_KEY)) {
             return conf.getProperty(SERVER_PORT_KEY);
@@ -194,7 +198,6 @@ public class Configuration {
         }
 
     }
-
 
     /*
      * Zest-Writer options
@@ -292,5 +295,9 @@ public class Configuration {
         setAuthentificationUsername("");
         setAuthentificationPassword("");
         saveConfFile();
+    }
+
+    public Properties getProps() {
+        return props;
     }
 }

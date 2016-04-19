@@ -2,6 +2,12 @@
 apply plugin: 'java'
 apply from: "http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.plugin"
 
+processResources {
+    filesMatching('config.properties') {
+        expand(project.properties)
+    }
+}
+
 // Configures plugin
 javafx {
     // Application name and ID presented by target OS
@@ -12,7 +18,7 @@ javafx {
     // JVM arguments, system properties, application command line arguments
     jvmArgs = ['-XX:+AggressiveOpts', '-XX:CompileThreshold=1']
     systemProperties = ['prism.disableRegionCaching': 'true']
-    arguments = ['-l', '--fast']
+    arguments = []
 
     // informations |  grep eclipse
     category = "Editor"
@@ -25,9 +31,9 @@ javafx {
 
     // app icons
     icons {
-        shortcut = ["src/logo/logo-16.png", "src/logo/logo-32.png", "src/logo/logo-128.png", "src/logo/logo-256.png", "src/logo/logo-16@2x.png", "src/logo/logo-32@2x.png", "src/logo/logo-128@2x.png"]
-        volume = 'src/logo/logo-128.png'
-        setup = 'src/logo/logo-128.png'
+        shortcut = ["src/main/resources/logo/logo-16.png", "src/main/resources/logo/logo-32.png", "src/main/resources/logo/logo-128.png", "src/main/resources/logo/logo-256.png", "src/main/resources/logo/logo-16@2x.png", "src/main/resources/logo/logo-32@2x.png", "src/main/resources/logo/logo-128@2x.png"]
+        volume = 'src/main/resources/logo/logo-128.png'
+        setup = 'src/main/resources/logo/logo-128.png'
     }
 
     // Keystore credentials for signing JAR
@@ -56,6 +62,7 @@ sourceSets {
         }
         resources {
             srcDir 'src/main/resources'
+            exclude '*.pyc'
         }
     }
     test {
@@ -64,6 +71,7 @@ sourceSets {
         }
         resources {
             srcDir 'src/test/resources'
+            exclude 'src/test/resources/log4j.properties'
         }
     }
 }

@@ -115,4 +115,9 @@ public class FunctionTreeFactory {
         String regex = "^(#+)(.{0,}?)(#*)$";
         return Pattern.compile(regex, Pattern.MULTILINE).matcher(text).replaceAll(padding(level,'#')+"$1$2");
     }
+
+    public static String changeLocationImages(String text) {
+        String regex = "()(!\\[.*?\\]\\()([^http])(.+?)(\\))";
+        return Pattern.compile(regex, Pattern.MULTILINE).matcher(text).replaceAll("$1$2http://zestedesavoir.com/$3$4$5");
+    }
 }

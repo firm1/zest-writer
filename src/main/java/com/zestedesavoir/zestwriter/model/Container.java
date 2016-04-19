@@ -90,7 +90,12 @@ public class Container extends MetaContent implements ContentNode {
     }
 
     public List<MetaContent> getChildren() {
-        return _children;
+        if( _children !=null) {
+            return _children;
+        }
+        else {
+            return new ArrayList<MetaContent>();
+        }
     }
 
     public void setChildren(List<MetaContent> children) {
@@ -98,7 +103,7 @@ public class Container extends MetaContent implements ContentNode {
     }
 
     public String getFilePath() {
-        Path path = Paths.get(getBasePath(), getIntroduction().getFilePath());
+        Path path = Paths.get(getIntroduction().getFilePath());
         path = path.getParent();
 
         return path.toAbsolutePath().toString();
@@ -187,6 +192,7 @@ public class Container extends MetaContent implements ContentNode {
             }
         }
         if(receiver instanceof Container) {
+
             int ancestors = ((Container) receiver).getCountAncestorsContainer(root);
             int descendants = getCountDescendantContainer();
             int childrenExtracts = ((Container) receiver).getCountChildrenExtract();
@@ -210,7 +216,7 @@ public class Container extends MetaContent implements ContentNode {
         StringBuilder sb = new StringBuilder();
         sb.append(FunctionTreeFactory.padding(level, '#'));
         sb.append(" ").append(getTitle()).append("\n\n");
-        sb.append(FunctionTreeFactory.offsetHeaderMarkdown(getIntroduction().readMarkdown(), levelDepth)).append("\n\n");
+        sb.append(FunctionTreeFactory.changeLocationImages(FunctionTreeFactory.offsetHeaderMarkdown(getIntroduction().readMarkdown(), levelDepth))).append("\n\n");
         for(MetaContent c:getChildren()) {
             if(c instanceof Container) {
                 sb.append(((Container) c).exportContentToMarkdown(level+1, levelDepth));
@@ -218,7 +224,7 @@ public class Container extends MetaContent implements ContentNode {
                 sb.append(((Extract) c).exportContentToMarkdown(level +1, levelDepth));
             }
         }
-        sb.append(FunctionTreeFactory.offsetHeaderMarkdown(getConclusion().readMarkdown(), levelDepth)).append("\n\n");
+        sb.append(FunctionTreeFactory.changeLocationImages(FunctionTreeFactory.offsetHeaderMarkdown(getConclusion().readMarkdown(), levelDepth))).append("\n\n");
         return sb.toString();
     }
 
