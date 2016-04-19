@@ -1,40 +1,66 @@
 package com.zestedesavoir.zestwriter.view.task;
 
 import java.io.IOException;
-import java.util.Optional;
 
-import com.zestedesavoir.zestwriter.utils.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.util.Pair;
 
 public class LoginService extends Service<Void>{
-	private Optional<Pair<String, String>> result;
 	private ZdsHttp zdsUtils;
     private Configuration config;
 	private final Logger logger;
+	private String username;
+	private String password;
 
-	public LoginService(Optional<Pair<String, String>> result, ZdsHttp zdsUtils, Configuration config) {
-		this.result = result;
-		this.zdsUtils = zdsUtils;
-        this.config = config;
-		logger = LoggerFactory.getLogger(getClass());
+	public LoginService(String username, String password, ZdsHttp zdsUtils, Configuration config) {
+	    this(zdsUtils, config);
+		this.username = username;
+		this.password = password;
 	}
 
-	@Override
+	public LoginService(ZdsHttp zdsUtils, Configuration config) {
+	    this.zdsUtils = zdsUtils;
+	    this.config = config;
+        logger = LoggerFactory.getLogger(getClass());
+	}
+
+
+
+	public String getUsername() {
+        return username;
+    }
+
+
+
+    public String getPassword() {
+        return password;
+    }
+
+
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
     protected Task<Void> createTask() {
         return new Task<Void>() {
             @Override
             protected Void call() {
-                result.ifPresent(usernamePassword -> {
+                if(getUsername() != null) {
                     try {
                         updateMessage("Connexion au site en cours ...");
-                        if(zdsUtils.login(usernamePassword.getKey(), usernamePassword.getValue())) {
+                        if(zdsUtils.login(getUsername(), getPassword())) {
                             updateMessage("Recherche des contenus ...");
                             zdsUtils.initInfoOnlineContent("tutorial");
                             zdsUtils.initInfoOnlineContent("article");
@@ -47,14 +73,12 @@ public class LoginService extends Service<Void>{
                         config.resetAuthentification();
                         cancel();
                     }
-                });
-
-                if(!result.isPresent()) {
+                } else {
                     if(zdsUtils.isAuthenticated()) {
                         updateMessage("Recherche des contenus ...");
                         try {
-                        	zdsUtils.initInfoOnlineContent("tutorial");
-                        	zdsUtils.initInfoOnlineContent("article");
+                            zdsUtils.initInfoOnlineContent("tutorial");
+                            zdsUtils.initInfoOnlineContent("article");
                         } catch (IOException e) {
                             logger.error("", e);
                         }
