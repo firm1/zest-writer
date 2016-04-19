@@ -291,5 +291,6 @@ public class Configuration {
     public void resetAuthentification(){
         setAuthentificationUsername("");
         setAuthentificationPassword("");
+        saveConfFile();
     }
 }

@@ -81,16 +81,16 @@ public class MenuController{
     private final Text labelField = new Text("");
     private final Logger logger;
 
-    @FXML MenuItem menuDownload;
-    @FXML MenuItem menuUpload;
-    @FXML MenuItem menuLogin;
-    @FXML MenuItem menuLogout;
-    @FXML MenuItem menuReport;
-    @FXML MenuItem menuLisibility;
-    @FXML MenuItem menuAbout;
-    @FXML MenuItem menuGoogle;
-    @FXML HBox hBottomBox;
-    @FXML Menu menuExport;
+    @FXML private MenuItem menuDownload;
+    @FXML private MenuItem menuUpload;
+    @FXML private MenuItem menuLogin;
+    @FXML private MenuItem menuLogout;
+    @FXML private MenuItem menuReport;
+    @FXML private MenuItem menuLisibility;
+    @FXML private MenuItem menuAbout;
+    @FXML private MenuItem menuGoogle;
+    @FXML private HBox hBottomBox;
+    @FXML private Menu menuExport;
 
 
     public MenuController(){
@@ -439,6 +439,9 @@ public class MenuController{
                     case CANCELLED:
                         hBottomBox.getChildren().clear();
                         alert = new Alert(AlertType.ERROR);
+                        Stage dialog = (Stage)alert.getDialogPane().getScene().getWindow();
+                        dialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+
                         alert.setTitle("Connexion");
                         alert.setHeaderText("Erreur de connexion");
                         alert.setContentText("Désolé mais vous n'avez pas été authentifié sur le serveur de Zeste de Savoir.");
@@ -641,5 +644,13 @@ public class MenuController{
 
     public Text getLabelField(){
         return labelField;
+    }
+
+    public HBox gethBottomBox(){
+        return hBottomBox;
+    }
+
+    public MenuItem getMenuDownload(){
+        return menuDownload;
     }
 }

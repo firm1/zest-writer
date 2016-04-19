@@ -14,12 +14,16 @@ import com.zestedesavoir.zestwriter.view.MenuController;
 import com.zestedesavoir.zestwriter.view.task.LoginService;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.concurrent.Service;
+import javafx.concurrent.Worker;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Tab;
@@ -148,7 +152,35 @@ public class MainApp extends Application {
     public void initConnection(){
         if(!config.getAuthentificationUsername().isEmpty() && !config.getAuthentificationPassword().isEmpty()){
             LoginService loginTask = new LoginService(config.getAuthentificationUsername(), config.getAuthentificationPassword(), zdsutils, config);
+
+            menuController.getMenuDownload().setDisable(true);
+            menuController.gethBottomBox().getChildren().addAll(menuController.getLabelField());
             menuController.getLabelField().textProperty().bind(loginTask.messageProperty());
+
+            loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
+                Alert alert = new Alert(Alert.AlertType.NONE);
+                alert.setTitle("Connexion");
+                alert.setHeaderText("Etat de connexion");
+
+                Stage dialog = (Stage)alert.getDialogPane().getScene().getWindow();
+                dialog.getIcons().add(new Image(getClass().getResourceAsStream("static/icons/logo.png")));
+
+                switch(newValue){
+                    case FAILED:
+                    case CANCELLED:
+                        alert.setAlertType(Alert.AlertType.ERROR);
+                        alert.setContentText("Désolé mais vous n'avez pas été authentifié sur le serveur de Zeste de Savoir.");
+
+                        alert.showAndWait();
+                        menuController.getMenuDownload().setDisable(false);
+                        break;
+                    case SUCCEEDED:
+                        menuController.getMenuDownload().setDisable(false);
+                        break;
+                }
+            });
+
+            loginTask.start();
         }
     }
 

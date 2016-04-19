@@ -30,19 +30,14 @@ public class LoginService extends Service<Void>{
         logger = LoggerFactory.getLogger(getClass());
 	}
 
-
-
+    
 	public String getUsername() {
         return username;
     }
 
-
-
     public String getPassword() {
         return password;
     }
-
-
 
     public void setUsername(String username) {
         this.username = username;
@@ -64,8 +59,8 @@ public class LoginService extends Service<Void>{
                             updateMessage("Recherche des contenus ...");
                             zdsUtils.initInfoOnlineContent("tutorial");
                             zdsUtils.initInfoOnlineContent("article");
-                        }
-                        else {
+                            updateMessage("Vous avez correctement été connecté, vous pouvez désormais télécharger vos contenus");
+                        } else {
                             config.resetAuthentification();
                             cancel();
                         }
@@ -82,6 +77,7 @@ public class LoginService extends Service<Void>{
                         } catch (IOException e) {
                             logger.error("", e);
                         }
+                        updateMessage("Vous avez correctement été connecté, vous pouvez désormais télécharger vos contenus");
                     } else {
                         config.resetAuthentification();
                         cancel();

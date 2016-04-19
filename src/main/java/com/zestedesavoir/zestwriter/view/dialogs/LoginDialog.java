@@ -71,6 +71,7 @@ public class LoginDialog extends BaseDialog<Pair<String, String>> {
                 if(keepConnection.isSelected()){
                     config.setAuthentificationUsername(username.getText());
                     config.setAuthentificationPassword(password.getText());
+                    config.saveConfFile();
                 }
 
                 return new Pair<>(username.getText(), password.getText());
