@@ -385,8 +385,8 @@ public class MdConvertController {
                             "});"+
                         "</script>");
                         content.append("<script type='text/javascript' src='");
-                        content.append(MainApp.class.getResource("view").toExternalForm());
-                        content.append("/static/js/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>");
+                        content.append(MainApp.class.getResource("static").toExternalForm());
+                        content.append("/js/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>");
                         content.append("</body></html>");
                         return content.toString();
                     }
