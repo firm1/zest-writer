@@ -105,7 +105,8 @@
             </Menu>
           <Menu mnemonicParsing="false" text="Aide">
             <items>
-              <MenuItem fx:id="menuAbout" mnemonicParsing="false" onAction="#HandleAboutButtonAction" text="About" />
+              <MenuItem fx:id="menuAbout" mnemonicParsing="false" onAction="#HandleAboutButtonAction" text="A propos" />
+              <MenuItem mnemonicParsing="false" onAction="#HandleCheckUpdateButtonAction" text="Vérification de mise à jour" />
             </items>
           </Menu>
         </menus>

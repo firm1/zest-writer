@@ -649,4 +649,30 @@ public class MenuController{
             logger.error(e.getMessage(), e);
         }
     }
+
+    @FXML private void HandleCheckUpdateButtonAction(ActionEvent event){
+        Alert alert;
+        String versionOnline = mainApp.getConfig().getLastRelease();
+        String current = mainApp.getConfig().getProps().getProperty("version", "Inconnue");
+
+        if(versionOnline == null) {
+            alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Erreur lors du contact du serveur");
+            alert.setContentText("Une erreur est survenue lors de la tentative de vérification des mises à jours. Vérifiez votre connexion à internet !");
+        } else {
+            if(!versionOnline.equals(current)) {
+                alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Mise à jour");
+                alert.setHeaderText("Version obsolète");
+                alert.setContentText("La version de Zest Writer que vous utilisez ("+current+") n'est pas à jour. Pensez à faire la mise à jour vers la "+versionOnline+" pour profiter des dernières nouveautés");
+            } else {
+                alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Mise à jour");
+                alert.setHeaderText("Version à jour");
+                alert.setContentText("Vous utilisez actuellement la dernière version publiée de Zest Writer");
+            }
+        }
+        alert.showAndWait();
+    }
 }
