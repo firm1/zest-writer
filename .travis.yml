@@ -12,6 +12,7 @@ matrix:
     - os: osx
 
 before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew tap caskroom/cask ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install brew-cask ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew cask install java ; fi
