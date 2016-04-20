@@ -88,7 +88,7 @@
                                     </VBox>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="optionEditorPane" prefHeight="200.0" prefWidth="450.0">
+                              <AnchorPane fx:id="optionEditorPane" prefHeight="200.0" prefWidth="450.0" visible="false">
                                  <children>
                                     <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
@@ -274,7 +274,7 @@
                                     </VBox>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="optionAdvancedPane" prefHeight="200.0" prefWidth="450.0" visible="false">
+                              <AnchorPane fx:id="optionAdvancedPane" prefHeight="200.0" prefWidth="450.0">
                                  <children>
                                     <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
@@ -339,6 +339,15 @@
             </HBox>
             <HBox alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="200.0">
                <children>
+                  <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#HandleResetButtonAction" text="Réinitialiser les options">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
                   <Button mnemonicParsing="false" onAction="#HandleCancelButtonAction" text="Annuler">
                      <HBox.margin>
                         <Insets right="10.0" />

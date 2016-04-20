@@ -332,6 +332,14 @@ public class Configuration {
         saveConfFile();
     }
 
+    public void resetAllOptions(){
+        for(Options opt : Options.values()){
+            conf.setProperty(opt.getKey(), opt.getDefaultValue());
+        }
+
+        saveConfFile();
+    }
+
     public Properties getProps() {
         return props;
     }

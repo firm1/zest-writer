@@ -1,6 +1,7 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
 
+import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import org.controlsfx.dialog.FontSelectorDialog;
 
 import com.zestedesavoir.zestwriter.MainApp;
@@ -68,7 +69,7 @@ public class OptionsDialog{
 
     @FXML private void initialize(){
         hideAllPane();
-        optionGeneralPane.setVisible(true);
+        optionEditorPane.setVisible(true);
     }
 
     @FXML private void HandleSaveButtonAction(){
@@ -102,6 +103,24 @@ public class OptionsDialog{
         if(result.isPresent()){
             if(result.get() == ButtonType.OK){
                 optionsWindow.close();
+            }
+        }
+    }
+
+    @FXML private void HandleResetButtonAction(){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmer la réinitialisation");
+        alert.setHeaderText("Réinitialisation");
+        alert.setContentText("Attention, une réinitialisation est irréversible, souhaitez-vous vraiment réinitialiser vos options ?");
+        alert.getButtonTypes().setAll(new ButtonType("Oui", ButtonBar.ButtonData.YES), new ButtonType("Non", ButtonBar.ButtonData.NO));
+        Stage stage= (Stage)alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if(result.isPresent()){
+            if(result.get().getButtonData() == ButtonBar.ButtonData.YES){
+                resetOptions();
             }
         }
     }
@@ -230,5 +249,16 @@ public class OptionsDialog{
         optionShortcutPane.setVisible(false);
         optionAuthentificationPane.setVisible(false);
         optionAdvancedPane.setVisible(false);
+    }
+
+    private void resetOptions(){
+        config.resetAllOptions();
+
+        setGeneralOptions();
+        setEditorOptions();
+        setDisplayOptions();
+        setShortcutOptions();
+        setAuthentificationOptions();
+        setAdvancedOptions();
     }
 }
