@@ -21,8 +21,8 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y rpm ; fi
 
 script:
-  - gradle check
-  - gradle fatJar
+  - gradlew check
+  - gradlew fatJar
 
 after_success:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_deb.sh $BINTRAY_KEY ; fi
