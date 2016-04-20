@@ -1,3 +1,6 @@
+git:
+  depth: 1
+
 language: java
 
 matrix:
@@ -9,16 +12,19 @@ matrix:
     - os: osx
 
 before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew tap caskroom/cask ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install brew-cask ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew cask install java ; fi
   - set JAVA_OPTS=-XX:MaxPermSize=1024m -Xmx1512m -Dfile.encoding=UTF-8
   - set JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
-  - sudo apt-get install -y rpm
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y rpm ; fi
 
 script:
   - gradle check
   - gradle fatJar
 
 after_success:
-  - scripts/upload_deb.sh $BINTRAY_KEY
-  - scripts/upload_rpm.sh $BINTRAY_KEY
-  - scripts/upload_jar.sh $BINTRAY_KEY
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_deb.sh $BINTRAY_KEY ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_rpm.sh $BINTRAY_KEY ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_jar.sh $BINTRAY_KEY ; fi
 
