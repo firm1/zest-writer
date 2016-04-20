@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.ziclix.python.sql.pipe.Source;
+import javafx.scene.control.*;
 import javafx.scene.text.Font;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.fxmisc.richtext.LineNumberFactory;
@@ -33,18 +34,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -53,6 +42,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Pair;
+
+import javax.tools.Tool;
 
 public class MdConvertController {
     private MainApp mainApp;
@@ -67,10 +58,13 @@ public class MdConvertController {
     private int yRenderPosition = 0;
     private boolean isSaved = true;
 
+    @FXML private ToolBar editorToolBar;
+    @FXML private ToolBar editorToolBarRender;
     @FXML private WebView renderView;
     @FXML private StyleClassedTextArea SourceText;
     @FXML private Button SaveButton;
     @FXML private Button RefreshButton;
+    @FXML private BorderPane BoxEditor;
     @FXML private BorderPane BoxRender;
     @FXML private Button FullScreeen;
 
@@ -297,6 +291,11 @@ public class MdConvertController {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MainApp.class.getResource("fxml/Editor.fxml"));
         SplitPane writer = loader.load();
+
+        if(mainApp.getConfig().getEditorToolbarView().equals("no")){
+            BoxEditor.setTop(null);
+            BoxRender.setTop(null);
+        }
 
         SourceText.setFont(new Font(config.getEditorFont(), config.getEditorFontsize()));
         SourceText.setStyle("-fx-font-family: \"" + config.getEditorFont() + "\";");
@@ -576,4 +575,7 @@ public class MdConvertController {
         return (Integer) view.getEngine().executeScript("document.body.scrollLeft");
     }
 
+    public ToolBar getEditorToolBar(){
+        return editorToolBar;
+    }
 }

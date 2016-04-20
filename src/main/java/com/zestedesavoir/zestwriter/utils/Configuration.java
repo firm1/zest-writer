@@ -41,6 +41,7 @@ public class Configuration {
     public enum Options{
         EditorFont("options.editor.font", "Arial"),
         EditorFontSize("options.editor.fontSize", "14"),
+        EditorToolbarView("options.editor.toolbar.view", "yes"),
         DisplayTheme("options.display.theme", "Standard"),
         AuthentificationUsername("options.authentification.username", ""),
         AuthentificationPassword("options.authentification.password", ""),
@@ -246,6 +247,19 @@ public class Configuration {
     }
     public void setEditorFontSize(String fontSize){
         conf.setProperty(Options.EditorFontSize.getKey(), fontSize);
+    }
+
+    public String getEditorToolbarView(){
+        if(conf.containsKey(Options.EditorToolbarView.getKey()))
+            return conf.getProperty(Options.EditorToolbarView.getKey());
+        else
+            return Options.DisplayTheme.getDefaultValue();
+    }
+    public void setEditorToolbarView(String view){
+        if(!view.toLowerCase().equals("yes") && !view.toLowerCase().equals("no"))
+            view = Options.EditorToolbarView.getDefaultValue();
+
+        conf.setProperty(Options.EditorToolbarView.getKey(), view);
     }
 
     public String getDisplayTheme(){

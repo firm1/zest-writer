@@ -23,6 +23,7 @@ public class OptionsDialog{
 
     private String optEditorFont;
     private double optEditorFontSize;
+    private String optEditorToolbarView;
 
     @FXML private Hyperlink optionGeneral;
     @FXML private Hyperlink optionEditor;
@@ -38,6 +39,8 @@ public class OptionsDialog{
     @FXML private AnchorPane optionAuthentificationPane;
     @FXML private AnchorPane optionAdvancedPane;
 
+    @FXML private RadioButton optEditorToolbarViewYes;
+    @FXML private RadioButton optEditorToolbarViewNo;
     @FXML private Button optEditorFontButton;
     @FXML private ComboBox<String> optDisplayTheme;
     @FXML private TextField optAuthentificationUsername;
@@ -71,6 +74,7 @@ public class OptionsDialog{
     @FXML private void HandleSaveButtonAction(){
         config.setEditorFont(optEditorFont);
         config.setEditorFontSize(String.valueOf(optEditorFontSize));
+        config.setEditorToolbarView(optEditorToolbarView);
 
         config.setDisplayTheme(optDisplayTheme.getValue());
 
@@ -159,7 +163,16 @@ public class OptionsDialog{
 
             optEditorFont = newFont.getName();
             optEditorFontSize = newFont.getSize();
+            optEditorFontButton.setText(optEditorFont + " - " + optEditorFontSize);
         }
+    }
+
+    @FXML private void HandleEditorToolbarViewYes(){
+        optEditorToolbarView = "yes";
+    }
+
+    @FXML private void HandleEditorToolbarViewNo(){
+        optEditorToolbarView = "no";
     }
 
     private void setGeneralOptions(){
@@ -170,6 +183,12 @@ public class OptionsDialog{
 
         optEditorFont = config.getEditorFont();
         optEditorFontSize = config.getEditorFontsize();
+        optEditorToolbarView = config.getEditorToolbarView();
+
+        if(optEditorToolbarView.toLowerCase().equals("no"))
+            optEditorToolbarViewNo.setSelected(true);
+        else
+            optEditorToolbarViewYes.setSelected(true);
     }
 
     private void setDisplayOptions(){
