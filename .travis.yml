@@ -22,10 +22,11 @@ before_install:
 
 script:
   - ./gradlew check
-  - ./gradlew fatJar
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew fatJar ; fi
 
 after_success:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_deb.sh $BINTRAY_KEY ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_rpm.sh $BINTRAY_KEY ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_jar.sh $BINTRAY_KEY ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then scripts/upload_dmg.sh $BINTRAY_KEY ; fi
 
