@@ -1,19 +1,32 @@
+git:
+  depth: 1
+
 language: java
-sudo: required
-dist: trusty
-jdk: oraclejdk8
+
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+      jdk: oraclejdk8
+    - os: osx
 
 before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew tap caskroom/cask ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install brew-cask ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew cask install java ; fi
   - set JAVA_OPTS=-XX:MaxPermSize=1024m -Xmx1512m -Dfile.encoding=UTF-8
   - set JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
-  - sudo apt-get install -y rpm
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y rpm ; fi
 
 script:
-  - gradle check
-  - gradle fatJar
+  - ./gradlew check
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew fatJar ; fi
 
 after_success:
-  - scripts/upload_deb.sh $BINTRAY_KEY
-  - scripts/upload_rpm.sh $BINTRAY_KEY
-  - scripts/upload_jar.sh $BINTRAY_KEY
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_deb.sh $BINTRAY_KEY ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_rpm.sh $BINTRAY_KEY ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_jar.sh $BINTRAY_KEY ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then scripts/upload_dmg.sh $BINTRAY_KEY ; fi
 
