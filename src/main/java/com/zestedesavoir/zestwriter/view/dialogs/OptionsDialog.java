@@ -1,6 +1,7 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
 
+import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import org.controlsfx.dialog.FontSelectorDialog;
 
 import com.zestedesavoir.zestwriter.MainApp;
@@ -90,8 +91,7 @@ public class OptionsDialog{
         alert.setTitle("Confirmer l'annulation");
         alert.setHeaderText(null);
         alert.setContentText("Voulez-vous vraiment annuler ? Les modifications apportés ne seront pas enregistré.");
-        Stage stage= (Stage)alert.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+        IconFactory.addAlertLogo(alert);
 
         Optional<ButtonType> result = alert.showAndWait();
 

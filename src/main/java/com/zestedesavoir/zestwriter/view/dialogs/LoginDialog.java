@@ -49,8 +49,7 @@ public class LoginDialog extends BaseDialog<Pair<String, String>> {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Attention !");
                 alert.setContentText("Attention, vos informations d'identification ne sont pas crypté dans le fichier de configuration.");
-                Stage stage = (Stage)alert.getDialogPane().getScene().getWindow();
-                stage.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+                IconFactory.addAlertLogo(alert);
 
                 alert.showAndWait();
             }

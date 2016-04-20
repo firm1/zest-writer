@@ -75,6 +75,8 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Pair;
 
+import javax.swing.*;
+
 public class MenuController{
     private MainApp mainApp;
     private TextArea textArea;
@@ -270,8 +272,7 @@ public class MenuController{
         textArea.textProperty().bind(correctTask.valueProperty());
         correctTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
             Alert alert = new Alert(AlertType.NONE);
-            Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
-            alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+            IconFactory.addAlertLogo(alert);
 
             switch(newValue){
                 case FAILED:
@@ -436,8 +437,7 @@ public class MenuController{
                 case CANCELLED:
                 case SUCCEEDED:
                     Alert alert = new Alert(AlertType.INFORMATION);
-                    Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
-                    alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+                    IconFactory.addAlertLogo(alert);
                     alert.setTitle("Téléchargement des contenus");
                     alert.setHeaderText("Confirmation du téléchargement");
                     alert.setContentText("Vos contenus (tutoriels et articles) de ZdS ont été téléchargés en local. \n" +
@@ -463,8 +463,7 @@ public class MenuController{
                     case CANCELLED:
                         hBottomBox.getChildren().clear();
                         alert = new Alert(AlertType.ERROR);
-                        Stage dialog = (Stage)alert.getDialogPane().getScene().getWindow();
-                        dialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+                        IconFactory.addAlertLogo(alert);
 
                         alert.setTitle("Connexion");
                         alert.setHeaderText("Erreur de connexion");
@@ -518,8 +517,8 @@ public class MenuController{
         labelField.textProperty().bind(uploadContentTask.messageProperty());
         uploadContentTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
             Alert alert = new Alert(AlertType.NONE);
-            Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
-            alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+            IconFactory.addAlertLogo(alert);
+
             switch(newValue){
                 case FAILED:
                     alert.setAlertType(AlertType.ERROR);
@@ -559,8 +558,7 @@ public class MenuController{
                     case CANCELLED:
                         hBottomBox.getChildren().clear();
                         alert = new Alert(AlertType.ERROR);
-                        Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
-                        alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+                        IconFactory.addAlertLogo(alert);
                         alert.setTitle("Connexion");
                         alert.setHeaderText("Erreur de connexion");
                         alert.setContentText("Désolé mais vous n'avez pas été authentifié sur le serveur de Zeste de Savoir.");
@@ -591,8 +589,7 @@ public class MenuController{
         mainApp.getConfig().loadWorkspace();
 
         Alert alert = new Alert(AlertType.INFORMATION);
-        Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
-        alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+        IconFactory.addAlertLogo(alert);
         alert.setTitle("Dossier de travail");
         alert.setHeaderText("Changement de dossier de travail");
         alert.setContentText("Votre dossier de travail est maintenant dans " + mainApp.getConfig().getWorkspacePath());
@@ -616,8 +613,7 @@ public class MenuController{
             logger.debug("Export réussi vers " + selectedFile.getAbsolutePath());
 
             Alert alert = new Alert(AlertType.INFORMATION);
-            Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
-            alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+            IconFactory.addAlertLogo(alert);
             alert.setTitle("Confirmation");
             alert.setHeaderText("Confirmation de l'export");
             alert.setContentText("Le contenu \"" + content.getTitle() + "\" a été exporté dans \"" + selectedFile.getAbsolutePath() + "\"");
@@ -644,8 +640,7 @@ public class MenuController{
             pb.progressProperty().bind(exportPdfTask.progressProperty());
             exportPdfTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
                 Alert alert = new Alert(AlertType.NONE);
-                Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
-                alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+                IconFactory.addAlertLogo(alert);
 
                 switch(newValue){
                     case FAILED:
@@ -729,23 +724,20 @@ public class MenuController{
 
         if(versionOnline == null) {
             alert = new Alert(AlertType.ERROR);
-            Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
-            alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+            IconFactory.addAlertLogo(alert);
             alert.setTitle("Erreur");
             alert.setHeaderText("Erreur lors du contact du serveur");
             alert.setContentText("Une erreur est survenue lors de la tentative de vérification des mises à jours. Vérifiez votre connexion à internet !");
         } else {
             if(!versionOnline.equals(current)) {
                 alert = new Alert(AlertType.WARNING);
-                Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
-                alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+                IconFactory.addAlertLogo(alert);
                 alert.setTitle("Mise à jour");
                 alert.setHeaderText("Version obsolète");
                 alert.setContentText("La version de Zest Writer que vous utilisez ("+current+") n'est pas à jour. Pensez à faire la mise à jour vers la "+versionOnline+" pour profiter des dernières nouveautés");
             } else {
                 alert = new Alert(AlertType.INFORMATION);
-                Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
-                alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+                IconFactory.addAlertLogo(alert);
                 alert.setTitle("Mise à jour");
                 alert.setHeaderText("Version à jour");
                 alert.setContentText("Vous utilisez actuellement la dernière version publiée de Zest Writer");

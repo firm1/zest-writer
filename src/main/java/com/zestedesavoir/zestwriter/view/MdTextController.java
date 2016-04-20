@@ -187,8 +187,7 @@ public class MdTextController {
         tab.setOnCloseRequest(t -> {
             if(!controller.isSaved()) {
                 Alert alert = new Alert(AlertType.CONFIRMATION);
-                Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
-                alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+                IconFactory.addAlertLogo(alert);
                 alert.setTitle("Confirmation");
                 alert.setHeaderText("Confirmation de fermeture");
                 alert.setContentText("Vous avez modifié cet extrait. Voulez-vous enregistrer les modifications ?");
