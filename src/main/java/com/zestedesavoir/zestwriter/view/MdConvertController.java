@@ -58,8 +58,6 @@ public class MdConvertController {
     private int yRenderPosition = 0;
     private boolean isSaved = true;
 
-    @FXML private ToolBar editorToolBar;
-    @FXML private ToolBar editorToolBarRender;
     @FXML private WebView renderView;
     @FXML private StyleClassedTextArea SourceText;
     @FXML private Button SaveButton;
@@ -573,9 +571,5 @@ public class MdConvertController {
      */
     public int getHScrollValue(WebView view) {
         return (Integer) view.getEngine().executeScript("document.body.scrollLeft");
-    }
-
-    public ToolBar getEditorToolBar(){
-        return editorToolBar;
     }
 }
