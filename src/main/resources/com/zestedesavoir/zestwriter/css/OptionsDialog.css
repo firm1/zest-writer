@@ -1,0 +1,9 @@
+/* OptionsDialog style */
+
+.hyperlink{
+    -fx-underline:false
+}
+
+.hyperlink:hover{
+    -fx-underline:true
+}

@@ -36,7 +36,7 @@
                         <MaterialDesignIconView fill="#084561" glyphName="FOLDER_MOVE" size="1.8em" />
                      </graphic>
                   </MenuItem>
-                  <Menu fx:id="menuExport" mnemonicParsing="false" text="Exporter le contenu" disable="true">
+                  <Menu fx:id="menuExport" disable="true" mnemonicParsing="false" text="Exporter le contenu">
                     <graphic>
                        <MaterialDesignIconView fill="#084561" glyphName="FILE_EXPORT" size="1.8em" />
                     </graphic>
@@ -81,6 +81,7 @@
                         <MaterialDesignIconView fill="#084561" glyphName="READ" size="1.8em" />
                      </graphic>
                   </Menu>
+                  <MenuItem fx:id="menuOptions" mnemonicParsing="false" onAction="#HandleOptionsButtonAction" text="Options" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Synchronisation">

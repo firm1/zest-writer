@@ -15,6 +15,7 @@ import java.util.Scanner;
 import java.util.function.Function;
 
 import com.zestedesavoir.zestwriter.view.dialogs.AboutDialog;
+import com.zestedesavoir.zestwriter.view.dialogs.OptionsDialog;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -81,16 +82,26 @@ public class MenuController{
     private final Text labelField = new Text("");
     private final Logger logger;
 
-    @FXML MenuItem menuDownload;
-    @FXML MenuItem menuUpload;
-    @FXML MenuItem menuLogin;
-    @FXML MenuItem menuLogout;
-    @FXML MenuItem menuReport;
-    @FXML MenuItem menuLisibility;
-    @FXML MenuItem menuAbout;
-    @FXML MenuItem menuGoogle;
-    @FXML HBox hBottomBox;
-    @FXML Menu menuExport;
+    @FXML
+    private MenuItem menuDownload;
+    @FXML
+    private MenuItem menuUpload;
+    @FXML
+    private MenuItem menuLogin;
+    @FXML
+    private MenuItem menuLogout;
+    @FXML
+    private MenuItem menuReport;
+    @FXML
+    private MenuItem menuLisibility;
+    @FXML
+    private MenuItem menuAbout;
+    @FXML
+    private MenuItem menuGoogle;
+    @FXML
+    private HBox hBottomBox;
+    @FXML
+    private Menu menuExport;
 
 
     public MenuController(){
@@ -102,7 +113,8 @@ public class MenuController{
         this.mainApp = mainApp;
     }
 
-    @FXML private void HandleQuitButtonAction(ActionEvent event){
+    @FXML
+    private void HandleQuitButtonAction(ActionEvent event){
         System.exit(0);
     }
 
@@ -114,7 +126,8 @@ public class MenuController{
         return render.toString();
     }
 
-    @FXML private void HandleFleshButtonAction(ActionEvent event){
+    @FXML
+    private void HandleFleshButtonAction(ActionEvent event){
         Function<Textual, Double> calFlesh = (Textual ch) -> {
             String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
             String plainText = Corrector.HtmlToTextWithoutCode(htmlText);
@@ -174,7 +187,8 @@ public class MenuController{
         Optional<Pair<String, String>> result = dialog.showAndWait();
     }
 
-    @FXML private void HandleGunningButtonAction(ActionEvent event){
+    @FXML
+    private void HandleGunningButtonAction(ActionEvent event){
         Function<Textual, Double> calFlesh = (Textual ch) -> {
             String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
             String plainText = Corrector.HtmlToTextWithoutCode(htmlText);
@@ -234,7 +248,8 @@ public class MenuController{
         Optional<Pair<String, String>> result = dialog.showAndWait();
     }
 
-    @FXML private void HandleReportWithoutTypoButtonAction(ActionEvent event){
+    @FXML
+    private void HandleReportWithoutTypoButtonAction(ActionEvent event){
         textArea = new TextArea();
         textArea.setEditable(true);
         textArea.setWrapText(true);
@@ -280,7 +295,8 @@ public class MenuController{
         correctTask.start();
     }
 
-    @FXML private void HandleNewButtonAction(ActionEvent event){
+    @FXML
+    private void HandleNewButtonAction(ActionEvent event){
         File defaultDirectory;
 
         try{
@@ -344,7 +360,8 @@ public class MenuController{
 
     }
 
-    @FXML private void HandleOpenButtonAction(ActionEvent event){
+    @FXML
+    private void HandleOpenButtonAction(ActionEvent event){
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Contenus Zestueux");
         File defaultDirectory;
@@ -381,10 +398,11 @@ public class MenuController{
         }
     }
 
-    @FXML private Service<Void> HandleLoginButtonAction(ActionEvent event){
+    @FXML
+    private Service<Void> HandleLoginButtonAction(ActionEvent event){
         // Button for google
         Button googleAuth = new Button("Connexion via Google", IconFactory.createGoogleIcon());
-        LoginDialog dialog = new LoginDialog(googleAuth);
+        LoginDialog dialog = new LoginDialog(googleAuth, mainApp);
         googleAuth.setOnAction(t -> {
             GoogleLoginDialog googleDialog = new GoogleLoginDialog(dialog, mainApp.getZdsutils());
             googleDialog.show();
@@ -392,9 +410,12 @@ public class MenuController{
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
         hBottomBox.getChildren().addAll(labelField);
-        LoginService loginTask = new LoginService(result, mainApp.getZdsutils());
+        LoginService loginTask = new LoginService(mainApp.getZdsutils(), mainApp.getConfig());
+        result.ifPresent(usernamePassword -> {
+            loginTask.setUsername(usernamePassword.getKey());
+            loginTask.setPassword(usernamePassword.getValue());
+        });
         labelField.textProperty().bind(loginTask.messageProperty());
-
         return loginTask;
     }
 
@@ -425,7 +446,8 @@ public class MenuController{
         downloadContentTask.start();
     }
 
-    @FXML private void HandleDownloadButtonAction(ActionEvent event){
+    @FXML
+    private void HandleDownloadButtonAction(ActionEvent event){
         if(! mainApp.getZdsutils().isAuthenticated()){
             Service<Void> loginTask = HandleLoginButtonAction(event);
 
@@ -436,6 +458,9 @@ public class MenuController{
                     case CANCELLED:
                         hBottomBox.getChildren().clear();
                         alert = new Alert(AlertType.ERROR);
+                        Stage dialog = (Stage)alert.getDialogPane().getScene().getWindow();
+                        dialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+
                         alert.setTitle("Connexion");
                         alert.setHeaderText("Erreur de connexion");
                         alert.setContentText("Désolé mais vous n'avez pas été authentifié sur le serveur de Zeste de Savoir.");
@@ -514,7 +539,8 @@ public class MenuController{
         }
     }
 
-    @FXML private void HandleUploadButtonAction(ActionEvent event){
+    @FXML
+    private void HandleUploadButtonAction(ActionEvent event){
         if(! mainApp.getZdsutils().isAuthenticated()){
             Service<Void> loginTask = HandleLoginButtonAction(event);
 
@@ -547,7 +573,8 @@ public class MenuController{
 
     }
 
-    @FXML private void HandleSwitchWorkspaceAction(ActionEvent event) throws IOException{
+    @FXML
+    private void HandleSwitchWorkspaceAction(ActionEvent event) throws IOException{
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setTitle("Sélectionnez un dossier");
         File selectedDirectory = fileChooser.showDialog(mainApp.getPrimaryStage());
@@ -563,7 +590,8 @@ public class MenuController{
         alert.showAndWait();
     }
 
-    @FXML private void HandleExportMarkdownButtonAction(ActionEvent event){
+    @FXML
+    private void HandleExportMarkdownButtonAction(ActionEvent event){
         Content content = mainApp.getContents().get(0);
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setTitle("Dossier d'export");
@@ -586,7 +614,8 @@ public class MenuController{
         }
     }
 
-    @FXML private void HandleExportPdfButtonAction(ActionEvent event){
+    @FXML
+    private void HandleExportPdfButtonAction(ActionEvent event){
         Content content = mainApp.getContents().get(0);
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setTitle("Dossier d'export");
@@ -602,7 +631,7 @@ public class MenuController{
             pb.progressProperty().bind(exportPdfTask.progressProperty());
             exportPdfTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
                 Alert alert;
-                switch(newValue) {
+                switch(newValue){
                     case FAILED:
                         alert = new Alert(AlertType.ERROR);
                         alert.setTitle("Echec");
@@ -627,7 +656,8 @@ public class MenuController{
         }
     }
 
-    @FXML private void HandleAboutButtonAction(ActionEvent event){
+    @FXML
+    private void HandleAboutButtonAction(ActionEvent event){
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MainApp.class.getResource("fxml/AboutDialog.fxml"));
 
@@ -643,6 +673,32 @@ public class MenuController{
             dialogStage.setScene(scene);
             dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
             dialogStage.initModality(Modality.APPLICATION_MODAL);
+
+            dialogStage.show();
+        }catch(IOException e){
+            logger.error(e.getMessage(), e);
+        }
+    }
+    
+    @FXML private void HandleOptionsButtonAction(ActionEvent evnet){
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainApp.class.getResource("fxml/OptionsDialog.fxml"));
+
+        try{
+            AnchorPane optionsDialog = loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Options");
+
+            Scene scene = new Scene(optionsDialog);
+            dialogStage.setScene(scene);
+            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+            dialogStage.setResizable(false);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+
+            OptionsDialog optionsController = loader.getController();
+            optionsController.setMainApp(mainApp);
+            optionsController.setWindow(dialogStage);
 
             dialogStage.show();
         }catch(IOException e){
@@ -674,5 +730,17 @@ public class MenuController{
             }
         }
         alert.showAndWait();
+    }
+
+    public Text getLabelField(){
+        return labelField;
+    }
+
+    public HBox gethBottomBox(){
+        return hBottomBox;
+    }
+
+    public MenuItem getMenuDownload(){
+        return menuDownload;
     }
 }
