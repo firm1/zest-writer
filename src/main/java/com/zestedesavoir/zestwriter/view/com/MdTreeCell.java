@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
+import com.zestedesavoir.zestwriter.MainApp;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,6 +78,8 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
         addMenuItem4.setOnAction(t -> {
             Alert alert = new Alert(AlertType.CONFIRMATION);
+            Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
+            alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
             alert.setTitle("Confirmation de suppression");
             alert.setHeaderText(null);
             alert.setContentText("Êtes vous sur de vouloir supprimer ?");
