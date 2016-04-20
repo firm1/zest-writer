@@ -362,31 +362,34 @@ public class MdConvertController {
                         StringBuilder content = new StringBuilder();
                         content.append("<!doctype html><html><head><meta charset='utf-8'><base href='");
                         if (!isCancelled()) {
-                            content.append(MainApp.class.getResource("view").toExternalForm());
+                            content.append(MainApp.class.getResource("view/..").toExternalForm());
                         }
                         content.append("' />");
                         content.append("<link rel=\"stylesheet\" href=\"");
                         content.append(MainApp.class.getResource("css/content.css").toExternalForm());
                         content.append("\" />");
+                        content.append("<link rel=\"stylesheet\" href=\"");
+                        content.append(MainApp.class.getResource("static").toExternalForm());
+                        content.append("/js/katex/katex.min.css\" />");
+                        content.append("<script src=\"").append(MainApp.class.getResource("static").toExternalForm());
+                        content.append("/js/katex/katex.min.js\"></script>");
+                        content.append("<script src=\"").append(MainApp.class.getResource("static").toExternalForm());
+                        content.append("/js/katex/contrib/auto-render.min.js\"></script>");
                         content.append("</head><body>");
                         if (!isCancelled()) {
                             content.append(markdownToHtml(SourceText.getText()));
                         }
-                        content.append("<script type=\"text/x-mathjax-config\">"+
-                            "MathJax.Hub.Config({"+
-                                "tex2jax: {"+
-                                    "inlineMath: [['$', '$']],"+
-                                    "displayMath: [['$$','$$']],"+
-                                    "processEscapes: true,"+
-                                "},"+
-                                "\"HTML-CSS\": {matchFontHeight: false},"+
-                                "TeX: { extensions: ['color.js', 'cancel.js', 'enclose.js', 'bbox.js', 'mathchoice.js', 'newcommand.js', 'verb.js', 'unicode.js', 'autobold.js', 'mhchem.js'] },"+
-                                "messageStyle: \"none\","+
-                            "});"+
+                        content.append("<script>"+
+                          "renderMathInElement("+
+                              "document.body,"+
+                              "{"+
+                                  "delimiters: ["+
+                                      "{left: \"$$\", right: \"$$\", display: true},"+
+                                      "{left: \"$\", right: \"$\", display: false},"+
+                                  "]"+
+                              "}"+
+                          ");"+
                         "</script>");
-                        content.append("<script type='text/javascript' src='");
-                        content.append(MainApp.class.getResource("static").toExternalForm());
-                        content.append("/js/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>");
                         content.append("</body></html>");
                         return content.toString();
                     }
