@@ -188,9 +188,9 @@ public class ZdsHttp {
         super();
         logger = LoggerFactory.getLogger(ZdsHttp.class);
         this.config = config;
-        this.protocol = config.getProtocol();
-        this.hostname = config.getHost();
-        this.port = config.getPort();
+        this.protocol = config.getAdvancedServerProtocol();
+        this.hostname = config.getAdvancedServerHost();
+        this.port = config.getAdvancedServerPort();
 
         initContext();
     }

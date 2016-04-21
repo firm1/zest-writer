@@ -33,9 +33,9 @@ public class Configuration {
 
     private final static String WORKSPACE_KEY = "data.workspace";
     private final static String SMART_EDITOR_KEY = "editor.smart";
-    private final static String SERVER_PROTOCOL_KEY = "server.protocol";
-    private final static String SERVER_HOST_KEY = "server.host";
-    private final static String SERVER_PORT_KEY = "server.port";
+    //private final static String SERVER_PROTOCOL_KEY = "server.protocol";
+    //private final static String SERVER_HOST_KEY = "server.host";
+    //private final static String SERVER_PORT_KEY = "server.port";
 
 
     public enum Options{
@@ -138,18 +138,18 @@ public class Configuration {
         this.workspaceFactory = new LocalDirectoryFactory(workspacePath);
     }
 
-    public String getProtocol() {
+    /*public String getProtocol() {
         if(conf.containsKey(SERVER_PROTOCOL_KEY)) {
             return conf.getProperty(SERVER_PROTOCOL_KEY);
         } else {
             return "http";
         }
-    }
+    }*/
 
     public String getPandocProvider() {
         return "http://vps146092.ovh.net/2pdf/";
     }
-
+    /*
     public String getPort() {
         if(conf.containsKey(SERVER_PORT_KEY)) {
             return conf.getProperty(SERVER_PORT_KEY);
@@ -164,7 +164,7 @@ public class Configuration {
         } else {
             return "localhost";
         }
-    }
+    }*/
 
 
     public boolean isSmartEditor() {
