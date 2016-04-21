@@ -102,9 +102,29 @@ public class MainApp extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Zest Writer");
         this.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("static/icons/logo.png")));
-        primaryStage.setOnCloseRequest(t -> {
+
+        this.primaryStage.setWidth(config.getDisplayWindowWidth());
+        this.primaryStage.setHeight(config.getDisplayWindowHeight());
+        this.primaryStage.setX(config.getDisplayWindowPositionX());
+        this.primaryStage.setY(config.getDisplayWindowPositionY());
+
+        this.primaryStage.setOnCloseRequest(t -> {
+            config.saveConfFile();
             Platform.exit();
             System.exit(0);
+        });
+
+        this.primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> {
+            config.setDisplayWindowWidth(String.valueOf(newValue));
+        });
+        this.primaryStage.heightProperty().addListener((observable, oldValue, newValue) -> {
+            config.setDisplayWindowHeight(String.valueOf(newValue));
+        });
+        this.primaryStage.xProperty().addListener((observable, oldValue, newValue) -> {
+            config.setDisplayWindowPositionX(String.valueOf(newValue));
+        });
+        this.primaryStage.yProperty().addListener((observable, oldValue, newValue) -> {
+            config.setDisplayWindowPositionY(String.valueOf(newValue));
         });
 
         initRootLayout();

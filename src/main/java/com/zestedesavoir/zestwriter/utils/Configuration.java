@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.jna.platform.win32.Netapi32Util.User;
 import com.zestedesavoir.zestwriter.MainApp;
 
 public class Configuration {
@@ -38,10 +37,17 @@ public class Configuration {
     private final static String SERVER_PORT_KEY = "server.port";
 
 
-    public enum Options{
+    public enum ConfigData{
+        DisplayWindowWidth("data.display.window.width", "800"),
+        DisplayWindowHeight("data.display.window.height", "800"),
+        DisplayWindowPositionX("data.display.window.position.x", "0"),
+        DisplayWindowPositionY("data.display.window.position.y", "0"),
+
         EditorFont("options.editor.font", "Arial"),
         EditorFontSize("options.editor.fontSize", "14"),
         DisplayTheme("options.display.theme", "Standard"),
+        DisplayWindowStandardDimension("options.display.window.standardDimension", "false"),
+        DisplayWindowStandardPosition("options.display.window.standardPosition", "true"),
         AuthentificationUsername("options.authentification.username", ""),
         AuthentificationPassword("options.authentification.password", ""),
         AdvancedServerProtocol("options.advanced.protocol", "https"),
@@ -51,7 +57,7 @@ public class Configuration {
         private String key;
         private String defaultValue;
 
-        Options(String key, String defaultValue){
+        ConfigData(String key, String defaultValue){
             this.key = key;
             this.defaultValue = defaultValue;
         }
@@ -220,96 +226,156 @@ public class Configuration {
         return null;
     }
 
+
+    /*
+     * Zest-Writer data
+     */
+    public double getDisplayWindowWidth(){
+        if(conf.containsKey(ConfigData.DisplayWindowWidth.getKey())){
+            if(NumberUtils.isNumber(conf.getProperty(ConfigData.DisplayWindowWidth.getKey())))
+                return Double.parseDouble(conf.getProperty(ConfigData.DisplayWindowWidth.getKey()));
+            else
+                return Double.parseDouble(ConfigData.DisplayWindowWidth.getDefaultValue());
+        }else{
+            return Double.parseDouble(ConfigData.DisplayWindowWidth.getDefaultValue());
+        }
+    }
+    public void setDisplayWindowWidth(String windowWidth){
+        conf.setProperty(ConfigData.DisplayWindowWidth.getKey(), windowWidth);
+    }
+
+    public double getDisplayWindowHeight(){
+        if(conf.containsKey(ConfigData.DisplayWindowHeight.getKey())){
+            if(NumberUtils.isNumber(conf.getProperty(ConfigData.DisplayWindowHeight.getKey())))
+                return Double.parseDouble(conf.getProperty(ConfigData.DisplayWindowHeight.getKey()));
+            else
+                return Double.parseDouble(ConfigData.DisplayWindowHeight.getDefaultValue());
+        }else{
+            return Double.parseDouble(ConfigData.DisplayWindowHeight.getDefaultValue());
+        }
+    }
+    public void setDisplayWindowHeight(String windowWidth){
+        conf.setProperty(ConfigData.DisplayWindowHeight.getKey(), windowWidth);
+    }
+
+    public double getDisplayWindowPositionX(){
+        if(conf.containsKey(ConfigData.DisplayWindowPositionX.getKey())){
+            if(NumberUtils.isNumber(conf.getProperty(ConfigData.DisplayWindowPositionX.getKey())))
+                return Double.parseDouble(conf.getProperty(ConfigData.DisplayWindowPositionX.getKey()));
+            else
+                return Double.parseDouble(ConfigData.DisplayWindowPositionX.getDefaultValue());
+        }else{
+            return Double.parseDouble(ConfigData.DisplayWindowPositionX.getDefaultValue());
+        }
+    }
+    public void setDisplayWindowPositionX(String windowWidth){
+        conf.setProperty(ConfigData.DisplayWindowPositionX.getKey(), windowWidth);
+    }
+
+    public double getDisplayWindowPositionY(){
+        if(conf.containsKey(ConfigData.DisplayWindowPositionY.getKey())){
+            if(NumberUtils.isNumber(conf.getProperty(ConfigData.DisplayWindowPositionY.getKey())))
+                return Double.parseDouble(conf.getProperty(ConfigData.DisplayWindowPositionY.getKey()));
+            else
+                return Double.parseDouble(ConfigData.DisplayWindowPositionY.getDefaultValue());
+        }else{
+            return Double.parseDouble(ConfigData.DisplayWindowPositionY.getDefaultValue());
+        }
+    }
+    public void setDisplayWindowPositionY(String windowWidth){
+        conf.setProperty(ConfigData.DisplayWindowPositionY.getKey(), windowWidth);
+    }
+
     /*
      * Zest-Writer options
      */
     public String getEditorFont(){
-        if(conf.containsKey(Options.EditorFont.getKey()))
-            return conf.getProperty(Options.EditorFont.getKey());
+        if(conf.containsKey(ConfigData.EditorFont.getKey()))
+            return conf.getProperty(ConfigData.EditorFont.getKey());
         else
-            return Options.EditorFont.getDefaultValue();
+            return ConfigData.EditorFont.getDefaultValue();
     }
 
     public void setEditorFont(String font){
-        conf.setProperty(Options.EditorFont.getKey(), font);
+        conf.setProperty(ConfigData.EditorFont.getKey(), font);
     }
 
     public double getEditorFontsize(){
-        if(conf.containsKey(Options.EditorFontSize.getKey())){
-            if(NumberUtils.isNumber(conf.getProperty(Options.EditorFontSize.getKey())))
-                return Double.parseDouble(conf.getProperty(Options.EditorFontSize.getKey()));
+        if(conf.containsKey(ConfigData.EditorFontSize.getKey())){
+            if(NumberUtils.isNumber(conf.getProperty(ConfigData.EditorFontSize.getKey())))
+                return Double.parseDouble(conf.getProperty(ConfigData.EditorFontSize.getKey()));
             else
-                return Double.parseDouble(Options.EditorFontSize.getDefaultValue());
+                return Double.parseDouble(ConfigData.EditorFontSize.getDefaultValue());
         }else{
-            return Double.parseDouble(Options.EditorFontSize.getDefaultValue());
+            return Double.parseDouble(ConfigData.EditorFontSize.getDefaultValue());
         }
     }
     public void setEditorFontSize(String fontSize){
-        conf.setProperty(Options.EditorFontSize.getKey(), fontSize);
+        conf.setProperty(ConfigData.EditorFontSize.getKey(), fontSize);
     }
 
     public String getDisplayTheme(){
-        if(conf.containsKey(Options.DisplayTheme.getKey()))
-            return conf.getProperty(Options.DisplayTheme.getKey());
+        if(conf.containsKey(ConfigData.DisplayTheme.getKey()))
+            return conf.getProperty(ConfigData.DisplayTheme.getKey());
         else
-            return Options.DisplayTheme.getDefaultValue();
+            return ConfigData.DisplayTheme.getDefaultValue();
     }
     public void setDisplayTheme(String displayTheme){
-        conf.setProperty(Options.DisplayTheme.getKey(), displayTheme);
+        conf.setProperty(ConfigData.DisplayTheme.getKey(), displayTheme);
     }
 
     public String getAuthentificationUsername(){
-        if(conf.containsKey(Options.AuthentificationUsername.getKey()))
-            return conf.getProperty(Options.AuthentificationUsername.getKey());
+        if(conf.containsKey(ConfigData.AuthentificationUsername.getKey()))
+            return conf.getProperty(ConfigData.AuthentificationUsername.getKey());
         else
-            return Options.AuthentificationUsername.getDefaultValue();
+            return ConfigData.AuthentificationUsername.getDefaultValue();
     }
     public void setAuthentificationUsername(String username){
-        conf.setProperty(Options.AuthentificationUsername.getKey(), username);
+        conf.setProperty(ConfigData.AuthentificationUsername.getKey(), username);
     }
 
     public String getAuthentificationPassword(){
-        if(conf.containsKey(Options.AuthentificationPassword.getKey()))
-            return conf.getProperty(Options.AuthentificationPassword.getKey());
+        if(conf.containsKey(ConfigData.AuthentificationPassword.getKey()))
+            return conf.getProperty(ConfigData.AuthentificationPassword.getKey());
         else
-            return Options.AuthentificationPassword.getDefaultValue();
+            return ConfigData.AuthentificationPassword.getDefaultValue();
     }
 
     public void setAuthentificationPassword(String password){
-        conf.setProperty(Options.AuthentificationPassword.getKey(), password);
+        conf.setProperty(ConfigData.AuthentificationPassword.getKey(), password);
     }
 
     public String getAdvancedServerProtocol(){
-        if(conf.containsKey(Options.AdvancedServerProtocol.getKey()))
-            return conf.getProperty(Options.AdvancedServerProtocol.getKey());
+        if(conf.containsKey(ConfigData.AdvancedServerProtocol.getKey()))
+            return conf.getProperty(ConfigData.AdvancedServerProtocol.getKey());
         else
-            return Options.AdvancedServerProtocol.getDefaultValue();
+            return ConfigData.AdvancedServerProtocol.getDefaultValue();
     }
 
     public void setAdvancedServerProtocol(String protocol){
-        conf.setProperty(Options.AdvancedServerProtocol.getKey(), protocol);
+        conf.setProperty(ConfigData.AdvancedServerProtocol.getKey(), protocol);
     }
 
     public String getAdvancedServerHost(){
-        if(conf.containsKey(Options.AdvancedServerHost.getKey()))
-            return conf.getProperty(Options.AdvancedServerHost.getKey());
+        if(conf.containsKey(ConfigData.AdvancedServerHost.getKey()))
+            return conf.getProperty(ConfigData.AdvancedServerHost.getKey());
         else
-            return Options.AdvancedServerHost.getDefaultValue();
+            return ConfigData.AdvancedServerHost.getDefaultValue();
     }
 
     public void setAdvancedServerHost(String host){
-        conf.setProperty(Options.AdvancedServerHost.getKey(), host);
+        conf.setProperty(ConfigData.AdvancedServerHost.getKey(), host);
     }
 
     public String getAdvancedServerPort(){
-        if(conf.containsKey(Options.AdvancedServerPort.getKey()))
-            return conf.getProperty(Options.AdvancedServerPort.getKey());
+        if(conf.containsKey(ConfigData.AdvancedServerPort.getKey()))
+            return conf.getProperty(ConfigData.AdvancedServerPort.getKey());
         else
-            return Options.AdvancedServerPort.getDefaultValue();
+            return ConfigData.AdvancedServerPort.getDefaultValue();
     }
 
     public void setAdvancedServerPort(String port){
-        conf.setProperty(Options.AdvancedServerPort.getKey(), port);
+        conf.setProperty(ConfigData.AdvancedServerPort.getKey(), port);
     }
 
     public void resetAuthentification(){

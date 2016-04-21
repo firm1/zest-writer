@@ -688,7 +688,7 @@ public class MenuController{
             AnchorPane optionsDialog = loader.load();
 
             Stage dialogStage = new Stage();
-            dialogStage.setTitle("Options");
+            dialogStage.setTitle("ConfigData");
 
             Scene scene = new Scene(optionsDialog);
             dialogStage.setScene(scene);
