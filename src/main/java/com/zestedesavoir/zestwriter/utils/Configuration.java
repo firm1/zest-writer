@@ -36,7 +36,7 @@ public class Configuration {
     public enum Options{
         WorkspacePath("options.workspace.path", ""),
         EditorSmart("options.editor.smart", "false"),
-        EditorFont("options.editor.font", "Arial"),
+        EditorFont("options.editor.font", "Fira Mono"),
         EditorFontSize("options.editor.fontSize", "14"),
         EditorToolbarView("options.editor.toolbar.view", "yes"),
         DisplayTheme("options.display.theme", "Standard"),

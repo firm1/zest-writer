@@ -1,7 +1,11 @@
 package com.zestedesavoir.zestwriter.view.com;
 
+import com.zestedesavoir.zestwriter.MainApp;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
 public class IconFactory {
     public static MaterialDesignIconView makeIcon(MaterialDesignIcon type, String hexColor) {
@@ -49,5 +53,10 @@ public class IconFactory {
 
     public static MaterialDesignIconView createArrowDownIcon() {
         return makeIcon(MaterialDesignIcon.ARROW_DOWN, "#48a200");
+    }
+
+    public static void addAlertLogo(Alert alert){
+        Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
+        alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
     }
 }

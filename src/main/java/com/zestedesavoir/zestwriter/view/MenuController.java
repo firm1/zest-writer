@@ -2,27 +2,13 @@ package com.zestedesavoir.zestwriter.view;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Scanner;
 import java.util.function.Function;
 
-import com.zestedesavoir.zestwriter.view.dialogs.AboutDialog;
-import com.zestedesavoir.zestwriter.view.dialogs.OptionsDialog;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.layout.*;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.python.core.PyString;
 import org.python.jline.internal.Log;
@@ -33,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
-import com.zestedesavoir.zestwriter.model.ContentNode;
 import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Corrector;
@@ -41,8 +26,10 @@ import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
+import com.zestedesavoir.zestwriter.view.dialogs.AboutDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.GoogleLoginDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.LoginDialog;
+import com.zestedesavoir.zestwriter.view.dialogs.OptionsDialog;
 import com.zestedesavoir.zestwriter.view.task.CorrectionService;
 import com.zestedesavoir.zestwriter.view.task.DownloadContentService;
 import com.zestedesavoir.zestwriter.view.task.ExportPdfService;
@@ -56,6 +43,9 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -67,12 +57,15 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TreeItem;
+import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 
 public class MenuController{
@@ -255,10 +248,12 @@ public class MenuController{
         labelField.textProperty().bind(correctTask.messageProperty());
         textArea.textProperty().bind(correctTask.valueProperty());
         correctTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
-            Alert alert;
+            Alert alert = new Alert(AlertType.NONE);
+            IconFactory.addAlertLogo(alert);
+
             switch(newValue){
                 case FAILED:
-                    alert = new Alert(AlertType.ERROR);
+                    alert.setAlertType(AlertType.ERROR);
                     alert.setTitle("Validation du contenu");
                     alert.setHeaderText("Erreur de validation");
                     alert.setContentText("Désolé une erreur nous empêche de trouver les erreurs dans votre contenu");
@@ -267,7 +262,7 @@ public class MenuController{
                     break;
                 case CANCELLED:
                 case SUCCEEDED:
-                    alert = new Alert(AlertType.ERROR);
+                    alert.setAlertType(AlertType.INFORMATION);
                     alert.setTitle("Validation du contenu");
                     alert.setHeaderText("Rapport de validation du contenu prêt à être copié sur ZdS");
 
@@ -416,6 +411,7 @@ public class MenuController{
                 case CANCELLED:
                 case SUCCEEDED:
                     Alert alert = new Alert(AlertType.INFORMATION);
+                    IconFactory.addAlertLogo(alert);
                     alert.setTitle("Téléchargement des contenus");
                     alert.setHeaderText("Confirmation du téléchargement");
                     alert.setContentText("Vos contenus (tutoriels et articles) de ZdS ont été téléchargés en local. \n" +
@@ -440,8 +436,7 @@ public class MenuController{
                     case CANCELLED:
                         hBottomBox.getChildren().clear();
                         alert = new Alert(AlertType.ERROR);
-                        Stage dialog = (Stage)alert.getDialogPane().getScene().getWindow();
-                        dialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+                        IconFactory.addAlertLogo(alert);
 
                         alert.setTitle("Connexion");
                         alert.setHeaderText("Erreur de connexion");
@@ -494,10 +489,12 @@ public class MenuController{
         UploadContentService uploadContentTask = new UploadContentService(mainApp.getZdsutils(), result);
         labelField.textProperty().bind(uploadContentTask.messageProperty());
         uploadContentTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
-            Alert alert;
+            Alert alert = new Alert(AlertType.NONE);
+            IconFactory.addAlertLogo(alert);
+
             switch(newValue){
                 case FAILED:
-                    alert = new Alert(AlertType.ERROR);
+                    alert.setAlertType(AlertType.ERROR);
                     alert.setTitle("Import de contenu");
                     alert.setHeaderText("Erreur d'import");
                     alert.setContentText("Désolé mais un problème vous empêche d'importer votre contenu sur ZdS");
@@ -506,7 +503,7 @@ public class MenuController{
                 case CANCELLED:
                     break;
                 case SUCCEEDED:
-                    alert = new Alert(AlertType.INFORMATION);
+                    alert.setAlertType(AlertType.INFORMATION);
                     alert.setTitle("Import de contenu");
                     alert.setHeaderText("Confirmation de l'import");
                     alert.setContentText("Votre contenu à été importé sur ZdS avec succès !");
@@ -533,6 +530,7 @@ public class MenuController{
                     case CANCELLED:
                         hBottomBox.getChildren().clear();
                         alert = new Alert(AlertType.ERROR);
+                        IconFactory.addAlertLogo(alert);
                         alert.setTitle("Connexion");
                         alert.setHeaderText("Erreur de connexion");
                         alert.setContentText("Désolé mais vous n'avez pas été authentifié sur le serveur de Zeste de Savoir.");
@@ -562,6 +560,7 @@ public class MenuController{
         mainApp.getConfig().loadWorkspace();
 
         Alert alert = new Alert(AlertType.INFORMATION);
+        IconFactory.addAlertLogo(alert);
         alert.setTitle("Dossier de travail");
         alert.setHeaderText("Changement de dossier de travail");
         alert.setContentText("Votre dossier de travail est maintenant dans " + mainApp.getConfig().getWorkspacePath());
@@ -584,6 +583,7 @@ public class MenuController{
             logger.debug("Export réussi vers " + selectedFile.getAbsolutePath());
 
             Alert alert = new Alert(AlertType.INFORMATION);
+            IconFactory.addAlertLogo(alert);
             alert.setTitle("Confirmation");
             alert.setHeaderText("Confirmation de l'export");
             alert.setContentText("Le contenu \"" + content.getTitle() + "\" a été exporté dans \"" + selectedFile.getAbsolutePath() + "\"");
@@ -608,10 +608,12 @@ public class MenuController{
             labelField.textProperty().bind(exportPdfTask.messageProperty());
             pb.progressProperty().bind(exportPdfTask.progressProperty());
             exportPdfTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
-                Alert alert;
+                Alert alert = new Alert(AlertType.NONE);
+                IconFactory.addAlertLogo(alert);
+
                 switch(newValue){
                     case FAILED:
-                        alert = new Alert(AlertType.ERROR);
+                        alert.setAlertType(AlertType.ERROR);
                         alert.setTitle("Echec");
                         alert.setHeaderText("Echec de l'export");
                         alert.setContentText("Le contenu \"" + content.getTitle() + "\" n'a pas pu être exporté");
@@ -620,7 +622,7 @@ public class MenuController{
                         break;
                     case CANCELLED:
                     case SUCCEEDED:
-                        alert = new Alert(AlertType.INFORMATION);
+                        alert.setAlertType(AlertType.INFORMATION);
                         alert.setTitle("Confirmation");
                         alert.setHeaderText("Confirmation de l'export");
                         alert.setContentText("Le contenu \"" + content.getTitle() + "\" a été exporté");
@@ -656,7 +658,7 @@ public class MenuController{
             logger.error(e.getMessage(), e);
         }
     }
-    
+
     @FXML private void HandleOptionsButtonAction(ActionEvent evnet){
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MainApp.class.getResource("fxml/OptionsDialog.fxml"));
@@ -690,17 +692,20 @@ public class MenuController{
 
         if(versionOnline == null) {
             alert = new Alert(AlertType.ERROR);
+            IconFactory.addAlertLogo(alert);
             alert.setTitle("Erreur");
             alert.setHeaderText("Erreur lors du contact du serveur");
             alert.setContentText("Une erreur est survenue lors de la tentative de vérification des mises à jours. Vérifiez votre connexion à internet !");
         } else {
             if(!versionOnline.equals(current)) {
                 alert = new Alert(AlertType.WARNING);
+                IconFactory.addAlertLogo(alert);
                 alert.setTitle("Mise à jour");
                 alert.setHeaderText("Version obsolète");
                 alert.setContentText("La version de Zest Writer que vous utilisez ("+current+") n'est pas à jour. Pensez à faire la mise à jour vers la "+versionOnline+" pour profiter des dernières nouveautés");
             } else {
                 alert = new Alert(AlertType.INFORMATION);
+                IconFactory.addAlertLogo(alert);
                 alert.setTitle("Mise à jour");
                 alert.setHeaderText("Version à jour");
                 alert.setContentText("Vous utilisez actuellement la dernière version publiée de Zest Writer");

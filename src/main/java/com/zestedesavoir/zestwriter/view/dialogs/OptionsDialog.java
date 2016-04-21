@@ -98,8 +98,7 @@ public class OptionsDialog{
         alert.setTitle("Confirmer l'annulation");
         alert.setHeaderText(null);
         alert.setContentText("Voulez-vous vraiment annuler ? Les modifications apportés ne seront pas enregistré.");
-        Stage stage= (Stage)alert.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+        IconFactory.addAlertLogo(alert);
 
         Optional<ButtonType> result = alert.showAndWait();
 

@@ -90,7 +90,7 @@ task fatJar(type: Jar) {
 
 dependencies {
     testCompile 'junit:junit:4.12'
-    compile 'org.languagetool:language-fr:3.1',
+    compile 'org.languagetool:language-fr:3.3',
             'org.apache.httpcomponents:httpclient:4.5.1',
             'org.apache.httpcomponents:httpcore:4.4.3',
             'org.apache.httpcomponents:fluent-hc:4.5.1',
@@ -101,8 +101,8 @@ dependencies {
             'de.julielab:aliasi-lingpipe:4.1.0',
             'org.python:jython-standalone:2.7.1b3',
             'org.jsoup:jsoup:1.8.1',
-            'org.slf4j:slf4j-api:1.7.12',
-            'org.slf4j:slf4j-log4j12:1.7.12',
+            'org.slf4j:slf4j-api:1.7.21',
+            'org.slf4j:slf4j-log4j12:1.7.21',
             'org.fxmisc.richtext:richtextfx:0.6.10',
             'de.jensd:fontawesomefx:8.9',
             'org.zeroturnaround:zt-zip:1.9',
