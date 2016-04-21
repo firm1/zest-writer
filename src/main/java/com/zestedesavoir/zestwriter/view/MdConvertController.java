@@ -100,6 +100,10 @@ public class MdConvertController {
 
     @FXML private void HandleBoldButtonAction(ActionEvent event) {
         SourceText.replaceText(SourceText.getSelection(), "**" + SourceText.getSelectedText() + "**");
+        //SourceText.requestFocus();
+
+        //The restore position of caret doesn't function (@Thomas)
+        SourceText.positionCaret(0);
     }
 
     @FXML private void HandleItalicButtonAction(ActionEvent event) {
