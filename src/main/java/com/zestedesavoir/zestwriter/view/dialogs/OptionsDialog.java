@@ -2,6 +2,8 @@ package com.zestedesavoir.zestwriter.view.dialogs;
 
 
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import org.controlsfx.dialog.FontSelectorDialog;
 
 import com.zestedesavoir.zestwriter.MainApp;
@@ -15,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.util.Optional;
 
 public class OptionsDialog{
@@ -69,7 +72,7 @@ public class OptionsDialog{
 
     @FXML private void initialize(){
         hideAllPane();
-        optionEditorPane.setVisible(true);
+        optionGeneralPane.setVisible(true);
     }
 
     @FXML private void HandleSaveButtonAction(){
@@ -171,6 +174,26 @@ public class OptionsDialog{
 
         resetHyperlinkColor();
         optionAdvanced.setTextFill(Color.BLACK);
+    }
+
+    @FXML private void HandleGeneralBrowseAction(){
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Espace de travail");
+        directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+
+        File directory = directoryChooser.showDialog(null);
+
+        if(directory != null && directory.exists()){
+            config.setWorkspacePath(directory.getAbsolutePath());
+        }
+    }
+
+    @FXML private void HandleGeneralShowAction(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Chemin de votre espace de travail");
+        alert.setHeaderText("Chemin de votre espace de travail");
+        alert.setContentText(config.getWorkspacePath());
+        alert.showAndWait();
     }
 
     @FXML private void HandleEditorFontChoice(){

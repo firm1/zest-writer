@@ -16,6 +16,11 @@
                      <children>
                         <VBox prefHeight="410.0" prefWidth="144.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
+                              <Hyperlink fx:id="optionGeneral" onAction="#HandleHyperlinkGeneralLabel" style="-fx-border-width: 0;" text="Générale" textFill="#656565">
+                                 <padding>
+                                    <Insets bottom="5.0" top="5.0" />
+                                 </padding>
+                              </Hyperlink>
                               <Hyperlink fx:id="optionEditor" onAction="#HandleHyperlinkEditorLabel" style="-fx-border-width: 0;" text="Editeur" textFill="#656565">
                                  <padding>
                                     <Insets bottom="5.0" top="5.0" />
@@ -41,11 +46,6 @@
                                     <Insets bottom="5.0" top="5.0" />
                                  </padding>
                               </Hyperlink>
-                              <Hyperlink fx:id="optionGeneral" onAction="#HandleHyperlinkGeneralLabel" style="-fx-border-width: 0;" text="Générale" textFill="#656565" visible="false">
-                                 <padding>
-                                    <Insets bottom="5.0" top="5.0" />
-                                 </padding>
-                              </Hyperlink>
                            </children>
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -57,7 +57,7 @@
                      <children>
                         <StackPane prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <AnchorPane fx:id="optionGeneralPane" prefHeight="200.0" prefWidth="450.0" visible="false">
+                              <AnchorPane fx:id="optionGeneralPane" prefHeight="200.0" prefWidth="450.0">
                                  <children>
                                     <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
@@ -72,14 +72,36 @@
                                           </HBox>
                                           <GridPane>
                                              <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="210.0" minWidth="10.0" prefWidth="150.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="303.0" minWidth="10.0" prefWidth="285.0" />
                                              </columnConstraints>
                                              <rowConstraints>
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                              </rowConstraints>
+                                             <children>
+                                                <Label text="Espace de travail">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Chemin" GridPane.rowIndex="1">
+                                                   <padding>
+                                                      <Insets left="10.0" />
+                                                   </padding>
+                                                </Label>
+                                                <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                   <children>
+                                                      <Button mnemonicParsing="false" onAction="#HandleGeneralBrowseAction" prefHeight="25.0" prefWidth="150.0" text="Parcourir" />
+                                                      <Button mnemonicParsing="false" onAction="#HandleGeneralShowAction" prefHeight="25.0" prefWidth="150.0" text="Voir">
+                                                         <HBox.margin>
+                                                            <Insets left="10.0" />
+                                                         </HBox.margin>
+                                                      </Button>
+                                                   </children>
+                                                </HBox>
+                                             </children>
                                           </GridPane>
                                        </children>
                                        <padding>
@@ -274,7 +296,7 @@
                                     </VBox>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="optionAdvancedPane" prefHeight="200.0" prefWidth="450.0">
+                              <AnchorPane fx:id="optionAdvancedPane" prefHeight="200.0" prefWidth="450.0" visible="false">
                                  <children>
                                     <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
