@@ -99,19 +99,34 @@ public class MdConvertController {
     }
 
     @FXML private void HandleBoldButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "**" + SourceText.getSelectedText() + "**");
-        //SourceText.requestFocus();
+        if(SourceText.getSelectedText().isEmpty()){
+            SourceText.replaceText(SourceText.getSelection(), "****");
+            SourceText.moveTo(SourceText.getCaretPosition() - 2);
+        }else{
+            SourceText.replaceText(SourceText.getSelection(), "**" + SourceText.getSelectedText() + "**");
+        }
 
-        //The restore position of caret doesn't function (@Thomas)
-        SourceText.positionCaret(0);
+        SourceText.requestFocus();
     }
 
     @FXML private void HandleItalicButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "*" + SourceText.getSelectedText() + "*");
+        if(SourceText.getSelectedText().isEmpty()){
+            SourceText.replaceText(SourceText.getSelection(), "**");
+            SourceText.moveTo(SourceText.getCaretPosition() - 1);
+        }else{
+            SourceText.replaceText(SourceText.getSelection(), "*" + SourceText.getSelectedText() + "*");
+        }
+
+        SourceText.requestFocus();
     }
 
     @FXML private void HandleQuoteButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "\n\n>" + SourceText.getSelectedText() + "\n\n");
+        if(SourceText.getSelectedText().isEmpty())
+            SourceText.replaceText(SourceText.getSelection(), "> ");
+        else
+            SourceText.replaceText(SourceText.getSelection(), "> " + SourceText.getSelectedText() + "\n\n");
+
+        SourceText.requestFocus();
     }
 
     @FXML private void HandleTableButtonAction(ActionEvent event) throws IOException {
@@ -161,7 +176,7 @@ public class MdConvertController {
             }
             String tablestring = FlipTable.of(headers, data);
             SourceText.replaceText(SourceText.getSelection(), "\n\n" + tablestring + "\n\n");
-
+            SourceText.requestFocus();
         });
     }
 
@@ -212,6 +227,8 @@ public class MdConvertController {
 
         result.ifPresent(tLinkTLabel -> SourceText.replaceText(SourceText.getSelection(),
                 "[" + tLinkTLabel.getValue() + "](" + tLinkTLabel.getKey() + ")"));
+
+        SourceText.requestFocus();
     }
 
     @FXML private void HandleCodeButtonAction(ActionEvent event) {
@@ -266,6 +283,8 @@ public class MdConvertController {
 
         result.ifPresent(tLangageTCode -> SourceText.replaceText(SourceText.getSelection(),
                 "\n```" + tLangageTCode.getKey() + "\n" + tLangageTCode.getValue() + "\n```\n"));
+
+        SourceText.requestFocus();
     }
 
     public void undo() {
@@ -281,6 +300,8 @@ public class MdConvertController {
         extract.save();
         tab.setText(extract.getTitle());
         this.isSaved = true;
+
+        SourceText.requestFocus();
     }
 
     @FXML private void HandleFullScreeenButtonAction(ActionEvent event) {
@@ -289,6 +310,8 @@ public class MdConvertController {
         } else {
             mdBox.getSplitPane().getItems().add(0, mdBox.getSummary());
         }
+
+        SourceText.requestFocus();
     }
 
     public void setMdBox(MdTextController mdBox, Textual extract, Tab tab) throws IOException {
@@ -465,57 +488,113 @@ public class MdConvertController {
     }
 
     @FXML private void HandleBarredButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "~~" + SourceText.getSelectedText() + "~~");
+        if(SourceText.getSelectedText().isEmpty()){
+            SourceText.replaceText(SourceText.getSelection(), "~~~~");
+            SourceText.moveTo(SourceText.getCaretPosition() - 2);
+        }else{
+            SourceText.replaceText(SourceText.getSelection(), "~~" + SourceText.getSelectedText() + "~~");
+        }
+
+        SourceText.requestFocus();
     }
 
     @FXML private void HandleTouchButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "||" + SourceText.getSelectedText() + "||");
+        if(SourceText.getSelectedText().isEmpty()){
+            SourceText.replaceText(SourceText.getSelection(), "||||");
+            SourceText.moveTo(SourceText.getCaretPosition() - 2);
+        }else{
+            SourceText.replaceText(SourceText.getSelection(), "||" + SourceText.getSelectedText() + "||");
+        }
+
+        SourceText.requestFocus();
     }
 
     private void HandleUnbreakableAction(ActionEvent event) {
         SourceText.replaceText(SourceText.getSelection(), SourceText.getSelectedText() + "\u00a0");
+        SourceText.requestFocus();
     }
 
     @FXML private void HandleExpButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "^" + SourceText.getSelectedText() + "^");
+        if(SourceText.getSelectedText().isEmpty()){
+            SourceText.replaceText(SourceText.getSelection(), "^^");
+            SourceText.moveTo(SourceText.getCaretPosition() - 1);
+        }else{
+            SourceText.replaceText(SourceText.getSelection(), "^" + SourceText.getSelectedText() + "^");
+        }
+
+        SourceText.requestFocus();
     }
 
     @FXML private void HandleIndButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "~" + SourceText.getSelectedText() + "~");
+        if(SourceText.getSelectedText().isEmpty()){
+            SourceText.replaceText(SourceText.getSelection(), "~~");
+            SourceText.moveTo(SourceText.getCaretPosition() - 1);
+        }else{
+            SourceText.replaceText(SourceText.getSelection(), "~" + SourceText.getSelectedText() + "~");
+        }
+
+        SourceText.requestFocus();
     }
 
     @FXML private void HandleCenterButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "\n-> " + SourceText.getSelectedText() + " <-");
+        if(SourceText.getSelectedText().isEmpty()){
+            SourceText.replaceText(SourceText.getSelection(), "\n->  <-");
+            SourceText.moveTo(SourceText.getCaretPosition() - 3);
+        }else{
+            SourceText.replaceText(SourceText.getSelection(), "\n-> " + SourceText.getSelectedText() + " <-");
+        }
+
+        SourceText.requestFocus();
     }
 
     @FXML private void HandleRightButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "\n-> " + SourceText.getSelectedText() + " ->");
+        if(SourceText.getSelectedText().isEmpty()){
+            SourceText.replaceText(SourceText.getSelection(), "\n->  ->");
+            SourceText.moveTo(SourceText.getCaretPosition() - 3);
+        }else{
+            SourceText.replaceText(SourceText.getSelection(), "\n-> " + SourceText.getSelectedText() + " ->\n");
+        }
+
+        SourceText.requestFocus();
     }
 
     @FXML private void HandleBulletButtonAction(ActionEvent event) {
-        String text = "";
-        String[] lines = SourceText.getSelectedText().split("\n");
-        for (String line : lines) {
-            text += "- " + line + "\n";
+        if(SourceText.getSelectedText().isEmpty()){
+            SourceText.replaceText(SourceText.getSelection(), "- ");
+        }else{
+            String text = "";
+            String[] lines = SourceText.getSelectedText().split("\n");
+            for(String line : lines){
+                text += "- " + line + "\n";
+            }
+
+            SourceText.replaceText(SourceText.getSelection(), text);
         }
 
-        SourceText.replaceText(SourceText.getSelection(), text);
+        SourceText.requestFocus();
     }
 
     @FXML private void HandleNumberedButtonAction(ActionEvent event) {
-        String text = "";
-        String[] lines = SourceText.getSelectedText().split("\n");
-        int i = 1;
-        for (String line : lines) {
-            text += i + ". " + line + "\n";
-            i++;
+        if(SourceText.getSelectedText().isEmpty()){
+            SourceText.replaceText(SourceText.getSelection(), "1. ");
+        }else{
+            String text = "";
+            String[] lines = SourceText.getSelectedText().split("\n");
+            int i = 1;
+            for(String line : lines){
+                text += i + ". " + line + "\n";
+                i++;
+            }
+
+            SourceText.replaceText(SourceText.getSelection(), text);
         }
 
-        SourceText.replaceText(SourceText.getSelection(), text);
+        SourceText.requestFocus();
     }
 
     @FXML private void HandleHeaderButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "\n# " + SourceText.getSelectedText());
+        SourceText.replaceText(SourceText.getSelection(), "# " + SourceText.getSelectedText());
+        SourceText.requestFocus();
     }
 
     @FXML private void HandleBlocButtonAction(ActionEvent event) {
@@ -542,6 +621,7 @@ public class MdConvertController {
             SourceText.replaceText(SourceText.getSelection(), "\n[[" + result.get() + "]]\n" + text);
         }
 
+        SourceText.requestFocus();
     }
 
     /**
