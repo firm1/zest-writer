@@ -115,8 +115,7 @@ public class OptionsDialog{
         alert.setHeaderText("Réinitialisation");
         alert.setContentText("Attention, une réinitialisation est irréversible, souhaitez-vous vraiment réinitialiser vos options ?");
         alert.getButtonTypes().setAll(new ButtonType("Oui", ButtonBar.ButtonData.YES), new ButtonType("Non", ButtonBar.ButtonData.NO));
-        Stage stage= (Stage)alert.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+        IconFactory.addAlertLogo(alert);
 
         Optional<ButtonType> result = alert.showAndWait();
 
@@ -189,6 +188,7 @@ public class OptionsDialog{
 
     @FXML private void HandleGeneralShowAction(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        IconFactory.addAlertLogo(alert);
         alert.setTitle("Chemin de votre espace de travail");
         alert.setHeaderText("Chemin de votre espace de travail");
         alert.setContentText(config.getWorkspacePath());
