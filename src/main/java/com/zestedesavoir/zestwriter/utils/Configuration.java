@@ -43,7 +43,7 @@ public class Configuration {
         DisplayWindowPositionX("data.display.window.position.x", "0"),
         DisplayWindowPositionY("data.display.window.position.y", "0"),
 
-        EditorFont("options.editor.font", "Arial"),
+        EditorFont("options.editor.font", "Fira Mono"),
         EditorFontSize("options.editor.fontSize", "14"),
         DisplayTheme("options.display.theme", "Standard"),
         DisplayWindowStandardDimension("options.display.window.standardDimension", "true"),

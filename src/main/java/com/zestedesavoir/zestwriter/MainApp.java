@@ -11,6 +11,7 @@ import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
 
+import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import com.zestedesavoir.zestwriter.view.task.LoginService;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -186,8 +187,7 @@ public class MainApp extends Application {
                 alert.setTitle("Connexion");
                 alert.setHeaderText("Etat de connexion");
 
-                Stage dialog = (Stage)alert.getDialogPane().getScene().getWindow();
-                dialog.getIcons().add(new Image(getClass().getResourceAsStream("static/icons/logo.png")));
+                IconFactory.addAlertLogo(alert);
 
                 switch(newValue){
                     case FAILED:
@@ -197,11 +197,13 @@ public class MainApp extends Application {
 
                         alert.showAndWait();
                         menuController.getMenuDownload().setDisable(false);
+
                         break;
                     case SUCCEEDED:
                         menuController.getMenuDownload().setDisable(false);
                         break;
                 }
+                menuController.gethBottomBox().getChildren().clear();
             });
 
             loginTask.start();
