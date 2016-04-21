@@ -38,16 +38,17 @@ public class Configuration {
 
 
     public enum ConfigData{
-        DisplayWindowWidth("data.display.window.width", "800"),
-        DisplayWindowHeight("data.display.window.height", "800"),
+        DisplayWindowWidth("data.display.window.width", "1000"),
+        DisplayWindowHeight("data.display.window.height", "600"),
         DisplayWindowPositionX("data.display.window.position.x", "0"),
         DisplayWindowPositionY("data.display.window.position.y", "0"),
 
         EditorFont("options.editor.font", "Fira Mono"),
         EditorFontSize("options.editor.fontSize", "14"),
         DisplayTheme("options.display.theme", "Standard"),
-        DisplayWindowStandardDimension("options.display.window.standardDimension", "true"),
-        DisplayWindowStandardPosition("options.display.window.standardPosition", "true"),
+        DisplayWindowPersonnalDimension("options.display.window.standardDimension", "true"),
+        DisplayWindowPersonnalPosition("options.display.window.standardPosition", "true"),
+        DisplayWindowMaximize("options.display.window.maximize", "false"),
         AuthentificationUsername("options.authentification.username", ""),
         AuthentificationPassword("options.authentification.password", ""),
         AdvancedServerProtocol("options.advanced.protocol", "https"),
@@ -324,30 +325,39 @@ public class Configuration {
         conf.setProperty(ConfigData.DisplayTheme.getKey(), displayTheme);
     }
 
-    public boolean isDisplayWindowStandardDimension(){
-        if(conf.containsKey(ConfigData.DisplayWindowStandardDimension.getKey())){
-            return Boolean.parseBoolean(conf.getProperty(ConfigData.DisplayWindowStandardDimension.getKey()));
+    public boolean isDisplayWindowPersonnalDimension(){
+        if(conf.containsKey(ConfigData.DisplayWindowPersonnalDimension.getKey())){
+            return Boolean.parseBoolean(conf.getProperty(ConfigData.DisplayWindowPersonnalDimension.getKey()));
         }else{
-            return Boolean.parseBoolean(ConfigData.DisplayWindowStandardDimension.getDefaultValue());
+            return Boolean.parseBoolean(ConfigData.DisplayWindowPersonnalDimension.getDefaultValue());
         }
     }
-
     public void setDisplayWindowStandardDimension(String standardDimension){
-        conf.setProperty(ConfigData.DisplayWindowStandardDimension.getKey(), standardDimension);
+        conf.setProperty(ConfigData.DisplayWindowPersonnalDimension.getKey(), standardDimension);
         System.out.println("set dim " + standardDimension);
     }
 
-    public boolean isDisplayWindowStandardPosition(){
-        if(conf.containsKey(ConfigData.DisplayWindowStandardPosition.getKey())){
-            return Boolean.parseBoolean(conf.getProperty(ConfigData.DisplayWindowStandardPosition.getKey()));
+    public boolean isDisplayWindowPersonnalPosition(){
+        if(conf.containsKey(ConfigData.DisplayWindowPersonnalPosition.getKey())){
+            return Boolean.parseBoolean(conf.getProperty(ConfigData.DisplayWindowPersonnalPosition.getKey()));
         }else{
-            return Boolean.parseBoolean(ConfigData.DisplayWindowStandardPosition.getDefaultValue());
+            return Boolean.parseBoolean(ConfigData.DisplayWindowPersonnalPosition.getDefaultValue());
         }
     }
-
-    public void setDisplayWindowStandardPosition(String standardPosition){
-        conf.setProperty(ConfigData.DisplayWindowStandardPosition.getKey(), standardPosition);
+    public void setDisplayWindowPersonnalPosition(String standardPosition){
+        conf.setProperty(ConfigData.DisplayWindowPersonnalPosition.getKey(), standardPosition);
         System.out.println("set pos " + standardPosition);
+    }
+
+    public boolean isDisplayWindowMaximize(){
+        if(conf.containsKey(ConfigData.DisplayWindowMaximize.getKey())){
+            return Boolean.parseBoolean(conf.getProperty(ConfigData.DisplayWindowMaximize.getKey()));
+        }else{
+            return Boolean.parseBoolean(ConfigData.DisplayWindowMaximize.getDefaultValue());
+        }
+    }
+    public void setDisplayWindowMaximize(String maximize){
+        conf.setProperty(ConfigData.DisplayWindowMaximize.getKey(), maximize);
     }
 
     public String getAuthentificationUsername(){

@@ -8,7 +8,6 @@ import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -40,6 +39,8 @@ public class OptionsDialog{
 
     @FXML private Button optEditorFontButton;
     @FXML private ComboBox<String> optDisplayTheme;
+    @FXML private RadioButton optDisplayWindowMaximizeYes;
+    @FXML private RadioButton optDisplayWindowMaximizeNo;
     @FXML private RadioButton optDisplayWindowDimensionYes;
     @FXML private RadioButton optDisplayWindowDimensionNo;
     @FXML private RadioButton optDisplayWindowPositionYes;
@@ -78,15 +79,20 @@ public class OptionsDialog{
 
         config.setDisplayTheme(optDisplayTheme.getValue());
 
+        if(optDisplayWindowMaximizeYes.isSelected())
+            config.setDisplayWindowMaximize("true");
+        else
+            config.setDisplayWindowMaximize("false");
+
         if(optDisplayWindowDimensionYes.isSelected())
             config.setDisplayWindowStandardDimension("true");
         else
             config.setDisplayWindowStandardDimension("false");
 
         if(optDisplayWindowPositionYes.isSelected())
-            config.setDisplayWindowStandardPosition("true");
+            config.setDisplayWindowPersonnalPosition("true");
         else
-            config.setDisplayWindowStandardPosition("false");
+            config.setDisplayWindowPersonnalPosition("false");
 
         config.setAuthentificationUsername(optAuthentificationUsername.getText());
         config.setAuthentificationPassword(optAuthentificationPassword.getText());
@@ -175,6 +181,20 @@ public class OptionsDialog{
         }
     }
 
+    @FXML private void HandleDisplayWindowMaximizeYes(){
+        optDisplayWindowDimensionYes.setDisable(true);
+        optDisplayWindowDimensionNo.setDisable(true);
+        optDisplayWindowPositionYes.setDisable(true);
+        optDisplayWindowPositionNo.setDisable(true);
+    }
+
+    @FXML private void HandleDisplayWindowMaximizeNo(){
+        optDisplayWindowDimensionYes.setDisable(false);
+        optDisplayWindowDimensionNo.setDisable(false);
+        optDisplayWindowPositionYes.setDisable(false);
+        optDisplayWindowPositionNo.setDisable(false);
+    }
+
     private void setGeneralOptions(){
     }
 
@@ -189,11 +209,28 @@ public class OptionsDialog{
         optDisplayTheme.getItems().add("Standard");
         optDisplayTheme.setValue(config.getDisplayTheme());
 
-        if(config.isDisplayWindowStandardDimension())
-            optDisplayWindowDimensionYes.setSelected(true);
+        if(config.isDisplayWindowMaximize())
+            optDisplayWindowMaximizeYes.setSelected(true);
+        else
+            optDisplayWindowMaximizeNo.setSelected(true);
 
-        if(config.isDisplayWindowStandardPosition())
+        if(config.isDisplayWindowPersonnalDimension())
+            optDisplayWindowDimensionYes.setSelected(true);
+        else
+            optDisplayWindowDimensionNo.setSelected(true);
+
+        if(config.isDisplayWindowPersonnalPosition())
             optDisplayWindowPositionYes.setSelected(true);
+        else
+            optDisplayWindowPositionNo.setSelected(true);
+
+
+        if(config.isDisplayWindowMaximize()){
+            optDisplayWindowDimensionYes.setDisable(true);
+            optDisplayWindowDimensionNo.setDisable(true);
+            optDisplayWindowPositionYes.setDisable(true);
+            optDisplayWindowPositionNo.setDisable(true);
+        }
     }
 
     private void setShortcutOptions(){
