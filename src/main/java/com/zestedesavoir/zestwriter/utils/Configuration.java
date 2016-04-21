@@ -46,7 +46,7 @@ public class Configuration {
         EditorFont("options.editor.font", "Arial"),
         EditorFontSize("options.editor.fontSize", "14"),
         DisplayTheme("options.display.theme", "Standard"),
-        DisplayWindowStandardDimension("options.display.window.standardDimension", "false"),
+        DisplayWindowStandardDimension("options.display.window.standardDimension", "true"),
         DisplayWindowStandardPosition("options.display.window.standardPosition", "true"),
         AuthentificationUsername("options.authentification.username", ""),
         AuthentificationPassword("options.authentification.password", ""),
@@ -322,6 +322,32 @@ public class Configuration {
     }
     public void setDisplayTheme(String displayTheme){
         conf.setProperty(ConfigData.DisplayTheme.getKey(), displayTheme);
+    }
+
+    public boolean isDisplayWindowStandardDimension(){
+        if(conf.containsKey(ConfigData.DisplayWindowStandardDimension.getKey())){
+            return Boolean.parseBoolean(conf.getProperty(ConfigData.DisplayWindowStandardDimension.getKey()));
+        }else{
+            return Boolean.parseBoolean(ConfigData.DisplayWindowStandardDimension.getDefaultValue());
+        }
+    }
+
+    public void setDisplayWindowStandardDimension(String standardDimension){
+        conf.setProperty(ConfigData.DisplayWindowStandardDimension.getKey(), standardDimension);
+        System.out.println("set dim " + standardDimension);
+    }
+
+    public boolean isDisplayWindowStandardPosition(){
+        if(conf.containsKey(ConfigData.DisplayWindowStandardPosition.getKey())){
+            return Boolean.parseBoolean(conf.getProperty(ConfigData.DisplayWindowStandardPosition.getKey()));
+        }else{
+            return Boolean.parseBoolean(ConfigData.DisplayWindowStandardPosition.getDefaultValue());
+        }
+    }
+
+    public void setDisplayWindowStandardPosition(String standardPosition){
+        conf.setProperty(ConfigData.DisplayWindowStandardPosition.getKey(), standardPosition);
+        System.out.println("set pos " + standardPosition);
     }
 
     public String getAuthentificationUsername(){

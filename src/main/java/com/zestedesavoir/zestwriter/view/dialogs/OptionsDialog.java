@@ -5,7 +5,6 @@ import org.controlsfx.dialog.FontSelectorDialog;
 
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
-import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -40,6 +39,10 @@ public class OptionsDialog{
 
     @FXML private Button optEditorFontButton;
     @FXML private ComboBox<String> optDisplayTheme;
+    @FXML private RadioButton optDisplayWindowDimensionYes;
+    @FXML private RadioButton optDisplayWindowDimensionNo;
+    @FXML private RadioButton optDisplayWindowPositionYes;
+    @FXML private RadioButton optDisplayWindowPositionNo;
     @FXML private TextField optAuthentificationUsername;
     @FXML private TextField optAuthentificationPassword;
     @FXML private ComboBox<String> optAdvancedProtocol;
@@ -73,6 +76,16 @@ public class OptionsDialog{
         config.setEditorFontSize(String.valueOf(optEditorFontSize));
 
         config.setDisplayTheme(optDisplayTheme.getValue());
+
+        if(optDisplayWindowDimensionYes.isSelected())
+            config.setDisplayWindowStandardDimension("true");
+        else
+            config.setDisplayWindowStandardDimension("false");
+
+        if(optDisplayWindowPositionYes.isSelected())
+            config.setDisplayWindowStandardPosition("true");
+        else
+            config.setDisplayWindowStandardPosition("false");
 
         config.setAuthentificationUsername(optAuthentificationUsername.getText());
         config.setAuthentificationPassword(optAuthentificationPassword.getText());
@@ -176,7 +189,11 @@ public class OptionsDialog{
         optDisplayTheme.getItems().add("Standard");
         optDisplayTheme.setValue(config.getDisplayTheme());
 
-        optDisplayTheme.setValue(config.getDisplayTheme());
+        if(config.isDisplayWindowStandardDimension())
+            optDisplayWindowDimensionYes.setSelected(true);
+
+        if(config.isDisplayWindowStandardPosition())
+            optDisplayWindowPositionYes.setSelected(true);
     }
 
     private void setShortcutOptions(){

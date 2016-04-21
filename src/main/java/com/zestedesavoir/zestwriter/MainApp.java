@@ -103,10 +103,14 @@ public class MainApp extends Application {
         this.primaryStage.setTitle("Zest Writer");
         this.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("static/icons/logo.png")));
 
-        this.primaryStage.setWidth(config.getDisplayWindowWidth());
-        this.primaryStage.setHeight(config.getDisplayWindowHeight());
-        this.primaryStage.setX(config.getDisplayWindowPositionX());
-        this.primaryStage.setY(config.getDisplayWindowPositionY());
+        if(config.isDisplayWindowStandardDimension()){
+            this.primaryStage.setWidth(config.getDisplayWindowWidth());
+            this.primaryStage.setHeight(config.getDisplayWindowHeight());
+        }
+        if(config.isDisplayWindowStandardPosition()){
+            this.primaryStage.setX(config.getDisplayWindowPositionX());
+            this.primaryStage.setY(config.getDisplayWindowPositionY());
+        }
 
         this.primaryStage.setOnCloseRequest(t -> {
             config.saveConfFile();
