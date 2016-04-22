@@ -6,8 +6,15 @@ import java.util.List;
 import java.util.Optional;
 
 import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
+import com.zestedesavoir.zestwriter.view.dialogs.OptionsDialog;
 import com.ziclix.python.sql.pipe.Source;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleClassedTextArea;
@@ -341,6 +348,9 @@ public class MdConvertController {
             } else if(t.getCode().equals(KeyCode.L) && t.isControlDown()) {
                 // go to line
                 HandleGoToLineAction();
+            } else if(t.getCode().equals(KeyCode.F) && t.isControlDown()) {
+                //Open find/replace dialog
+                HandleFindReplaceDialog();
             }
 
         });
@@ -538,6 +548,31 @@ public class MdConvertController {
             SourceText.replaceText(SourceText.getSelection(), "\n[[" + result.get() + "]]\n" + text);
         }
 
+    }
+
+    @FXML private void HandleFindReplaceDialog(){
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainApp.class.getResource("fxml/FindReplaceDialog.fxml"));
+
+        try{
+            AnchorPane optionsDialog = loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Rechecher / Remplacer");
+
+            Scene scene = new Scene(optionsDialog);
+            dialogStage.setScene(scene);
+            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+            dialogStage.setResizable(false);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+
+            FindReplaceDialog findReplaceDialog = loader.getController();
+            findReplaceDialog.setMainApp(mainApp);
+
+            dialogStage.show();
+        }catch(IOException e){
+            logger.error(e.getMessage(), e);
+        }
     }
 
     /**
