@@ -39,7 +39,7 @@ public class Configuration {
 
 
     public enum Options{
-        EditorFont("options.editor.font", "Arial"),
+        EditorFont("options.editor.font", "Fira Mono"),
         EditorFontSize("options.editor.fontSize", "14"),
         DisplayTheme("options.display.theme", "Standard"),
         AuthentificationUsername("options.authentification.username", ""),
