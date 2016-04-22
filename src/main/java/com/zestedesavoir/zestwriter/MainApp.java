@@ -173,11 +173,13 @@ public class MainApp extends Application {
 
                         alert.showAndWait();
                         menuController.getMenuDownload().setDisable(false);
+
                         break;
                     case SUCCEEDED:
                         menuController.getMenuDownload().setDisable(false);
                         break;
                 }
+                menuController.gethBottomBox().getChildren().clear();
             });
 
             loginTask.start();
