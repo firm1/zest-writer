@@ -90,7 +90,7 @@ task fatJar(type: Jar) {
 
 dependencies {
     testCompile 'junit:junit:4.12'
-    compile 'org.languagetool:language-fr:3.1',
+    compile 'org.languagetool:language-fr:3.3',
             'org.apache.httpcomponents:httpclient:4.5.1',
             'org.apache.httpcomponents:httpcore:4.4.3',
             'org.apache.httpcomponents:fluent-hc:4.5.1',
