@@ -3,6 +3,8 @@ package com.zestedesavoir.zestwriter.view;
 import java.io.IOException;
 import java.util.Optional;
 
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 import org.python.util.PythonInterpreter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -185,6 +187,7 @@ public class MdTextController {
         tab.setOnCloseRequest(t -> {
             if(!controller.isSaved()) {
                 Alert alert = new Alert(AlertType.CONFIRMATION);
+                IconFactory.addAlertLogo(alert);
                 alert.setTitle("Confirmation");
                 alert.setHeaderText("Confirmation de fermeture");
                 alert.setContentText("Vous avez modifié cet extrait. Voulez-vous enregistrer les modifications ?");
