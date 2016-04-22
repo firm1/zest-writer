@@ -78,8 +78,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
         addMenuItem4.setOnAction(t -> {
             Alert alert = new Alert(AlertType.CONFIRMATION);
-            Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
-            alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+            IconFactory.addAlertLogo(alert);
             alert.setTitle("Confirmation de suppression");
             alert.setHeaderText(null);
             alert.setContentText("Êtes vous sur de vouloir supprimer ?");
