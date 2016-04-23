@@ -568,11 +568,17 @@ public class MdConvertController {
 
             FindReplaceDialog findReplaceDialog = loader.getController();
             findReplaceDialog.setMainApp(mainApp);
+            findReplaceDialog.setMdConvertController(this);
 
             dialogStage.show();
         }catch(IOException e){
             logger.error(e.getMessage(), e);
         }
+    }
+
+
+    public StyleClassedTextArea getSourceText(){
+        return SourceText;
     }
 
     /**
