@@ -1,4 +1,13 @@
-.findReplace-highlights{
-    -fx-font-weight: bold;
-    -fx-fill: rgb(200, 10, 10)
+.findReplace-highlightsFind{
+    -fx-background-fill: #fdde02
+}
+
+.findReplace-highlightsFindAction{
+    -fx-background-fill: #ff9900;
+    -fx-font-weigh: bold;
+    -fx-underline: true;
+}
+
+.findReplace-highlightsReplace{
+    -fx-background-fill: #ff9900
 }

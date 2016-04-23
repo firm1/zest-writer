@@ -20,6 +20,10 @@ public class FindReplaceDialog{
     private StyleClassedTextArea sourceText;
     private Stage window;
 
+    private int replaceIndex;
+    private int findIndex;
+    private int numberIterationTotal;
+
     @FXML private TextField searchField;
     @FXML private TextField replaceField;
     @FXML private CheckBox caseSensitive;
@@ -31,6 +35,13 @@ public class FindReplaceDialog{
     @FXML private Button replaceAllButton;
     @FXML private Label iterations;
 
+
+    private enum FindReplaceAction{
+        FIND,
+        FIND_ACTION,
+        REPLACE,
+        REPLACE_ALL
+    }
 
     public void setMainApp(MainApp mainApp){
         this.mainApp = mainApp;
@@ -66,6 +77,8 @@ public class FindReplaceDialog{
     }
 
     @FXML private void HandleSearchFieldChange(){
+        replaceIndex = 0;
+        findIndex = 0;
         resetTextFill();
 
         if(!searchField.getText().isEmpty()){
@@ -90,6 +103,8 @@ public class FindReplaceDialog{
     }
 
     @FXML private void HandleReplaceFieldChange(){
+        replaceIndex = 0;
+
         if(!replaceField.getText().isEmpty() && !searchField.getText().isEmpty()){
             replaceButton.setDisable(false);
             replaceAllButton.setDisable(false);
@@ -100,7 +115,7 @@ public class FindReplaceDialog{
     }
 
     @FXML private void HandleSearchButtonAction(){
-        findText(true);
+        findReplace(FindReplaceAction.FIND_ACTION);
     }
 
     @FXML private void HandleReplaceButtonAction(){
@@ -112,6 +127,18 @@ public class FindReplaceDialog{
     }
 
     private void findText(boolean findText){
+        findReplace(FindReplaceAction.FIND);
+    }
+
+    private void replaceNextText(){
+        findReplace(FindReplaceAction.REPLACE);
+    }
+
+    private void replaceAllText(){
+        findReplace(FindReplaceAction.REPLACE_ALL);
+    }
+
+    private void findReplace(FindReplaceAction action){
         resetTextFill();
 
         if(!searchField.getText().isEmpty()){
@@ -127,63 +154,98 @@ public class FindReplaceDialog{
                 searchText = " " + searchText + " ";
 
             int numberIteration = 0;
+            numberIterationTotal = 0;
             for(int i = - 1; (i = text.indexOf(searchText, i + 1)) != - 1; ){
-                if(findText){
-                    //Action for find text
-                }
-
-                if(selectionOnly.isSelected() && !sourceText.getSelectedText().isEmpty()){
-                    if(i > sourceText.getSelection().getStart() && i < sourceText.getSelection().getEnd()){
-                        textFill(i, i + searchText.length());
-                        numberIteration++;
+                if(action == FindReplaceAction.FIND){
+                    if(selectionOnly.isSelected()){
+                        if(!sourceText.getSelectedText().isEmpty()){
+                            textFill(i, i + searchText.length(), FindReplaceAction.FIND);
+                        }
+                    }else{
+                        textFill(i, i + searchText.length(), FindReplaceAction.FIND);
                     }
-                }else{
-                    textFill(i, i + searchText.length());
-                    numberIteration++;
-                }
-            }
+                }else if(action == FindReplaceAction.FIND_ACTION){
+                    if(selectionOnly.isSelected()){
+                        if(!sourceText.getSelectedText().isEmpty()){
+                            textFill(i, i + searchText.length(), FindReplaceAction.FIND);
+                        }
+                    }else{
+                        textFill(i, i + searchText.length(), FindReplaceAction.FIND);
+                    }
 
-            if(numberIteration > 0)
-                iterations.setText(numberIteration + " itérations trouvés");
-            else
-                iterations.setText("0 itération trouvé");
-        }
-    }
+                    if(numberIterationTotal == findIndex){
+                        findReplace(FindReplaceAction.FIND);
+                        textFill(i, i + searchText.length(), FindReplaceAction.FIND_ACTION);
+                        sourceText.moveTo(i);
+                        findIndex++;
+                        break;
+                    }
+                }else if(action == FindReplaceAction.REPLACE){
+                    if(!replaceField.getText().isEmpty()){
+                        if(selectionOnly.isSelected()){
+                            if(!sourceText.getSelectedText().isEmpty()){
+                                textFill(i, i + searchText.length(), FindReplaceAction.FIND);
+                            }
+                        }else{
+                            textFill(i, i + searchText.length(), FindReplaceAction.FIND);
+                        }
 
-    private void replaceNextText(){
+                        if(replaceIndex == numberIterationTotal){
+                            sourceText.replaceText(i, i + searchField.getText().length(), replaceField.getText());
+                            findReplace(FindReplaceAction.FIND);
+                            textFill(i, i + replaceField.getText().length(), FindReplaceAction.REPLACE);
 
-    }
-
-    private void replaceAllText(){
-        if(!searchField.getText().isEmpty() && !replaceField.getText().isEmpty()){
-            String text = sourceText.getText();
-            String searchText = searchField.getText();
-
-            if(!caseSensitive.isSelected()){
-                text = text.toLowerCase();
-                searchText = searchText.toLowerCase();
-            }
-
-            if(wholeWord.isSelected())
-                searchText = " " + searchText + " ";
-
-            int numberIteration = 0;
-            for(int i = - 1; (i = text.indexOf(searchText, i + 1)) != - 1; ){
-                if(selectionOnly.isSelected() && !sourceText.getSelectedText().isEmpty()){
-                    if(i > sourceText.getSelection().getStart() && i < sourceText.getSelection().getEnd()){
+                            sourceText.moveTo(i);
+                            break;
+                        }
+                    }
+                }else if(action == FindReplaceAction.REPLACE_ALL){
+                    if(!replaceField.getText().isEmpty()){
                         sourceText.replaceText(i, i + searchField.getText().length(), replaceField.getText());
-                        numberIteration++;
+                        textFill(i, i + replaceField.getText().length(), FindReplaceAction.REPLACE_ALL);
+                    }
+                }
+
+                if(selectionOnly.isSelected()){
+                    if(!sourceText.getSelectedText().isEmpty()){
+                        if(i > sourceText.getSelection().getStart() && i < sourceText.getSelection().getEnd()){
+                            if(numberIteration == 0)
+                                sourceText.positionCaret(i);
+
+                            numberIteration++;
+                        }
                     }
                 }else{
-                    sourceText.replaceText(i, i + searchField.getText().length(), replaceField.getText());
+                    if(numberIteration == 0)
+                        sourceText.positionCaret(i);
+
                     numberIteration++;
                 }
+
+                numberIterationTotal++;
             }
 
-            if(numberIteration > 0)
-                iterations.setText(numberIteration + " itérations modifiés");
-            else
-                iterations.setText("0 itération modifié");
+            if(action == FindReplaceAction.FIND_ACTION && findIndex == numberIteration)
+                findIndex = 0;
+
+            if(action == FindReplaceAction.REPLACE && replaceIndex == numberIterationTotal)
+                HandleSearchFieldChange();
+
+            if(action == FindReplaceAction.FIND){
+                if(numberIteration > 0){
+                    iterations.setText(numberIteration + " itérations trouvés");
+
+                    searchButton.setDisable(false);
+                    replaceButton.setDisable(false);
+                    replaceAllButton.setDisable(false);
+                }else{
+                    iterations.setText("0 itération trouvé");
+
+                    searchButton.setDisable(true);
+                    replaceButton.setDisable(true);
+                    replaceAllButton.setDisable(true);
+                }
+            }
         }
     }
 
@@ -191,8 +253,14 @@ public class FindReplaceDialog{
         iterations.setText("0 itération trouvé");
     }
 
-    private void textFill(int start, int end){
-        sourceText.setStyleClass(start, end, "findReplace-highlights");
+    private void textFill(int start, int end, FindReplaceAction action){
+        if(action == FindReplaceAction.FIND){
+            sourceText.setStyleClass(start, end, "findReplace-highlightsFind");
+        }else if(action == FindReplaceAction.FIND_ACTION){
+            sourceText.setStyleClass(start, end, "findReplace-highlightsFindAction");
+        }else if(action == FindReplaceAction.REPLACE || action == FindReplaceAction.REPLACE_ALL){
+            sourceText.setStyleClass(start, end, "findReplace-highlightsReplace");
+        }
     }
 
     private void resetTextFill(){
