@@ -122,6 +122,7 @@ public class MainApp extends Application {
                 config.setDisplayWindowMaximize("true");
 
             config.saveConfFile();
+
             Platform.exit();
             System.exit(0);
         });
@@ -235,7 +236,7 @@ public class MainApp extends Application {
                         dialog.setHeaderText(null);
                         dialog.setContentText(null);
 
-                        dialog.setGraphic(new ImageView(this.getClass().getResource("static/goal.gif").toString()));
+                        dialog.setGraphic(new ImageView(this.getClass().getResource("assets/static/goal.gif").toString()));
                         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK);
 
                         dialog.showAndWait();

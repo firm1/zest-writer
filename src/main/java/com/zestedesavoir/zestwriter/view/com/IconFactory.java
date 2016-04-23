@@ -57,6 +57,6 @@ public class IconFactory {
 
     public static void addAlertLogo(Alert alert){
         Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
-        alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+        alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
     }
 }
