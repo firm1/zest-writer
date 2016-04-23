@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import org.fxmisc.richtext.StyleClassedTextArea;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class FindReplaceDialog{
     private MainApp mainApp;
     private MdConvertController mdConvertController;
     private StyleClassedTextArea sourceText;
+    private Stage window;
 
     @FXML private TextField searchField;
     @FXML private TextField replaceField;
@@ -32,6 +34,11 @@ public class FindReplaceDialog{
 
     public void setMainApp(MainApp mainApp){
         this.mainApp = mainApp;
+    }
+
+    public void setWindow(Stage window){
+        this.window = window;
+        window.setOnCloseRequest(event -> resetTextFill());
     }
 
     public void setMdConvertController(MdConvertController mdConvertController){
@@ -59,6 +66,8 @@ public class FindReplaceDialog{
     }
 
     @FXML private void HandleSearchFieldChange(){
+        resetTextFill();
+
         if(!searchField.getText().isEmpty()){
             searchButton.setDisable(false);
 
@@ -103,13 +112,11 @@ public class FindReplaceDialog{
     }
 
     private void findText(boolean findText){
+        resetTextFill();
+
         if(!searchField.getText().isEmpty()){
             String text = sourceText.getText();
             String searchText = searchField.getText();
-
-            Collection<String> css = new ArrayList<>();
-            css.add("-fx-background-color: red;");
-            sourceText.setStyle(0, 20, css);
 
             if(!caseSensitive.isSelected()){
                 text = text.toLowerCase();
@@ -127,9 +134,11 @@ public class FindReplaceDialog{
 
                 if(selectionOnly.isSelected() && !sourceText.getSelectedText().isEmpty()){
                     if(i > sourceText.getSelection().getStart() && i < sourceText.getSelection().getEnd()){
+                        textFill(i, i + searchText.length());
                         numberIteration++;
                     }
                 }else{
+                    textFill(i, i + searchText.length());
                     numberIteration++;
                 }
             }
@@ -180,5 +189,13 @@ public class FindReplaceDialog{
 
     private void resetIterationNumber(){
         iterations.setText("0 itération trouvé");
+    }
+
+    private void textFill(int start, int end){
+        sourceText.setStyleClass(start, end, "findReplace-highlights");
+    }
+
+    private void resetTextFill(){
+        sourceText.setStyleClass(0, sourceText.getText().length(), "");
     }
 }

@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.python.core.PyString;
+import org.python.icu.impl.ICUResource;
 import org.python.util.PythonInterpreter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,6 +145,8 @@ public class MdConvertController {
             } else if(t.getCode().equals(KeyCode.L) && t.isControlDown()) {
                 // go to line
                 HandleGoToLineAction();
+            } else if(t.getCode().equals(KeyCode.F) && t.isControlDown()) {
+                HandleFindReplaceDialog();
             }
 
         });
@@ -594,12 +597,13 @@ public class MdConvertController {
 
             Scene scene = new Scene(optionsDialog);
             dialogStage.setScene(scene);
-            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
             dialogStage.setResizable(false);
             dialogStage.initModality(Modality.APPLICATION_MODAL);
 
             FindReplaceDialog findReplaceDialog = loader.getController();
             findReplaceDialog.setMainApp(mainApp);
+            findReplaceDialog.setWindow(dialogStage);
             findReplaceDialog.setMdConvertController(this);
 
             dialogStage.show();
