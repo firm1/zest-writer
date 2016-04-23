@@ -70,17 +70,17 @@
                                                       <Font name="System Bold" size="12.0" />
                                                    </font>
                                                 </Label>
-                                                <Hyperlink text="Nouveau projet" GridPane.rowIndex="1">
+                                                <Hyperlink style="-fx-border-width: 0;" text="Nouveau projet" textFill="#494949" GridPane.rowIndex="1">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </Hyperlink>
-                                                <Hyperlink text="Ouvrir un projet" GridPane.rowIndex="2">
+                                                <Hyperlink style="-fx-border-width: 0;" text="Ouvrir un projet" textFill="#494949" GridPane.rowIndex="2">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </Hyperlink>
-                                                <Hyperlink text="Options" GridPane.rowIndex="3">
+                                                <Hyperlink style="-fx-border-width: 0;" text="Options" textFill="#494949" GridPane.rowIndex="3">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
