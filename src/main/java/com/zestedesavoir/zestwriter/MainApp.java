@@ -102,7 +102,7 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Zest Writer");
-        this.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("static/icons/logo.png")));
+        this.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("assets/static/icons/logo.png")));
         primaryStage.setOnCloseRequest(t -> {
             Platform.exit();
             System.exit(0);
@@ -204,7 +204,7 @@ public class MainApp extends Application {
                         dialog.setHeaderText(null);
                         dialog.setContentText(null);
 
-                        dialog.setGraphic(new ImageView(this.getClass().getResource("static/goal.gif").toString()));
+                        dialog.setGraphic(new ImageView(this.getClass().getResource("assets/static/goal.gif").toString()));
                         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK);
 
                         dialog.showAndWait();
