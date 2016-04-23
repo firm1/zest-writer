@@ -45,7 +45,7 @@
                                        <children>
                                           <ImageView fitHeight="134.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER">
                                              <image>
-                                                <Image url="@../static/icons/clem.png" />
+                                                <Image url="@../assets/static/icons/clem.png" />
                                              </image>
                                           </ImageView>
                                           <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Bienvenue dans ZestWriter" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">

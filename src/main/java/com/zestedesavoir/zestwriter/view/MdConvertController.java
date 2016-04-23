@@ -282,7 +282,7 @@ public class MdConvertController {
         dialog.setHeaderText("");
 
         // Set the icon (must be included in the project).
-        dialog.setGraphic(new ImageView(MainApp.class.getResource("static/icons/table.png").toString()));
+        dialog.setGraphic(new ImageView(MainApp.class.getResource("assets/static/icons/table.png").toString()));
 
         // Set the button types.
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
@@ -335,7 +335,7 @@ public class MdConvertController {
         dialog.setHeaderText("");
 
         // Set the icon (must be included in the project).
-        dialog.setGraphic(new ImageView(MainApp.class.getResource("static/icons/link.png").toString()));
+        dialog.setGraphic(new ImageView(MainApp.class.getResource("assets/static/icons/link.png").toString()));
 
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
@@ -391,7 +391,7 @@ public class MdConvertController {
         dialog.setHeaderText("");
 
         // Set the icon (must be included in the project).
-        dialog.setGraphic(new ImageView(MainApp.class.getResource("static/icons/code.png").toString()));
+        dialog.setGraphic(new ImageView(MainApp.class.getResource("assets/static/icons/code.png").toString()));
 
         // Set the button types.
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
@@ -472,18 +472,18 @@ public class MdConvertController {
                         StringBuilder content = new StringBuilder();
                         content.append("<!doctype html><html><head><meta charset='utf-8'><base href='");
                         if (!isCancelled()) {
-                            content.append(MainApp.class.getResource("view/..").toExternalForm());
+                            content.append(MainApp.class.getResource("assets").toExternalForm());
                         }
-                        content.append("' />");
+                        content.append("/' />");
                         content.append("<link rel=\"stylesheet\" href=\"");
                         content.append(MainApp.class.getResource("css/content.css").toExternalForm());
                         content.append("\" />");
                         content.append("<link rel=\"stylesheet\" href=\"");
-                        content.append(MainApp.class.getResource("static").toExternalForm());
+                        content.append(MainApp.class.getResource("assets/static").toExternalForm());
                         content.append("/js/katex/katex.min.css\" />");
-                        content.append("<script src=\"").append(MainApp.class.getResource("static").toExternalForm());
+                        content.append("<script src=\"").append(MainApp.class.getResource("assets/static").toExternalForm());
                         content.append("/js/katex/katex.min.js\"></script>");
-                        content.append("<script src=\"").append(MainApp.class.getResource("static").toExternalForm());
+                        content.append("<script src=\"").append(MainApp.class.getResource("assets/static").toExternalForm());
                         content.append("/js/katex/contrib/auto-render.min.js\"></script>");
                         content.append("</head><body>");
                         if (!isCancelled()) {
