@@ -83,210 +83,6 @@ public class MdConvertController {
         return mdBox;
     }
 
-
-    public boolean isSaved() {
-        return isSaved;
-    }
-
-    public void setSaved(boolean isSaved) {
-        this.isSaved = isSaved;
-    }
-
-    @FXML private void initialize() {
-        SourceText.getStyleClass().add("markdown-editor");
-        SourceText.getStylesheets().add(MainApp.class.getResource("css/editor.css").toExternalForm());
-        SourceText.setParagraphGraphicFactory(LineNumberFactory.get(SourceText));
-    }
-
-    @FXML private void HandleBoldButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "**" + SourceText.getSelectedText() + "**");
-    }
-
-    @FXML private void HandleItalicButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "*" + SourceText.getSelectedText() + "*");
-    }
-
-    @FXML private void HandleQuoteButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "\n\n>" + SourceText.getSelectedText() + "\n\n");
-    }
-
-    @FXML private void HandleTableButtonAction(ActionEvent event) throws IOException {
-        // Create the custom dialog.
-        Dialog<Pair<ObservableList, ObservableList<ZRow>>> dialog = new Dialog<>();
-        dialog.setTitle("Editeur de tableau");
-        dialog.setHeaderText("");
-
-        // Set the icon (must be included in the project).
-        dialog.setGraphic(new ImageView(MainApp.class.getResource("static/icons/table.png").toString()));
-
-        // Set the button types.
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("fxml/TableEditor.fxml"));
-        BorderPane tableEditor = loader.load();
-        TableView<ZRow> tbView = (TableView) tableEditor.getCenter();
-
-        TableController controller = loader.getController();
-        controller.setEditor(this);
-
-        dialog.getDialogPane().setContent(tableEditor);
-
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK) {
-                return new Pair<>(tbView.getColumns(), tbView.getItems());
-            }
-            return null;
-        });
-
-        Optional<Pair<ObservableList, ObservableList<ZRow>>> result = dialog.showAndWait();
-
-        result.ifPresent(datas -> {
-            String[][] data = new String[datas.getValue().size()][datas.getValue().get(0).getRow().size()];
-            String[] headers = new String[datas.getKey().size()];
-            int cpt = 0;
-            for (Object key : datas.getKey()) {
-                headers[cpt] = ((TextField) ((TableColumn) key).getGraphic()).getText();
-                cpt++;
-            }
-
-            for (int i = 0; i < datas.getValue().size(); i++) {
-                for (int j = 0; j < datas.getValue().get(i).getRow().size(); j++) {
-                    data[i][j] = (String) datas.getValue().get(i).getRow().get(j);
-                }
-            }
-            String tablestring = FlipTable.of(headers, data);
-            SourceText.replaceText(SourceText.getSelection(), "\n\n" + tablestring + "\n\n");
-
-        });
-    }
-
-    @FXML private void HandleLinkButtonAction(ActionEvent event) {
-        String link = SourceText.getSelectedText();
-
-        // Create the custom dialog.
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Détail du lien");
-        dialog.setHeaderText("");
-
-        // Set the icon (must be included in the project).
-        dialog.setGraphic(new ImageView(MainApp.class.getResource("static/icons/link.png").toString()));
-
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        // Create the username and password labels and fields.
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
-
-        TextField tLink = new TextField();
-        tLink.setText(link);
-        TextField tLabel = new TextField();
-        tLabel.setText(link);
-
-        grid.add(new Label("Lien:"), 0, 0);
-        grid.add(tLink, 1, 0);
-        grid.add(new Label("Titre du lien"), 0, 1);
-        grid.add(tLabel, 1, 1);
-
-        dialog.getDialogPane().setContent(grid);
-
-        // Request focus on the username field by default.
-        Platform.runLater(tLink::requestFocus);
-
-        // Convert the result to a username-password-pair when the login button
-        // is clicked.
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK) {
-                return new Pair<>(tLink.getText(), tLabel.getText());
-            }
-            return null;
-        });
-
-        Optional<Pair<String, String>> result = dialog.showAndWait();
-
-        result.ifPresent(tLinkTLabel -> SourceText.replaceText(SourceText.getSelection(),
-                "[" + tLinkTLabel.getValue() + "](" + tLinkTLabel.getKey() + ")"));
-    }
-
-    @FXML private void HandleCodeButtonAction(ActionEvent event) {
-        String code = SourceText.getSelectedText();
-        if (code.trim().startsWith("```") && code.trim().endsWith("```")) {
-            int start = code.trim().indexOf('\n') + 1;
-            int end = code.trim().lastIndexOf('\n');
-            code = code.substring(start, end);
-        }
-
-        // Create the custom dialog.
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Editeur de code");
-        dialog.setHeaderText("");
-
-        // Set the icon (must be included in the project).
-        dialog.setGraphic(new ImageView(MainApp.class.getResource("static/icons/code.png").toString()));
-
-        // Set the button types.
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        // Create the username and password labels and fields.
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
-
-        TextField tLangage = new TextField();
-        TextArea tCode = new TextArea();
-        tCode.setText(code);
-
-        grid.add(new Label("Langage:"), 0, 0);
-        grid.add(tLangage, 1, 0);
-        grid.add(new Label("Code"), 0, 1);
-        grid.add(tCode, 1, 1);
-
-        dialog.getDialogPane().setContent(grid);
-
-        // Request focus on the username field by default.
-        Platform.runLater(tLangage::requestFocus);
-
-        // Convert the result to a username-password-pair when the login button
-        // is clicked.
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK) {
-                return new Pair<>(tLangage.getText(), tCode.getText());
-            }
-            return null;
-        });
-
-        Optional<Pair<String, String>> result = dialog.showAndWait();
-
-        result.ifPresent(tLangageTCode -> SourceText.replaceText(SourceText.getSelection(),
-                "\n```" + tLangageTCode.getKey() + "\n" + tLangageTCode.getValue() + "\n```\n"));
-    }
-
-    public void undo() {
-    	SourceText.getUndoManager().undo();
-    }
-
-    public void redo() {
-    	SourceText.getUndoManager().redo();
-    }
-
-    @FXML public void HandleSaveButtonAction(ActionEvent event) {
-        extract.setMarkdown(SourceText.getText());
-        extract.save();
-        tab.setText(extract.getTitle());
-        this.isSaved = true;
-    }
-
-    @FXML private void HandleFullScreeenButtonAction(ActionEvent event) {
-        if (mdBox.getSplitPane().getItems().size() > 1) {
-            mdBox.getSplitPane().getItems().remove(0);
-        } else {
-            mdBox.getSplitPane().getItems().add(0, mdBox.getSummary());
-        }
-    }
-
     public void setMdBox(MdTextController mdBox, Textual extract, Tab tab) throws IOException {
         this.mainApp = mdBox.getMainApp();
         this.config = mainApp.getConfig();
@@ -346,7 +142,312 @@ public class MdConvertController {
         });
     }
 
-    public void updateRender() {
+
+    @FXML private void initialize() {
+        SourceText.getStyleClass().add("markdown-editor");
+        SourceText.getStylesheets().add(MainApp.class.getResource("css/editor.css").toExternalForm());
+        SourceText.setParagraphGraphicFactory(LineNumberFactory.get(SourceText));
+    }
+
+    private void replaceAction(String defaultString, int defaultOffsetCaret, String beforeString, String afterString) {
+        if(SourceText.getSelectedText().isEmpty()){
+            SourceText.replaceText(SourceText.getSelection(), defaultString);
+            SourceText.moveTo(SourceText.getCaretPosition() - defaultOffsetCaret);
+        }else{
+            SourceText.replaceText(SourceText.getSelection(), beforeString + SourceText.getSelectedText() + afterString);
+        }
+
+        SourceText.requestFocus();
+    }
+
+    /*
+     * Editor Toolbar Action
+     */
+
+    @FXML public void HandleSaveButtonAction(ActionEvent event) {
+        extract.setMarkdown(SourceText.getText());
+        extract.save();
+        tab.setText(extract.getTitle());
+        this.isSaved = true;
+
+        SourceText.requestFocus();
+    }
+
+    @FXML private void HandleBoldButtonAction(ActionEvent event) {
+        replaceAction("****", 2, "**", "**");
+    }
+
+    @FXML private void HandleItalicButtonAction(ActionEvent event) {
+        replaceAction("**", 1, "*", "*");
+    }
+
+    @FXML private void HandleBarredButtonAction(ActionEvent event) {
+        replaceAction("~~~~", 2, "~~", "~~");
+    }
+
+    @FXML private void HandleTouchButtonAction(ActionEvent event) {
+        replaceAction("||||", 2, "||", "||");
+    }
+
+    @FXML private void HandleExpButtonAction(ActionEvent event) {
+        replaceAction("^^", 1, "^", "^");
+    }
+
+    @FXML private void HandleIndButtonAction(ActionEvent event) {
+        replaceAction("~~", 1, "~", "~");
+    }
+
+    @FXML private void HandleCenterButtonAction(ActionEvent event) {
+        replaceAction("\n->  <-", 3, "\n-> ", " <-");
+    }
+
+    @FXML private void HandleRightButtonAction(ActionEvent event) {
+        replaceAction("\n->  ->", 3, "\n-> ", " ->\n");
+    }
+
+    @FXML private void HandleBulletButtonAction(ActionEvent event) {
+        if(SourceText.getSelectedText().isEmpty()){
+            SourceText.replaceText(SourceText.getSelection(), "- ");
+        }else{
+            StringBuilder sb = new StringBuilder();
+            String[] lines = SourceText.getSelectedText().split("\n");
+            for(String line : lines){
+                sb.append("- ").append(line).append("\n");
+            }
+
+            SourceText.replaceText(SourceText.getSelection(), sb.toString());
+        }
+
+        SourceText.requestFocus();
+    }
+
+    @FXML private void HandleNumberedButtonAction(ActionEvent event) {
+        if(SourceText.getSelectedText().isEmpty()){
+            SourceText.replaceText(SourceText.getSelection(), "1. ");
+        }else{
+            StringBuilder sb = new StringBuilder();
+            String[] lines = SourceText.getSelectedText().split("\n");
+            int i = 1;
+            for(String line : lines){
+                sb.append(i).append(". ").append(line).append("\n");
+                i++;
+            }
+
+            SourceText.replaceText(SourceText.getSelection(), sb.toString());
+        }
+
+        SourceText.requestFocus();
+    }
+
+    @FXML private void HandleHeaderButtonAction(ActionEvent event) {
+        SourceText.replaceText(SourceText.getSelection(), "# " + SourceText.getSelectedText());
+        SourceText.requestFocus();
+    }
+
+    @FXML private void HandleQuoteButtonAction(ActionEvent event) {
+        replaceAction("> ", 0, "> ", "\n\n");
+    }
+
+    @FXML private void HandleBlocButtonAction(ActionEvent event) {
+        String text = "";
+        String[] lines = SourceText.getSelectedText().split("\n");
+        for (String line : lines) {
+            text += "| " + line + "\n";
+        }
+
+        List<String> choices = new ArrayList<>();
+        choices.add("information");
+        choices.add("question");
+        choices.add("attention");
+        choices.add("erreur");
+
+        ChoiceDialog<String> dialog = new ChoiceDialog<>("information", choices);
+        dialog.setTitle("Choix du bloc");
+        dialog.setHeaderText("Votre type de bloc");
+        dialog.setContentText("Type de bloc: ");
+
+        // Traditional way to get the response value.
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            SourceText.replaceText(SourceText.getSelection(), "\n[[" + result.get() + "]]\n" + text);
+        }
+
+        SourceText.requestFocus();
+    }
+
+    @FXML private void HandleTableButtonAction(ActionEvent event) throws IOException {
+        // Create the custom dialog.
+        Dialog<Pair<ObservableList, ObservableList<ZRow>>> dialog = new Dialog<>();
+        dialog.setTitle("Editeur de tableau");
+        dialog.setHeaderText("");
+
+        // Set the icon (must be included in the project).
+        dialog.setGraphic(new ImageView(MainApp.class.getResource("static/icons/table.png").toString()));
+
+        // Set the button types.
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainApp.class.getResource("fxml/TableEditor.fxml"));
+        BorderPane tableEditor = loader.load();
+        TableView<ZRow> tbView = (TableView) tableEditor.getCenter();
+
+        TableController controller = loader.getController();
+        controller.setEditor(this);
+
+        dialog.getDialogPane().setContent(tableEditor);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                return new Pair<>(tbView.getColumns(), tbView.getItems());
+            }
+            return null;
+        });
+
+        Optional<Pair<ObservableList, ObservableList<ZRow>>> result = dialog.showAndWait();
+
+        result.ifPresent(datas -> {
+            String[][] data = new String[datas.getValue().size()][datas.getValue().get(0).getRow().size()];
+            String[] headers = new String[datas.getKey().size()];
+            int cpt = 0;
+            for (Object key : datas.getKey()) {
+                headers[cpt] = ((TextField) ((TableColumn) key).getGraphic()).getText();
+                cpt++;
+            }
+
+            for (int i = 0; i < datas.getValue().size(); i++) {
+                for (int j = 0; j < datas.getValue().get(i).getRow().size(); j++) {
+                    data[i][j] = (String) datas.getValue().get(i).getRow().get(j);
+                }
+            }
+            String tablestring = FlipTable.of(headers, data);
+            SourceText.replaceText(SourceText.getSelection(), "\n\n" + tablestring + "\n\n");
+            SourceText.requestFocus();
+        });
+    }
+
+    @FXML private void HandleLinkButtonAction(ActionEvent event) {
+        String link = SourceText.getSelectedText();
+
+        // Create the custom dialog.
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Détail du lien");
+        dialog.setHeaderText("");
+
+        // Set the icon (must be included in the project).
+        dialog.setGraphic(new ImageView(MainApp.class.getResource("static/icons/link.png").toString()));
+
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        // Create the username and password labels and fields.
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField tLink = new TextField();
+        tLink.setText(link);
+        TextField tLabel = new TextField();
+        tLabel.setText(link);
+
+        grid.add(new Label("Lien:"), 0, 0);
+        grid.add(tLink, 1, 0);
+        grid.add(new Label("Titre du lien"), 0, 1);
+        grid.add(tLabel, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Request focus on the username field by default.
+        Platform.runLater(tLink::requestFocus);
+
+        // Convert the result to a username-password-pair when the login button
+        // is clicked.
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                return new Pair<>(tLink.getText(), tLabel.getText());
+            }
+            return null;
+        });
+
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+
+        result.ifPresent(tLinkTLabel -> SourceText.replaceText(SourceText.getSelection(),
+                "[" + tLinkTLabel.getValue() + "](" + tLinkTLabel.getKey() + ")"));
+
+        SourceText.requestFocus();
+    }
+
+    @FXML private void HandleCodeButtonAction(ActionEvent event) {
+        String code = SourceText.getSelectedText();
+        if (code.trim().startsWith("```") && code.trim().endsWith("```")) {
+            int start = code.trim().indexOf('\n') + 1;
+            int end = code.trim().lastIndexOf('\n');
+            code = code.substring(start, end);
+        }
+
+        // Create the custom dialog.
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Editeur de code");
+        dialog.setHeaderText("");
+
+        // Set the icon (must be included in the project).
+        dialog.setGraphic(new ImageView(MainApp.class.getResource("static/icons/code.png").toString()));
+
+        // Set the button types.
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        // Create the username and password labels and fields.
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField tLangage = new TextField();
+        TextArea tCode = new TextArea();
+        tCode.setText(code);
+
+        grid.add(new Label("Langage:"), 0, 0);
+        grid.add(tLangage, 1, 0);
+        grid.add(new Label("Code"), 0, 1);
+        grid.add(tCode, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Request focus on the username field by default.
+        Platform.runLater(tLangage::requestFocus);
+
+        // Convert the result to a username-password-pair when the login button
+        // is clicked.
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                return new Pair<>(tLangage.getText(), tCode.getText());
+            }
+            return null;
+        });
+
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+
+        result.ifPresent(tLangageTCode -> SourceText.replaceText(SourceText.getSelection(),
+                "\n```" + tLangageTCode.getKey() + "\n" + tLangageTCode.getValue() + "\n```\n"));
+
+        SourceText.requestFocus();
+    }
+
+    /*
+     * Render Toolbar Action
+     */
+
+    @FXML private void HandleFullScreeenButtonAction(ActionEvent event) {
+        if (mdBox.getSplitPane().getItems().size() > 1) {
+            mdBox.getSplitPane().getItems().remove(0);
+        } else {
+            mdBox.getSplitPane().getItems().add(0, mdBox.getSummary());
+        }
+
+        SourceText.requestFocus();
+    }
+
+    @FXML private void updateRender() {
         if (renderTask != null) {
             if (renderTask.isRunning()) {
                 renderTask.cancel();
@@ -389,16 +490,16 @@ public class MdConvertController {
                             content.append(markdownToHtml(SourceText.getText()));
                         }
                         content.append("<script>"+
-                          "renderMathInElement("+
-                              "document.body,"+
-                              "{"+
-                                  "delimiters: ["+
-                                      "{left: \"$$\", right: \"$$\", display: true},"+
-                                      "{left: \"$\", right: \"$\", display: false},"+
-                                  "]"+
-                              "}"+
-                          ");"+
-                        "</script>");
+                                "renderMathInElement("+
+                                "document.body,"+
+                                "{"+
+                                "delimiters: ["+
+                                "{left: \"$$\", right: \"$$\", display: true},"+
+                                "{left: \"$\", right: \"$\", display: false},"+
+                                "]"+
+                                "}"+
+                                ");"+
+                                "</script>");
                         content.append("</body></html>");
                         return content.toString();
                     }
@@ -407,7 +508,7 @@ public class MdConvertController {
             }
         };
         renderTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue,
-                Worker.State oldValue, Worker.State newValue) -> {
+                                                Worker.State oldValue, Worker.State newValue) -> {
             switch (newValue) {
                 case FAILED:
                     break;
@@ -423,7 +524,7 @@ public class MdConvertController {
         renderTask.start();
     }
 
-    @FXML public void HandleValidateButtonAction(ActionEvent event) {
+    @FXML private void HandleValidateButtonAction(ActionEvent event) {
         String s = StringEscapeUtils.unescapeHtml(markdownToHtml(SourceText.getText()));
         if(corrector == null) {
         	corrector = new Corrector();
@@ -439,17 +540,25 @@ public class MdConvertController {
         }
     }
 
-    public void HandleGoToLineAction() {
-    	TextInputDialog dialog = new TextInputDialog();
-    	dialog.setTitle("Aller à la ligne");
-    	dialog.setHeaderText(null);
-    	dialog.setContentText("Numéro de ligne: ");
-
-    	Optional<String> result = dialog.showAndWait();
-    	result.ifPresent(line -> {
-    		SourceText.positionCaret(SourceText.position(Integer.parseInt(line)-1, 0).toOffset());
-    	});
+    @FXML private void HandleUnbreakableAction(ActionEvent event) {
+        SourceText.replaceText(SourceText.getSelection(), SourceText.getSelectedText() + "\u00a0");
+        SourceText.requestFocus();
     }
+
+
+
+    public void HandleGoToLineAction() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Aller à la ligne");
+        dialog.setHeaderText(null);
+        dialog.setContentText("Numéro de ligne: ");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(line -> {
+            SourceText.positionCaret(SourceText.position(Integer.parseInt(line)-1, 0).toOffset());
+        });
+    }
+
 
     public String markdownToHtml(String chaine) {
         PythonInterpreter console = getMdBox().getPyconsole();
@@ -460,84 +569,12 @@ public class MdConvertController {
         return render.toString();
     }
 
-    @FXML private void HandleBarredButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "~~" + SourceText.getSelectedText() + "~~");
+    public boolean isSaved() {
+        return isSaved;
     }
 
-    @FXML private void HandleTouchButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "||" + SourceText.getSelectedText() + "||");
-    }
-
-    private void HandleUnbreakableAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), SourceText.getSelectedText() + "\u00a0");
-    }
-
-    @FXML private void HandleExpButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "^" + SourceText.getSelectedText() + "^");
-    }
-
-    @FXML private void HandleIndButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "~" + SourceText.getSelectedText() + "~");
-    }
-
-    @FXML private void HandleCenterButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "\n-> " + SourceText.getSelectedText() + " <-");
-    }
-
-    @FXML private void HandleRightButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "\n-> " + SourceText.getSelectedText() + " ->");
-    }
-
-    @FXML private void HandleBulletButtonAction(ActionEvent event) {
-        String text = "";
-        String[] lines = SourceText.getSelectedText().split("\n");
-        for (String line : lines) {
-            text += "- " + line + "\n";
-        }
-
-        SourceText.replaceText(SourceText.getSelection(), text);
-    }
-
-    @FXML private void HandleNumberedButtonAction(ActionEvent event) {
-        String text = "";
-        String[] lines = SourceText.getSelectedText().split("\n");
-        int i = 1;
-        for (String line : lines) {
-            text += i + ". " + line + "\n";
-            i++;
-        }
-
-        SourceText.replaceText(SourceText.getSelection(), text);
-    }
-
-    @FXML private void HandleHeaderButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "\n# " + SourceText.getSelectedText());
-    }
-
-    @FXML private void HandleBlocButtonAction(ActionEvent event) {
-        String text = "";
-        String[] lines = SourceText.getSelectedText().split("\n");
-        for (String line : lines) {
-            text += "| " + line + "\n";
-        }
-
-        List<String> choices = new ArrayList<>();
-        choices.add("information");
-        choices.add("question");
-        choices.add("attention");
-        choices.add("erreur");
-
-        ChoiceDialog<String> dialog = new ChoiceDialog<>("information", choices);
-        dialog.setTitle("Choix du bloc");
-        dialog.setHeaderText("Votre type de bloc");
-        dialog.setContentText("Type de bloc: ");
-
-        // Traditional way to get the response value.
-        Optional<String> result = dialog.showAndWait();
-        if (result.isPresent()) {
-            SourceText.replaceText(SourceText.getSelection(), "\n[[" + result.get() + "]]\n" + text);
-        }
-
+    public void setSaved(boolean isSaved) {
+        this.isSaved = isSaved;
     }
 
     /**
