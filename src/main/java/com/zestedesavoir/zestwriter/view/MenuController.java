@@ -437,7 +437,6 @@ public class MenuController{
                         hBottomBox.getChildren().clear();
                         alert = new Alert(AlertType.ERROR);
                         IconFactory.addAlertLogo(alert);
-
                         alert.setTitle("Connexion");
                         alert.setHeaderText("Erreur de connexion");
                         alert.setContentText("Désolé mais vous n'avez pas été authentifié sur le serveur de Zeste de Savoir.");
@@ -650,7 +649,7 @@ public class MenuController{
 
             Scene scene = new Scene(aboutDialog);
             dialogStage.setScene(scene);
-            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
             dialogStage.initModality(Modality.APPLICATION_MODAL);
 
             dialogStage.show();
@@ -671,7 +670,7 @@ public class MenuController{
 
             Scene scene = new Scene(optionsDialog);
             dialogStage.setScene(scene);
-            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("static/icons/logo.png")));
+            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
             dialogStage.setResizable(false);
             dialogStage.initModality(Modality.APPLICATION_MODAL);
 
