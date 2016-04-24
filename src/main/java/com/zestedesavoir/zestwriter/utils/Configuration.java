@@ -17,13 +17,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.jna.platform.win32.Netapi32Util.User;
 import com.zestedesavoir.zestwriter.MainApp;
 
 public class Configuration {
     private Properties conf;
     private String appName = "zestwriter";
     private String confFileName = "conf.properties";
+    private String confDirPath;
     private File confFile;
     private StorageSaver offlineSaver;
     private StorageSaver onlineSaver;
@@ -31,16 +31,13 @@ public class Configuration {
     private final Logger logger;
     private Properties props;
 
-    private final static String WORKSPACE_KEY = "data.workspace";
-    private final static String SMART_EDITOR_KEY = "editor.smart";
-    private final static String SERVER_PROTOCOL_KEY = "server.protocol";
-    private final static String SERVER_HOST_KEY = "server.host";
-    private final static String SERVER_PORT_KEY = "server.port";
-
 
     public enum Options{
+        WorkspacePath("options.workspace.path", ""),
+        EditorSmart("options.editor.smart", "false"),
         EditorFont("options.editor.font", "Fira Mono"),
         EditorFontSize("options.editor.fontSize", "14"),
+        EditorToolbarView("options.editor.toolbar.view", "yes"),
         DisplayTheme("options.display.theme", "Standard"),
         AuthentificationUsername("options.authentification.username", ""),
         AuthentificationPassword("options.authentification.password", ""),
@@ -67,7 +64,7 @@ public class Configuration {
 
     public Configuration(String homeDir) {
         logger = LoggerFactory.getLogger(Configuration.class);
-        String confDirPath = homeDir+File.separator+"."+this.appName;
+        confDirPath = homeDir+File.separator+"."+this.appName;
         String confFilePath = confDirPath+File.separator+this.confFileName;
         File confDir = new File(confDirPath);
         confFile = new File(confFilePath);
@@ -87,9 +84,7 @@ public class Configuration {
 
         if(!confFile.exists()) {
             logger.debug("le fichier de configuartion "+confFile.getAbsolutePath()+" n'existe pas");
-            JFileChooser fr = new JFileChooser();
-            FileSystemView fw = fr.getFileSystemView();
-            conf.setProperty(WORKSPACE_KEY, fw.getDefaultDirectory().getAbsolutePath() + File.separator + "zwriter-workspace");
+            setWorkspacePath(Configuration.getDefaultWorkspace());
             saveConfFile();
         }
         else {
@@ -127,52 +122,14 @@ public class Configuration {
         return result.toString();
     }
 
-    public String getWorkspacePath() {
-        return conf.getProperty(WORKSPACE_KEY);
-    }
-
-    public void setWorkspacePath(String workspacePath) {
-        conf.setProperty(WORKSPACE_KEY, workspacePath);
-        saveConfFile();
-        this.workspaceFactory = new LocalDirectoryFactory(workspacePath);
-    }
-
-    public String getProtocol() {
-        if(conf.containsKey(SERVER_PROTOCOL_KEY)) {
-            return conf.getProperty(SERVER_PROTOCOL_KEY);
-        } else {
-            return "http";
-        }
+    public static String getDefaultWorkspace() {
+        JFileChooser fr = new JFileChooser();
+        FileSystemView fw = fr.getFileSystemView();
+        return fw.getDefaultDirectory().getAbsolutePath() + File.separator + "zwriter-workspace";
     }
 
     public String getPandocProvider() {
         return "http://vps146092.ovh.net/2pdf/";
-    }
-
-    public String getPort() {
-        if(conf.containsKey(SERVER_PORT_KEY)) {
-            return conf.getProperty(SERVER_PORT_KEY);
-        } else {
-            return "80";
-        }
-    }
-
-    public String getHost() {
-        if(conf.containsKey(SERVER_HOST_KEY)) {
-            return conf.getProperty(SERVER_HOST_KEY);
-        } else {
-            return "localhost";
-        }
-    }
-
-
-    public boolean isSmartEditor() {
-        return conf.getProperty(SMART_EDITOR_KEY).equalsIgnoreCase("true");
-    }
-
-    public void setSmartEditor(boolean smart) {
-        conf.setProperty(SMART_EDITOR_KEY, ""+smart);
-        saveConfFile();
     }
 
     public StorageSaver getOfflineSaver() {
@@ -223,6 +180,32 @@ public class Configuration {
     /*
      * Zest-Writer options
      */
+    public String getWorkspacePath(){
+        if(conf.containsKey(Options.WorkspacePath.getKey()))
+            return conf.getProperty(Options.WorkspacePath.getKey());
+        else
+            return Configuration.getDefaultWorkspace();
+    }
+
+    public void setWorkspacePath(String font){
+        conf.setProperty(Options.WorkspacePath.getKey(), font);
+    }
+
+    public Boolean getEditorSmart(){
+        if(conf.containsKey(Options.EditorSmart.getKey())){
+            if(NumberUtils.isNumber(conf.getProperty(Options.EditorSmart.getKey())))
+                return Boolean.parseBoolean(conf.getProperty(Options.EditorSmart.getKey()));
+            else
+                return Boolean.parseBoolean(Options.EditorSmart.getDefaultValue());
+        }else{
+            return Boolean.parseBoolean(Options.EditorSmart.getDefaultValue());
+        }
+    }
+
+    public void isEditorSmart(String editorSmart){
+        conf.setProperty(Options.EditorSmart.getKey(), editorSmart);
+    }
+
     public String getEditorFont(){
         if(conf.containsKey(Options.EditorFont.getKey()))
             return conf.getProperty(Options.EditorFont.getKey());
@@ -246,6 +229,19 @@ public class Configuration {
     }
     public void setEditorFontSize(String fontSize){
         conf.setProperty(Options.EditorFontSize.getKey(), fontSize);
+    }
+
+    public String getEditorToolbarView(){
+        if(conf.containsKey(Options.EditorToolbarView.getKey()))
+            return conf.getProperty(Options.EditorToolbarView.getKey());
+        else
+            return Options.DisplayTheme.getDefaultValue();
+    }
+    public void setEditorToolbarView(String view){
+        if(!view.toLowerCase().equals("yes") && !view.toLowerCase().equals("no"))
+            view = Options.EditorToolbarView.getDefaultValue();
+
+        conf.setProperty(Options.EditorToolbarView.getKey(), view);
     }
 
     public String getDisplayTheme(){
@@ -315,6 +311,14 @@ public class Configuration {
     public void resetAuthentification(){
         setAuthentificationUsername("");
         setAuthentificationPassword("");
+        saveConfFile();
+    }
+
+    public void resetAllOptions(){
+        for(Options opt : Options.values()){
+            conf.setProperty(opt.getKey(), opt.getDefaultValue());
+        }
+
         saveConfFile();
     }
 

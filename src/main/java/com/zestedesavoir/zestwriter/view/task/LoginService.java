@@ -30,7 +30,7 @@ public class LoginService extends Service<Void>{
         logger = LoggerFactory.getLogger(getClass());
 	}
 
-    
+
 	public String getUsername() {
         return username;
     }
@@ -57,6 +57,7 @@ public class LoginService extends Service<Void>{
                         updateMessage("Connexion au site en cours ...");
                         if(zdsUtils.login(getUsername(), getPassword())) {
                             updateMessage("Recherche des contenus ...");
+                            zdsUtils.getContentListOnline().clear();
                             zdsUtils.initInfoOnlineContent("tutorial");
                             zdsUtils.initInfoOnlineContent("article");
                             updateMessage("Vous avez correctement été connecté, vous pouvez désormais télécharger vos contenus");
@@ -72,10 +73,11 @@ public class LoginService extends Service<Void>{
                     if(zdsUtils.isAuthenticated()) {
                         updateMessage("Recherche des contenus ...");
                         try {
+                            zdsUtils.getContentListOnline().clear();
                             zdsUtils.initInfoOnlineContent("tutorial");
                             zdsUtils.initInfoOnlineContent("article");
                         } catch (IOException e) {
-                            logger.error("", e);
+                            logger.error("Echec de téléchargement des metadonnés des contenus en ligne", e);
                         }
                         updateMessage("Vous avez correctement été connecté, vous pouvez désormais télécharger vos contenus");
                     } else {
