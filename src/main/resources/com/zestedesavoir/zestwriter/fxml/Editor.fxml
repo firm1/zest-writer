@@ -15,9 +15,9 @@
 
 <SplitPane dividerPositions="0.5" prefHeight="633.0" prefWidth="773.0" stylesheets="@../css/dark.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MdConvertController">
    <items>
-      <BorderPane>
+      <BorderPane fx:id="BoxEditor">
          <top>
-            <ToolBar BorderPane.alignment="CENTER">
+            <ToolBar fx:id="editorToolBar" BorderPane.alignment="CENTER">
               <items>
                   <Button fx:id="SaveButton" mnemonicParsing="false" onAction="#HandleSaveButtonAction">
                     <tooltip>
@@ -151,7 +151,7 @@
             <WebView fx:id="renderView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
          </center>
          <top>
-            <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <ToolBar fx:id="editorToolBarRender" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <items>
                   <Button fx:id="FullScreeen" mnemonicParsing="false" onAction="#HandleFullScreeenButtonAction">
                   <tooltip>

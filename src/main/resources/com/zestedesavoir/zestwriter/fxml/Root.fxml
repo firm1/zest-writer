@@ -81,7 +81,11 @@
                         <MaterialDesignIconView fill="#084561" glyphName="READ" size="1.8em" />
                      </graphic>
                   </Menu>
-                  <MenuItem fx:id="menuOptions" mnemonicParsing="false" onAction="#HandleOptionsButtonAction" text="Options" />
+                  <MenuItem fx:id="menuOptions" mnemonicParsing="false" onAction="#HandleOptionsButtonAction" text="Préférences">
+                  <graphic>
+                     <MaterialDesignIconView fill="#084561" glyphName="SETTINGS" size="1.8em" />
+                  </graphic>
+                  </MenuItem>
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Synchronisation">
