@@ -17,9 +17,12 @@
 }
 
 .hyperlink{
-    -fx-underline:false
+    -fx-border-width:0;
+    -fx-underline:false;
+    -fx-text-fill:#6B8FA0;
 }
 
 .hyperlink:hover{
-    -fx-underline:true
+    -fx-underline:true;
+    -fx-text-fill:#154E69;
 }

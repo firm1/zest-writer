@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.*?>
+<?import javafx.scene.paint.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
@@ -32,7 +34,7 @@
                            <content>
                               <VBox>
                                  <children>
-                                    <VBox alignment="TOP_CENTER" prefHeight="10.0" prefWidth="100.0" style="-fx-background-color: linear-gradient(to bottom, rgba(21,78,105,1) 0%,rgba(8,71,101,0) 63%,rgba(0,67,99,0) 100%);;">
+                                    <VBox alignment="TOP_CENTER" prefHeight="10.0" prefWidth="100.0" style="-fx-background-color: linear-gradient(to bottom, rgba(21,78,105,1) 0%,rgba(8,71,101,0) 63%,rgba(0,67,99,0) 100%); -fx-border-width: 0 0 2 0; -fx-border-color: #F8AD32;">
                                        <children>
                                           <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -65,12 +67,12 @@
                                                 <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
-                                                <Label text="Action">
+                                                <Label text="Action" textFill="#104b66">
                                                    <font>
                                                       <Font name="System Bold" size="12.0" />
                                                    </font>
                                                 </Label>
-                                                <Hyperlink style="-fx-border-width: 0;" text="Nouveau projet" textFill="#494949" GridPane.rowIndex="1">
+                                                <Hyperlink stylesheets="@../css/dark.css" text="Nouveau projet" textFill="#474747" GridPane.rowIndex="1">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
@@ -85,7 +87,7 @@
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </Hyperlink>
-                                                <Label text="Projet ouvert récemment" GridPane.columnIndex="1">
+                                                <Label text="Projet ouvert récemment" textFill="#104b66" GridPane.columnIndex="1">
                                                    <font>
                                                       <Font name="System Bold" size="12.0" />
                                                    </font>
@@ -100,7 +102,7 @@
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </Hyperlink>
-                                                <Hyperlink text="no_name" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                <Hyperlink text="no_name" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
@@ -115,7 +117,7 @@
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </Hyperlink>
-                                                <Label text="Aucun projet ouvert récemment" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                <Label style="-fx-text-fill: #6B8FA0;" text="Aucun projet ouvert récemment" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
