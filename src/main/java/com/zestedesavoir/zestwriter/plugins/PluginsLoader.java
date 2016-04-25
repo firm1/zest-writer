@@ -27,12 +27,12 @@ public class PluginsLoader{
     public ArrayList<Class> getPlugins(){
         File pluginsFile[];
         try{
-            System.out.println(PluginsLoader.class.getResource("").toURI().toString());
+            System.out.println(MainApp.class.getResource("plugins/").getPath());
         }catch(URISyntaxException e){
             e.printStackTrace();
         }
         try{
-            File pluginFolder = new File(MainApp.class.getClassLoader().getResource("plugins").toURI());
+            File pluginFolder = new File(MainApp.class.getResource("plugins").toURI());
             pluginsFile = pluginFolder.listFiles();
         }catch(URISyntaxException e){
             e.printStackTrace();
