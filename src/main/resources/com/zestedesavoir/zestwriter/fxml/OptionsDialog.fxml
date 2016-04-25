@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.materialdesignicons.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -14,9 +15,9 @@
                <children>
                   <AnchorPane prefHeight="200.0" prefWidth="150.0">
                      <children>
-                        <VBox prefHeight="410.0" prefWidth="144.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <VBox prefHeight="410.0" prefWidth="144.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <Hyperlink fx:id="optionGeneral" onAction="#HandleHyperlinkGeneralLabel" style="-fx-border-width: 0;" text="Générale" textFill="#656565">
+                              <Hyperlink fx:id="optionGeneral" onAction="#HandleHyperlinkGeneralLabel" style="-fx-border-width: 0;" text="Général" textFill="#656565">
                                  <padding>
                                     <Insets bottom="5.0" top="5.0" />
                                  </padding>
@@ -59,18 +60,15 @@
                            <children>
                               <AnchorPane fx:id="optionGeneralPane" prefHeight="200.0" prefWidth="450.0">
                                  <children>
-                                    <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
                                           <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0">
                                              <children>
-                                                <Label text="Générale">
-                                                   <font>
-                                                      <Font name="System Bold" size="16.0" />
-                                                   </font>
+                                                <Label styleClass="title" text="Général">
                                                 </Label>
                                              </children>
                                           </HBox>
-                                          <GridPane>
+                                          <GridPane vgap="20.0">
                                              <columnConstraints>
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="210.0" minWidth="10.0" prefWidth="150.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="303.0" minWidth="10.0" prefWidth="285.0" />
@@ -81,10 +79,7 @@
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
-                                                <Label text="Espace de travail">
-                                                   <font>
-                                                      <Font name="System Bold" size="12.0" />
-                                                   </font>
+                                                <Label styleClass="subtitle" text="Espace de travail">
                                                 </Label>
                                                 <Label text="Chemin" GridPane.rowIndex="1">
                                                    <padding>
@@ -93,11 +88,18 @@
                                                 </Label>
                                                 <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                    <children>
-                                                      <Button mnemonicParsing="false" onAction="#HandleGeneralBrowseAction" prefHeight="25.0" prefWidth="150.0" text="Parcourir" />
+                                                      <Button mnemonicParsing="false" onAction="#HandleGeneralBrowseAction" prefHeight="25.0" prefWidth="150.0" text="Modifier">
+                                                         <graphic>
+									                        <MaterialDesignIconView fill="#084561" glyphName="CAMERA_SWITCH" size="1.8em" />
+									                     </graphic>
+                                                      </Button>
                                                       <Button mnemonicParsing="false" onAction="#HandleGeneralShowAction" prefHeight="25.0" prefWidth="150.0" text="Voir">
                                                          <HBox.margin>
                                                             <Insets left="10.0" />
                                                          </HBox.margin>
+                                                         <graphic>
+									                        <MaterialDesignIconView fill="#084561" glyphName="EYE" size="1.8em" />
+									                     </graphic>
                                                       </Button>
                                                    </children>
                                                 </HBox>
@@ -112,18 +114,15 @@
                               </AnchorPane>
                               <AnchorPane fx:id="optionEditorPane" prefHeight="200.0" prefWidth="450.0" visible="false">
                                  <children>
-                                    <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
                                           <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0">
                                              <children>
-                                                <Label text="Editeur">
-                                                   <font>
-                                                      <Font name="System Bold" size="16.0" />
-                                                   </font>
+                                                <Label styleClass="title" text="Editeur">
                                                 </Label>
                                              </children>
                                           </HBox>
-                                          <GridPane>
+                                          <GridPane vgap="20.0">
                                              <columnConstraints>
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="210.0" minWidth="10.0" prefWidth="151.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="294.0" minWidth="10.0" prefWidth="279.0" />
@@ -136,16 +135,14 @@
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
-                                                <Label text="Apparence éditeur">
-                                                   <font>
-                                                      <Font name="System Bold" size="12.0" />
-                                                   </font>
+                                                <Label styleClass="subtitle" text="Apparence éditeur">
                                                 </Label>
                                                 <Label text="Police d'écriture" GridPane.rowIndex="1">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin></Label>
-                                                <Button fx:id="optEditorFontButton" mnemonicParsing="false" onAction="#HandleEditorFontChoice" prefHeight="25.0" prefWidth="352.0" text="Arial" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <Button fx:id="optEditorFontButton" mnemonicParsing="false" onAction="#HandleEditorFontChoice" prefHeight="25.0" prefWidth="352.0" text="Arial" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                </Button>
                                                 <Label text="Afficher la barre d'outil" GridPane.rowIndex="2">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
@@ -176,18 +173,15 @@
                               </AnchorPane>
                               <AnchorPane fx:id="optionDisplayPane" prefHeight="200.0" prefWidth="450.0" visible="false">
                                  <children>
-                                    <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
                                           <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0">
                                              <children>
-                                                <Label text="Affichage">
-                                                   <font>
-                                                      <Font name="System Bold" size="16.0" />
-                                                   </font>
+                                                <Label styleClass="title" text="Affichage">
                                                 </Label>
                                              </children>
                                           </HBox>
-                                          <GridPane>
+                                          <GridPane vgap="20.0">
                                              <columnConstraints>
                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -211,18 +205,15 @@
                               </AnchorPane>
                               <AnchorPane fx:id="optionShortcutPane" prefHeight="200.0" prefWidth="450.0" visible="false">
                                  <children>
-                                    <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
                                           <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0">
                                              <children>
-                                                <Label text="Raccourcis">
-                                                   <font>
-                                                      <Font name="System Bold" size="16.0" />
-                                                   </font>
+                                                <Label styleClass="subtitle" text="Raccourcis">
                                                 </Label>
                                              </children>
                                           </HBox>
-                                          <GridPane>
+                                          <GridPane vgap="20.0">
                                              <columnConstraints>
                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -244,18 +235,15 @@
                                  <children>
                                     <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0">
+                                          <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0" spacing="20.0">
                                              <children>
-                                                <Label text="Authentification">
-                                                   <font>
-                                                      <Font name="System Bold" size="16.0" />
-                                                   </font>
+                                                <Label styleClass="title" text="Authentification">
                                                 </Label>
                                              </children>
                                           </HBox>
-                                          <VBox>
+                                          <VBox spacing="20.0">
                                              <children>
-                                                <GridPane>
+                                                <GridPane vgap="20.0">
                                                    <columnConstraints>
                                                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="210.0" minWidth="10.0" prefWidth="150.0" />
                                                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="327.0" minWidth="10.0" prefWidth="325.0" />
@@ -267,10 +255,7 @@
                                                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                    </rowConstraints>
                                                    <children>
-                                                      <Label text="Connexion">
-                                                         <font>
-                                                            <Font name="System Bold" size="12.0" />
-                                                         </font>
+                                                      <Label styleClass="subtitle" text="Connexion">
                                                       </Label>
                                                       <Label text="Nom d'utilisateur" GridPane.rowIndex="1">
                                                          <padding>
@@ -286,7 +271,7 @@
                                                       <PasswordField fx:id="optAuthentificationPassword" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                    </children>
                                                 </GridPane>
-                                                <Label text="Attention, votre identification n'est pas crypté dans le fichier de configuration et peuvent être lisible pour un humain" textAlignment="CENTER" textFill="RED" wrapText="true" />
+                                                <Label text="Attention, vos identifiants ne sont pas chiffrés dans le fichier de configuration et peuvent être lisible pour un humain" textAlignment="CENTER" textFill="RED" wrapText="true" />
                                              </children>
                                           </VBox>
                                        </children>
@@ -300,16 +285,13 @@
                                  <children>
                                     <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0">
+                                          <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0" spacing="20.0">
                                              <children>
-                                                <Label text="Avancé">
-                                                   <font>
-                                                      <Font name="System Bold" size="16.0" />
-                                                   </font>
+                                                <Label styleClass="title" text="Avancé">
                                                 </Label>
                                              </children>
                                           </HBox>
-                                          <GridPane>
+                                          <GridPane vgap="20.0">
                                              <columnConstraints>
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="210.0" minWidth="10.0" prefWidth="150.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="327.0" minWidth="10.0" prefWidth="325.0" />
@@ -321,10 +303,7 @@
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
-                                                <Label text="Serveur">
-                                                   <font>
-                                                      <Font name="System Bold" size="12.0" />
-                                                   </font>
+                                                <Label styleClass="subtitle" text="Serveur">
                                                 </Label>
                                                 <Label text="Protocole" GridPane.rowIndex="1">
                                                    <padding>

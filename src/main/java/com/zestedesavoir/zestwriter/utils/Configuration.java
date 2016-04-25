@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.jna.platform.win32.Netapi32Util.User;
 import com.zestedesavoir.zestwriter.MainApp;
 
 public class Configuration {
@@ -85,9 +84,7 @@ public class Configuration {
 
         if(!confFile.exists()) {
             logger.debug("le fichier de configuartion "+confFile.getAbsolutePath()+" n'existe pas");
-            JFileChooser fr = new JFileChooser();
-            FileSystemView fw = fr.getFileSystemView();
-            setWorkspacePath(fw.getDefaultDirectory().getAbsolutePath() + File.separator + "zwriter-workspace");
+            setWorkspacePath(Configuration.getDefaultWorkspace());
             saveConfFile();
         }
         else {
@@ -123,6 +120,12 @@ public class Configuration {
         }
 
         return result.toString();
+    }
+
+    public static String getDefaultWorkspace() {
+        JFileChooser fr = new JFileChooser();
+        FileSystemView fw = fr.getFileSystemView();
+        return fw.getDefaultDirectory().getAbsolutePath() + File.separator + "zwriter-workspace";
     }
 
     public String getPandocProvider() {
@@ -181,7 +184,7 @@ public class Configuration {
         if(conf.containsKey(Options.WorkspacePath.getKey()))
             return conf.getProperty(Options.WorkspacePath.getKey());
         else
-            return confDirPath;
+            return Configuration.getDefaultWorkspace();
     }
 
     public void setWorkspacePath(String font){
