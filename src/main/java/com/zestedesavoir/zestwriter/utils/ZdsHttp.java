@@ -443,7 +443,9 @@ public class ZdsHttp {
                 if (ref.startsWith("/contenus/")) {
                     String[] tab = ref.split("/");
                     MetadataContent onlineContent = new MetadataContent(tab[2], tab[3], type);
-                    getContentListOnline().add(onlineContent);
+                    if(!getContentListOnline().contains(onlineContent)) {
+                        getContentListOnline().add(onlineContent);
+                    }
                 }
             }
         }
@@ -541,7 +543,6 @@ public class ZdsHttp {
         try {
             ZdsHttp zdsutils = new ZdsHttp(config);
             if (zdsutils.login("admin", "admin")) {
-                System.out.println("Connecté avec l'id : "+zdsutils.idUser);
                 zdsutils.initInfoOnlineContent("tutorial");
                 zdsutils.initInfoOnlineContent("article");
 

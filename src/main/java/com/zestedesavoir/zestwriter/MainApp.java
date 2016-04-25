@@ -155,6 +155,7 @@ public class MainApp extends Application {
             LoginService loginTask = new LoginService(config.getAuthentificationUsername(), config.getAuthentificationPassword(), zdsutils, config);
 
             menuController.getMenuDownload().setDisable(true);
+            menuController.gethBottomBox().getChildren().clear();
             menuController.gethBottomBox().getChildren().addAll(menuController.getLabelField());
             menuController.getLabelField().textProperty().bind(loginTask.messageProperty());
 
@@ -173,13 +174,13 @@ public class MainApp extends Application {
 
                         alert.showAndWait();
                         menuController.getMenuDownload().setDisable(false);
+                        menuController.gethBottomBox().getChildren().clear();
 
                         break;
                     case SUCCEEDED:
                         menuController.getMenuDownload().setDisable(false);
                         break;
                 }
-                menuController.gethBottomBox().getChildren().clear();
             });
 
             loginTask.start();
