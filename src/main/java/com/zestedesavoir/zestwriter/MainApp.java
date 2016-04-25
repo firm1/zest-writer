@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
+import com.zestedesavoir.zestwriter.plugins.PluginsManager;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
@@ -108,6 +109,7 @@ public class MainApp extends Application {
             System.exit(0);
         });
 
+        initPlugins();
         initRootLayout();
         showWriter();
         initConnection();
@@ -185,6 +187,11 @@ public class MainApp extends Application {
 
             loginTask.start();
         }
+    }
+
+    public void initPlugins(){
+        PluginsManager pm = new PluginsManager();
+        pm.enablePlugins();
     }
 
     private void loadCombinason() {
