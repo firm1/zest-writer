@@ -41,6 +41,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Worker;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -606,31 +607,25 @@ public class MenuController{
             ExportPdfService exportPdfTask = new ExportPdfService(mainApp.getConfig().getPandocProvider(), content, selectedFile);
             labelField.textProperty().bind(exportPdfTask.messageProperty());
             pb.progressProperty().bind(exportPdfTask.progressProperty());
-            exportPdfTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
-                Alert alert = new Alert(AlertType.NONE);
-                IconFactory.addAlertLogo(alert);
-
-                switch(newValue){
-                    case FAILED:
-                        alert.setAlertType(AlertType.ERROR);
-                        alert.setTitle("Echec");
-                        alert.setHeaderText("Echec de l'export");
-                        alert.setContentText("Le contenu \"" + content.getTitle() + "\" n'a pas pu être exporté");
-                        alert.showAndWait();
-                        hBottomBox.getChildren().clear();
-                        break;
-                    case CANCELLED:
-                    case SUCCEEDED:
-                        alert.setAlertType(AlertType.INFORMATION);
-                        alert.setTitle("Confirmation");
-                        alert.setHeaderText("Confirmation de l'export");
-                        alert.setContentText("Le contenu \"" + content.getTitle() + "\" a été exporté");
-                        alert.showAndWait();
-                        hBottomBox.getChildren().clear();
-                        break;
-                }
+            Alert alert = new Alert(AlertType.NONE);
+            IconFactory.addAlertLogo(alert);
+            exportPdfTask.setOnFailed((WorkerStateEvent ev) -> {
+                alert.setAlertType(AlertType.ERROR);
+                alert.setTitle("Echec");
+                alert.setHeaderText("Echec de l'export");
+                alert.setContentText("Le contenu \"" + content.getTitle() + "\" n'a pas pu être exporté, vérifiez l'état de votre connexion Internet");
+                alert.showAndWait();
+                hBottomBox.getChildren().clear();
             });
 
+            exportPdfTask.setOnSucceeded((WorkerStateEvent ev) -> {
+                alert.setAlertType(AlertType.INFORMATION);
+                alert.setTitle("Confirmation");
+                alert.setHeaderText("Confirmation de l'export");
+                alert.setContentText("Le contenu \"" + content.getTitle() + "\" a été exporté");
+                alert.showAndWait();
+                hBottomBox.getChildren().clear();
+            });
             exportPdfTask.start();
         }
     }

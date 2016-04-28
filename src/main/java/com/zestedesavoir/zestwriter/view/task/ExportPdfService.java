@@ -61,6 +61,10 @@ public class ExportPdfService extends Service<Void>{
         return markdownFile;
     }
 
+    public Service<Void> getThis() {
+        return this;
+    }
+
     @Override
     protected Task<Void> createTask() {
         return new Task<Void>() {
@@ -108,7 +112,8 @@ public class ExportPdfService extends Service<Void>{
 
                 updateMessage("Export  du contenu au format Pdf");
                 if(!downloadPdf()) {
-                    failed();
+                    updateMessage("Erreur Pdf");
+                    throw new IOException();
                 }
                 return null;
             }
