@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Optional;
 
+import com.sun.webkit.plugin.PluginManager;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.plugins.PluginsManager;
@@ -51,6 +52,7 @@ public class MainApp extends Application {
     private StringBuilder key = new StringBuilder();
     private Logger logger;
     private MenuController menuController;
+    private PluginsManager pm;
     public static String[] args;
 
     public MainApp() {
@@ -105,6 +107,7 @@ public class MainApp extends Application {
         this.primaryStage.setTitle("Zest Writer");
         this.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("assets/static/icons/logo.png")));
         primaryStage.setOnCloseRequest(t -> {
+            pm.disablePlugins();
             Platform.exit();
             System.exit(0);
         });
@@ -113,6 +116,10 @@ public class MainApp extends Application {
         initRootLayout();
         showWriter();
         initConnection();
+
+        this.primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> {
+
+        });
     }
 
     public void initRootLayout() {
@@ -190,7 +197,7 @@ public class MainApp extends Application {
     }
 
     public void initPlugins(){
-        PluginsManager pm = new PluginsManager();
+        pm = new PluginsManager(this);
         pm.enablePlugins();
     }
 

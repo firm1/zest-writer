@@ -34,6 +34,7 @@ public class Configuration {
 
     public enum Options{
         WorkspacePath("options.workspace.path", ""),
+        PluginPath("options.plugins.path", ""),
         EditorSmart("options.editor.smart", "false"),
         EditorFont("options.editor.font", "Fira Mono"),
         EditorFontSize("options.editor.fontSize", "14"),
@@ -187,8 +188,19 @@ public class Configuration {
             return Configuration.getDefaultWorkspace();
     }
 
-    public void setWorkspacePath(String font){
-        conf.setProperty(Options.WorkspacePath.getKey(), font);
+    public void setWorkspacePath(String path){
+        conf.setProperty(Options.WorkspacePath.getKey(), path);
+    }
+
+    public String getPluginsPath(){
+        if(conf.containsKey(Options.PluginPath.getKey()))
+            return conf.getProperty(Options.PluginPath.getKey());
+        else
+            return getWorkspacePath() + "/plugins";
+    }
+
+    public void setPluginPath(String path){
+        conf.setProperty(Options.PluginPath.getKey(), path);
     }
 
     public Boolean getEditorSmart(){
