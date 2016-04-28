@@ -227,7 +227,6 @@ public class OptionsDialog{
         }
     }
 
-<<<<<<< HEAD
     @FXML private void HandleDisplayWindowMaximizeYes(){
         optDisplayWindowDimensionYes.setDisable(true);
         optDisplayWindowDimensionNo.setDisable(true);
@@ -240,14 +239,14 @@ public class OptionsDialog{
         optDisplayWindowDimensionNo.setDisable(false);
         optDisplayWindowPositionYes.setDisable(false);
         optDisplayWindowPositionNo.setDisable(false);
-=======
+    }
+
     @FXML private void HandleEditorToolbarViewYes(){
         optEditorToolbarView = "yes";
     }
 
     @FXML private void HandleEditorToolbarViewNo(){
         optEditorToolbarView = "no";
->>>>>>> 4a9d44243a86e8bc8551f2d0812301786ea86cc2
     }
 
     private void setGeneralOptions(){
