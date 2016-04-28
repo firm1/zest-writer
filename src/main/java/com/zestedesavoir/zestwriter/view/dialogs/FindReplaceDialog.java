@@ -200,9 +200,8 @@ public class FindReplaceDialog{
                         }
                     }
                 }else if(action == FindReplaceAction.REPLACE_ALL){
-                    if(!replaceField.getText().isEmpty()){
-                        sourceText.replaceText(i, i + searchField.getText().length(), replaceField.getText());
-                        textFill(i, i + replaceField.getText().length(), FindReplaceAction.REPLACE_ALL);
+                    for(int j = - 1; (j = text.indexOf(searchText, j + 1)) != - 1; ){
+                        findReplace(FindReplaceAction.REPLACE);
                     }
                 }
 
