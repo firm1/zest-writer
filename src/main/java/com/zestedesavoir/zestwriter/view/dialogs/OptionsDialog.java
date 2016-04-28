@@ -2,6 +2,8 @@ package com.zestedesavoir.zestwriter.view.dialogs;
 
 
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import org.controlsfx.dialog.FontSelectorDialog;
 
 import com.zestedesavoir.zestwriter.MainApp;
@@ -13,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.util.Optional;
 
 public class OptionsDialog{
@@ -22,6 +25,7 @@ public class OptionsDialog{
 
     private String optEditorFont;
     private double optEditorFontSize;
+    private String optEditorToolbarView;
 
     @FXML private Hyperlink optionGeneral;
     @FXML private Hyperlink optionEditor;
@@ -37,6 +41,8 @@ public class OptionsDialog{
     @FXML private AnchorPane optionAuthentificationPane;
     @FXML private AnchorPane optionAdvancedPane;
 
+    @FXML private RadioButton optEditorToolbarViewYes;
+    @FXML private RadioButton optEditorToolbarViewNo;
     @FXML private Button optEditorFontButton;
     @FXML private ComboBox<String> optDisplayTheme;
     @FXML private RadioButton optDisplayWindowMaximizeYes;
@@ -76,6 +82,7 @@ public class OptionsDialog{
     @FXML private void HandleSaveButtonAction(){
         config.setEditorFont(optEditorFont);
         config.setEditorFontSize(String.valueOf(optEditorFontSize));
+        config.setEditorToolbarView(optEditorToolbarView);
 
         config.setDisplayTheme(optDisplayTheme.getValue());
 
@@ -117,6 +124,23 @@ public class OptionsDialog{
         if(result.isPresent()){
             if(result.get() == ButtonType.OK){
                 optionsWindow.close();
+            }
+        }
+    }
+
+    @FXML private void HandleResetButtonAction(){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmer la réinitialisation");
+        alert.setHeaderText("Réinitialisation");
+        alert.setContentText("Attention, une réinitialisation est irréversible, souhaitez-vous vraiment réinitialiser vos options ?");
+        alert.getButtonTypes().setAll(new ButtonType("Oui", ButtonBar.ButtonData.YES), new ButtonType("Non", ButtonBar.ButtonData.NO));
+        IconFactory.addAlertLogo(alert);
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if(result.isPresent()){
+            if(result.get().getButtonData() == ButtonBar.ButtonData.YES){
+                resetOptions();
             }
         }
     }
@@ -169,6 +193,27 @@ public class OptionsDialog{
         optionAdvanced.setTextFill(Color.BLACK);
     }
 
+    @FXML private void HandleGeneralBrowseAction(){
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Espace de travail");
+        directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+
+        File directory = directoryChooser.showDialog(null);
+
+        if(directory != null && directory.exists()){
+            config.setWorkspacePath(directory.getAbsolutePath());
+        }
+    }
+
+    @FXML private void HandleGeneralShowAction(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        IconFactory.addAlertLogo(alert);
+        alert.setTitle("Chemin de votre espace de travail");
+        alert.setHeaderText("Chemin de votre espace de travail");
+        alert.setContentText(config.getWorkspacePath());
+        alert.showAndWait();
+    }
+
     @FXML private void HandleEditorFontChoice(){
         Dialog<Font> fontSelector = new FontSelectorDialog(new Font(config.getEditorFont(), config.getEditorFontsize()));
         Optional<Font> result = fontSelector.showAndWait();
@@ -178,9 +223,11 @@ public class OptionsDialog{
 
             optEditorFont = newFont.getName();
             optEditorFontSize = newFont.getSize();
+            optEditorFontButton.setText(optEditorFont + " - " + optEditorFontSize);
         }
     }
 
+<<<<<<< HEAD
     @FXML private void HandleDisplayWindowMaximizeYes(){
         optDisplayWindowDimensionYes.setDisable(true);
         optDisplayWindowDimensionNo.setDisable(true);
@@ -193,6 +240,14 @@ public class OptionsDialog{
         optDisplayWindowDimensionNo.setDisable(false);
         optDisplayWindowPositionYes.setDisable(false);
         optDisplayWindowPositionNo.setDisable(false);
+=======
+    @FXML private void HandleEditorToolbarViewYes(){
+        optEditorToolbarView = "yes";
+    }
+
+    @FXML private void HandleEditorToolbarViewNo(){
+        optEditorToolbarView = "no";
+>>>>>>> 4a9d44243a86e8bc8551f2d0812301786ea86cc2
     }
 
     private void setGeneralOptions(){
@@ -203,6 +258,12 @@ public class OptionsDialog{
 
         optEditorFont = config.getEditorFont();
         optEditorFontSize = config.getEditorFontsize();
+        optEditorToolbarView = config.getEditorToolbarView();
+
+        if(optEditorToolbarView.toLowerCase().equals("no"))
+            optEditorToolbarViewNo.setSelected(true);
+        else
+            optEditorToolbarViewYes.setSelected(true);
     }
 
     private void setDisplayOptions(){
@@ -265,5 +326,16 @@ public class OptionsDialog{
         optionShortcutPane.setVisible(false);
         optionAuthentificationPane.setVisible(false);
         optionAdvancedPane.setVisible(false);
+    }
+
+    private void resetOptions(){
+        config.resetAllOptions();
+
+        setGeneralOptions();
+        setEditorOptions();
+        setDisplayOptions();
+        setShortcutOptions();
+        setAuthentificationOptions();
+        setAdvancedOptions();
     }
 }

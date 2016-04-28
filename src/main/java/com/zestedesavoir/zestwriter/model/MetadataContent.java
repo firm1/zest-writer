@@ -40,4 +40,15 @@ public class MetadataContent {
     public String toString() {
         return getSlug();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof MetadataContent) {
+            MetadataContent ob = (MetadataContent) obj;
+            return getId().equals(ob.getId()) && getSlug().equals(ob.getSlug()) && getType().equals(ob.getType());
+        }
+        return super.equals(obj);
+    }
+
+
 }

@@ -52,6 +52,15 @@ public class UploadContentService extends Service<Void>{
                     } catch (IOException e) {
                         logger.error(e.getMessage(), e);
                     }
+
+                    updateMessage("Synchronisation des contenus ...");
+                    try {
+                        zdsUtils.getContentListOnline().clear();
+                        zdsUtils.initInfoOnlineContent("tutorial");
+                        zdsUtils.initInfoOnlineContent("article");
+                    } catch (IOException e) {
+                        logger.error("Echec de téléchargement des metadonnés des contenus en ligne", e);
+                    }
                 }
                 return null;
             }

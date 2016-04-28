@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.ziclix.python.sql.pipe.Source;
+import javafx.scene.control.*;
 import javafx.scene.text.Font;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.fxmisc.richtext.LineNumberFactory;
@@ -33,18 +34,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -53,6 +42,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Pair;
+
+import javax.tools.Tool;
 
 public class MdConvertController {
     private MainApp mainApp;
@@ -71,6 +62,7 @@ public class MdConvertController {
     @FXML private StyleClassedTextArea SourceText;
     @FXML private Button SaveButton;
     @FXML private Button RefreshButton;
+    @FXML private BorderPane BoxEditor;
     @FXML private BorderPane BoxRender;
     @FXML private Button FullScreeen;
 
@@ -94,6 +86,11 @@ public class MdConvertController {
         loader.setLocation(MainApp.class.getResource("fxml/Editor.fxml"));
         SplitPane writer = loader.load();
 
+        if(mainApp.getConfig().getEditorToolbarView().equals("no")){
+            BoxEditor.setTop(null);
+            BoxRender.setTop(null);
+        }
+
         SourceText.setFont(new Font(config.getEditorFont(), config.getEditorFontsize()));
         SourceText.setStyle("-fx-font-family: \"" + config.getEditorFont() + "\";");
         SourceText.replaceText(extract.getMarkdown());
@@ -105,41 +102,42 @@ public class MdConvertController {
         });
         updateRender();
         tab.getContent().addEventFilter(KeyEvent.KEY_PRESSED, t -> {
-            if (t.getCode().equals(KeyCode.S) && t.isControlDown()) {
+            if(t.getCode().equals(KeyCode.S) && t.isControlDown()){
                 HandleSaveButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.G) && t.isControlDown()) {
+            }else if(t.getCode().equals(KeyCode.G) && t.isControlDown()){
                 // put in bold
                 HandleBoldButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.I) && t.isControlDown()) {
+            }else if(t.getCode().equals(KeyCode.I) && t.isControlDown()){
                 // put in italic
                 HandleItalicButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.B) && t.isControlDown()) {
+            }else if(t.getCode().equals(KeyCode.B) && t.isControlDown()){
                 // put it barred
                 HandleBarredButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.K) && t.isControlDown()) {
+            }else if(t.getCode().equals(KeyCode.K) && t.isControlDown()){
                 // put it touch
                 HandleTouchButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.PLUS) && t.isControlDown() && t.isShiftDown()) {
+            }else if(t.getCode().equals(KeyCode.PLUS) && t.isControlDown() && t.isShiftDown()){
                 // put it exp
                 HandleExpButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.EQUALS) && t.isControlDown()) {
+            }else if(t.getCode().equals(KeyCode.EQUALS) && t.isControlDown()){
                 // put it ind
                 HandleIndButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.E) && t.isControlDown()) {
+            }else if(t.getCode().equals(KeyCode.E) && t.isControlDown()){
                 // put it center
                 HandleCenterButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.D) && t.isControlDown() && t.isShiftDown()) {
+            }else if(t.getCode().equals(KeyCode.D) && t.isControlDown() && t.isShiftDown()){
                 // put it right
                 HandleRightButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.SPACE) && t.isControlDown() && t.isShiftDown()) {
+            }else if(t.getCode().equals(KeyCode.SPACE) && t.isControlDown() && t.isShiftDown()){
                 // unbreakable space
                 HandleUnbreakableAction(null);
-            } else if(t.getCode().equals(KeyCode.L) && t.isControlDown()) {
+            }else if(t.getCode().equals(KeyCode.L) && t.isControlDown()){
                 // go to line
                 HandleGoToLineAction();
             }
-
         });
+
+        SourceText.requestFocus();
     }
 
 
@@ -147,17 +145,6 @@ public class MdConvertController {
         SourceText.getStyleClass().add("markdown-editor");
         SourceText.getStylesheets().add(MainApp.class.getResource("css/editor.css").toExternalForm());
         SourceText.setParagraphGraphicFactory(LineNumberFactory.get(SourceText));
-    }
-
-    private void replaceAction(String defaultString, int defaultOffsetCaret, String beforeString, String afterString) {
-        if(SourceText.getSelectedText().isEmpty()){
-            SourceText.replaceText(SourceText.getSelection(), defaultString);
-            SourceText.moveTo(SourceText.getCaretPosition() - defaultOffsetCaret);
-        }else{
-            SourceText.replaceText(SourceText.getSelection(), beforeString + SourceText.getSelectedText() + afterString);
-        }
-
-        SourceText.requestFocus();
     }
 
     /*
@@ -443,8 +430,6 @@ public class MdConvertController {
         } else {
             mdBox.getSplitPane().getItems().add(0, mdBox.getSummary());
         }
-
-        SourceText.requestFocus();
     }
 
     @FXML private void updateRender() {
@@ -569,6 +554,17 @@ public class MdConvertController {
         return render.toString();
     }
 
+    private void replaceAction(String defaultString, int defaultOffsetCaret, String beforeString, String afterString) {
+        if(SourceText.getSelectedText().isEmpty()){
+            SourceText.replaceText(SourceText.getSelection(), defaultString);
+            SourceText.moveTo(SourceText.getCaretPosition() - defaultOffsetCaret);
+        }else{
+            SourceText.replaceText(SourceText.getSelection(), beforeString + SourceText.getSelectedText() + afterString);
+        }
+
+        SourceText.requestFocus();
+    }
+
     public boolean isSaved() {
         return isSaved;
     }
@@ -612,5 +608,4 @@ public class MdConvertController {
     public int getHScrollValue(WebView view) {
         return (Integer) view.getEngine().executeScript("document.body.scrollLeft");
     }
-
 }
