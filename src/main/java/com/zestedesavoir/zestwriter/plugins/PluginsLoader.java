@@ -25,14 +25,14 @@ import java.util.jar.Manifest;
 public class PluginsLoader{
     private MainApp mainApp;
     private Configuration config;
-    private ArrayList<Class> plugins = new ArrayList<>();
+    private ArrayList<Plugin> plugins = new ArrayList<>();
 
     public PluginsLoader(MainApp mainApp){
         this.mainApp = mainApp;
         this.config = this.mainApp.getConfig();
     }
 
-    public ArrayList<Class> getPlugins(){
+    public ArrayList<Plugin> getPlugins(){
         File pluginsFile[];
 
         File pluginFolder = new File(config.getPluginsPath());
@@ -81,8 +81,8 @@ public class PluginsLoader{
                         URLClassLoader child = new URLClassLoader(url, this.getClass().getClassLoader());
                         Class classToLoad = Class.forName(mainClass, true, child);
 
-                        plugins.add(classToLoad);
-                        return plugins;
+                        Plugin plugin = new Plugin(mainApp, classToLoad);
+                        plugins.add(plugin);
                     }catch(Exception ex){
                         ex.printStackTrace();
                     }
@@ -93,6 +93,8 @@ public class PluginsLoader{
                     alert.setContentText("Unable to load <" + pluginFile.getName() + ">, the Main-Class has not ben founded in Manifest file");
                 }
             }
+
+            return plugins;
         }else{
             System.out.println("No plugins founded");
         }
