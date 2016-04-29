@@ -75,12 +75,18 @@ public class MdConvertController {
         return mdBox;
     }
 
+    public StyleClassedTextArea getSourceText(){
+        return SourceText;
+    }
+
     public void setMdBox(MdTextController mdBox, Textual extract, Tab tab) throws IOException {
         this.mainApp = mdBox.getMainApp();
         this.config = mainApp.getConfig();
         this.mdBox = mdBox;
         this.tab = tab;
         this.extract = extract;
+
+        mainApp.getPluginsManager().setEditor(this);
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MainApp.class.getResource("fxml/Editor.fxml"));

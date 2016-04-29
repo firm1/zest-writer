@@ -7,44 +7,71 @@ import javafx.stage.Stage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 public class Plugin{
     private MainApp mainApp;
-    private Stage window;
+    private ArrayList<Class> listenerClass = new ArrayList<>();
     private Class plugin;
-    private Method[] windowEventsMethod = WindowEvents.class.getDeclaredMethods();
+    private boolean enabled = false;
+    private boolean pluginError = false;
+
+
+    public Plugin(MainApp mainApp){
+        this.mainApp = mainApp;
+        pluginError = true;
+    }
 
     public Plugin(MainApp mainApp, Class plugin){
         this.mainApp = mainApp;
-        this.window = this.mainApp.getPrimaryStage();
         this.plugin = plugin;
+
+        listenerClass.add(plugin);
     }
 
     public void enable(){
+        enabled = true;
+        System.out.println("Version: " + method("getVersion").toString());
         method("onEnable");
+        listenerClass = (ArrayList<Class>)method("getListener");
+
+        if(!listenerClass.contains(plugin)){
+            listenerClass.add(plugin);
+        }
     }
 
     public void disable(){
         method("onDisable");
+        System.out.println("Invoke disable");
+        enabled = false;
     }
 
-    public void method(String method){
-        try{
-            Method methodInvoke;
-            methodInvoke = plugin.getDeclaredMethod(method);
-            Object instance = plugin.newInstance();
-            Object result = methodInvoke.invoke(instance);
-        }catch(NoSuchMethodException e){
-            System.out.println("No such method " + method);
-        }catch(IllegalAccessException | InstantiationException | InvocationTargetException e){
-            e.printStackTrace();
+    public Object method(String method){
+        if(!enabled || pluginError)
+            return null;
+
+        for(Class listener : listenerClass){
+            try{
+                Method methodInvoke;
+                methodInvoke = listener.getDeclaredMethod(method);
+                Object instance = listener.newInstance();
+                return methodInvoke.invoke(instance);
+            }catch(NoSuchMethodException e){
+            }catch(IllegalAccessException | InstantiationException | InvocationTargetException e){
+                e.printStackTrace();
+            }
         }
+
+        return null;
     }
 
-    public void method(String method, Object... value){
+    public Object method(String method, Object... value){
         /**
          * Cette méthode ne fonctionne pas, voir pourquoi car elle serait nettement plus pratique !
          */
+
+        if(!enabled || pluginError)
+            return null;
 
         Class[] type = new Class[value.length];
 
@@ -54,28 +81,45 @@ public class Plugin{
             System.out.println("-- " + type[i].getTypeName() + " ---- " + value.getClass().getTypeName());
         }
 
-        try{
-            Method methodInvoke;
-            methodInvoke = plugin.getDeclaredMethod(method, type);
-            Object instance = plugin.newInstance();
-            Object result = methodInvoke.invoke(instance, value);
-        }catch(NoSuchMethodException e){
-            System.out.println("No such method " + method);
-        }catch(IllegalAccessException | InstantiationException | InvocationTargetException e){
-            e.printStackTrace();
+        for(Class listener : listenerClass){
+            try{
+                Method methodInvoke;
+                methodInvoke = listener.getDeclaredMethod(method, type);
+                Object instance = listener.newInstance();
+                return methodInvoke.invoke(instance, value);
+            }catch(NoSuchMethodException e){
+            }catch(IllegalAccessException | InstantiationException | InvocationTargetException e){
+                e.printStackTrace();
+            }
         }
+
+        return null;
     }
 
-    public void method(String method, Class[] type, Object... value){
-        try{
-            Method methodInvoke;
-            methodInvoke = plugin.getDeclaredMethod(method, type);
-            Object instance = plugin.newInstance();
-            Object result = methodInvoke.invoke(instance, value);
-        }catch(NoSuchMethodException e){
-            System.out.println("No such method " + method);
-        }catch(IllegalAccessException | InstantiationException | InvocationTargetException e){
-            e.printStackTrace();
+    public Object method(String method, Class[] type, Object... value){
+        if(!enabled || pluginError)
+            return null;
+
+        for(Class listener : listenerClass){
+            try{
+                Method methodInvoke;
+                methodInvoke = listener.getDeclaredMethod(method, type);
+                Object instance = listener.newInstance();
+                return methodInvoke.invoke(instance, value);
+            }catch(NoSuchMethodException e){
+            }catch(IllegalAccessException | InstantiationException | InvocationTargetException e){
+                e.printStackTrace();
+            }
         }
+
+        return null;
+    }
+
+    public boolean isEnabled(){
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled){
+        this.enabled = !pluginError && enabled;
     }
 }

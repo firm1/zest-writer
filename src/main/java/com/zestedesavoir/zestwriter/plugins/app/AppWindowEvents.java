@@ -22,27 +22,27 @@ public class AppWindowEvents{
     private void setMainWindowEvents(){
         window.widthProperty().addListener((observable, oldValue, newValue) -> {
             for(Plugin plugin : plugins){
-                plugin.method("WindowWidthResizeEvent", new Class[]{Double.TYPE, Double.TYPE}, oldValue.doubleValue(), newValue.doubleValue());
+                plugin.method("onWindowWidthResizeEvent", new Class[]{Integer.TYPE, Integer.TYPE}, oldValue.intValue(), newValue.intValue());
             }
         });
         window.heightProperty().addListener((observable, oldValue, newValue) -> {
             for(Plugin plugin : plugins){
-                plugin.method("WindowHeightResizeEvent", new Class[]{Double.TYPE, Double.TYPE}, oldValue.doubleValue(), newValue.doubleValue());
+                plugin.method("onWindowHeightResizeEvent", new Class[]{Integer.TYPE, Integer.TYPE}, oldValue.intValue(), newValue.intValue());
             }
         });
         window.setOnCloseRequest(event -> {
             for(Plugin plugin : plugins){
-                plugin.method("WindowCloseEvent");
+                plugin.method("onWindowCloseEvent");
             }
         });
         window.maximizedProperty().addListener((observable, oldValue, newValue) -> {
             for(Plugin plugin : plugins){
-                plugin.method("WindowMaximizedChangeEvent", new Class[]{Boolean.TYPE, Boolean.TYPE}, oldValue, newValue);
+                plugin.method("onWindowMaximizedChangeEvent", new Class[]{Boolean.TYPE, Boolean.TYPE}, oldValue, newValue);
             }
         });
         window.focusedProperty().addListener((observable, oldValue, newValue) -> {
             for(Plugin plugin : plugins){
-                plugin.method("WindowFocusChangeEvent", new Class[]{Boolean.TYPE, Boolean.TYPE}, oldValue, newValue);
+                plugin.method("onWindowFocusChangeEvent", new Class[]{Boolean.TYPE, Boolean.TYPE}, oldValue, newValue);
             }
         });
     }

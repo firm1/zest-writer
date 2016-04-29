@@ -101,6 +101,10 @@ public class MainApp extends Application {
         return extracts;
     }
 
+    public PluginsManager getPluginsManager(){
+        return pm;
+    }
+
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
