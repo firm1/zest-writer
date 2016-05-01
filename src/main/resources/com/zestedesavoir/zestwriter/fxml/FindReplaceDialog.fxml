@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="230.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog">
+   <children>
+      <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <GridPane>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Rechercher" />
+                  <Label text="Remplacer par" GridPane.rowIndex="1" />
+                  <TextField fx:id="searchField" onKeyReleased="#HandleSearchFieldChange" GridPane.columnIndex="1" />
+                  <TextField fx:id="replaceField" onKeyReleased="#HandleReplaceFieldChange" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </GridPane>
+            <HBox>
+               <children>
+                  <VBox alignment="CENTER_LEFT" prefHeight="10.0" prefWidth="300.0">
+                     <children>
+                        <CheckBox fx:id="caseSensitive" mnemonicParsing="false" text="Respecter la case">
+                           <VBox.margin>
+                              <Insets bottom="5.0" top="5.0" />
+                           </VBox.margin>
+                        </CheckBox>
+                        <CheckBox fx:id="wholeWord" mnemonicParsing="false" text="Mot entier uniquement">
+                           <VBox.margin>
+                              <Insets bottom="5.0" top="5.0" />
+                           </VBox.margin>
+                        </CheckBox>
+                        <CheckBox fx:id="markLines" mnemonicParsing="false" text="Marquer les lignes">
+                           <VBox.margin>
+                              <Insets bottom="5.0" top="5.0" />
+                           </VBox.margin>
+                        </CheckBox>
+                        <CheckBox fx:id="selectionOnly" mnemonicParsing="false" text="Sélection uniquement">
+                           <VBox.margin>
+                              <Insets bottom="5.0" top="5.0" />
+                           </VBox.margin>
+                        </CheckBox>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER_LEFT" prefHeight="10.0" prefWidth="300.0">
+                     <children>
+                        <Button fx:id="searchButton" mnemonicParsing="false" onAction="#HandleSearchButtonAction" prefHeight="25.0" prefWidth="284.0" text="Rechercher">
+                           <VBox.margin>
+                              <Insets bottom="5.0" top="5.0" />
+                           </VBox.margin>
+                        </Button>
+                        <Button fx:id="replaceButton" mnemonicParsing="false" onAction="#HandleReplaceButtonAction" prefHeight="25.0" prefWidth="404.0" text="Remplacer">
+                           <VBox.margin>
+                              <Insets bottom="5.0" top="5.0" />
+                           </VBox.margin>
+                        </Button>
+                        <Button fx:id="replaceAllButton" mnemonicParsing="false" onAction="#HandleReplaceAllButtonAction" prefHeight="25.0" prefWidth="323.0" text="Remplacer tout">
+                           <VBox.margin>
+                              <Insets bottom="5.0" top="5.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="10.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="iterations" text="0 itération trouvé" />
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets left="15.0" right="15.0" />
+   </padding>
+</AnchorPane>
