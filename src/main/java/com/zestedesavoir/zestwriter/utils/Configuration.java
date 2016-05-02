@@ -12,6 +12,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
 
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,20 +168,14 @@ public class Configuration {
 
     }
 
-    public String getLastRelease() {
+    public String getLastRelease() throws ClientProtocolException, IOException {
         String projecUrlRelease = "https://api.github.com/repos/firm1/zest-writer/releases/latest";
 
-        try {
-            String json = Request.Get(projecUrlRelease).execute().returnContent().asString();
-            ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
-            Map map = mapper.readValue(json, Map.class);
-            if(map.containsKey("tag_name")) {
-                return (String) map.get("tag_name");
-            }
-
-        } catch (IOException e) {
-            logger.error("Impossible de joindre l'api de github", e);
-            e.printStackTrace();
+        String json = Request.Get(projecUrlRelease).execute().returnContent().asString();
+        ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
+        Map map = mapper.readValue(json, Map.class);
+        if(map.containsKey("tag_name")) {
+            return (String) map.get("tag_name");
         }
         return null;
     }
