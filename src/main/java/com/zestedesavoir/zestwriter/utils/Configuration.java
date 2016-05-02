@@ -189,57 +189,48 @@ public class Configuration {
     /*
      * Zest-Writer data
      */
-    public double getDisplayWindowWidth(){
-        if(conf.containsKey(ConfigData.DisplayWindowWidth.getKey())){
-            if(NumberUtils.isNumber(conf.getProperty(ConfigData.DisplayWindowWidth.getKey())))
-                return Double.parseDouble(conf.getProperty(ConfigData.DisplayWindowWidth.getKey()));
+    private double getGenericDoubleDisplay(ConfigData configData) {
+        if(conf.containsKey(configData.getKey())){
+            if(NumberUtils.isNumber(conf.getProperty(configData.getKey())))
+                return Double.parseDouble(conf.getProperty(configData.getKey()));
             else
-                return Double.parseDouble(ConfigData.DisplayWindowWidth.getDefaultValue());
+                return Double.parseDouble(configData.getDefaultValue());
         }else{
-            return Double.parseDouble(ConfigData.DisplayWindowWidth.getDefaultValue());
+            return Double.parseDouble(configData.getDefaultValue());
         }
+    }
+
+    private boolean getGenericBooleanDisplay(ConfigData configData) {
+        if(conf.containsKey(configData.getKey())){
+            return Boolean.parseBoolean(conf.getProperty(configData.getKey()));
+        }else{
+            return Boolean.parseBoolean(configData.getDefaultValue());
+        }
+    }
+
+    public double getDisplayWindowWidth(){
+        return getGenericDoubleDisplay(ConfigData.DisplayWindowWidth);
     }
     public void setDisplayWindowWidth(String windowWidth){
         conf.setProperty(ConfigData.DisplayWindowWidth.getKey(), windowWidth);
     }
 
     public double getDisplayWindowHeight(){
-        if(conf.containsKey(ConfigData.DisplayWindowHeight.getKey())){
-            if(NumberUtils.isNumber(conf.getProperty(ConfigData.DisplayWindowHeight.getKey())))
-                return Double.parseDouble(conf.getProperty(ConfigData.DisplayWindowHeight.getKey()));
-            else
-                return Double.parseDouble(ConfigData.DisplayWindowHeight.getDefaultValue());
-        }else{
-            return Double.parseDouble(ConfigData.DisplayWindowHeight.getDefaultValue());
-        }
+        return getGenericDoubleDisplay(ConfigData.DisplayWindowHeight);
     }
     public void setDisplayWindowHeight(String windowWidth){
         conf.setProperty(ConfigData.DisplayWindowHeight.getKey(), windowWidth);
     }
 
     public double getDisplayWindowPositionX(){
-        if(conf.containsKey(ConfigData.DisplayWindowPositionX.getKey())){
-            if(NumberUtils.isNumber(conf.getProperty(ConfigData.DisplayWindowPositionX.getKey())))
-                return Double.parseDouble(conf.getProperty(ConfigData.DisplayWindowPositionX.getKey()));
-            else
-                return Double.parseDouble(ConfigData.DisplayWindowPositionX.getDefaultValue());
-        }else{
-            return Double.parseDouble(ConfigData.DisplayWindowPositionX.getDefaultValue());
-        }
+        return getGenericDoubleDisplay(ConfigData.DisplayWindowPositionX);
     }
     public void setDisplayWindowPositionX(String windowWidth){
         conf.setProperty(ConfigData.DisplayWindowPositionX.getKey(), windowWidth);
     }
 
     public double getDisplayWindowPositionY(){
-        if(conf.containsKey(ConfigData.DisplayWindowPositionY.getKey())){
-            if(NumberUtils.isNumber(conf.getProperty(ConfigData.DisplayWindowPositionY.getKey())))
-                return Double.parseDouble(conf.getProperty(ConfigData.DisplayWindowPositionY.getKey()));
-            else
-                return Double.parseDouble(ConfigData.DisplayWindowPositionY.getDefaultValue());
-        }else{
-            return Double.parseDouble(ConfigData.DisplayWindowPositionY.getDefaultValue());
-        }
+        return getGenericDoubleDisplay(ConfigData.DisplayWindowPositionY);
     }
     public void setDisplayWindowPositionY(String windowWidth){
         conf.setProperty(ConfigData.DisplayWindowPositionY.getKey(), windowWidth);
@@ -260,14 +251,7 @@ public class Configuration {
     }
 
     public Boolean getEditorSmart(){
-        if(conf.containsKey(ConfigData.EditorSmart.getKey())){
-            if(NumberUtils.isNumber(conf.getProperty(ConfigData.EditorSmart.getKey())))
-                return Boolean.parseBoolean(conf.getProperty(ConfigData.EditorSmart.getKey()));
-            else
-                return Boolean.parseBoolean(ConfigData.EditorSmart.getDefaultValue());
-        }else{
-            return Boolean.parseBoolean(ConfigData.EditorSmart.getDefaultValue());
-        }
+        return getGenericBooleanDisplay(ConfigData.EditorSmart);
     }
 
     public void isEditorSmart(String editorSmart){
@@ -286,15 +270,9 @@ public class Configuration {
     }
 
     public double getEditorFontsize(){
-        if(conf.containsKey(ConfigData.EditorFontSize.getKey())){
-            if(NumberUtils.isNumber(conf.getProperty(ConfigData.EditorFontSize.getKey())))
-                return Double.parseDouble(conf.getProperty(ConfigData.EditorFontSize.getKey()));
-            else
-                return Double.parseDouble(ConfigData.EditorFontSize.getDefaultValue());
-        }else{
-            return Double.parseDouble(ConfigData.EditorFontSize.getDefaultValue());
-        }
+        return getGenericDoubleDisplay(ConfigData.EditorFontSize);
     }
+
     public void setEditorFontSize(String fontSize){
         conf.setProperty(ConfigData.EditorFontSize.getKey(), fontSize);
     }
@@ -323,35 +301,21 @@ public class Configuration {
     }
 
     public boolean isDisplayWindowPersonnalDimension(){
-        if(conf.containsKey(ConfigData.DisplayWindowPersonnalDimension.getKey())){
-            return Boolean.parseBoolean(conf.getProperty(ConfigData.DisplayWindowPersonnalDimension.getKey()));
-        }else{
-            return Boolean.parseBoolean(ConfigData.DisplayWindowPersonnalDimension.getDefaultValue());
-        }
+        return getGenericBooleanDisplay(ConfigData.DisplayWindowPersonnalDimension);
     }
     public void setDisplayWindowStandardDimension(String standardDimension){
         conf.setProperty(ConfigData.DisplayWindowPersonnalDimension.getKey(), standardDimension);
-        System.out.println("set dim " + standardDimension);
     }
 
     public boolean isDisplayWindowPersonnalPosition(){
-        if(conf.containsKey(ConfigData.DisplayWindowPersonnalPosition.getKey())){
-            return Boolean.parseBoolean(conf.getProperty(ConfigData.DisplayWindowPersonnalPosition.getKey()));
-        }else{
-            return Boolean.parseBoolean(ConfigData.DisplayWindowPersonnalPosition.getDefaultValue());
-        }
+        return getGenericBooleanDisplay(ConfigData.DisplayWindowPersonnalPosition);
     }
     public void setDisplayWindowPersonnalPosition(String standardPosition){
         conf.setProperty(ConfigData.DisplayWindowPersonnalPosition.getKey(), standardPosition);
-        System.out.println("set pos " + standardPosition);
     }
 
     public boolean isDisplayWindowMaximize(){
-        if(conf.containsKey(ConfigData.DisplayWindowMaximize.getKey())){
-            return Boolean.parseBoolean(conf.getProperty(ConfigData.DisplayWindowMaximize.getKey()));
-        }else{
-            return Boolean.parseBoolean(ConfigData.DisplayWindowMaximize.getDefaultValue());
-        }
+        return getGenericBooleanDisplay(ConfigData.DisplayWindowMaximize);
     }
     public void setDisplayWindowMaximize(String maximize){
         conf.setProperty(ConfigData.DisplayWindowMaximize.getKey(), maximize);
