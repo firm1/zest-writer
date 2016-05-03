@@ -28,6 +28,11 @@ public class PluginsManager{
 
     public void setEditor(MdConvertController editor){
         this.editor = editor;
+
+        for(Plugin plugin : plugins){
+            plugin.setEditor(editor);
+        }
+
         editorEvents();
     }
 

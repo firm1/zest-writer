@@ -1,17 +1,21 @@
 package com.zestedesavoir.zestwriter.plugins;
 
 
+import com.kenai.jffi.Main;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.plugins.events.WindowEvents;
+import com.zestedesavoir.zestwriter.view.MdConvertController;
 import javafx.stage.Stage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Plugin{
     private MainApp mainApp;
     private ArrayList<Class> listenerClass = new ArrayList<>();
+    private ZwPlugin zwPlugin;
     private Class plugin;
     private boolean enabled = false;
     private boolean pluginError = false;
@@ -32,12 +36,22 @@ public class Plugin{
     public void enable(){
         enabled = true;
         System.out.println("Version: " + method("getVersion").toString());
-        method("onEnable");
+        ZwPlugin zwPlugin = (ZwPlugin)method("onDefine");
+
+        method("setMainApp", new Class[]{MainApp.class}, mainApp);
+
         listenerClass = (ArrayList<Class>)method("getListener");
 
-        if(!listenerClass.contains(plugin)){
-            listenerClass.add(plugin);
+        if(listenerClass == null){
+            pluginError = true;
+        }else{
+            if(! listenerClass.contains(plugin)){
+                listenerClass.add(plugin);
+            }
         }
+
+
+        method("onEnable");
     }
 
     public void disable(){
@@ -55,7 +69,9 @@ public class Plugin{
                 Method methodInvoke;
                 methodInvoke = listener.getDeclaredMethod(method);
                 Object instance = listener.newInstance();
-                return methodInvoke.invoke(instance);
+                Object result = methodInvoke.invoke(instance);
+                System.out.println("Return .. " + method);
+                return result;
             }catch(NoSuchMethodException e){
             }catch(IllegalAccessException | InstantiationException | InvocationTargetException e){
                 e.printStackTrace();
@@ -105,7 +121,9 @@ public class Plugin{
                 Method methodInvoke;
                 methodInvoke = listener.getDeclaredMethod(method, type);
                 Object instance = listener.newInstance();
-                return methodInvoke.invoke(instance, value);
+                Object result = methodInvoke.invoke(instance, value);
+                System.out.println("Return .. " + method);
+                return result;
             }catch(NoSuchMethodException e){
             }catch(IllegalAccessException | InstantiationException | InvocationTargetException e){
                 e.printStackTrace();
@@ -121,5 +139,9 @@ public class Plugin{
 
     public void setEnabled(boolean enabled){
         this.enabled = !pluginError && enabled;
+    }
+
+    public void setEditor(MdConvertController editor){
+        zwPlugin.setEditor(editor);
     }
 }
