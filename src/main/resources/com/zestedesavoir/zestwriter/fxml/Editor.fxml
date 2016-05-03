@@ -13,7 +13,7 @@
 <?import javafx.scene.web.WebView?>
 <?import de.jensd.fx.glyphs.fontawesome.*?>
 
-<SplitPane dividerPositions="0.5" prefHeight="633.0" prefWidth="773.0" stylesheets="@../css/dark.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MdConvertController">
+<SplitPane xmlns:fx="http://javafx.com/fxml/1" dividerPositions="0.5" prefHeight="633.0" prefWidth="773.0" stylesheets="@../css/dark.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MdConvertController">
    <items>
       <BorderPane fx:id="BoxEditor">
          <top>
@@ -145,6 +145,9 @@
             <StyleClassedTextArea fx:id="SourceText" wrapText="true" BorderPane.alignment="CENTER" >
             </StyleClassedTextArea>
          </center>
+         <bottom>
+             <Label text="Nombre de mots :" fx:id="wordcount"></Label>  
+         </bottom>
       </BorderPane>
       <BorderPane fx:id="BoxRender" prefHeight="200.0" prefWidth="200.0">
          <center>
