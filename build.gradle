@@ -1,5 +1,8 @@
-// Declares binary plugin and its required JavaFX classpath
-apply plugin: 'java'
+plugins {
+    id "java"
+    id "com.eriwen.gradle.css" version "2.12.0"
+}
+
 apply from: "http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.plugin"
 
 processResources {
@@ -53,6 +56,7 @@ String getProjectProperty(String propertyName) {
 repositories {
     mavenLocal()
     mavenCentral()
+    jcenter()
 }
 
 sourceSets {
@@ -87,6 +91,17 @@ task fatJar(type: Jar) {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
+
+minifyCss {
+    source = "${sourceSets.main.resources.srcDirs.first()}/com/zestedesavoir/zestwriter/css/content.css"
+    dest = "${sourceSets.main.output.resourcesDir}/com/zestedesavoir/zestwriter/css/content.css"
+    yuicompressor { // Optional
+        lineBreakPos = -1
+    }
+}
+
+tasks.cssToBin.dependsOn tasks.minifyCss
+tasks.minifyCss.dependsOn tasks.processResources
 
 dependencies {
     testCompile 'junit:junit:4.12'
