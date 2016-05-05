@@ -15,7 +15,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="Fichier">
             <items>
-                  <MenuItem mnemonicParsing="false" onAction="#HandleNewButtonAction" text="Nouveau">
+                  <MenuItem fx:id="menuNewContent" mnemonicParsing="false" onAction="#HandleNewButtonAction" text="Nouveau">
                      <graphic>
                         <MaterialDesignIconView fill="#084561" glyphName="FOLDER_PLUS" size="1.8em" />
                      </graphic>

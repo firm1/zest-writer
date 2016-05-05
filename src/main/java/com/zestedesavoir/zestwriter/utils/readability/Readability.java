@@ -43,16 +43,6 @@ public class Readability {
         this.words = getNumberOfWords(text);
         this.syllables = getNumberOfSyllables(text);
         this.characters = getNumberOfCharacters(text);
-
-
-
-        /*
-        System.out.println("Sentences:" + sentences);
-        System.out.println("Words:" + words);
-        System.out.println("Characters:" + characters);
-        System.out.println("Syllables:" + syllables);
-        System.out.println("Complex Words:" + complex);
-        */
     }
 
     /**

@@ -473,28 +473,4 @@ public class ZdsHttp {
     public boolean isAuthenticated() {
         return authenticated;
     }
-
-    public static void main(String[] args) {
-        Configuration config = new Configuration(System.getProperty("user.home"));
-
-        try {
-            ZdsHttp zdsutils = new ZdsHttp(config);
-            if (zdsutils.login("admin", "admin")) {
-                zdsutils.initInfoOnlineContent("tutorial");
-                zdsutils.initInfoOnlineContent("article");
-
-                for (MetadataContent meta : zdsutils.getContentListOnline()) {
-                    zdsutils.downloaDraft(meta.getId(), meta.getType());
-                    zdsutils.unzipOnlineContent(zdsutils.getOnlineContentPathDir() + File.separator + meta.getSlug() + ".zip");
-                }
-            } else {
-                System.out.println("Echec de connexion");
-            }
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 }

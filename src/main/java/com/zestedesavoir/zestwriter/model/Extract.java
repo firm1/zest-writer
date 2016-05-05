@@ -32,11 +32,6 @@ public class Extract extends MetaContent implements Textual, ContentNode{
         this._text = text;
     }
 
-    public Extract(String object, String slug, String title, String basePath, String text) {
-        super(object, slug, title, basePath);
-        this._text = text;
-    }
-
     public String getText() {
         return _text;
     }

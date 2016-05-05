@@ -10,6 +10,7 @@ import com.zestedesavoir.zestwriter.model.Container;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
 import com.zestedesavoir.zestwriter.model.Extract;
+import com.zestedesavoir.zestwriter.model.MetaAttribute;
 import com.zestedesavoir.zestwriter.model.MetaContent;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
@@ -119,5 +120,24 @@ public class FunctionTreeFactory {
     public static String changeLocationImages(String text) {
         String regex = "()(!\\[.*?\\]\\()([^http])(.+?)(\\))";
         return Pattern.compile(regex, Pattern.MULTILINE).matcher(text).replaceAll("$1$2http://zestedesavoir.com/$3$4$5");
+    }
+
+    public static Container getContainerOfMetaAttribute(Container c, MetaAttribute meta) {
+        if(c == null || meta == null) {
+            return null;
+        }
+        if(meta.equals(c.getIntroduction()) || meta.equals(c.getConclusion())) {
+            return c;
+        } else {
+            for(MetaContent ch:c.getChildren()) {
+                if(ch instanceof Container) {
+                    Container result = getContainerOfMetaAttribute((Container) ch, meta);
+                    if(result != null) {
+                        return result;
+                    }
+                }
+            }
+            return null;
+        }
     }
 }
