@@ -56,7 +56,9 @@ String getProjectProperty(String propertyName) {
 repositories {
     mavenLocal()
     mavenCentral()
-    jcenter()
+    maven {
+        url "https://dl.bintray.com/firm1/maven"
+    }
 }
 
 sourceSets {
@@ -116,12 +118,12 @@ dependencies {
             'de.julielab:aliasi-lingpipe:4.1.0',
             'org.python:jython-standalone:2.7.1b3',
             'org.jsoup:jsoup:1.8.1',
-            'org.slf4j:slf4j-api:1.7.21',
             'org.slf4j:slf4j-log4j12:1.7.21',
             'org.fxmisc.richtext:richtextfx:0.6.10',
             'de.jensd:fontawesomefx:8.9',
             'org.zeroturnaround:zt-zip:1.9',
-            'org.controlsfx:controlsfx:8.40.10'
+            'org.controlsfx:controlsfx:8.40.10',
+            'com.zestedesavoir.zmarkdown:java-zmarkdown:2.6.0'
 }
 
 test {
