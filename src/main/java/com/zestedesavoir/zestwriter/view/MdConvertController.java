@@ -112,40 +112,22 @@ public class MdConvertController {
         });
         updateRender();
         tab.getContent().addEventFilter(KeyEvent.KEY_PRESSED, t -> {
-            if(t.getCode().equals(KeyCode.S) && t.isControlDown()){
-                HandleSaveButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.G) && t.isControlDown()){
-                // put in bold
-                HandleBoldButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.I) && t.isControlDown()){
-                // put in italic
-                HandleItalicButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.B) && t.isControlDown()){
-                // put it barred
-                HandleBarredButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.K) && t.isControlDown()){
-                // put it touch
-                HandleTouchButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.PLUS) && t.isControlDown() && t.isShiftDown()){
-                // put it exp
-                HandleExpButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.EQUALS) && t.isControlDown()){
-                // put it ind
-                HandleIndButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.E) && t.isControlDown()){
-                // put it center
-                HandleCenterButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.D) && t.isControlDown() && t.isShiftDown()){
-                // put it right
-                HandleRightButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.SPACE) && t.isControlDown() && t.isShiftDown()){
-                // unbreakable space
-                HandleUnbreakableAction(null);
-            }else if(t.getCode().equals(KeyCode.L) && t.isControlDown()){
-                // go to line
-                HandleGoToLineAction();
-            } else if(t.getCode().equals(KeyCode.F) && t.isControlDown()) {
-                HandleFindReplaceDialog();
+            if(t.isControlDown() && !t.isAltDown()) {
+                switch(t.getCode()) {
+                    case S: HandleSaveButtonAction(null); break;
+                    case G: HandleBoldButtonAction(null); break;
+                    case I: HandleItalicButtonAction(null); break;
+                    case B: HandleBarredButtonAction(null); break;
+                    case K: HandleTouchButtonAction(null); break;
+                    case PLUS: HandleExpButtonAction(null); break;
+                    case EQUALS: HandleIndButtonAction(null); break;
+                    case E: HandleCenterButtonAction(null); break;
+                    case D: if(t.isShiftDown()) {HandleRightButtonAction(null);} break;
+                    case SPACE: HandleUnbreakableAction(null); break;
+                    case L: HandleGoToLineAction(); break;
+                    case F: HandleFindReplaceDialog(); break;
+                    default: break;
+                }
             }
         });
 
