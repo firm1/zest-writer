@@ -6,6 +6,8 @@ import com.zestedesavoir.zestwriter.plugins.app.AppEditorEvents;
 import com.zestedesavoir.zestwriter.plugins.app.AppWindowEvents;
 import com.zestedesavoir.zestwriter.view.MdConvertController;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -14,9 +16,11 @@ public class PluginsManager{
     private Stage window;
     private MdConvertController editor;
     private PluginsLoader pluginsLoader;
+    private Logger logger;
     private ArrayList<Plugin> plugins = new ArrayList<>();
 
     public PluginsManager(MainApp mainApp){
+        logger = LoggerFactory.getLogger(PluginsManager.class);
         this.mainApp = mainApp;
         this.window = mainApp.getPrimaryStage();
         pluginsLoader = new PluginsLoader(mainApp);
@@ -37,11 +41,12 @@ public class PluginsManager{
     }
 
     public void enablePlugins(){
+        logger.info("[PLUGINS] Enable plugins");
         plugins.forEach(Plugin::enable);
     }
 
     public void disablePlugins(){
-        System.out.println("Disable plugin");
+        logger.info("[PLUGINS] Disable plugins");
         plugins.forEach(Plugin::disable);
     }
 

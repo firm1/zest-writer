@@ -6,6 +6,8 @@ import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.plugins.events.WindowEvents;
 import com.zestedesavoir.zestwriter.view.MdConvertController;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -17,29 +19,43 @@ public class Plugin{
     private ArrayList<Class> listenerClass = new ArrayList<>();
     private ZwPlugin zwPlugin;
     private Class plugin;
+    private Logger logger;
+    private String name;
     private boolean enabled = false;
     private boolean pluginError = false;
 
 
-    public Plugin(MainApp mainApp){
+    public Plugin(MainApp mainApp, String name){
+        logger = LoggerFactory.getLogger(Plugin.class);
+
         this.mainApp = mainApp;
+        this.name = name;
         pluginError = true;
     }
 
-    public Plugin(MainApp mainApp, Class plugin){
+    public Plugin(MainApp mainApp, String name, Class plugin){
+        logger = LoggerFactory.getLogger(Plugin.class);
+
         this.mainApp = mainApp;
+        this.name = name;
         this.plugin = plugin;
 
         listenerClass.add(plugin);
     }
 
     public void enable(){
+        logger.debug("[PLUGINS] Enable <" + name + ">");
+
         enabled = true;
-        System.out.println("Version: " + method("getVersion").toString());
+        logger.debug("[PLUGINS]   Call <onDefine> method");
         ZwPlugin zwPlugin = (ZwPlugin)method("onDefine");
 
+        logger.debug("[PLUGINS]   Version: " + method("getVersion"));
+
+        logger.debug("[PLUGINS]   Call <setMainApp> method");
         method("setMainApp", new Class[]{MainApp.class}, mainApp);
 
+        logger.debug("[PLUGINS]   Call <getListener> method");
         listenerClass = (ArrayList<Class>)method("getListener");
 
         if(listenerClass == null){
@@ -50,13 +66,15 @@ public class Plugin{
             }
         }
 
-
+        logger.debug("[PLUGINS]   Call <onEnable> method of plugin");
         method("onEnable");
     }
 
     public void disable(){
+        logger.debug("[PLUGINS] Disable <" + plugin.getName() + ">");
+        logger.debug("[PLUGINS]   Call <onDisable> method");
+
         method("onDisable");
-        System.out.println("Invoke disable");
         enabled = false;
     }
 
@@ -143,5 +161,9 @@ public class Plugin{
 
     public void setEditor(MdConvertController editor){
         zwPlugin.setEditor(editor);
+    }
+
+    public void setName(String name){
+        this.name = name;
     }
 }

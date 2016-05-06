@@ -4,6 +4,8 @@ package com.zestedesavoir.zestwriter.plugins;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import javafx.scene.control.Alert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,14 +27,18 @@ import java.util.jar.Manifest;
 public class PluginsLoader{
     private MainApp mainApp;
     private Configuration config;
+    private Logger logger;
     private ArrayList<Plugin> plugins = new ArrayList<>();
 
     public PluginsLoader(MainApp mainApp){
         this.mainApp = mainApp;
         this.config = this.mainApp.getConfig();
+
+        logger = LoggerFactory.getLogger(PluginsLoader.class);
     }
 
     public ArrayList<Plugin> getPlugins(){
+        logger.debug("[PLUGINS] Starting loading plugins");
         File pluginsFile[];
 
         File pluginFolder = new File(config.getPluginsPath());
@@ -40,11 +46,11 @@ public class PluginsLoader{
 
 
         if(pluginsFile != null){
-            System.out.println("---Start List plugins---");
+            logger.debug("[PLUGINS] Start list of plugins");
             for(File pluginFile : pluginsFile){
-                System.out.println(pluginFile.getName());
+                logger.debug("[PLUGINS]   " + pluginFile.getName());
             }
-            System.out.println("---End List plugins---");
+            logger.debug("[PLUGINS] End list of plugins");
 
             String mainClass = "";
             URL[] url = new URL[1];
@@ -53,7 +59,7 @@ public class PluginsLoader{
                 try{
                     url[0] = new URL("file:///" + pluginFile.getPath());
                 }catch(MalformedURLException e){
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
 
                 JarFile jarFile = null;
@@ -71,20 +77,19 @@ public class PluginsLoader{
                             mainClass = attrValue;
                     }
                 }catch(IOException e){
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
 
 
                 if(! mainClass.isEmpty()){
                     try{
-                        System.out.println(mainClass + " - (MainClass)");
                         URLClassLoader child = new URLClassLoader(url, this.getClass().getClassLoader());
                         Class classToLoad = Class.forName(mainClass, true, child);
 
-                        Plugin plugin = new Plugin(mainApp, classToLoad);
+                        Plugin plugin = new Plugin(mainApp, pluginFile.getName(), classToLoad);
                         plugins.add(plugin);
-                    }catch(Exception ex){
-                        ex.printStackTrace();
+                    }catch(Exception e){
+                        logger.error(e.getMessage(), e);
                     }
                 }else{
                     Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -96,7 +101,7 @@ public class PluginsLoader{
 
             return plugins;
         }else{
-            System.out.println("No plugins founded");
+            logger.debug("[PLUGINS] No plugin founded in " + pluginFolder.getPath());
         }
 
         return new ArrayList<>();
