@@ -83,11 +83,10 @@ public class Extract extends MetaContent implements Textual, ContentNode{
                 bfString.append(scanner.nextLine());
                 bfString.append("\n");
             }
+            scanner.close();
             return bfString.toString();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            scanner.close();
         }
         return null;
     }

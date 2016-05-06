@@ -171,7 +171,7 @@
                                     </VBox>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="optionDisplayPane" prefHeight="200.0" prefWidth="450.0" visible="false">
+                              <AnchorPane fx:id="optionDisplayPane" prefHeight="200.0" prefWidth="450.0">
                                  <children>
                                     <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
@@ -187,13 +187,84 @@
                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                              </columnConstraints>
                                              <rowConstraints>
+                                                <RowConstraints />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
-                                                <Label text="Thème" />
-                                                <ComboBox fx:id="optDisplayTheme" prefWidth="150.0" GridPane.columnIndex="1" />
+                                                <Label text="Thème" GridPane.rowIndex="2">
+                                                   <GridPane.margin>
+                                                      <Insets left="10.0" />
+                                                   </GridPane.margin></Label>
+                                                <ComboBox fx:id="optDisplayTheme" prefHeight="25.0" prefWidth="281.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                <Label text="Mémoriser la dimension de la fenêtre" GridPane.rowIndex="5">
+                                                   <padding>
+                                                      <Insets left="10.0" />
+                                                   </padding></Label>
+                                                <Label text="Mémoriser la position de la fenêtre" GridPane.rowIndex="6">
+                                                   <padding>
+                                                      <Insets left="10.0" />
+                                                   </padding></Label>
+                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                                   <children>
+                                                      <RadioButton fx:id="optDisplayWindowDimensionYes" mnemonicParsing="false" text="Oui">
+                                                         <toggleGroup>
+                                                            <ToggleGroup fx:id="displayDimension" />
+                                                         </toggleGroup>
+                                                      </RadioButton>
+                                                      <RadioButton fx:id="optDisplayWindowDimensionNo" mnemonicParsing="false" text="Non" toggleGroup="$displayDimension">
+                                                         <padding>
+                                                            <Insets left="10.0" />
+                                                         </padding>
+                                                      </RadioButton>
+                                                   </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                                   <children>
+                                                      <RadioButton fx:id="optDisplayWindowPositionYes" mnemonicParsing="false" text="Oui">
+                                                         <toggleGroup>
+                                                            <ToggleGroup fx:id="displayPosition" />
+                                                         </toggleGroup>
+                                                      </RadioButton>
+                                                      <RadioButton fx:id="optDisplayWindowPositionNo" mnemonicParsing="false" text="Non" toggleGroup="$displayPosition">
+                                                         <padding>
+                                                            <Insets left="10.0" />
+                                                         </padding>
+                                                      </RadioButton>
+                                                   </children>
+                                                </HBox>
+                                                <Label text="Démarrer avec la fenêtre agrandi" GridPane.rowIndex="4">
+                                                   <padding>
+                                                      <Insets left="10.0" />
+                                                   </padding>
+                                                </Label>
+                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                                   <children>
+                                                      <RadioButton fx:id="optDisplayWindowMaximizeYes" mnemonicParsing="false" onAction="#HandleDisplayWindowMaximizeYes" text="Oui">
+                                                         <toggleGroup>
+                                                            <ToggleGroup fx:id="displayMaximize" />
+                                                         </toggleGroup>
+                                                      </RadioButton>
+                                                      <RadioButton fx:id="optDisplayWindowMaximizeNo" mnemonicParsing="false" onAction="#HandleDisplayWindowMaximizeNo" text="Non" toggleGroup="$displayMaximize">
+                                                         <padding>
+                                                            <Insets left="10.0" />
+                                                         </padding>
+                                                      </RadioButton>
+                                                   </children>
+                                                </HBox>
+                                                <Label text="Fenêtre" GridPane.rowIndex="3">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font></Label>
+                                                <Label text="Thème" GridPane.rowIndex="1">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
                                              </children>
                                           </GridPane>
                                        </children>

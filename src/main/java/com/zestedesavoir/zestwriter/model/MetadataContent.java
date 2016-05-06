@@ -45,6 +45,9 @@ public class MetadataContent {
     public boolean equals(Object obj) {
         if(obj instanceof MetadataContent) {
             MetadataContent ob = (MetadataContent) obj;
+            if(getId() == null || ob.getId() == null) {
+                return false;
+            }
             return getId().equals(ob.getId()) && getSlug().equals(ob.getSlug()) && getType().equals(ob.getType());
         }
         return super.equals(obj);

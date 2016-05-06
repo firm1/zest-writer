@@ -2,7 +2,6 @@ package com.zestedesavoir.zestwriter;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Optional;
 
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
@@ -19,7 +18,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-import javafx.concurrent.Service;
 import javafx.concurrent.Worker;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -34,7 +32,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,9 +100,44 @@ public class MainApp extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Zest Writer");
         this.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("assets/static/icons/logo.png")));
-        primaryStage.setOnCloseRequest(t -> {
+
+        if(config.isDisplayWindowMaximize()){
+            this.primaryStage.setMaximized(true);
+        }else{
+            if(config.isDisplayWindowPersonnalDimension()){
+                this.primaryStage.setWidth(config.getDisplayWindowWidth());
+                this.primaryStage.setHeight(config.getDisplayWindowHeight());
+            }else{
+                this.primaryStage.setWidth(Double.parseDouble(Configuration.ConfigData.DisplayWindowWidth.getDefaultValue()));
+                this.primaryStage.setHeight(Double.parseDouble(Configuration.ConfigData.DisplayWindowHeight.getDefaultValue()));
+            }
+            if(config.isDisplayWindowPersonnalPosition()){
+                this.primaryStage.setX(config.getDisplayWindowPositionX());
+                this.primaryStage.setY(config.getDisplayWindowPositionY());
+            }
+        }
+
+        this.primaryStage.setOnCloseRequest(t -> {
+            if(this.primaryStage.isMaximized() && config.isDisplayWindowPersonnalDimension())
+                config.setDisplayWindowMaximize("true");
+
+            config.saveConfFile();
+
             Platform.exit();
             System.exit(0);
+        });
+
+        this.primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> {
+            config.setDisplayWindowWidth(String.valueOf(newValue));
+        });
+        this.primaryStage.heightProperty().addListener((observable, oldValue, newValue) -> {
+            config.setDisplayWindowHeight(String.valueOf(newValue));
+        });
+        this.primaryStage.xProperty().addListener((observable, oldValue, newValue) -> {
+            config.setDisplayWindowPositionX(String.valueOf(newValue));
+        });
+        this.primaryStage.yProperty().addListener((observable, oldValue, newValue) -> {
+            config.setDisplayWindowPositionY(String.valueOf(newValue));
         });
 
         initRootLayout();

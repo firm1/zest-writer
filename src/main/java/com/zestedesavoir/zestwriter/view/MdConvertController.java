@@ -6,13 +6,21 @@ import java.util.List;
 import java.util.Optional;
 
 import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
+import com.zestedesavoir.zestwriter.view.dialogs.OptionsDialog;
 import com.ziclix.python.sql.pipe.Source;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.*;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.python.core.PyString;
+import org.python.icu.impl.ICUResource;
 import org.python.util.PythonInterpreter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,38 +110,22 @@ public class MdConvertController {
         });
         updateRender();
         tab.getContent().addEventFilter(KeyEvent.KEY_PRESSED, t -> {
-            if(t.getCode().equals(KeyCode.S) && t.isControlDown()){
-                HandleSaveButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.G) && t.isControlDown()){
-                // put in bold
-                HandleBoldButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.I) && t.isControlDown()){
-                // put in italic
-                HandleItalicButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.B) && t.isControlDown()){
-                // put it barred
-                HandleBarredButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.K) && t.isControlDown()){
-                // put it touch
-                HandleTouchButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.PLUS) && t.isControlDown() && t.isShiftDown()){
-                // put it exp
-                HandleExpButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.EQUALS) && t.isControlDown()){
-                // put it ind
-                HandleIndButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.E) && t.isControlDown()){
-                // put it center
-                HandleCenterButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.D) && t.isControlDown() && t.isShiftDown()){
-                // put it right
-                HandleRightButtonAction(null);
-            }else if(t.getCode().equals(KeyCode.SPACE) && t.isControlDown() && t.isShiftDown()){
-                // unbreakable space
-                HandleUnbreakableAction(null);
-            }else if(t.getCode().equals(KeyCode.L) && t.isControlDown()){
-                // go to line
-                HandleGoToLineAction();
+            if(t.isControlDown() && !t.isAltDown()) {
+                switch(t.getCode()) {
+                    case S: HandleSaveButtonAction(null); break;
+                    case G: HandleBoldButtonAction(null); break;
+                    case I: HandleItalicButtonAction(null); break;
+                    case B: HandleBarredButtonAction(null); break;
+                    case K: HandleTouchButtonAction(null); break;
+                    case PLUS: HandleExpButtonAction(null); break;
+                    case EQUALS: HandleIndButtonAction(null); break;
+                    case E: HandleCenterButtonAction(null); break;
+                    case D: if(t.isShiftDown()) {HandleRightButtonAction(null);} break;
+                    case SPACE: HandleUnbreakableAction(null); break;
+                    case L: HandleGoToLineAction(); break;
+                    case F: HandleFindReplaceDialog(); break;
+                    default: break;
+                }
             }
         });
 
@@ -571,6 +563,38 @@ public class MdConvertController {
 
     public void setSaved(boolean isSaved) {
         this.isSaved = isSaved;
+    }
+
+    @FXML private void HandleFindReplaceDialog(){
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainApp.class.getResource("fxml/FindReplaceDialog.fxml"));
+
+        try{
+            AnchorPane optionsDialog = loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Rechecher / Remplacer");
+
+            Scene scene = new Scene(optionsDialog);
+            dialogStage.setScene(scene);
+            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
+            dialogStage.setResizable(false);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+
+            FindReplaceDialog findReplaceDialog = loader.getController();
+            findReplaceDialog.setMainApp(mainApp);
+            findReplaceDialog.setWindow(dialogStage);
+            findReplaceDialog.setMdConvertController(this);
+
+            dialogStage.show();
+        }catch(IOException e){
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+
+    public StyleClassedTextArea getSourceText(){
+        return SourceText;
     }
 
     /**
