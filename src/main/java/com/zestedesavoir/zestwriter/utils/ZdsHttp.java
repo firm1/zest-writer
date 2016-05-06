@@ -12,11 +12,10 @@ import java.nio.file.Paths;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -46,7 +45,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.python.jline.internal.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,10 +121,6 @@ public class ZdsHttp {
 
     private String getLoginUrl() {
         return getBaseUrl() + "/membres/connexion/?next=/";
-    }
-
-    private String getViewMemberUrl(String username) {
-        return getBaseUrl() + "/membres/voir/" + username;
     }
 
     private String getPersonalTutorialUrl() {
@@ -230,41 +224,6 @@ public class ZdsHttp {
         return value;
     }
 
-    private String getIdByUsername(String username) throws IOException {
-        HttpGet get = new HttpGet(getViewMemberUrl(login));
-        logger.debug("Tentative de connexion à " + getViewMemberUrl(login));
-        HttpResponse response = client.execute(get, context);
-
-        if (response.getStatusLine().getStatusCode() != 200) {
-            logger.debug("Impossible de joindre l'url " + getViewMemberUrl(login));
-            return null;
-        }
-
-        logger.debug("Url joignable " + getViewMemberUrl(login));
-
-        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-        StringBuilder result = new StringBuilder();
-        String line = "";
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
-        }
-
-        Document doc = Jsoup.parse(result.toString());
-
-        String link = doc.select("a.mobile-menu-sublink").first().attr("href");
-        List<String> lst = Arrays.asList(link.split("/"));
-        for (String param : lst) {
-            try {
-                int x = Integer.parseInt(param);
-                logger.debug("Id Utilisateur trouvé : " + x);
-                return param;
-            } catch (NumberFormatException e) {
-                logger.debug("Problème de recherche utilisateur : "+ e.getMessage());
-            }
-        }
-        return null;
-    }
-
     private Pair<Integer, String> sendPost(String url, HttpEntity entity) {
         HttpPost post = new HttpPost(url);
         try {
@@ -276,23 +235,15 @@ public class ZdsHttp {
             post.setHeader("Cookie", this.cookies);
             post.setHeader("Connection", "keep-alive");
             post.setHeader("Referer", url);
-            //post.setHeader("Content-Type", "application/x-www-form-urlencoded");
 
             post.setEntity(entity);
             HttpResponse response = client.execute(post, context);
 
             int responseCode = response.getStatusLine().getStatusCode();
             BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-
-            StringBuilder result = new StringBuilder();
-            String line = "";
-            while ((line = rd.readLine()) != null) {
-                result.append(line);
-            }
-
-            return new Pair<>(responseCode, result.toString());
+            return new Pair<>(responseCode, rd.lines().collect(Collectors.joining("\n")));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Impossible d'executer la requête POST", e);
         }
 
         return new Pair<>(500, null);
@@ -322,8 +273,6 @@ public class ZdsHttp {
     public boolean login(String login, String password) throws IOException {
         this.login = login;
         this.password = password;
-        //idUser = getIdByUsername(login);
-        logger.info("L'identifiant de l'utilisateur " + this.login + " est : " + idUser);
 
         HttpGet get = new HttpGet(getLoginUrl());
         HttpResponse response = client.execute(get, context);
@@ -427,13 +376,8 @@ public class ZdsHttp {
         logger.info("Tentative réussie");
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-        StringBuilder result = new StringBuilder();
-        String line = "";
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
-        }
 
-        Document doc = Jsoup.parse(result.toString());
+        Document doc = Jsoup.parse(rd.lines().collect(Collectors.joining("\n")));
         Elements sections = doc.select("article");
         for (Element section : sections) {
             Elements links = section.getElementsByTag("a");
@@ -522,19 +466,12 @@ public class ZdsHttp {
             }
 
         } catch (IOException ex) {
-            ex.printStackTrace();
             logger.debug("Echec de dezippage dans " + zipFilePath);
         }
     }
 
     public boolean isAuthenticated() {
         return authenticated;
-    }
-
-    public boolean sendNewContent(String localPath, Map<String, String> params) {
-        String localSlug = toSlug(params.get("title"));
-
-        return true;
     }
 
     public static void main(String[] args) {

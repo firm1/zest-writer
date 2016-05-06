@@ -40,6 +40,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
@@ -661,7 +662,7 @@ public class MenuController{
             AnchorPane optionsDialog = loader.load();
 
             Stage dialogStage = new Stage();
-            dialogStage.setTitle("Options");
+            dialogStage.setTitle("Préférences");
 
             Scene scene = new Scene(optionsDialog);
             dialogStage.setScene(scene);
@@ -680,23 +681,45 @@ public class MenuController{
     }
 
     @FXML private void HandleCheckUpdateButtonAction(ActionEvent event){
-        Alert alert;
-        String versionOnline = mainApp.getConfig().getLastRelease();
-        String current = mainApp.getConfig().getProps().getProperty("version", "Inconnue");
+        Service<Boolean> checkService = new Service<Boolean>() {
+            @Override
+            protected Task<Boolean> createTask() {
+                return new Task<Boolean>() {
+                    @Override
+                    protected Boolean call() throws Exception {
+                        String current = mainApp.getConfig().getProps().getProperty("version", "Inconnue");
+                        String versionOnline = mainApp.getConfig().getLastRelease();
+                        if(versionOnline == null) {
+                            throw new IOException();
+                        } else {
+                            if(versionOnline.equals(current)) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
+                    }
+                };
+            }
+        };
 
-        if(versionOnline == null) {
-            alert = new Alert(AlertType.ERROR);
+        checkService.setOnFailed(t -> {
+            Alert alert = new Alert(AlertType.ERROR);
             IconFactory.addAlertLogo(alert);
             alert.setTitle("Erreur");
             alert.setHeaderText("Erreur lors du contact du serveur");
             alert.setContentText("Une erreur est survenue lors de la tentative de vérification des mises à jours. Vérifiez votre connexion à internet !");
-        } else {
-            if(!versionOnline.equals(current)) {
+            alert.showAndWait();
+        });
+
+        checkService.setOnSucceeded(t -> {
+            Alert alert = new Alert(AlertType.NONE);
+            IconFactory.addAlertLogo(alert);
+            if(!checkService.getValue()) {
                 alert = new Alert(AlertType.WARNING);
-                IconFactory.addAlertLogo(alert);
                 alert.setTitle("Mise à jour");
                 alert.setHeaderText("Version obsolète");
-                alert.setContentText("La version de Zest Writer que vous utilisez ("+current+") n'est pas à jour. Pensez à faire la mise à jour vers la "+versionOnline+" pour profiter des dernières nouveautés");
+                alert.setContentText("La version de Zest Writer que vous utilisez n'est pas à jour. Pensez à faire la mise à jour vers pour profiter des dernières nouveautés");
             } else {
                 alert = new Alert(AlertType.INFORMATION);
                 IconFactory.addAlertLogo(alert);
@@ -704,8 +727,11 @@ public class MenuController{
                 alert.setHeaderText("Version à jour");
                 alert.setContentText("Vous utilisez actuellement la dernière version publiée de Zest Writer");
             }
-        }
-        alert.showAndWait();
+            alert.showAndWait();
+        });
+
+        checkService.start();
+
     }
 
     public Text getLabelField(){

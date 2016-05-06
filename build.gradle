@@ -1,5 +1,8 @@
-// Declares binary plugin and its required JavaFX classpath
-apply plugin: 'java'
+plugins {
+    id "java"
+    id "com.eriwen.gradle.css" version "2.12.0"
+}
+
 apply from: "http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.plugin"
 
 processResources {
@@ -53,6 +56,9 @@ String getProjectProperty(String propertyName) {
 repositories {
     mavenLocal()
     mavenCentral()
+    maven {
+        url "https://dl.bintray.com/firm1/maven"
+    }
 }
 
 sourceSets {
@@ -88,25 +94,32 @@ task fatJar(type: Jar) {
     with jar
 }
 
+minifyCss {
+    source = "${sourceSets.main.resources.srcDirs.first()}/com/zestedesavoir/zestwriter/css/content.css"
+    dest = "${sourceSets.main.output.resourcesDir}/com/zestedesavoir/zestwriter/css/content.css"
+    yuicompressor { // Optional
+        lineBreakPos = -1
+    }
+}
+
+tasks.cssToBin.dependsOn tasks.minifyCss
+tasks.minifyCss.dependsOn tasks.processResources
+
 dependencies {
     testCompile 'junit:junit:4.12'
     compile 'org.languagetool:language-fr:3.3',
-            'org.apache.httpcomponents:httpclient:4.5.1',
-            'org.apache.httpcomponents:httpcore:4.4.3',
-            'org.apache.httpcomponents:fluent-hc:4.5.1',
-            'org.apache.httpcomponents:httpmime:4.5.1',
-            'org.apache.httpcomponents:httpclient-cache:4.5.1',
-            'org.apache.httpcomponents:httpclient-win:4.5.1',
-            'com.fasterxml.jackson.core:jackson-databind:2.7.3',
+            'org.apache.httpcomponents:fluent-hc:4.5.2',
+            'org.apache.httpcomponents:httpmime:4.5.2',
+            'com.fasterxml.jackson.core:jackson-databind:2.7.4',
             'de.julielab:aliasi-lingpipe:4.1.0',
             'org.python:jython-standalone:2.7.1b3',
-            'org.jsoup:jsoup:1.8.1',
-            'org.slf4j:slf4j-api:1.7.21',
+            'org.jsoup:jsoup:1.9.1',
             'org.slf4j:slf4j-log4j12:1.7.21',
             'org.fxmisc.richtext:richtextfx:0.6.10',
             'de.jensd:fontawesomefx:8.9',
             'org.zeroturnaround:zt-zip:1.9',
-            'org.controlsfx:controlsfx:8.40.10'
+            'org.controlsfx:controlsfx:8.40.10',
+            'com.zestedesavoir.zmarkdown:java-zmarkdown:2.6.0'
 }
 
 test {
