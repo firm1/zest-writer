@@ -48,12 +48,13 @@ public class Plugin{
 
         enabled = true;
         logger.debug("[PLUGINS]   Call <onDefine> method");
-        ZwPlugin zwPlugin = (ZwPlugin)method("onDefine");
+        zwPlugin = (ZwPlugin)method("onDefine");
+
+        if(zwPlugin == null)
+            System.err.println("zwPlugin vaut NULL");
 
         logger.debug("[PLUGINS]   Version: " + method("getVersion"));
 
-        logger.debug("[PLUGINS]   Call <setMainApp> method");
-        method("setMainApp", new Class[]{MainApp.class}, mainApp);
 
         logger.debug("[PLUGINS]   Call <getListener> method");
         listenerClass = (ArrayList<Class>)method("getListener");
@@ -67,7 +68,7 @@ public class Plugin{
         }
 
         logger.debug("[PLUGINS]   Call <onEnable> method of plugin");
-        method("onEnable");
+        method("onEnable", new Class[]{MainApp.class}, mainApp);
     }
 
     public void disable(){

@@ -14,7 +14,7 @@ abstract public class ZwPlugin{
 
     abstract public ZwPlugin onDefine();
 
-    abstract public void onEnable();
+    abstract public void onEnable(MainApp mainApp);
 
     abstract public void onDisable();
 
@@ -29,8 +29,6 @@ abstract public class ZwPlugin{
     protected MdConvertController getEditor(){
         return editor;
     }
-
-    abstract public void setMainApp(MainApp mainApp);
 
     public void setEditor(MdConvertController editor){
         this.editor = editor;

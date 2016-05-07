@@ -48,7 +48,7 @@ public class PluginsLoader{
         if(pluginsFile != null){
             logger.debug("[PLUGINS] Start list of plugins");
             for(File pluginFile : pluginsFile){
-                logger.debug("[PLUGINS]   " + pluginFile.getName());
+                logger.debug("[PLUGINS]   " + pluginFile.getName() + " <" + pluginFile.getPath() + ">");
             }
             logger.debug("[PLUGINS] End list of plugins");
 
