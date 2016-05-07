@@ -12,6 +12,10 @@ abstract public class ZwPlugin{
     protected MainApp mainApp;
     private MdConvertController editor;
 
+    protected ZwPlugin getZwPlugin(){
+        return this;
+    }
+
     abstract public ZwPlugin onDefine();
 
     abstract public void onEnable(MainApp mainApp);
@@ -22,7 +26,7 @@ abstract public class ZwPlugin{
 
     abstract public ArrayList<Class> getListener();
 
-    public MainApp getMainApp(){
+    protected MainApp getMainApp(){
         return mainApp;
     }
 
@@ -32,9 +36,5 @@ abstract public class ZwPlugin{
 
     public void setEditor(MdConvertController editor){
         this.editor = editor;
-    }
-
-    public ZwPlugin getZwPlugin(){
-        return this;
     }
 }

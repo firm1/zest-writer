@@ -45,16 +45,12 @@ public class Plugin{
 
     public void enable(){
         logger.debug("[PLUGINS] Enable <" + name + ">");
-
         enabled = true;
+
         logger.debug("[PLUGINS]   Call <onDefine> method");
         zwPlugin = (ZwPlugin)method("onDefine");
 
-        if(zwPlugin == null)
-            System.err.println("zwPlugin vaut NULL");
-
         logger.debug("[PLUGINS]   Version: " + method("getVersion"));
-
 
         logger.debug("[PLUGINS]   Call <getListener> method");
         listenerClass = (ArrayList<Class>)method("getListener");
@@ -74,7 +70,6 @@ public class Plugin{
     public void disable(){
         logger.debug("[PLUGINS] Disable <" + plugin.getName() + ">");
         logger.debug("[PLUGINS]   Call <onDisable> method");
-
         method("onDisable");
         enabled = false;
     }
@@ -88,12 +83,10 @@ public class Plugin{
                 Method methodInvoke;
                 methodInvoke = listener.getDeclaredMethod(method);
                 Object instance = listener.newInstance();
-                Object result = methodInvoke.invoke(instance);
-                System.out.println("Return .. " + method);
-                return result;
+                return methodInvoke.invoke(instance);
             }catch(NoSuchMethodException e){
             }catch(IllegalAccessException | InstantiationException | InvocationTargetException e){
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
 
@@ -124,7 +117,7 @@ public class Plugin{
                 return methodInvoke.invoke(instance, value);
             }catch(NoSuchMethodException e){
             }catch(IllegalAccessException | InstantiationException | InvocationTargetException e){
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
 
@@ -140,12 +133,10 @@ public class Plugin{
                 Method methodInvoke;
                 methodInvoke = listener.getDeclaredMethod(method, type);
                 Object instance = listener.newInstance();
-                Object result = methodInvoke.invoke(instance, value);
-                System.out.println("Return .. " + method);
-                return result;
+                return methodInvoke.invoke(instance, value);
             }catch(NoSuchMethodException e){
             }catch(IllegalAccessException | InstantiationException | InvocationTargetException e){
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
 

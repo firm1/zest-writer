@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 public class PluginsManager{
     private MainApp mainApp;
-    private Stage window;
     private MdConvertController editor;
     private PluginsLoader pluginsLoader;
     private Logger logger;
@@ -22,7 +21,6 @@ public class PluginsManager{
     public PluginsManager(MainApp mainApp){
         logger = LoggerFactory.getLogger(PluginsManager.class);
         this.mainApp = mainApp;
-        this.window = mainApp.getPrimaryStage();
         pluginsLoader = new PluginsLoader(mainApp);
         plugins = pluginsLoader.getPlugins();
 
