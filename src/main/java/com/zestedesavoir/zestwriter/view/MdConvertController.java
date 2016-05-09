@@ -535,9 +535,7 @@ public class MdConvertController {
         dialog.setContentText("Numéro de ligne: ");
 
         Optional<String> result = dialog.showAndWait();
-        result.ifPresent(line -> {
-            SourceText.positionCaret(SourceText.position(Integer.parseInt(line)-1, 0).toOffset());
-        });
+        result.ifPresent(line -> SourceText.positionCaret(SourceText.position(Integer.parseInt(line)-1, 0).toOffset()));
     }
 
 
