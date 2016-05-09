@@ -28,7 +28,7 @@ public class UploadContentService extends Service<Void>{
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                if (zdsUtils.isAuthenticated()) {
+                if (zdsUtils.isAuthenticated() && result.isPresent()) {
                     String targetId = result.get().getId();
                     String localSlug = zdsUtils.getLocalSlug();
                     String targetSlug = result.get().getSlug();

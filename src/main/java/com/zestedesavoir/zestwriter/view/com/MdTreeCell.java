@@ -79,7 +79,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             alert.setContentText("Êtes vous sur de vouloir supprimer ?");
 
             Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK) {
+            if (result.isPresent() && result.get() == ButtonType.OK) {
                 logger.debug("Tentative de suppression");
                 // delete in logical tree
                 Container parentContainer = (Container) getTreeItem().getParent().getValue();

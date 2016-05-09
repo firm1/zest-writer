@@ -203,12 +203,14 @@ public class MdTextController {
                 alert.getDialogPane().setPrefSize(480, 320);
 
                 Optional<ButtonType> result = alert.showAndWait();
-                if(result.get() != buttonTypeCancel) {
-                    if (result.get() == buttonTypeYes){
-                        controller.HandleSaveButtonAction(null);
+                if (result.isPresent()) {
+                    if (result.get() != buttonTypeCancel) {
+                        if (result.get() == buttonTypeYes) {
+                            controller.HandleSaveButtonAction(null);
+                        }
+                    } else {
+                        t.consume();
                     }
-                } else {
-                    t.consume();
                 }
             }
         });
