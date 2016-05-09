@@ -13,7 +13,7 @@ public class ContentSerializer extends JsonSerializer<Container>{
 
     @Override
     public void serialize(Container value, JsonGenerator gen, SerializerProvider serializers)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         gen.writeStartObject();
         gen.writeStringField("object", value.getObject());
         gen.writeStringField("slug", value.getSlug());

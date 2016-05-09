@@ -300,7 +300,7 @@ public class ZdsHttp {
         this.authenticated = false;
     }
 
-    public boolean importNewContent(String filePath) throws ClientProtocolException, IOException {
+    public boolean importNewContent(String filePath) throws IOException {
 
         logger.debug("Tentative d'import via l'url : " + getImportNewContenttUrl());
         HttpGet get = new HttpGet(getImportNewContenttUrl());

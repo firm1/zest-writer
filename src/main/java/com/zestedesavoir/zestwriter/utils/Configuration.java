@@ -3,7 +3,6 @@ package com.zestedesavoir.zestwriter.utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
 import org.apache.commons.lang.math.NumberUtils;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -195,7 +194,7 @@ public class Configuration {
 
     }
 
-    public String getLastRelease() throws ClientProtocolException, IOException {
+    public String getLastRelease() throws IOException {
         String projecUrlRelease = "https://api.github.com/repos/firm1/zest-writer/releases/latest";
 
         String json = Request.Get(projecUrlRelease).execute().returnContent().asString();
