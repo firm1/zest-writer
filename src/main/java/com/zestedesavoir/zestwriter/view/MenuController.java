@@ -338,33 +338,12 @@ public class MenuController{
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Contenus Zestueux");
         File defaultDirectory;
-        File selectedDirectory = null;
 
         if(mainApp.getConfig().getWorkspaceFactory() == null){
             mainApp.getConfig().loadWorkspace();
         }
         defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
         chooser.setInitialDirectory(defaultDirectory);
-
-
-        if(selectedDirectory != null){
-            File manifest = new File(selectedDirectory.getAbsolutePath() + File.separator + "manifest.json");
-            ObjectMapper mapper = new ObjectMapper();
-            Content content;
-            try{
-                content = mapper.readValue(manifest, Content.class);
-                content.setRootContent(content, selectedDirectory.getAbsolutePath());
-                mainApp.getContents().clear();
-                FunctionTreeFactory.clearContent(mainApp.getExtracts(), mainApp.getIndex().getEditorList());
-                mainApp.getContents().add(content);
-                menuUpload.setDisable(false);
-                menuLisibility.setDisable(false);
-                menuReport.setDisable(false);
-                menuExport.setDisable(false);
-            }catch(IOException e){
-                logger.error(e.getMessage(), e);
-            }
-        }
     }
 
     @FXML private Service<Void> HandleLoginButtonAction(ActionEvent event){
