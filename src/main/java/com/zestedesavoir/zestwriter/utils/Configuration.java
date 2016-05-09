@@ -107,11 +107,7 @@ public class Configuration {
 
         if(!confDir.exists()){
             if(!confDir.mkdir())
-                logger.error("Le fichier de confiuration n'a pas pu être créé");
-        }
-        if(!confDir.exists()){
-            if(!confDir.mkdir())
-                logger.error("Le fichier de confiuration n'a pas pu être créé");
+                logger.error("Le fichier de configuration n'a pas pu être créé");
         }
 
         // defaults config
