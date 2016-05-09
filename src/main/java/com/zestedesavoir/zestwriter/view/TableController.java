@@ -81,7 +81,7 @@ public class TableController {
         tc.setEditable(true);
         tc.setCellValueFactory(new Callback<CellDataFeatures<ZRow, String>, ObservableValue<String>>() {
             public ObservableValue<String> call(CellDataFeatures<ZRow, String> param) {
-                return new SimpleStringProperty(param.getValue().getRow().get(0).toString());
+                return new SimpleStringProperty(param.getValue().getRow().get(0));
             }
         });
 

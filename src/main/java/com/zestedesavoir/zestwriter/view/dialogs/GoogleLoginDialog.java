@@ -112,7 +112,7 @@ public class GoogleLoginDialog extends Dialog<Pair<String, String>>{
                                         Element aItem = ((Element)ktem);
                                         //System.out.println("BALISE : "+aItem.getNodeName());
                                         if(aItem.getNodeName().equals("A")) {
-                                            String ref = aItem.getAttribute("href").toString();
+                                            String ref = aItem.getAttribute("href");
                                             if(ref.startsWith("/contenus/tutoriels")) {
                                                 String[] splt = ref.split("/");
                                                 if(splt.length >= 4) {
