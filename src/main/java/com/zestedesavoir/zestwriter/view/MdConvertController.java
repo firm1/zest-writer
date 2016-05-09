@@ -124,6 +124,7 @@ public class MdConvertController {
                     case SPACE: HandleUnbreakableAction(null); break;
                     case L: HandleGoToLineAction(); break;
                     case F: HandleFindReplaceDialog(); break;
+                    case A: SourceText.selectAll(); break;
                     default: break;
                 }
             }
