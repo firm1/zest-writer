@@ -71,7 +71,7 @@ public class Extract extends MetaContent implements Textual, ContentNode{
 
     public String readMarkdown() {
         Path path = Paths.get(this.getFilePath());
-        Scanner scanner  = null;
+        Scanner scanner;
         StringBuilder bfString = new StringBuilder();
         try {
             scanner = new Scanner(path, StandardCharsets.UTF_8.name());

@@ -164,7 +164,7 @@ public class MenuController{
             return null;
         });
 
-        Optional<Pair<String, String>> result = dialog.showAndWait();
+        dialog.showAndWait();
     }
 
     @FXML private void HandleGunningButtonAction(ActionEvent event){
@@ -224,7 +224,7 @@ public class MenuController{
             return null;
         });
 
-        Optional<Pair<String, String>> result = dialog.showAndWait();
+        dialog.showAndWait();
     }
 
     @FXML private void HandleReportWithoutTypoButtonAction(ActionEvent event){

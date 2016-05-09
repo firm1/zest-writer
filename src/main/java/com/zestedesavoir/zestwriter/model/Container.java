@@ -111,7 +111,7 @@ public class Container extends MetaContent implements ContentNode {
      * @return number of container-type ancestors
      */
     public int getCountAncestorsContainer(Container content) {
-        int total = 0;
+        int total;
         if(this.getFilePath().equals(content.getFilePath())) {
             return 1;
         }

@@ -23,7 +23,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -95,7 +94,7 @@ public class MdConvertController {
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MainApp.class.getResource("fxml/Editor.fxml"));
-        SplitPane writer = loader.load();
+        loader.load();
 
         if(mainApp.getConfig().getEditorToolbarView().equals("no")){
             BoxEditor.setTop(null);

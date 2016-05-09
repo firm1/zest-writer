@@ -8,7 +8,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -67,7 +66,7 @@ public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Objec
 	    grid.add(license, 1, 3);
 
 	    // Enable/Disable login button depending on whether a username was entered.
-	    Node validButton = this.getDialogPane().lookupButton(validButtonType);
+		this.getDialogPane().lookupButton(validButtonType);
 
 	    this.getDialogPane().setContent(grid);
 
