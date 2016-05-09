@@ -151,11 +151,9 @@ public class Extract extends MetaContent implements Textual, ContentNode{
 
     @Override
     public String exportContentToMarkdown(int level, int levelDepth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(FunctionTreeFactory.padding(level, '#'));
-        sb.append(" ").append(getTitle()).append("\n\n");
-        sb.append(FunctionTreeFactory.changeLocationImages(FunctionTreeFactory.offsetHeaderMarkdown(readMarkdown(), levelDepth))).append("\n\n");
-        return sb.toString();
+        return FunctionTreeFactory.padding(level, '#') +
+                " " + getTitle() + "\n\n" +
+                FunctionTreeFactory.changeLocationImages(FunctionTreeFactory.offsetHeaderMarkdown(readMarkdown(), levelDepth)) + "\n\n";
     }
 
     @Override
