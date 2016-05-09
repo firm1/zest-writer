@@ -26,10 +26,15 @@ public class TestUtils {
                     +"<span class=\"o\">}</span>"
                     +"</pre></div>"
                     +"</td></tr></tbody></table>";
-        String expected = "En java on utilise  de cette façon :";
+        String expected_text = "En java on utilise  de cette façon :";
         String res = Corrector.HtmlToTextWithoutCode(text);
-        assertEquals(expected, res.trim());
+        assertEquals(expected_text, res.trim());
+
+        Corrector corrector = new Corrector();
+        String resHtml = corrector.checkHtmlContentToText(text, "Titre");
+        assertEquals(resHtml.trim().isEmpty(), false);
     }
+
 
     @Test
     public void testFlipTable() {

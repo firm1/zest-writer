@@ -25,9 +25,6 @@ public class Corrector {
         langTool.disableRule("WHITESPACE_RULE");
     }
 
-    public JLanguageTool getLangTool() {
-        return langTool;
-    }
 
     public static String HtmlToTextWithoutCode(String htmlText) {
         AnnotatedTextBuilder builder = new AnnotatedTextBuilder();
@@ -194,11 +191,5 @@ public class Corrector {
             }
         }
         return bf.toString();
-    }
-
-    public static void main(String[] args) throws IOException {
-        Corrector cr = new Corrector();
-        String html = "Je vais au <code>sea sex and sun</code>, <i>car</i> je n'<strong>aime</strong> \n<pre>pas</pre>\n la source du coeur coeur:";
-        System.out.println(cr.checkHtmlContent(html));
     }
 }

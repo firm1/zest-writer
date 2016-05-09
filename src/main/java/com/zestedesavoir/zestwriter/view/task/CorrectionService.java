@@ -26,7 +26,6 @@ public class CorrectionService extends Service<String>{
 		this.mdText = mdText;
 		this.content = (Content) mdText.getSummary().getRoot().getValue();
 		corrector = new Corrector();
-        corrector.getLangTool().disableRule("FRENCH_WHITESPACE");
 	}
 
 	@Override
