@@ -3,6 +3,8 @@
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -15,10 +17,13 @@ import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Extract;
 import com.zestedesavoir.zestwriter.model.MetaAttribute;
 import com.zestedesavoir.zestwriter.model.Textual;
+import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
+import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 
 public class TestModel {
 
+    private final static String TEST_DIR = System.getProperty("java.io.tmpdir");
     Content content;
     Container part1;
     Container part2;
@@ -165,5 +170,88 @@ public class TestModel {
 
         Map<Textual, Integer> result = content.doOnTextual(countWords);
 
+    }
+
+    @Test
+    public void testCreateBigTuto() {
+        System.out.println(TEST_DIR);
+        File workspace = new File(new File(TEST_DIR), "zworkspace");
+        if(!workspace.exists()) {
+            workspace.mkdirs();
+        }
+        String title = "Tutoriel de test";
+        String description = "Description d'un tutoriel de test";
+        String part_1_title = "Première partie";
+        String part_2_title = "Deuxième partie";
+        String chapter_11_title = "Premier chapitre";
+        String chapter_12_title = "Deuxième chapitre";
+        String extract_111_title = "Premier Extrait";
+        String extract_21_title = "Autre Extrait";
+
+        Content bigtuto = new Content("container", ZdsHttp.toSlug(title), title, "introduction.md", "conclusion.md", new ArrayList<>(), 2, "CC-BY", description, "TUTORIAL");
+        assertEquals(bigtuto.getSlug(), "tutoriel-de-test");
+        Container part_1 = new Container("container", ZdsHttp.toSlug(part_1_title), part_1_title, ZdsHttp.toSlug(part_1_title)+"/introduction.md", ZdsHttp.toSlug(part_1_title)+"/conclusion.md", new ArrayList<>());
+        bigtuto.getChildren().add(part_1);
+        assertEquals(part_1.getSlug(), "premiere-partie");
+        Container part_2 = new Container("container", ZdsHttp.toSlug(part_2_title), part_2_title, ZdsHttp.toSlug(part_2_title)+"/introduction.md", ZdsHttp.toSlug(part_2_title)+"/conclusion.md", new ArrayList<>());
+        bigtuto.getChildren().add(part_2);
+        assertEquals(part_2.getSlug(), "deuxieme-partie");
+
+        Container chapter_11 = new Container("container", ZdsHttp.toSlug(chapter_11_title), chapter_11_title, ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_11_title)+"/introduction.md", ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_11_title)+"/conclusion.md", new ArrayList<>());
+        part_1.getChildren().add(chapter_11);
+        assertEquals(chapter_11.getSlug(), "premier-chapitre");
+        Container chapter_12 = new Container("container", ZdsHttp.toSlug(chapter_12_title), chapter_12_title, ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_12_title)+"/introduction.md", ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_12_title)+"/conclusion.md", new ArrayList<>());
+        part_1.getChildren().add(chapter_12);
+        assertEquals(chapter_12.getSlug(), "deuxieme-chapitre");
+
+        Extract extract111 = new Extract("extract", ZdsHttp.toSlug(extract_111_title), extract_111_title, ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_11_title)+"/"+ZdsHttp.toSlug(extract_111_title)+".md");
+        chapter_11.getChildren().add(extract111);
+        assertEquals(extract111.getSlug(), "premier-extrait");
+        Extract extract_21 = new Extract("extract", ZdsHttp.toSlug(extract_21_title), extract_21_title, ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(extract_21_title)+".md");
+        part_2.getChildren().add(extract_21);
+        assertEquals(extract_21.getSlug(), "autre-extrait");
+
+        bigtuto.setRootContent(bigtuto, new File(workspace, bigtuto.getSlug()).getAbsolutePath());
+        // create file
+        try {
+            (new File(bigtuto.getFilePath())).mkdir();
+            (new File(bigtuto.getIntroduction().getFilePath())).createNewFile();
+            (new File(bigtuto.getConclusion().getFilePath())).createNewFile();
+            (new File(bigtuto.getFilePath(), "manifest.json")).createNewFile();
+            (new File(part_1.getFilePath())).mkdir();
+            (new File(part_1.getIntroduction().getFilePath())).createNewFile();
+            (new File(part_1.getConclusion().getFilePath())).createNewFile();
+            (new File(part_2.getFilePath())).mkdir();
+            (new File(part_2.getIntroduction().getFilePath())).createNewFile();
+            (new File(part_2.getConclusion().getFilePath())).createNewFile();
+            (new File(chapter_11.getFilePath())).mkdir();
+            (new File(chapter_11.getIntroduction().getFilePath())).createNewFile();
+            (new File(chapter_11.getConclusion().getFilePath())).createNewFile();
+            (new File(chapter_12.getFilePath())).mkdir();
+            (new File(chapter_12.getIntroduction().getFilePath())).createNewFile();
+            (new File(chapter_12.getConclusion().getFilePath())).createNewFile();
+            (new File(extract111.getFilePath())).createNewFile();
+            (new File(extract_21.getFilePath())).createNewFile();
+
+            bigtuto.getIntroduction().setMarkdown("Introduction du tutoriel");
+            bigtuto.getIntroduction().save();
+            extract_21.setMarkdown("My new content");
+            extract_21.save();
+
+
+            part_2.delete();
+            assertEquals((new File(part_2.getFilePath())).exists(), false);
+            extract111.delete();
+            assertEquals((new File(extract111.getFilePath())).exists(), false);
+            chapter_12.delete();
+            assertEquals((new File(chapter_12.getFilePath())).exists(), false);
+            bigtuto.delete();
+            assertEquals((new File(bigtuto.getFilePath())).exists(), false);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            workspace.delete();
+        }
     }
 }
