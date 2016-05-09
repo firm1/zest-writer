@@ -47,22 +47,6 @@ public class Container extends MetaContent implements ContentNode {
         this._children = children;
     }
 
-    public Container(String object, String slug, String title, String basePath, Textual introduction,
-            Textual conclusion, List<MetaContent> children) {
-        super(object, slug, title, basePath);
-        this._introduction = introduction;
-        this._conclusion = conclusion;
-        this._children = children;
-    }
-
-    public Container(String object, String slug, String title, String basePath, String introduction,
-            String conclusion, ArrayList<MetaContent> children) {
-        super(object, slug, title, basePath);
-        this._introduction = new MetaAttribute(introduction, "Introduction");
-        this._conclusion = new MetaAttribute(conclusion, "Conclusion");
-        this._children = children;
-    }
-
     public Textual getIntroduction() {
         return _introduction;
     }
@@ -189,6 +173,8 @@ public class Container extends MetaContent implements ContentNode {
         if(receiver instanceof MetaAttribute) {
             if(receiver.getTitle().equalsIgnoreCase("conclusion")) {
                 return false;
+            } else {
+                return isMoveableIn(((MetaAttribute) receiver).getParent(), root);
             }
         }
         if(receiver instanceof Container) {

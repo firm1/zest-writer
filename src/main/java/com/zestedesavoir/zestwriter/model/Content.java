@@ -36,15 +36,6 @@ public class Content extends Container implements ContentNode{
         this._type = type;
     }
 
-    public Content(String object, String slug, String title, String basePath, Textual introduction, Textual conclusion,
-            List<MetaContent> children, int version, String licence, String description, String type) {
-        super(object, slug, title, basePath, introduction, conclusion, children);
-        this._version = version;
-        this._licence = licence;
-        this._description = description;
-        this._type = type;
-    }
-
     public int getVersion() {
         return _version;
     }

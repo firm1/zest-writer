@@ -49,8 +49,8 @@ public abstract class MetaContent{
         this.rootContent = rootContent;
         if(this instanceof Container) {
             Container c = ((Container) this);
-            c.getIntroduction().setBasePath(basePath);
-            c.getConclusion().setBasePath(basePath);
+            c.getIntroduction().setRootContent(rootContent, basePath);
+            c.getConclusion().setRootContent(rootContent, basePath);
             for(MetaContent meta: c.getChildren()) {
                 meta.setRootContent(rootContent, basePath);
             }

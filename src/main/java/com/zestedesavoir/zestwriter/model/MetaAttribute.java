@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
+import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
@@ -164,6 +165,18 @@ public class MetaAttribute implements Textual, ContentNode{
     public void setRootContent(Content rootContent, String basePath) {
         this.rootContent = rootContent;
         setBasePath(basePath);
+    }
+
+    public Container getParent() {
+        return FunctionTreeFactory.getContainerOfMetaAttribute(rootContent, this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof MetaAttribute) {
+            return getFilePath().equals(((MetaAttribute) obj).getFilePath());
+        }
+        return super.equals(obj);
     }
 
 }

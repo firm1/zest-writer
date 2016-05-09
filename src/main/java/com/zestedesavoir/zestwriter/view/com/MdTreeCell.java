@@ -110,8 +110,8 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 extract = new Extract("extract",
                         ZdsHttp.toSlug(result.get()),
                         result.get(),
-                        baseFilePath,
                         (getItem().getFilePath() + "/" + ZdsHttp.toSlug(result.get()) + ".md").substring(baseFilePath.length()+1));
+                extract.setRootContent(content, baseFilePath);
                 ((Container)getItem()).getChildren().add(extract);
                 // create file
                 File extFile = new File(extract.getFilePath());

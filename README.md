@@ -8,6 +8,8 @@ Linux | Windows
 ---|---
 [![Build Status](https://travis-ci.org/firm1/zest-writer.svg?branch=master)](https://travis-ci.org/firm1/zest-writer) | [![Build status](https://ci.appveyor.com/api/projects/status/n3aa5h519uxvjufq/branch/master?svg=true)](https://ci.appveyor.com/project/firm1/zest-writer/branch/master)
 
+[![codecov](https://codecov.io/gh/firm1/zest-writer/branch/master/graph/badge.svg)](https://codecov.io/gh/firm1/zest-writer)
+
 [![Dependency Status](https://www.versioneye.com/user/projects/5719ed6bfcd19a0039f17b07/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5719ed6bfcd19a0039f17b07)
 
 ## Installation (version stable)
