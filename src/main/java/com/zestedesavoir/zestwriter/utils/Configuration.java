@@ -131,12 +131,13 @@ public class Configuration {
             }
         }
 
-        for(Entry<?, ?> entry:props.entrySet()) {
-            if(!conf.containsKey(entry.getKey())) {
-                conf.putIfAbsent(entry.getKey(), entry.getValue());
-                saveConfFile();
-            }
-        }
+        props.entrySet().stream()
+                .filter(entry -> !conf.containsKey(entry.getKey()))
+                .forEach(entry -> {
+                        conf.putIfAbsent(entry.getKey(), entry.getValue());
+                        saveConfFile();
+                    }
+                );
     }
 
     public void saveConfFile() {
