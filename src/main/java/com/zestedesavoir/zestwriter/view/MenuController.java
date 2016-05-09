@@ -515,7 +515,28 @@ public class MenuController{
         });
 
         if(result.isPresent()){
-            uploadContentTask.start();
+            Function<Textual, Boolean> checkExtractAvailability = (Textual ch) -> {
+                File f = new File(ch.getFilePath());
+                return f.exists();
+            };
+            Map<Textual, Boolean> analyse = mainApp.getContents().get(0).doOnTextual(checkExtractAvailability);
+            boolean avalaible = true;
+            for(Map.Entry<Textual, Boolean> tx:analyse.entrySet()) {
+                if(!tx.getValue()) {
+                    avalaible = false;
+                    break;
+                }
+            }
+            if(avalaible) {
+                uploadContentTask.start();
+            }
+            else {
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Import de contenu");
+                alert.setHeaderText("Erreur d'import");
+                alert.setContentText("Désolé certains fichiers sont absent de votre disque, l'import ne peut pas avoir lieu");
+                alert.showAndWait();
+            }
         }
     }
 
