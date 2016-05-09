@@ -1,11 +1,5 @@
 package com.zestedesavoir.zestwriter.view.com;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.regex.Pattern;
-
 import com.zestedesavoir.zestwriter.model.Container;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
@@ -14,7 +8,6 @@ import com.zestedesavoir.zestwriter.model.MetaAttribute;
 import com.zestedesavoir.zestwriter.model.MetaContent;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
-
 import javafx.application.Platform;
 import javafx.collections.ObservableMap;
 import javafx.event.Event;
@@ -22,6 +15,12 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.util.Pair;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.regex.Pattern;
 
 public class FunctionTreeFactory {
     public static Map<String,Object> initContentDialog(Content defaultContent) {

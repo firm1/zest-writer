@@ -1,21 +1,5 @@
 package com.zestedesavoir.zestwriter.view;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.function.Function;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.python.core.PyString;
-import org.python.jline.internal.Log;
-import org.python.util.PythonInterpreter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
@@ -35,7 +19,6 @@ import com.zestedesavoir.zestwriter.view.task.DownloadContentService;
 import com.zestedesavoir.zestwriter.view.task.ExportPdfService;
 import com.zestedesavoir.zestwriter.view.task.LoginService;
 import com.zestedesavoir.zestwriter.view.task.UploadContentService;
-
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -69,6 +52,21 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.python.core.PyString;
+import org.python.jline.internal.Log;
+import org.python.util.PythonInterpreter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.function.Function;
 
 public class MenuController{
     private MainApp mainApp;

@@ -11,9 +11,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.fxmisc.richtext.StyleClassedTextArea;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 public class FindReplaceDialog{
     private MainApp mainApp;
     private MdConvertController mdConvertController;

@@ -1,13 +1,9 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.License;
 import com.zestedesavoir.zestwriter.model.TypeContent;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,6 +16,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Object>>>{
 	public static ObservableList<TypeContent> typeOptions = FXCollections.observableArrayList(new TypeContent("ARTICLE", "Article"), new TypeContent("TUTORIAL","Tutoriel"));

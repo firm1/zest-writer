@@ -2,7 +2,6 @@ package com.zestedesavoir.zestwriter.view.dialogs;
 
 
 import com.zestedesavoir.zestwriter.MainApp;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 

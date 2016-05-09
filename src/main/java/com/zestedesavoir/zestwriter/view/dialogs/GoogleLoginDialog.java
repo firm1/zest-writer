@@ -1,13 +1,6 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
-import java.net.CookieHandler;
-import java.net.CookieManager;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -18,6 +11,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Pair;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import java.net.CookieHandler;
+import java.net.CookieManager;
 
 public class GoogleLoginDialog extends Dialog<Pair<String, String>>{
 	public GoogleLoginDialog(LoginDialog parent, ZdsHttp zdsUtils) {
