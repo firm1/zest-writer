@@ -23,15 +23,40 @@ import com.zestedesavoir.zestwriter.MainApp;
 public class Configuration {
     private Properties conf;
     private String appName = "zestwriter";
+    private String confHomepageName = "homepage.properties";
     private String confFileName = "conf.properties";
     private String confDirPath;
     private File confFile;
+    private File homepageConfFile;
     private StorageSaver offlineSaver;
     private StorageSaver onlineSaver;
     private LocalDirectoryFactory workspaceFactory;
     private final Logger logger;
     private Properties props;
 
+    public enum HomepageData{
+        HomepageRecentFile1("data.homepage.recentFile.1", ""),
+        HomepageRecentFile2("data.homepage.recentFile.2", ""),
+        HomepageRecentFile3("data.homepage.recentFile.3", ""),
+        HomepageRecentFile4("data.homepage.recentFile.4", ""),
+        HomepageRecentFile5("data.homepage.recentFile.5", "");
+
+        private String key;
+        private String defaultValue;
+
+        HomepageData(String key, String defaultValue){
+            this.key = key;
+            this.defaultValue = defaultValue;
+        }
+
+        public String getKey(){
+            return key;
+        }
+
+        public String getDefaultValue(){
+            return defaultValue;
+        }
+    }
 
     public enum ConfigData{
         DisplayWindowWidth("data.display.window.width", "1000"),
@@ -75,10 +100,18 @@ public class Configuration {
         logger = LoggerFactory.getLogger(Configuration.class);
         confDirPath = homeDir+File.separator+"."+this.appName;
         String confFilePath = confDirPath+File.separator+this.confFileName;
+        String homepageConfFilePath = confDirPath+File.separator+this.confHomepageName;
         File confDir = new File(confDirPath);
         confFile = new File(confFilePath);
-        if(!confDir.exists()) {
-            confDir.mkdir();
+        homepageConfFile = new File(homepageConfFilePath);
+
+        if(!confDir.exists()){
+            if(!confDir.mkdir())
+                logger.error("Le fichier de confiuration n'a pas pu être créé");
+        }
+        if(!confDir.exists()){
+            if(!confDir.mkdir())
+                logger.error("Le fichier de confiuration n'a pas pu être créé");
         }
 
         // defaults config

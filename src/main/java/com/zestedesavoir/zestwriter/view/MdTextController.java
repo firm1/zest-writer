@@ -3,6 +3,8 @@ package com.zestedesavoir.zestwriter.view;
 import java.io.IOException;
 import java.util.Optional;
 
+import com.zestedesavoir.zestwriter.utils.Configuration;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.python.util.PythonInterpreter;
@@ -24,17 +26,8 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.DragEvent;
@@ -47,8 +40,15 @@ import javafx.util.Callback;
 
 public class MdTextController {
     private MainApp mainApp;
+    private Configuration config;
     private PythonInterpreter pyconsole;
     private final Logger logger;
+
+    @FXML private Hyperlink recentFileLink1;
+    @FXML private Hyperlink recentFileLink2;
+    @FXML private Hyperlink recentFileLink3;
+    @FXML private Hyperlink recentFileLink4;
+    @FXML private Hyperlink recentFileLink5;
 
     @FXML private TabPane EditorList;
     @FXML private TreeView<ContentNode> Summary;
@@ -118,6 +118,7 @@ public class MdTextController {
 
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
+        this.config = mainApp.getConfig();
 
         mainApp.getContents().addListener((ListChangeListener<Content>) change -> {
             for(Content content:mainApp.getContents()) {
@@ -315,4 +316,5 @@ public class MdTextController {
         });
         logger.info("Contenu stocké dans "+filePath+" ouvert");
     }
+
 }

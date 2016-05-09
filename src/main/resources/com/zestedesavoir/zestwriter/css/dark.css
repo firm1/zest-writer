@@ -15,3 +15,14 @@
     -fx-cell-size: 80px;
     -fx-padding: 20 5 20 5;
 }
+
+.hyperlink{
+    -fx-border-width:0;
+    -fx-underline:false;
+    -fx-text-fill:#6B8FA0;
+}
+
+.hyperlink:hover{
+    -fx-underline:true;
+    -fx-text-fill:#154E69;
+}
