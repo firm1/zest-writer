@@ -176,7 +176,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
                 if (!result.get().trim().equals("")) {
-                    ((MetaContent)item1.getValue()).setTitle(result.get());
+                    item1.getValue().setTitle(result.get());
                     saveManifestJson();
                     index.openContent(content);
                 }
@@ -189,7 +189,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             try {
                 Map<String,Object> paramContent= FunctionTreeFactory.initContentDialog(content);
                 if(paramContent != null) {
-                    ((Content) index.getSummary().getRoot().getValue()).setTitle(paramContent.get("title").toString());
+                    index.getSummary().getRoot().getValue().setTitle(paramContent.get("title").toString());
                     ((Content) index.getSummary().getRoot().getValue()).setDescription(paramContent.get("description").toString());
                     ((Content) index.getSummary().getRoot().getValue()).setType(paramContent.get("type").toString());
                     ((Content) index.getSummary().getRoot().getValue()).setLicence(paramContent.get("licence").toString());

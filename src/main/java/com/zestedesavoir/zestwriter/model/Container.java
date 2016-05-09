@@ -197,9 +197,9 @@ public class Container extends MetaContent implements ContentNode {
         sb.append(FunctionTreeFactory.changeLocationImages(FunctionTreeFactory.offsetHeaderMarkdown(getIntroduction().readMarkdown(), levelDepth))).append("\n\n");
         for(MetaContent c:getChildren()) {
             if(c instanceof Container) {
-                sb.append(((Container) c).exportContentToMarkdown(level+1, levelDepth));
+                sb.append(c.exportContentToMarkdown(level+1, levelDepth));
             } else if (c instanceof Extract) {
-                sb.append(((Extract) c).exportContentToMarkdown(level +1, levelDepth));
+                sb.append(c.exportContentToMarkdown(level +1, levelDepth));
             }
         }
         sb.append(FunctionTreeFactory.changeLocationImages(FunctionTreeFactory.offsetHeaderMarkdown(getConclusion().readMarkdown(), levelDepth))).append("\n\n");

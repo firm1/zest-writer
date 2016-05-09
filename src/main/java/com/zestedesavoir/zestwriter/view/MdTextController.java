@@ -134,7 +134,7 @@ public class MdTextController {
 
                 if (size > 0) {
                     TabPaneSkin skin = (TabPaneSkin) EditorList.getSkin();
-                    TabPaneBehavior tabPaneBehavior = (TabPaneBehavior) skin.getBehavior();
+                    TabPaneBehavior tabPaneBehavior = skin.getBehavior();
 
                     int selectedIndex = EditorList.getSelectionModel().getSelectedIndex();
 
@@ -254,7 +254,7 @@ public class MdTextController {
                             }
                         } else {
                             TabPaneSkin skin = (TabPaneSkin) EditorList.getSkin();
-                            TabPaneBehavior tabPaneBehavior = (TabPaneBehavior) skin.getBehavior();
+                            TabPaneBehavior tabPaneBehavior = skin.getBehavior();
                             tabPaneBehavior.selectTab(mainApp.getExtracts().get(item.getValue()));
                         }
                     }

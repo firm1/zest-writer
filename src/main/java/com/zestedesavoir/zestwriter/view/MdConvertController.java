@@ -299,7 +299,7 @@ public class MdConvertController {
 
             for (int i = 0; i < datas.getValue().size(); i++) {
                 for (int j = 0; j < datas.getValue().get(i).getRow().size(); j++) {
-                    data[i][j] = (String) datas.getValue().get(i).getRow().get(j);
+                    data[i][j] = datas.getValue().get(i).getRow().get(j);
                 }
             }
             String tablestring = FlipTable.of(headers, data);

@@ -51,10 +51,10 @@ public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Objec
 	    TextField title = new TextField(defaultContent.getTitle());
 	    TextField subtitle = new TextField(defaultContent.getDescription());
 	    ComboBox<TypeContent> type = new ComboBox<>(typeOptions);
-	    type.setValue((TypeContent) typeOptions.get(typeOptions.indexOf(new TypeContent(defaultContent.getType(), ""))));
+	    type.setValue(typeOptions.get(typeOptions.indexOf(new TypeContent(defaultContent.getType(), ""))));
 
 	    ComboBox<License> license = new ComboBox<>(licOptions);
-	    license.setValue((License) licOptions.get(licOptions.indexOf(new License(defaultContent.getLicence(), ""))));
+	    license.setValue(licOptions.get(licOptions.indexOf(new License(defaultContent.getLicence(), ""))));
 
 	    grid.add(new Label("Titre du contenu :"), 0, 0);
 	    grid.add(title, 1, 0);

@@ -73,7 +73,7 @@ public class FunctionTreeFactory {
         }
         else if(node.getValue() instanceof Extract) {
             Extract extract = (Extract) node.getValue();
-            return new TreeItem<>((ContentNode) extract);
+            return new TreeItem<>(extract);
         }
         return node;
     }
