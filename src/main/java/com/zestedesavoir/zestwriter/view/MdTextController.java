@@ -119,7 +119,6 @@ public class MdTextController {
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
         this.config = mainApp.getConfig();
-        setHomePage();
 
         mainApp.getContents().addListener((ListChangeListener<Content>) change -> {
             for(Content content:mainApp.getContents()) {
@@ -318,23 +317,4 @@ public class MdTextController {
         logger.info("Contenu stocké dans "+filePath+" ouvert");
     }
 
-    private void setHomePage(){
-
-
-        recentFileLink1.setOnAction(event -> {
-
-        });
-        recentFileLink2.setOnAction(event -> {
-
-        });
-        recentFileLink3.setOnAction(event -> {
-
-        });
-        recentFileLink4.setOnAction(event -> {
-
-        });
-        recentFileLink5.setOnAction(event -> {
-
-        });
-    }
 }
