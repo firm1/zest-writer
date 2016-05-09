@@ -16,6 +16,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 public class OptionsDialog{
@@ -109,6 +110,12 @@ public class OptionsDialog{
         config.setAdvancedServerPort(optAdvancedPort.getText());
 
         config.saveConfFile();
+        try {
+            config.loadWorkspace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         optionsWindow.close();
     }
 
