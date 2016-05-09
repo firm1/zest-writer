@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 import org.controlsfx.dialog.FontSelectorDialog;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
 
 public class OptionsDialog{
@@ -116,12 +115,7 @@ public class OptionsDialog{
         config.setAdvancedServerPort(optAdvancedPort.getText());
 
         config.saveConfFile();
-        try {
-            config.loadWorkspace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        config.loadWorkspace();
         optionsWindow.close();
     }
 

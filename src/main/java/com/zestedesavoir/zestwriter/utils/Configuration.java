@@ -179,19 +179,13 @@ public class Configuration {
         return workspaceFactory;
     }
 
-    public void loadWorkspace() throws IOException{
+    public void loadWorkspace() {
 
         this.workspaceFactory = new LocalDirectoryFactory(getWorkspacePath());
 
-        try{
-            offlineSaver = workspaceFactory.getOfflineSaver();
-            onlineSaver = workspaceFactory.getOnlineSaver();
-            logger.info("Espace de travail chargé en mémoire");
-        }
-        catch(IOException e){
-            logger.error("", e);
-        }
-
+        offlineSaver = workspaceFactory.getOfflineSaver();
+        onlineSaver = workspaceFactory.getOnlineSaver();
+        logger.info("Espace de travail chargé en mémoire");
     }
 
     public String getLastRelease() throws IOException {
