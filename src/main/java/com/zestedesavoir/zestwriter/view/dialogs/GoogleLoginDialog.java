@@ -91,7 +91,7 @@ public class GoogleLoginDialog extends Dialog<Pair<String, String>>{
                 Element find = ((Element)item);
                 if(find.getNodeName().equals("SPAN")) {
                     return find.getTextContent();
-                };
+                }
             }
         }
         return null;
