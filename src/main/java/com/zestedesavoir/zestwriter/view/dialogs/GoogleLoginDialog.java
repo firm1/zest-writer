@@ -1,9 +1,6 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Worker;
 import javafx.concurrent.Worker.State;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -33,26 +30,24 @@ public class GoogleLoginDialog extends Dialog<Pair<String, String>>{
         this.getDialogPane().setContent(scrollPane);
         this.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
 
-        webEngine.getLoadWorker().stateProperty().addListener(new ChangeListener<State>() {
-            @Override public void changed(ObservableValue ov, State oldState, State newState) {
-                if(newState == Worker.State.RUNNING) {
-                    if(webEngine.getLocation().contains("accounts.google.com/ServiceLoginAuth")) {
-                        scrollPane.setVisible(false);
-                    }
+        webEngine.getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
+            if(newState == State.RUNNING) {
+                if(webEngine.getLocation().contains("accounts.google.com/ServiceLoginAuth")) {
+                    scrollPane.setVisible(false);
                 }
-                if(newState == Worker.State.SUCCEEDED) {
-                    if(webEngine.getLocation().equals("https://zestedesavoir.com/")) {
-                        Element elementary = webEngine.getDocument().getDocumentElement();
-                        Element logbox = getLogBox(elementary);
-                        String pseudo = getPseudo(logbox);
-                        String id = getId(logbox);
-                        zdsUtils.authToGoogle(manager.getCookieStore().getCookies(), pseudo, id);
-                        getThis().close();
-                        parent.close();
-                    } else {
-                        if(webEngine.getLocation().contains("accounts.google.com/ServiceLoginAuth")) {
-                            scrollPane.setVisible(true);
-                        }
+            }
+            if(newState == State.SUCCEEDED) {
+                if(webEngine.getLocation().equals("https://zestedesavoir.com/")) {
+                    Element elementary = webEngine.getDocument().getDocumentElement();
+                    Element logbox = getLogBox(elementary);
+                    String pseudo = getPseudo(logbox);
+                    String id = getId(logbox);
+                    zdsUtils.authToGoogle(manager.getCookieStore().getCookies(), pseudo, id);
+                    getThis().close();
+                    parent.close();
+                } else {
+                    if(webEngine.getLocation().contains("accounts.google.com/ServiceLoginAuth")) {
+                        scrollPane.setVisible(true);
                     }
                 }
             }

@@ -12,7 +12,6 @@ import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import com.zestedesavoir.zestwriter.view.com.MdTreeCell;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
@@ -29,7 +28,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -80,19 +78,17 @@ public class MdTextController {
     }
 
     public void loadFonts() {
-        new Thread(new Runnable() {
-            public void run() {
-                Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Regular.ttf").toExternalForm(), 10);
-                Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Black.ttf").toExternalForm(), 10);
-                Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Bold.ttf").toExternalForm(), 10);
-                Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-BoldItalic.ttf").toExternalForm(), 10);
-                Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-HeavyItalic.ttf").toExternalForm(), 10);
-                Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Italic.ttf").toExternalForm(), 10);
-                Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Light.ttf").toExternalForm(), 10);
-                Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-LightItalic.ttf").toExternalForm(), 10);
+        new Thread(() -> {
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Regular.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Black.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Bold.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-BoldItalic.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-HeavyItalic.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Italic.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Light.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-LightItalic.ttf").toExternalForm(), 10);
 
-                Font.loadFont(MainApp.class.getResource("assets/static/fonts/FiraMono-Regular.ttf").toExternalForm(), 10);
-            }
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/FiraMono-Regular.ttf").toExternalForm(), 10);
         }).start();
     }
 
@@ -293,20 +289,17 @@ public class MdTextController {
                 });
 
 
-                treeCell.setOnDragOver(new EventHandler<DragEvent>() {
-                    @Override
-                    public void handle(DragEvent dragEvent) {
-                        if(dragObject != null && treeCell.getItem() != null) {
-                            if (!dragObject.getValue().isMoveableIn(treeCell.getItem(), ((Content)Summary.getRoot().getValue())))
-                            {
-                                treeCell.setGraphic(IconFactory.createDeleteIcon());
-                            } else {
-                                treeCell.setGraphic(IconFactory.createArrowDownIcon());
-                                dragEvent.acceptTransferModes(TransferMode.MOVE);
-                            }
+                treeCell.setOnDragOver(dragEvent -> {
+                    if(dragObject != null && treeCell.getItem() != null) {
+                        if (!dragObject.getValue().isMoveableIn(treeCell.getItem(), ((Content)Summary.getRoot().getValue())))
+                        {
+                            treeCell.setGraphic(IconFactory.createDeleteIcon());
+                        } else {
+                            treeCell.setGraphic(IconFactory.createArrowDownIcon());
+                            dragEvent.acceptTransferModes(TransferMode.MOVE);
                         }
-                        dragEvent.consume();
                     }
+                    dragEvent.consume();
                 });
 
                 treeCell.setOnDragDropped(dragEvent -> {
