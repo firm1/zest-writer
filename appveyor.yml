@@ -16,7 +16,6 @@ install:
 
 
 build_script:
-  - gradlew.bat check
   - gradlew.bat -u -i clean assemble
 
 artifacts:
