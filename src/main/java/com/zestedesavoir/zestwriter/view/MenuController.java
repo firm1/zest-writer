@@ -344,6 +344,26 @@ public class MenuController{
         }
         defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
         chooser.setInitialDirectory(defaultDirectory);
+        File selectedDirectory = chooser.showDialog(mainApp.getPrimaryStage());
+
+        if(selectedDirectory != null){
+            File manifest = new File(selectedDirectory.getAbsolutePath() + File.separator + "manifest.json");
+            ObjectMapper mapper = new ObjectMapper();
+            Content content;
+            try{
+                content = mapper.readValue(manifest, Content.class);
+                content.setRootContent(content, selectedDirectory.getAbsolutePath());
+                mainApp.getContents().clear();
+                FunctionTreeFactory.clearContent(mainApp.getExtracts(), mainApp.getIndex().getEditorList());
+                mainApp.getContents().add(content);
+                menuUpload.setDisable(false);
+                menuLisibility.setDisable(false);
+                menuReport.setDisable(false);
+                menuExport.setDisable(false);
+            }catch(IOException e){
+                logger.error(e.getMessage(), e);
+            }
+        }
     }
 
     @FXML private Service<Void> HandleLoginButtonAction(ActionEvent event){
