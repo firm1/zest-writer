@@ -111,7 +111,9 @@ public class Content extends Container implements ContentNode{
             e.printStackTrace();
         } finally {
             try {
-                writer.close();
+                if (writer != null) {
+                    writer.close();
+                }
             } catch (Exception ignored) {
             }
         }

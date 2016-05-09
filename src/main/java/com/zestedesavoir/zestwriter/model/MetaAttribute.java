@@ -44,7 +44,9 @@ public class MetaAttribute implements Textual, ContentNode{
             e.printStackTrace();
         } finally {
             try {
-                writer.close();
+                if (writer != null) {
+                    writer.close();
+                }
             } catch (Exception ignored) {
             }
         }

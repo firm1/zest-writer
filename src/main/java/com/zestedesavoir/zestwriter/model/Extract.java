@@ -51,7 +51,9 @@ public class Extract extends MetaContent implements Textual, ContentNode{
         } finally {
             try {
                 // Close the writer regardless of what happens...
-                writer.close();
+                if (writer != null) {
+                    writer.close();
+                }
             } catch (Exception ignored) {
             }
         }
