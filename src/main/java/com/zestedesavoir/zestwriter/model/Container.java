@@ -73,7 +73,7 @@ public class Container extends MetaContent implements ContentNode {
             return _children;
         }
         else {
-            return new ArrayList<MetaContent>();
+            return new ArrayList<>();
         }
     }
 

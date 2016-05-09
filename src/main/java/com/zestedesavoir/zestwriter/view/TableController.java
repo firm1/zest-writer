@@ -33,7 +33,7 @@ class ZRow {
             lst.add(" - ");
         }
         ObservableList<String> observableList = FXCollections.observableArrayList(lst);
-        this.row = new SimpleListProperty<String>(observableList);
+        this.row = new SimpleListProperty<>(observableList);
 
     }
 
