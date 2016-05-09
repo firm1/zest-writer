@@ -152,10 +152,7 @@ public class Container extends MetaContent implements ContentNode {
 
     @Override
     public boolean canTakeExtract() {
-        if(getCountDescendantContainer() > 0) {
-            return false;
-        }
-        return true;
+        return getCountDescendantContainer() <= 0;
     }
 
     @Override

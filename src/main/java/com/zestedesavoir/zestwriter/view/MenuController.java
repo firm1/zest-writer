@@ -711,11 +711,7 @@ public class MenuController{
                         if(versionOnline == null) {
                             throw new IOException();
                         } else {
-                            if(versionOnline.equals(current)) {
-                                return true;
-                            } else {
-                                return false;
-                            }
+                            return versionOnline.equals(current);
                         }
                     }
                 };
