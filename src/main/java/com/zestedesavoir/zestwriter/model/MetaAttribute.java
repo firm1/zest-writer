@@ -98,10 +98,8 @@ public class MetaAttribute implements Textual, ContentNode{
 
     public String readMarkdown() {
         Path path = Paths.get(this.getFilePath());
-        Scanner scanner  = null;
         StringBuilder bfString = new StringBuilder();
-        try {
-            scanner = new Scanner(path, StandardCharsets.UTF_8.name());
+        try (Scanner scanner = new Scanner(path, StandardCharsets.UTF_8.name())) {
             while (scanner.hasNextLine()) {
                 bfString.append(scanner.nextLine());
                 bfString.append("\n");
@@ -109,8 +107,6 @@ public class MetaAttribute implements Textual, ContentNode{
             return bfString.toString();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            scanner.close();
         }
         return null;
     }
