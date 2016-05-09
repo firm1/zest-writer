@@ -147,7 +147,6 @@ public class MetaAttribute implements Textual, ContentNode{
 
     @Override
     public void delete() {
-        return;
     }
 
     @Override
