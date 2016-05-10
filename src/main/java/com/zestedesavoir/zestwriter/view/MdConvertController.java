@@ -1,5 +1,22 @@
 package com.zestedesavoir.zestwriter.view;
 
+import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
+import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.fxmisc.richtext.LineNumberFactory;
+import org.fxmisc.richtext.StyleClassedTextArea;
+import org.python.core.PyString;
+import org.python.util.PythonInterpreter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.DOMException;
+
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
@@ -7,7 +24,9 @@ import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.FlipTable;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
+
 import javafx.application.Platform;
+import javafx.beans.property.BooleanPropertyBase;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
@@ -43,22 +62,6 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.fxmisc.richtext.LineNumberFactory;
-import org.fxmisc.richtext.StyleClassedTextArea;
-import org.python.core.PyString;
-import org.python.util.PythonInterpreter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.DOMException;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
-import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
 
 public class MdConvertController {
     private MainApp mainApp;
@@ -71,7 +74,20 @@ public class MdConvertController {
     private final Logger logger;
     private int xRenderPosition = 0;
     private int yRenderPosition = 0;
-    private boolean isSaved = true;
+    private BooleanPropertyBase isSaved = new BooleanPropertyBase(true) {
+
+        @Override
+        public String getName() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public Object getBean() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+    };
 
     @FXML private WebView renderView;
     @FXML private StyleClassedTextArea SourceText;
@@ -111,7 +127,7 @@ public class MdConvertController {
         SourceText.replaceText(extract.getMarkdown());
         SourceText.textProperty().addListener((observableValue, s, s2) -> {
             tab.setText("! " + extract.getTitle());
-            this.isSaved = false;
+            this.isSaved.setValue(false);
             SourceText.getUndoManager().mark();
             updateRender();
         });
@@ -140,6 +156,7 @@ public class MdConvertController {
         SourceText.getStyleClass().add("markdown-editor");
         SourceText.getStylesheets().add(MainApp.class.getResource("css/editor.css").toExternalForm());
         SourceText.setParagraphGraphicFactory(LineNumberFactory.get(SourceText));
+        SaveButton.disableProperty().bind(isSaved);
     }
 
     /*
@@ -150,7 +167,7 @@ public class MdConvertController {
         extract.setMarkdown(SourceText.getText());
         extract.save();
         tab.setText(extract.getTitle());
-        this.isSaved = true;
+        this.isSaved.setValue(true);
 
         SourceText.requestFocus();
     }
@@ -559,11 +576,11 @@ public class MdConvertController {
     }
 
     public boolean isSaved() {
-        return isSaved;
+        return isSaved.getValue();
     }
 
     public void setSaved(boolean isSaved) {
-        this.isSaved = isSaved;
+        this.isSaved.setValue(isSaved);
     }
 
     @FXML private void HandleFindReplaceDialog(){
