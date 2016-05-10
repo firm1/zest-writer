@@ -28,6 +28,7 @@ import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanPropertyBase;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
@@ -44,6 +45,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -441,7 +443,9 @@ public class MdConvertController {
         if (mdBox.getSplitPane().getItems().size() > 1) {
             mdBox.getSplitPane().getItems().remove(0);
         } else {
-            mdBox.getSplitPane().getItems().add(0, mdBox.getSummary());
+            mdBox.getSplitPane().getItems().add(0, mdBox.treePane);
+            mdBox.getSplitPane().setDividerPositions(0.2);
+            SplitPane.setResizableWithParent(mdBox.treePane,Boolean.FALSE);
         }
     }
 

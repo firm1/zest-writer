@@ -45,6 +45,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 
@@ -63,6 +64,7 @@ public class MdTextController {
     @FXML private TabPane EditorList;
     @FXML private TreeView<ContentNode> Summary;
     @FXML private SplitPane splitPane;
+    @FXML public AnchorPane treePane;
     @FXML private Tab Home;
 
     @FXML private void initialize() {
