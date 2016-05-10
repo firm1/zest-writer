@@ -189,7 +189,7 @@ public class Configuration {
         logger.info("Espace de travail chargé en mémoire");
     }
 
-    public String getLastRelease() throws IOException {
+    public static String getLastRelease() throws IOException {
         String projecUrlRelease = "https://api.github.com/repos/firm1/zest-writer/releases/latest";
 
         String json = Request.Get(projecUrlRelease).execute().returnContent().asString();
