@@ -1,5 +1,12 @@
 package com.zestedesavoir.zestwriter.view;
 
+import java.io.IOException;
+import java.util.Optional;
+
+import org.python.util.PythonInterpreter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
 import com.sun.javafx.scene.control.skin.TabPaneSkin;
 import com.zestedesavoir.zestwriter.MainApp;
@@ -10,6 +17,8 @@ import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import com.zestedesavoir.zestwriter.view.com.MdTreeCell;
+
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -34,12 +43,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
-import org.python.util.PythonInterpreter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.Optional;
 
 public class MdTextController {
     private MainApp mainApp;
@@ -122,9 +125,10 @@ public class MdTextController {
         this.config = mainApp.getConfig();
 
         mainApp.getContents().addListener((ListChangeListener<Content>) change -> {
-            for(Content content:mainApp.getContents()) {
-                FunctionTreeFactory.clearContent(mainApp.getExtracts(), EditorList);
-                openContent(content);
+            if(FunctionTreeFactory.clearContent(mainApp.getExtracts(), EditorList)) {
+                for(Content content:mainApp.getContents()) {
+                    openContent(content);
+                }
             }
         });
 
@@ -158,11 +162,9 @@ public class MdTextController {
             } else if(t.getCode().equals(KeyCode.W) && t.isControlDown()) {
                 if (EditorList.getTabs().size() > 1) {
                     Tab selectedTab = EditorList.getSelectionModel().getSelectedItem();
-                    Event closeRequestEvent = new Event(Tab.TAB_CLOSE_REQUEST_EVENT);
-                    Event.fireEvent(selectedTab, closeRequestEvent);
-                    Event closedEvent = new Event(Tab.CLOSED_EVENT);
-                    Event.fireEvent(selectedTab, closedEvent);
-                    EditorList.getTabs().remove(selectedTab);
+                    Platform.runLater(() -> {
+                        Event.fireEvent(selectedTab, new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
+                    });
                 }
             }
         });
@@ -208,14 +210,16 @@ public class MdTextController {
                         if (result.get() == buttonTypeYes) {
                             controller.HandleSaveButtonAction(null);
                         }
-                    } else {
-                        t.consume();
+                        Event.fireEvent(tab, new Event(Tab.CLOSED_EVENT));
                     }
                 }
+            } else {
+                Event.fireEvent(tab, new Event(Tab.CLOSED_EVENT));
             }
         });
 
         tab.setOnClosed(t -> {
+            EditorList.getTabs().remove(tab);
             mainApp.getExtracts().remove(extract);
             t.consume();
         });
