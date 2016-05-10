@@ -1,21 +1,17 @@
 package com.zestedesavoir.zestwriter.view.task;
 
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.Function;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
-
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import org.apache.commons.lang.StringEscapeUtils;
+
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.Function;
 
 public class CorrectionService extends Service<String>{
 	private Corrector corrector;

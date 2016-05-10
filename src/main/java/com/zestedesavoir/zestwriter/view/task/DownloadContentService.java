@@ -1,15 +1,13 @@
 package com.zestedesavoir.zestwriter.view.task;
 
-import java.io.File;
-
+import com.zestedesavoir.zestwriter.model.MetadataContent;
+import com.zestedesavoir.zestwriter.utils.ZdsHttp;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zestedesavoir.zestwriter.model.MetadataContent;
-import com.zestedesavoir.zestwriter.utils.ZdsHttp;
-
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
+import java.io.File;
 
 public class DownloadContentService extends Service<Void>{
 	private ZdsHttp zdsUtils;

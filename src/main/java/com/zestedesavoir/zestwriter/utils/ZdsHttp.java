@@ -1,24 +1,7 @@
 package com.zestedesavoir.zestwriter.utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpCookie;
-import java.nio.file.Paths;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
+import com.zestedesavoir.zestwriter.model.MetadataContent;
+import javafx.util.Pair;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -48,9 +31,24 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zestedesavoir.zestwriter.model.MetadataContent;
-
-import javafx.util.Pair;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpCookie;
+import java.nio.file.Paths;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 
 public class ZdsHttp {
@@ -302,7 +300,7 @@ public class ZdsHttp {
         this.authenticated = false;
     }
 
-    public boolean importNewContent(String filePath) throws ClientProtocolException, IOException {
+    public boolean importNewContent(String filePath) throws IOException {
 
         logger.debug("Tentative d'import via l'url : " + getImportNewContenttUrl());
         HttpGet get = new HttpGet(getImportNewContenttUrl());

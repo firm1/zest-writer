@@ -23,12 +23,12 @@ public class LocalDirectoryFactory {
     public String getWorkspaceDir(){
         return baseSaver.getBaseDirectory();
     }
-    public LocalDirectorySaver getOnlineSaver() throws IOException{
+    public LocalDirectorySaver getOnlineSaver() {
 
         return new LocalDirectorySaver(baseSaver.getBaseDirectory() + File.separator + "online");
     }
 
-    public LocalDirectorySaver getOfflineSaver() throws IOException{
+    public LocalDirectorySaver getOfflineSaver() {
 
         return new LocalDirectorySaver(baseSaver.getBaseDirectory() + File.separator + "offline");
     }

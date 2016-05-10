@@ -1,5 +1,14 @@
 package com.zestedesavoir.zestwriter.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
+import com.zestedesavoir.zestwriter.view.com.IconFactory;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -7,20 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
-import com.zestedesavoir.zestwriter.view.com.IconFactory;
-
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="type", visible=true)
 @JsonSubTypes({@Type(value = Container.class, name = "null"), @Type(value = Content.class, name = "TUTORIAL"), @Type(value = Content.class, name = "ARTICLE") })
@@ -78,7 +73,7 @@ public class Container extends MetaContent implements ContentNode {
             return _children;
         }
         else {
-            return new ArrayList<MetaContent>();
+            return new ArrayList<>();
         }
     }
 
@@ -116,7 +111,7 @@ public class Container extends MetaContent implements ContentNode {
      * @return number of container-type ancestors
      */
     public int getCountAncestorsContainer(Container content) {
-        int total = 0;
+        int total;
         if(this.getFilePath().equals(content.getFilePath())) {
             return 1;
         }
@@ -157,10 +152,7 @@ public class Container extends MetaContent implements ContentNode {
 
     @Override
     public boolean canTakeExtract() {
-        if(getCountDescendantContainer() > 0) {
-            return false;
-        }
-        return true;
+        return getCountDescendantContainer() <= 0;
     }
 
     @Override
@@ -205,9 +197,9 @@ public class Container extends MetaContent implements ContentNode {
         sb.append(FunctionTreeFactory.changeLocationImages(FunctionTreeFactory.offsetHeaderMarkdown(getIntroduction().readMarkdown(), levelDepth))).append("\n\n");
         for(MetaContent c:getChildren()) {
             if(c instanceof Container) {
-                sb.append(((Container) c).exportContentToMarkdown(level+1, levelDepth));
+                sb.append(c.exportContentToMarkdown(level+1, levelDepth));
             } else if (c instanceof Extract) {
-                sb.append(((Extract) c).exportContentToMarkdown(level +1, levelDepth));
+                sb.append(c.exportContentToMarkdown(level +1, levelDepth));
             }
         }
         sb.append(FunctionTreeFactory.changeLocationImages(FunctionTreeFactory.offsetHeaderMarkdown(getConclusion().readMarkdown(), levelDepth))).append("\n\n");

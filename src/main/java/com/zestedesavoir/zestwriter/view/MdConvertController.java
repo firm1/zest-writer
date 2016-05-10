@@ -1,36 +1,11 @@
 package com.zestedesavoir.zestwriter.view;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
-import com.zestedesavoir.zestwriter.view.dialogs.OptionsDialog;
-import com.ziclix.python.sql.pipe.Source;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.control.*;
-import javafx.scene.text.Font;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.fxmisc.richtext.LineNumberFactory;
-import org.fxmisc.richtext.StyleClassedTextArea;
-import org.python.core.PyString;
-import org.python.icu.impl.ICUResource;
-import org.python.util.PythonInterpreter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.DOMException;
-
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Textual;
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.FlipTable;
-
+import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -42,16 +17,43 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Pair;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.fxmisc.richtext.LineNumberFactory;
+import org.fxmisc.richtext.StyleClassedTextArea;
+import org.python.core.PyString;
+import org.python.util.PythonInterpreter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.DOMException;
 
-import javax.tools.Tool;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class MdConvertController {
     private MainApp mainApp;
@@ -92,7 +94,7 @@ public class MdConvertController {
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MainApp.class.getResource("fxml/Editor.fxml"));
-        SplitPane writer = loader.load();
+        loader.load();
 
         if(mainApp.getConfig().getEditorToolbarView().equals("no")){
             BoxEditor.setTop(null);
@@ -297,7 +299,7 @@ public class MdConvertController {
 
             for (int i = 0; i < datas.getValue().size(); i++) {
                 for (int j = 0; j < datas.getValue().get(i).getRow().size(); j++) {
-                    data[i][j] = (String) datas.getValue().get(i).getRow().get(j);
+                    data[i][j] = datas.getValue().get(i).getRow().get(j);
                 }
             }
             String tablestring = FlipTable.of(headers, data);
@@ -532,9 +534,7 @@ public class MdConvertController {
         dialog.setContentText("Numéro de ligne: ");
 
         Optional<String> result = dialog.showAndWait();
-        result.ifPresent(line -> {
-            SourceText.positionCaret(SourceText.position(Integer.parseInt(line)-1, 0).toOffset());
-        });
+        result.ifPresent(line -> SourceText.positionCaret(SourceText.position(Integer.parseInt(line)-1, 0).toOffset()));
     }
 
 

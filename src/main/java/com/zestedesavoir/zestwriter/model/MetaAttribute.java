@@ -1,5 +1,9 @@
 package com.zestedesavoir.zestwriter.model;
 
+import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
+import com.zestedesavoir.zestwriter.view.com.IconFactory;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,11 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
-
-import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
-import com.zestedesavoir.zestwriter.view.com.IconFactory;
-
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 
 public class MetaAttribute implements Textual, ContentNode{
     private String basePath;
@@ -45,7 +44,9 @@ public class MetaAttribute implements Textual, ContentNode{
             e.printStackTrace();
         } finally {
             try {
-                writer.close();
+                if (writer != null) {
+                    writer.close();
+                }
             } catch (Exception ignored) {
             }
         }
@@ -99,10 +100,8 @@ public class MetaAttribute implements Textual, ContentNode{
 
     public String readMarkdown() {
         Path path = Paths.get(this.getFilePath());
-        Scanner scanner  = null;
         StringBuilder bfString = new StringBuilder();
-        try {
-            scanner = new Scanner(path, StandardCharsets.UTF_8.name());
+        try (Scanner scanner = new Scanner(path, StandardCharsets.UTF_8.name())) {
             while (scanner.hasNextLine()) {
                 bfString.append(scanner.nextLine());
                 bfString.append("\n");
@@ -110,8 +109,6 @@ public class MetaAttribute implements Textual, ContentNode{
             return bfString.toString();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            scanner.close();
         }
         return null;
     }
@@ -148,7 +145,6 @@ public class MetaAttribute implements Textual, ContentNode{
 
     @Override
     public void delete() {
-        return;
     }
 
     @Override

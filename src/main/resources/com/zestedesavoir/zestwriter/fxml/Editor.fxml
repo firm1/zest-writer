@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.jensd.fx.glyphs.materialdesignicons.*?>
-<?import org.fxmisc.richtext.StyleClassedTextArea ?>
-<?import javafx.scene.paint.*?>
-<?import java.lang.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.web.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.web.WebView?>
-<?import de.jensd.fx.glyphs.fontawesome.*?>
-
+<?import org.fxmisc.richtext.StyleClassedTextArea?>
 <SplitPane dividerPositions="0.5" prefHeight="633.0" prefWidth="773.0" stylesheets="@../css/dark.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MdConvertController">
    <items>
       <BorderPane fx:id="BoxEditor">

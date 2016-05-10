@@ -1,21 +1,5 @@
 package com.zestedesavoir.zestwriter.view;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.function.Function;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.python.core.PyString;
-import org.python.jline.internal.Log;
-import org.python.util.PythonInterpreter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
@@ -35,7 +19,6 @@ import com.zestedesavoir.zestwriter.view.task.DownloadContentService;
 import com.zestedesavoir.zestwriter.view.task.ExportPdfService;
 import com.zestedesavoir.zestwriter.view.task.LoginService;
 import com.zestedesavoir.zestwriter.view.task.UploadContentService;
-
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -69,6 +52,20 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.python.core.PyString;
+import org.python.util.PythonInterpreter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.function.Function;
 
 public class MenuController{
     private MainApp mainApp;
@@ -167,7 +164,7 @@ public class MenuController{
             return null;
         });
 
-        Optional<Pair<String, String>> result = dialog.showAndWait();
+        dialog.showAndWait();
     }
 
     @FXML private void HandleGunningButtonAction(ActionEvent event){
@@ -227,7 +224,7 @@ public class MenuController{
             return null;
         });
 
-        Optional<Pair<String, String>> result = dialog.showAndWait();
+        dialog.showAndWait();
     }
 
     @FXML private void HandleReportWithoutTypoButtonAction(ActionEvent event){
@@ -281,83 +278,73 @@ public class MenuController{
     @FXML private void HandleNewButtonAction(ActionEvent event){
         File defaultDirectory;
 
-        try{
-            if(mainApp.getConfig().getWorkspaceFactory() == null){
-                mainApp.getConfig().loadWorkspace();
-            }
-
-            defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
-
-            Map<String, Object> paramContent = FunctionTreeFactory.initContentDialog(null);
-
-            if(paramContent != null){
-                // find inexistant directory
-                String localPath = defaultDirectory.getAbsolutePath() + File.separator + ZdsHttp.toSlug((String)paramContent.get("title"));
-                String realLocalPath = localPath;
-                File folder = new File(realLocalPath);
-                int i = 1;
-                while(folder.exists()){
-                    realLocalPath = localPath + "-" + i;
-                    folder = new File(realLocalPath);
-                    i++;
-                }
-                // create directory
-                folder.mkdir();
-
-                // create manifest.json
-                File manifest = new File(realLocalPath + File.separator + "manifest.json");
-                ObjectMapper mapper = new ObjectMapper();
-                paramContent.put("slug", ZdsHttp.toSlug((String)paramContent.get("title")));
-                paramContent.put("version", 2);
-                paramContent.put("object", "container");
-                paramContent.put("introduction", "introduction.md");
-                paramContent.put("conclusion", "conclusion.md");
-                paramContent.put("children", new ArrayList<>());
-
-                try{
-                    mapper.writeValue(manifest, paramContent);
-                    // create introduction and conclusion
-                    File intro = new File(realLocalPath + File.separator + "introduction.md");
-                    File conclu = new File(realLocalPath + File.separator + "conclusion.md");
-                    intro.createNewFile();
-                    conclu.createNewFile();
-                    Content content = mapper.readValue(manifest, Content.class);
-                    content.setRootContent(content, realLocalPath);
-                    mainApp.getContents().clear();
-                    FunctionTreeFactory.clearContent(mainApp.getExtracts(), mainApp.getIndex().getEditorList());
-                    mainApp.getContents().add(content);
-
-                }catch(IOException e){
-                    logger.error(e.getMessage(), e);
-                }
-
-                menuUpload.setDisable(false);
-                menuLisibility.setDisable(false);
-                menuReport.setDisable(false);
-                menuExport.setDisable(false);
-            }
-        }catch(IOException e){
-            logger.error(e.getMessage(), e);
+        if(mainApp.getConfig().getWorkspaceFactory() == null){
+            mainApp.getConfig().loadWorkspace();
         }
 
+        defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
+
+        Map<String, Object> paramContent = FunctionTreeFactory.initContentDialog(null);
+
+        if(paramContent != null){
+            // find inexistant directory
+            String localPath = defaultDirectory.getAbsolutePath() + File.separator + ZdsHttp.toSlug((String)paramContent.get("title"));
+            String realLocalPath = localPath;
+            File folder = new File(realLocalPath);
+            int i = 1;
+            while(folder.exists()){
+                realLocalPath = localPath + "-" + i;
+                folder = new File(realLocalPath);
+                i++;
+            }
+            // create directory
+            folder.mkdir();
+
+            // create manifest.json
+            File manifest = new File(realLocalPath + File.separator + "manifest.json");
+            ObjectMapper mapper = new ObjectMapper();
+            paramContent.put("slug", ZdsHttp.toSlug((String)paramContent.get("title")));
+            paramContent.put("version", 2);
+            paramContent.put("object", "container");
+            paramContent.put("introduction", "introduction.md");
+            paramContent.put("conclusion", "conclusion.md");
+            paramContent.put("children", new ArrayList<>());
+
+            try{
+                mapper.writeValue(manifest, paramContent);
+                // create introduction and conclusion
+                File intro = new File(realLocalPath + File.separator + "introduction.md");
+                File conclu = new File(realLocalPath + File.separator + "conclusion.md");
+                intro.createNewFile();
+                conclu.createNewFile();
+                Content content = mapper.readValue(manifest, Content.class);
+                content.setRootContent(content, realLocalPath);
+                mainApp.getContents().clear();
+                FunctionTreeFactory.clearContent(mainApp.getExtracts(), mainApp.getIndex().getEditorList());
+                mainApp.getContents().add(content);
+
+            }catch(IOException e){
+                logger.error(e.getMessage(), e);
+            }
+
+            menuUpload.setDisable(false);
+            menuLisibility.setDisable(false);
+            menuReport.setDisable(false);
+            menuExport.setDisable(false);
+        }
     }
 
     @FXML private void HandleOpenButtonAction(ActionEvent event){
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Contenus Zestueux");
         File defaultDirectory;
-        File selectedDirectory = null;
 
-        try{
-            if(mainApp.getConfig().getWorkspaceFactory() == null){
-                mainApp.getConfig().loadWorkspace();
-            }
-            defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
-            chooser.setInitialDirectory(defaultDirectory);
-            selectedDirectory = chooser.showDialog(mainApp.getPrimaryStage());
-        }catch(IOException e){
-            Log.error(e.getMessage(), e);
+        if(mainApp.getConfig().getWorkspaceFactory() == null){
+            mainApp.getConfig().loadWorkspace();
         }
+        defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
+        chooser.setInitialDirectory(defaultDirectory);
+        File selectedDirectory = chooser.showDialog(mainApp.getPrimaryStage());
 
         if(selectedDirectory != null){
             File manifest = new File(selectedDirectory.getAbsolutePath() + File.separator + "manifest.json");
@@ -462,11 +449,7 @@ public class MenuController{
 
     private void prerequisitesForData(){
         if(mainApp.getConfig().getWorkspaceFactory() == null){
-            try{
-                mainApp.getConfig().loadWorkspace();
-            }catch(IOException e){
-                logger.error(e.getMessage(), e);
-            }
+            mainApp.getConfig().loadWorkspace();
         }
     }
 
@@ -713,11 +696,7 @@ public class MenuController{
                         if(versionOnline == null) {
                             throw new IOException();
                         } else {
-                            if(versionOnline.equals(current)) {
-                                return true;
-                            } else {
-                                return false;
-                            }
+                            return versionOnline.equals(current);
                         }
                     }
                 };

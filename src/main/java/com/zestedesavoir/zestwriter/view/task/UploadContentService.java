@@ -1,22 +1,16 @@
 package com.zestedesavoir.zestwriter.view.task;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-
+import com.zestedesavoir.zestwriter.model.MetadataContent;
+import com.zestedesavoir.zestwriter.utils.ZdsHttp;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zeroturnaround.zip.ZipUtil;
 
-import com.zestedesavoir.zestwriter.model.MetadataContent;
-import com.zestedesavoir.zestwriter.model.Textual;
-import com.zestedesavoir.zestwriter.utils.ZdsHttp;
-import com.zestedesavoir.zestwriter.utils.readability.Readability;
-
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
+import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
 
 public class UploadContentService extends Service<Void>{
 	private ZdsHttp zdsUtils;
@@ -34,7 +28,7 @@ public class UploadContentService extends Service<Void>{
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                if (zdsUtils.isAuthenticated()) {
+                if (zdsUtils.isAuthenticated() && result.isPresent()) {
                     String targetId = result.get().getId();
                     String localSlug = zdsUtils.getLocalSlug();
                     String targetSlug = result.get().getSlug();
