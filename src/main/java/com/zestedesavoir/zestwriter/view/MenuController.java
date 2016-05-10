@@ -1,5 +1,20 @@
 package com.zestedesavoir.zestwriter.view;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.function.Function;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.python.core.PyString;
+import org.python.util.PythonInterpreter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
@@ -19,6 +34,7 @@ import com.zestedesavoir.zestwriter.view.task.DownloadContentService;
 import com.zestedesavoir.zestwriter.view.task.ExportPdfService;
 import com.zestedesavoir.zestwriter.view.task.LoginService;
 import com.zestedesavoir.zestwriter.view.task.UploadContentService;
+
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -43,6 +59,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -52,20 +71,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.python.core.PyString;
-import org.python.util.PythonInterpreter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.function.Function;
 
 public class MenuController{
     private MainApp mainApp;
@@ -84,6 +89,7 @@ public class MenuController{
     @FXML private MenuItem menuGoogle;
     @FXML private HBox hBottomBox;
     @FXML private Menu menuExport;
+    @FXML private MenuItem menuQuit;
 
 
     public MenuController(){
@@ -93,6 +99,12 @@ public class MenuController{
 
     public void setMainApp(MainApp mainApp){
         this.mainApp = mainApp;
+    }
+
+    @FXML private void initialize() {
+        if(FunctionTreeFactory.isMacOs()) {
+            menuQuit.setAccelerator(new KeyCodeCombination(KeyCode.A, KeyCombination.SHORTCUT_DOWN));
+        }
     }
 
     @FXML private void HandleQuitButtonAction(ActionEvent event){

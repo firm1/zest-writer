@@ -23,6 +23,11 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class FunctionTreeFactory {
+
+    public static boolean isMacOs() {
+        return System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0;
+    }
+
     public static Map<String,Object> initContentDialog(Content defaultContent) {
         if(defaultContent == null) {
             defaultContent = new Content("container",

@@ -51,7 +51,7 @@
                       </MenuItem>
                     </items>
                   </Menu>
-              <MenuItem mnemonicParsing="false" onAction="#HandleQuitButtonAction" text="Quitter">
+              <MenuItem fx:id="menuQuit" mnemonicParsing="false" onAction="#HandleQuitButtonAction" text="Quitter">
                      <graphic>
                         <MaterialDesignIconView fill="#084561" glyphName="EXIT_TO_APP" size="1.8em" />
                      </graphic>

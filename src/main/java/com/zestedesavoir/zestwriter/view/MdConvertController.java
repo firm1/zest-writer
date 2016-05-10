@@ -5,6 +5,7 @@ import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.FlipTable;
+import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -31,6 +32,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -55,19 +57,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static javafx.scene.input.KeyCode.A;
-import static javafx.scene.input.KeyCode.B;
-import static javafx.scene.input.KeyCode.D;
-import static javafx.scene.input.KeyCode.E;
-import static javafx.scene.input.KeyCode.EQUALS;
-import static javafx.scene.input.KeyCode.F;
-import static javafx.scene.input.KeyCode.G;
-import static javafx.scene.input.KeyCode.I;
-import static javafx.scene.input.KeyCode.K;
-import static javafx.scene.input.KeyCode.L;
-import static javafx.scene.input.KeyCode.PLUS;
-import static javafx.scene.input.KeyCode.S;
-import static javafx.scene.input.KeyCode.SPACE;
 import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
 import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
 
@@ -127,19 +116,21 @@ public class MdConvertController {
             updateRender();
         });
         updateRender();
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(S, SHORTCUT_DOWN), () -> HandleSaveButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(G, SHORTCUT_DOWN), () -> HandleBoldButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(I, SHORTCUT_DOWN), () -> HandleItalicButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(B, SHORTCUT_DOWN), () -> HandleBarredButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(K, SHORTCUT_DOWN), () -> HandleTouchButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(PLUS, SHORTCUT_DOWN), () -> HandleExpButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(EQUALS, SHORTCUT_DOWN), () -> HandleIndButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(E, SHORTCUT_DOWN), () -> HandleCenterButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(D, SHORTCUT_DOWN, SHIFT_DOWN), () -> HandleRightButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(SPACE, SHORTCUT_DOWN), () -> HandleUnbreakableAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(L, SHORTCUT_DOWN), this::HandleGoToLineAction);
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(F, SHORTCUT_DOWN), this::HandleFindReplaceDialog);
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(A, SHORTCUT_DOWN), () -> SourceText.selectAll());
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.S, SHORTCUT_DOWN), () -> HandleSaveButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.G, SHORTCUT_DOWN), () -> HandleBoldButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.I, SHORTCUT_DOWN), () -> HandleItalicButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.B, SHORTCUT_DOWN), () -> HandleBarredButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.K, SHORTCUT_DOWN), () -> HandleTouchButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.PLUS, SHORTCUT_DOWN), () -> HandleExpButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.EQUALS, SHORTCUT_DOWN), () -> HandleIndButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.E, SHORTCUT_DOWN), () -> HandleCenterButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.D, SHORTCUT_DOWN, SHIFT_DOWN), () -> HandleRightButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.SPACE, SHORTCUT_DOWN), () -> HandleUnbreakableAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.L, SHORTCUT_DOWN), this::HandleGoToLineAction);
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.F, SHORTCUT_DOWN), this::HandleFindReplaceDialog);
+        if(FunctionTreeFactory.isMacOs()) {
+            tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.Q, SHORTCUT_DOWN), () -> SourceText.selectAll());
+        }
 
         SourceText.requestFocus();
     }

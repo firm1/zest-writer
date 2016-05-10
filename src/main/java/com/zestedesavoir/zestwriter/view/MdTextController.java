@@ -1,5 +1,8 @@
 package com.zestedesavoir.zestwriter.view;
 
+import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
+import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
+
 import java.io.IOException;
 import java.util.Optional;
 
@@ -39,6 +42,7 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.text.Font;
@@ -132,43 +136,47 @@ public class MdTextController {
             }
         });
 
-        mainApp.getScene().addEventFilter(KeyEvent.KEY_PRESSED, t -> {
-            if (t.getCode().equals(KeyCode.TAB) && t.isControlDown()) {
-                int size = EditorList.getTabs().size();
+        mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.TAB, SHORTCUT_DOWN), () -> switchTabTo(true));
+        mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.TAB, SHORTCUT_DOWN, SHIFT_DOWN), () -> switchTabTo(false));
+        if(FunctionTreeFactory.isMacOs()) {
+            mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.W, SHORTCUT_DOWN), () -> closeCurrentTab());
+        } else {
+            mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.Z, SHORTCUT_DOWN), () -> closeCurrentTab());
+        }
+    }
 
-                if (size > 0) {
-                    TabPaneSkin skin = (TabPaneSkin) EditorList.getSkin();
-                    TabPaneBehavior tabPaneBehavior = skin.getBehavior();
+    public void closeCurrentTab() {
+        if (EditorList.getTabs().size() > 1) {
+            Tab selectedTab = EditorList.getSelectionModel().getSelectedItem();
+            Platform.runLater(() -> {
+                Event.fireEvent(selectedTab, new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
+            });
+        }
+    }
 
-                    int selectedIndex = EditorList.getSelectionModel().getSelectedIndex();
+    public void switchTabTo(boolean right) {
+        int size = EditorList.getTabs().size();
 
-                    if (!t.isShiftDown()) {
-                        if (selectedIndex < size -1) {
-                            tabPaneBehavior.selectNextTab();
-                        } else {
-                            tabPaneBehavior.selectTab(EditorList.getTabs().get(0));
-                        }
-                    } else {
-                        if (selectedIndex > 0) {
-                            tabPaneBehavior.selectPreviousTab();
-                        } else {
-                            tabPaneBehavior.selectTab(EditorList.getTabs().get(size - 1));
-                        }
-                    }
+        if (size > 0) {
+            TabPaneSkin skin = (TabPaneSkin) EditorList.getSkin();
+            TabPaneBehavior tabPaneBehavior = skin.getBehavior();
 
-                    t.consume();
+            int selectedIndex = EditorList.getSelectionModel().getSelectedIndex();
+
+            if (right) {
+                if (selectedIndex < size -1) {
+                    tabPaneBehavior.selectNextTab();
+                } else {
+                    tabPaneBehavior.selectTab(EditorList.getTabs().get(0));
                 }
-
-            } else if(t.getCode().equals(KeyCode.W) && t.isControlDown()) {
-                if (EditorList.getTabs().size() > 1) {
-                    Tab selectedTab = EditorList.getSelectionModel().getSelectedItem();
-                    Platform.runLater(() -> {
-                        Event.fireEvent(selectedTab, new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
-                    });
+            } else {
+                if (selectedIndex > 0) {
+                    tabPaneBehavior.selectPreviousTab();
+                } else {
+                    tabPaneBehavior.selectTab(EditorList.getTabs().get(size - 1));
                 }
             }
-        });
-
+        }
     }
 
     public void createTabExtract(Textual extract) throws IOException {
