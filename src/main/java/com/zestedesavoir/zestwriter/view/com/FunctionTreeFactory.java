@@ -48,15 +48,16 @@ public class FunctionTreeFactory {
 
      }
 
-    public static void clearContent(ObservableMap<Textual, Tab> extracts, TabPane editorList) {
+    public static boolean clearContent(ObservableMap<Textual, Tab> extracts, TabPane editorList) {
         for(Entry<Textual, Tab> entry:extracts.entrySet()) {
-            Platform.runLater(() -> {
-                Event.fireEvent(entry.getValue(), new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
-                Event.fireEvent(entry.getValue(), new Event(Tab.CLOSED_EVENT));
-                editorList.getTabs().remove(entry.getValue());
-            });
+            Event.fireEvent(entry.getValue(), new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
         }
-        extracts.clear();
+        if(editorList.getTabs().size() <= 1) {
+            extracts.clear();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static TreeItem<ContentNode> buildChild(TreeItem<ContentNode> node) {

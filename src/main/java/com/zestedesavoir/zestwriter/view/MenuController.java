@@ -96,7 +96,9 @@ public class MenuController{
     }
 
     @FXML private void HandleQuitButtonAction(ActionEvent event){
-        System.exit(0);
+        if(FunctionTreeFactory.clearContent(mainApp.getExtracts(), mainApp.getIndex().getEditorList())) {
+            System.exit(0);
+        }
     }
 
     public static String markdownToHtml(MdTextController index, String chaine){
