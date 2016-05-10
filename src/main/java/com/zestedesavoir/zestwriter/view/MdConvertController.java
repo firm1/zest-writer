@@ -23,6 +23,7 @@ import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.FlipTable;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
+import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
 
 import javafx.application.Platform;
@@ -334,7 +335,7 @@ public class MdConvertController {
         dialog.setHeaderText("");
 
         // Set the icon (must be included in the project).
-        dialog.setGraphic(new ImageView(MainApp.class.getResource("assets/static/icons/link.png").toString()));
+        dialog.setGraphic(IconFactory.createLinkIcon());
 
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
@@ -390,7 +391,7 @@ public class MdConvertController {
         dialog.setHeaderText("");
 
         // Set the icon (must be included in the project).
-        dialog.setGraphic(new ImageView(MainApp.class.getResource("assets/static/icons/code.png").toString()));
+        dialog.setGraphic(IconFactory.createCodeIcon());
 
         // Set the button types.
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
