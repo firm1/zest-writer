@@ -31,7 +31,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -54,6 +54,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static javafx.scene.input.KeyCode.A;
+import static javafx.scene.input.KeyCode.B;
+import static javafx.scene.input.KeyCode.D;
+import static javafx.scene.input.KeyCode.E;
+import static javafx.scene.input.KeyCode.EQUALS;
+import static javafx.scene.input.KeyCode.F;
+import static javafx.scene.input.KeyCode.G;
+import static javafx.scene.input.KeyCode.I;
+import static javafx.scene.input.KeyCode.K;
+import static javafx.scene.input.KeyCode.L;
+import static javafx.scene.input.KeyCode.PLUS;
+import static javafx.scene.input.KeyCode.S;
+import static javafx.scene.input.KeyCode.SPACE;
+import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
+import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
 
 public class MdConvertController {
     private MainApp mainApp;
@@ -111,26 +127,19 @@ public class MdConvertController {
             updateRender();
         });
         updateRender();
-        tab.getContent().addEventFilter(KeyEvent.KEY_PRESSED, t -> {
-            if(t.isControlDown() && !t.isAltDown()) {
-                switch(t.getCode()) {
-                    case S: HandleSaveButtonAction(null); break;
-                    case G: HandleBoldButtonAction(null); break;
-                    case I: HandleItalicButtonAction(null); break;
-                    case B: HandleBarredButtonAction(null); break;
-                    case K: HandleTouchButtonAction(null); break;
-                    case PLUS: HandleExpButtonAction(null); break;
-                    case EQUALS: HandleIndButtonAction(null); break;
-                    case E: HandleCenterButtonAction(null); break;
-                    case D: if(t.isShiftDown()) {HandleRightButtonAction(null);} break;
-                    case SPACE: HandleUnbreakableAction(null); break;
-                    case L: HandleGoToLineAction(); break;
-                    case F: HandleFindReplaceDialog(); break;
-                    case A: SourceText.selectAll(); break;
-                    default: break;
-                }
-            }
-        });
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(S, SHORTCUT_DOWN), () -> HandleSaveButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(G, SHORTCUT_DOWN), () -> HandleBoldButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(I, SHORTCUT_DOWN), () -> HandleItalicButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(B, SHORTCUT_DOWN), () -> HandleBarredButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(K, SHORTCUT_DOWN), () -> HandleTouchButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(PLUS, SHORTCUT_DOWN), () -> HandleExpButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(EQUALS, SHORTCUT_DOWN), () -> HandleIndButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(E, SHORTCUT_DOWN), () -> HandleCenterButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(D, SHORTCUT_DOWN, SHIFT_DOWN), () -> HandleRightButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(SPACE, SHORTCUT_DOWN), () -> HandleUnbreakableAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(L, SHORTCUT_DOWN), this::HandleGoToLineAction);
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(F, SHORTCUT_DOWN), this::HandleFindReplaceDialog);
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(A, SHORTCUT_DOWN), () -> SourceText.selectAll());
 
         SourceText.requestFocus();
     }
