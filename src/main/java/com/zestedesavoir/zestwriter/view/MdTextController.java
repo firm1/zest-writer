@@ -208,7 +208,7 @@ public class MdTextController {
 
                 alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo, buttonTypeCancel);
                 alert.setResizable(true);
-                alert.getDialogPane().setPrefSize(480, 320);
+                alert.getDialogPane().setPrefSize(280, 320);
 
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.isPresent()) {

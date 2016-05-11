@@ -35,6 +35,7 @@ import com.zestedesavoir.zestwriter.view.task.ExportPdfService;
 import com.zestedesavoir.zestwriter.view.task.LoginService;
 import com.zestedesavoir.zestwriter.view.task.UploadContentService;
 
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -108,9 +109,7 @@ public class MenuController{
     }
 
     @FXML private void HandleQuitButtonAction(ActionEvent event){
-        if(FunctionTreeFactory.clearContent(mainApp.getExtracts(), mainApp.getIndex().getEditorList())) {
-            System.exit(0);
-        }
+        mainApp.quitApp();
     }
 
     public static String markdownToHtml(MdTextController index, String chaine){
