@@ -21,7 +21,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y rpm ; fi
 
 script:
-  - ./gradlew check
+  - ./gradlew check -Dzw.username=$ZDS_USERNAME -Dzw.password=$ZDS_PASSWORD
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew fatJar ; fi
 
 after_success:

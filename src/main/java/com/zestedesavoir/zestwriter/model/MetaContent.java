@@ -122,7 +122,7 @@ public abstract class MetaContent{
         return true;
     }
 
-    private void deleteFile(File file) {
+    public static void deleteFile(File file) {
         if(file.isDirectory()) {
             if(file.list().length==0) {
                 file.delete();

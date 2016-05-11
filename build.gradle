@@ -127,6 +127,9 @@ test {
     filter {
         includeTestsMatching "*Test*"
     }
+
+    systemProperty "zw.username", System.getProperty("zw.username")
+    systemProperty "zw.password", System.getProperty("zw.password")
 }
 
 jacocoTestReport {
