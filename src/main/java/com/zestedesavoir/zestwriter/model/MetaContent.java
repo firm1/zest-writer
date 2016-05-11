@@ -31,15 +31,6 @@ public abstract class MetaContent{
         this._title = title;
     }
 
-    public MetaContent(String object, String slug, String title, String basePath) {
-        super();
-        this._object = object;
-        this._slug = slug;
-        this._title = title;
-        this.basePath = basePath;
-    }
-
-
     public Content getRootContent() {
         return rootContent;
     }

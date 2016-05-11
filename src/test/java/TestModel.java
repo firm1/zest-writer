@@ -123,6 +123,8 @@ public class TestModel {
         assertEquals("Un extrait est déplaceable après un extrait d'un autre chapitre", extract111.isMoveableIn(extract211, content), true);
         assertEquals("Un extrait est déplaceable après une introduction", extract111.isMoveableIn((MetaAttribute)chapter11.getIntroduction(), content), true);
         assertEquals("Un extrait n'est pas déplaceable après une conclusion", extract111.isMoveableIn((MetaAttribute)chapter11.getConclusion(), content), false);
+        assertEquals("Une conclusion ne peut pas être déplacée", ((MetaAttribute) chapter11.getConclusion()).isMoveableIn(chapter12, content), false);
+        assertEquals("Une introduction ne peut pas être déplacée", ((MetaAttribute) chapter11.getIntroduction()).isMoveableIn(chapter12, content), false);
     }
 
     @Test
@@ -174,7 +176,6 @@ public class TestModel {
 
     @Test
     public void testCreateBigTuto() {
-        System.out.println(TEST_DIR);
         File workspace = new File(new File(TEST_DIR), "zworkspace");
         if(!workspace.exists()) {
             workspace.mkdirs();
@@ -235,9 +236,12 @@ public class TestModel {
 
             bigtuto.getIntroduction().setMarkdown("Introduction du tutoriel");
             bigtuto.getIntroduction().save();
+            bigtuto.getIntroduction().loadMarkdown();
+            assertEquals(bigtuto.getIntroduction().getMarkdown().trim(), "Introduction du tutoriel");
             extract_21.setMarkdown("My new content");
             extract_21.save();
-
+            extract_21.loadMarkdown();
+            assertEquals(extract_21.getMarkdown().trim(), "My new content");
 
             part_2.delete();
             assertEquals((new File(part_2.getFilePath())).exists(), false);

@@ -26,13 +26,6 @@ public class MetaAttribute implements Textual, ContentNode{
         this.title = title;
     }
 
-    public MetaAttribute(String basePath, String slug, String title) {
-        super();
-        this.basePath = basePath;
-        this._slug = slug;
-        this.title = title;
-    }
-
     @Override
     public void save() {
         BufferedWriter writer = null;

@@ -34,14 +34,6 @@ public class Container extends MetaContent implements ContentNode {
         this._children = children;
     }
 
-    public Container(String object, String slug, String title, Textual introduction, Textual conclusion,
-            List<MetaContent> children) {
-        super(object, slug, title);
-        this._introduction = introduction;
-        this._conclusion = conclusion;
-        this._children = children;
-    }
-
     public Textual getIntroduction() {
         return _introduction;
     }

@@ -50,14 +50,16 @@ public class TestConfig {
         assertEquals(config.getDisplayWindowPositionX(), 10, 0);
         config.setDisplayWindowPositionY("20");
         assertEquals(config.getDisplayWindowPositionY(), 20, 0);
+        config.setAuthentificationUsername("admin");
+        config.setAuthentificationPassword("admin");
         config.saveConfFile();
 
         config = new Configuration(TEST_DIR.getAbsolutePath());
         assertEquals(config.getAdvancedServerHost(), "localhost");
         assertEquals(config.getAdvancedServerPort(), "8080");
         assertEquals(config.getAdvancedServerProtocol(), "http");
-        assertEquals(config.getAuthentificationPassword(), "");
-        assertEquals(config.getAuthentificationUsername(), "");
+        assertEquals(config.getAuthentificationUsername(), "admin");
+        assertEquals(config.getAuthentificationPassword(), "admin");
         assertEquals(config.getDisplayTheme(), "Standard");
         assertEquals(config.getDisplayWindowHeight(), 600, 0);
         assertEquals(config.getDisplayWindowWidth(), 800, 0);

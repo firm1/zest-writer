@@ -86,27 +86,12 @@ public class ZdsHttp {
         this.localSlug = localSlug;
     }
 
-
-    public String getLocalType() {
-        return localType;
-    }
-
-
     public void setLocalType(String localType) {
         this.localType = localType;
     }
 
-
-    public HttpClientContext getContext() {
-        return context;
-    }
-
     public List<MetadataContent> getContentListOnline() {
         return contentListOnline;
-    }
-
-    public void setContext(HttpClientContext context) {
-        this.context = context;
     }
 
     private String getBaseUrl() {
@@ -139,10 +124,6 @@ public class ZdsHttp {
 
     private String getImportNewContenttUrl() {
         return getBaseUrl() + "/contenus/importer/archive/nouveau/";
-    }
-
-    public String getViewContenttUrl(String idContent, String slugContent) {
-        return getBaseUrl() + "/contenus/" + idContent + "/" + slugContent + "/";
     }
 
     public String getOnlineContentPathDir() {
