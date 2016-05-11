@@ -25,7 +25,7 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew fatJar ; fi
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew jacocoTestReport coveralls; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_deb.sh $BINTRAY_KEY ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_rpm.sh $BINTRAY_KEY ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_jar.sh $BINTRAY_KEY ; fi
