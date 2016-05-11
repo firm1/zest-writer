@@ -152,7 +152,17 @@ public class MdConvertController {
             tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.Q, SHORTCUT_DOWN), () -> SourceText.selectAll());
         }
 
-        SourceText.requestFocus();
+        tab.setOnSelectionChanged(t -> {
+            if(tab.isSelected()) {
+                Platform.runLater(() -> {
+                    SourceText.requestFocus();
+                });
+            }
+        });
+
+        Platform.runLater(() -> {
+            SourceText.requestFocus();
+        });
     }
 
 
@@ -578,7 +588,9 @@ public class MdConvertController {
             SourceText.replaceText(SourceText.getSelection(), beforeString + SourceText.getSelectedText() + afterString);
         }
 
-        SourceText.requestFocus();
+        Platform.runLater(() -> {
+            SourceText.requestFocus();
+        });
     }
 
     public boolean isSaved() {

@@ -1,7 +1,7 @@
 package com.zestedesavoir.zestwriter.view;
 
-import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
 import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
+import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -16,7 +16,6 @@ import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
 import com.zestedesavoir.zestwriter.model.Textual;
-import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import com.zestedesavoir.zestwriter.view.com.MdTreeCell;
@@ -43,7 +42,6 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
@@ -51,7 +49,6 @@ import javafx.util.Callback;
 
 public class MdTextController {
     private MainApp mainApp;
-    private Configuration config;
     private PythonInterpreter pyconsole;
     private final Logger logger;
 
@@ -128,7 +125,6 @@ public class MdTextController {
 
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
-        this.config = mainApp.getConfig();
 
         mainApp.getContents().addListener((ListChangeListener<Content>) change -> {
             if(FunctionTreeFactory.clearContent(mainApp.getExtracts(), EditorList)) {

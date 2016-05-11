@@ -55,7 +55,9 @@ public class FunctionTreeFactory {
 
     public static boolean clearContent(ObservableMap<Textual, Tab> extracts, TabPane editorList) {
         for(Entry<Textual, Tab> entry:extracts.entrySet()) {
-            Event.fireEvent(entry.getValue(), new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
+            Platform.runLater(() -> {
+                Event.fireEvent(entry.getValue(), new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
+            });
         }
         if(editorList.getTabs().size() <= 1) {
             extracts.clear();
