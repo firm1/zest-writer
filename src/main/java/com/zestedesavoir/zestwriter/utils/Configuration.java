@@ -1,5 +1,14 @@
 package com.zestedesavoir.zestwriter.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zestedesavoir.zestwriter.MainApp;
+import org.apache.commons.lang.math.NumberUtils;
+import org.apache.http.client.fluent.Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -8,20 +17,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileSystemView;
-
-import org.apache.commons.lang.math.NumberUtils;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.fluent.Request;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zestedesavoir.zestwriter.MainApp;
-
 public class Configuration {
-    private Properties conf;
+    public Properties conf;
     private String appName = "zestwriter";
     private String confFileName = "conf.properties";
     private String confDirPath;
@@ -31,7 +28,6 @@ public class Configuration {
     private LocalDirectoryFactory workspaceFactory;
     private final Logger logger;
     private Properties props;
-
 
     public enum ConfigData{
         DisplayWindowWidth("data.display.window.width", "1000"),
@@ -78,8 +74,10 @@ public class Configuration {
         String confFilePath = confDirPath+File.separator+this.confFileName;
         File confDir = new File(confDirPath);
         confFile = new File(confFilePath);
-        if(!confDir.exists()) {
-            confDir.mkdir();
+
+        if(!confDir.exists()){
+            if(!confDir.mkdir())
+                logger.error("Le fichier de configuration n'a pas pu être créé");
         }
 
         // defaults config
@@ -106,12 +104,13 @@ public class Configuration {
             }
         }
 
-        for(Entry<?, ?> entry:props.entrySet()) {
-            if(!conf.containsKey(entry.getKey())) {
-                conf.putIfAbsent(entry.getKey(), entry.getValue());
-                saveConfFile();
-            }
-        }
+        props.entrySet().stream()
+                .filter(entry -> !conf.containsKey(entry.getKey()))
+                .forEach(entry -> {
+                        conf.putIfAbsent(entry.getKey(), entry.getValue());
+                        saveConfFile();
+                    }
+                );
     }
 
     public void saveConfFile() {
@@ -121,15 +120,6 @@ public class Configuration {
         } catch (IOException e) {
             logger.error("", e);
         }
-    }
-
-    public String toString() {
-        StringBuilder result = new StringBuilder();
-        for(Entry<?, ?> entry:conf.entrySet()) {
-            result.append(entry.getKey()).append(" = ").append(entry.getValue()).append("\n");
-        }
-
-        return result.toString();
     }
 
     public static String getDefaultWorkspace() {
@@ -154,22 +144,16 @@ public class Configuration {
         return workspaceFactory;
     }
 
-    public void loadWorkspace() throws IOException{
+    public void loadWorkspace() {
 
         this.workspaceFactory = new LocalDirectoryFactory(getWorkspacePath());
 
-        try{
-            offlineSaver = workspaceFactory.getOfflineSaver();
-            onlineSaver = workspaceFactory.getOnlineSaver();
-            logger.info("Espace de travail chargé en mémoire");
-        }
-        catch(IOException e){
-            logger.error("", e);
-        }
-
+        offlineSaver = workspaceFactory.getOfflineSaver();
+        onlineSaver = workspaceFactory.getOnlineSaver();
+        logger.info("Espace de travail chargé en mémoire");
     }
 
-    public String getLastRelease() throws ClientProtocolException, IOException {
+    public static String getLastRelease() throws IOException {
         String projecUrlRelease = "https://api.github.com/repos/firm1/zest-writer/releases/latest";
 
         String json = Request.Get(projecUrlRelease).execute().returnContent().asString();

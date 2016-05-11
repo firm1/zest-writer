@@ -1,17 +1,5 @@
 package com.zestedesavoir.zestwriter.view.com;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Optional;
-
-import com.zestedesavoir.zestwriter.MainApp;
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.model.Container;
 import com.zestedesavoir.zestwriter.model.Content;
@@ -20,7 +8,6 @@ import com.zestedesavoir.zestwriter.model.Extract;
 import com.zestedesavoir.zestwriter.model.MetaContent;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -30,6 +17,14 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Optional;
 
 public class MdTreeCell extends TreeCell<ContentNode>{
 	private MdTextController index;
@@ -84,7 +79,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             alert.setContentText("Êtes vous sur de vouloir supprimer ?");
 
             Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK) {
+            if (result.isPresent() && result.get() == ButtonType.OK) {
                 logger.debug("Tentative de suppression");
                 // delete in logical tree
                 Container parentContainer = (Container) getTreeItem().getParent().getValue();
@@ -110,8 +105,8 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 extract = new Extract("extract",
                         ZdsHttp.toSlug(result.get()),
                         result.get(),
-                        baseFilePath,
                         (getItem().getFilePath() + "/" + ZdsHttp.toSlug(result.get()) + ".md").substring(baseFilePath.length()+1));
+                extract.setRootContent(content, baseFilePath);
                 ((Container)getItem()).getChildren().add(extract);
                 // create file
                 File extFile = new File(extract.getFilePath());
@@ -181,7 +176,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
                 if (!result.get().trim().equals("")) {
-                    ((MetaContent)item1.getValue()).setTitle(result.get());
+                    item1.getValue().setTitle(result.get());
                     saveManifestJson();
                     index.openContent(content);
                 }
@@ -194,7 +189,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             try {
                 Map<String,Object> paramContent= FunctionTreeFactory.initContentDialog(content);
                 if(paramContent != null) {
-                    ((Content) index.getSummary().getRoot().getValue()).setTitle(paramContent.get("title").toString());
+                    index.getSummary().getRoot().getValue().setTitle(paramContent.get("title").toString());
                     ((Content) index.getSummary().getRoot().getValue()).setDescription(paramContent.get("description").toString());
                     ((Content) index.getSummary().getRoot().getValue()).setType(paramContent.get("type").toString());
                     ((Content) index.getSummary().getRoot().getValue()).setLicence(paramContent.get("licence").toString());

@@ -1,24 +1,7 @@
 package com.zestedesavoir.zestwriter.utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpCookie;
-import java.nio.file.Paths;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
+import com.zestedesavoir.zestwriter.model.MetadataContent;
+import javafx.util.Pair;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -48,9 +31,24 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zestedesavoir.zestwriter.model.MetadataContent;
-
-import javafx.util.Pair;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpCookie;
+import java.nio.file.Paths;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 
 public class ZdsHttp {
@@ -88,27 +86,12 @@ public class ZdsHttp {
         this.localSlug = localSlug;
     }
 
-
-    public String getLocalType() {
-        return localType;
-    }
-
-
     public void setLocalType(String localType) {
         this.localType = localType;
     }
 
-
-    public HttpClientContext getContext() {
-        return context;
-    }
-
     public List<MetadataContent> getContentListOnline() {
         return contentListOnline;
-    }
-
-    public void setContext(HttpClientContext context) {
-        this.context = context;
     }
 
     private String getBaseUrl() {
@@ -141,10 +124,6 @@ public class ZdsHttp {
 
     private String getImportNewContenttUrl() {
         return getBaseUrl() + "/contenus/importer/archive/nouveau/";
-    }
-
-    public String getViewContenttUrl(String idContent, String slugContent) {
-        return getBaseUrl() + "/contenus/" + idContent + "/" + slugContent + "/";
     }
 
     public String getOnlineContentPathDir() {
@@ -302,7 +281,7 @@ public class ZdsHttp {
         this.authenticated = false;
     }
 
-    public boolean importNewContent(String filePath) throws ClientProtocolException, IOException {
+    public boolean importNewContent(String filePath) throws IOException {
 
         logger.debug("Tentative d'import via l'url : " + getImportNewContenttUrl());
         HttpGet get = new HttpGet(getImportNewContenttUrl());
@@ -472,29 +451,5 @@ public class ZdsHttp {
 
     public boolean isAuthenticated() {
         return authenticated;
-    }
-
-    public static void main(String[] args) {
-        Configuration config = new Configuration(System.getProperty("user.home"));
-
-        try {
-            ZdsHttp zdsutils = new ZdsHttp(config);
-            if (zdsutils.login("admin", "admin")) {
-                zdsutils.initInfoOnlineContent("tutorial");
-                zdsutils.initInfoOnlineContent("article");
-
-                for (MetadataContent meta : zdsutils.getContentListOnline()) {
-                    zdsutils.downloaDraft(meta.getId(), meta.getType());
-                    zdsutils.unzipOnlineContent(zdsutils.getOnlineContentPathDir() + File.separator + meta.getSlug() + ".zip");
-                }
-            } else {
-                System.out.println("Echec de connexion");
-            }
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 }

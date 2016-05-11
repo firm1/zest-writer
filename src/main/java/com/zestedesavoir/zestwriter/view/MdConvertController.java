@@ -1,26 +1,17 @@
 package com.zestedesavoir.zestwriter.view;
 
+import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
+import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
-import com.zestedesavoir.zestwriter.view.dialogs.OptionsDialog;
-import com.ziclix.python.sql.pipe.Source;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.control.*;
-import javafx.scene.text.Font;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.python.core.PyString;
-import org.python.icu.impl.ICUResource;
 import org.python.util.PythonInterpreter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +19,16 @@ import org.w3c.dom.DOMException;
 
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Textual;
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.FlipTable;
+import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
+import com.zestedesavoir.zestwriter.view.com.IconFactory;
+import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanPropertyBase;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
@@ -42,16 +39,32 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Pair;
-
-import javax.tools.Tool;
 
 public class MdConvertController {
     private MainApp mainApp;
@@ -64,7 +77,20 @@ public class MdConvertController {
     private final Logger logger;
     private int xRenderPosition = 0;
     private int yRenderPosition = 0;
-    private boolean isSaved = true;
+    private BooleanPropertyBase isSaved = new BooleanPropertyBase(true) {
+
+        @Override
+        public String getName() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public Object getBean() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+    };
 
     @FXML private WebView renderView;
     @FXML private StyleClassedTextArea SourceText;
@@ -98,7 +124,7 @@ public class MdConvertController {
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MainApp.class.getResource("fxml/Editor.fxml"));
-        SplitPane writer = loader.load();
+        loader.load();
 
         if(mainApp.getConfig().getEditorToolbarView().equals("no")){
             BoxEditor.setTop(null);
@@ -108,34 +134,41 @@ public class MdConvertController {
         SourceText.setFont(new Font(config.getEditorFont(), config.getEditorFontsize()));
         SourceText.setStyle("-fx-font-family: \"" + config.getEditorFont() + "\";");
         SourceText.replaceText(extract.getMarkdown());
+        SourceText.getUndoManager().forgetHistory();
         SourceText.textProperty().addListener((observableValue, s, s2) -> {
             tab.setText("! " + extract.getTitle());
-            this.isSaved = false;
+            this.isSaved.setValue(false);
             SourceText.getUndoManager().mark();
             updateRender();
         });
         updateRender();
-        tab.getContent().addEventFilter(KeyEvent.KEY_PRESSED, t -> {
-            if(t.isControlDown() && !t.isAltDown()) {
-                switch(t.getCode()) {
-                    case S: HandleSaveButtonAction(null); break;
-                    case G: HandleBoldButtonAction(null); break;
-                    case I: HandleItalicButtonAction(null); break;
-                    case B: HandleBarredButtonAction(null); break;
-                    case K: HandleTouchButtonAction(null); break;
-                    case PLUS: HandleExpButtonAction(null); break;
-                    case EQUALS: HandleIndButtonAction(null); break;
-                    case E: HandleCenterButtonAction(null); break;
-                    case D: if(t.isShiftDown()) {HandleRightButtonAction(null);} break;
-                    case SPACE: HandleUnbreakableAction(null); break;
-                    case L: HandleGoToLineAction(); break;
-                    case F: HandleFindReplaceDialog(); break;
-                    default: break;
-                }
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.S, SHORTCUT_DOWN), () -> HandleSaveButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.G, SHORTCUT_DOWN), () -> HandleBoldButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.I, SHORTCUT_DOWN), () -> HandleItalicButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.B, SHORTCUT_DOWN), () -> HandleBarredButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.K, SHORTCUT_DOWN), () -> HandleTouchButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.PLUS, SHORTCUT_DOWN), () -> HandleExpButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.EQUALS, SHORTCUT_DOWN), () -> HandleIndButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.E, SHORTCUT_DOWN), () -> HandleCenterButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.D, SHORTCUT_DOWN, SHIFT_DOWN), () -> HandleRightButtonAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.SPACE, SHORTCUT_DOWN), () -> HandleUnbreakableAction(null));
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.L, SHORTCUT_DOWN), this::HandleGoToLineAction);
+        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.F, SHORTCUT_DOWN), this::HandleFindReplaceDialog);
+        if(FunctionTreeFactory.isMacOs()) {
+            tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.Q, SHORTCUT_DOWN), () -> SourceText.selectAll());
+        }
+
+        tab.setOnSelectionChanged(t -> {
+            if(tab.isSelected()) {
+                Platform.runLater(() -> {
+                    SourceText.requestFocus();
+                });
             }
         });
 
-        SourceText.requestFocus();
+        Platform.runLater(() -> {
+            SourceText.requestFocus();
+        });
     }
 
 
@@ -143,6 +176,7 @@ public class MdConvertController {
         SourceText.getStyleClass().add("markdown-editor");
         SourceText.getStylesheets().add(MainApp.class.getResource("css/editor.css").toExternalForm());
         SourceText.setParagraphGraphicFactory(LineNumberFactory.get(SourceText));
+        SaveButton.disableProperty().bind(isSaved);
     }
 
     /*
@@ -153,7 +187,7 @@ public class MdConvertController {
         extract.setMarkdown(SourceText.getText());
         extract.save();
         tab.setText(extract.getTitle());
-        this.isSaved = true;
+        this.isSaved.setValue(true);
 
         SourceText.requestFocus();
     }
@@ -302,7 +336,7 @@ public class MdConvertController {
 
             for (int i = 0; i < datas.getValue().size(); i++) {
                 for (int j = 0; j < datas.getValue().get(i).getRow().size(); j++) {
-                    data[i][j] = (String) datas.getValue().get(i).getRow().get(j);
+                    data[i][j] = datas.getValue().get(i).getRow().get(j);
                 }
             }
             String tablestring = FlipTable.of(headers, data);
@@ -320,7 +354,7 @@ public class MdConvertController {
         dialog.setHeaderText("");
 
         // Set the icon (must be included in the project).
-        dialog.setGraphic(new ImageView(MainApp.class.getResource("assets/static/icons/link.png").toString()));
+        dialog.setGraphic(IconFactory.createLinkIcon());
 
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
@@ -376,7 +410,7 @@ public class MdConvertController {
         dialog.setHeaderText("");
 
         // Set the icon (must be included in the project).
-        dialog.setGraphic(new ImageView(MainApp.class.getResource("assets/static/icons/code.png").toString()));
+        dialog.setGraphic(IconFactory.createCodeIcon());
 
         // Set the button types.
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
@@ -426,7 +460,9 @@ public class MdConvertController {
         if (mdBox.getSplitPane().getItems().size() > 1) {
             mdBox.getSplitPane().getItems().remove(0);
         } else {
-            mdBox.getSplitPane().getItems().add(0, mdBox.getSummary());
+            mdBox.getSplitPane().getItems().add(0, mdBox.treePane);
+            mdBox.getSplitPane().setDividerPositions(0.2);
+            SplitPane.setResizableWithParent(mdBox.treePane,Boolean.FALSE);
         }
     }
 
@@ -537,9 +573,7 @@ public class MdConvertController {
         dialog.setContentText("Numéro de ligne: ");
 
         Optional<String> result = dialog.showAndWait();
-        result.ifPresent(line -> {
-            SourceText.positionCaret(SourceText.position(Integer.parseInt(line)-1, 0).toOffset());
-        });
+        result.ifPresent(line -> SourceText.positionCaret(SourceText.position(Integer.parseInt(line)-1, 0).toOffset()));
     }
 
 
@@ -560,15 +594,17 @@ public class MdConvertController {
             SourceText.replaceText(SourceText.getSelection(), beforeString + SourceText.getSelectedText() + afterString);
         }
 
-        SourceText.requestFocus();
+        Platform.runLater(() -> {
+            SourceText.requestFocus();
+        });
     }
 
     public boolean isSaved() {
-        return isSaved;
+        return isSaved.getValue();
     }
 
     public void setSaved(boolean isSaved) {
-        this.isSaved = isSaved;
+        this.isSaved.setValue(isSaved);
     }
 
     @FXML private void HandleFindReplaceDialog(){

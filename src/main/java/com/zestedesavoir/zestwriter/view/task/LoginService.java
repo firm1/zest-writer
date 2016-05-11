@@ -1,15 +1,13 @@
 package com.zestedesavoir.zestwriter.view.task;
 
-import java.io.IOException;
-
+import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.utils.ZdsHttp;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.utils.ZdsHttp;
-
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
+import java.io.IOException;
 
 public class LoginService extends Service<Void>{
 	private ZdsHttp zdsUtils;

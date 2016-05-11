@@ -1,5 +1,12 @@
 package com.zestedesavoir.zestwriter.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
+import com.zestedesavoir.zestwriter.view.com.IconFactory;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,14 +19,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Function;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
-import com.zestedesavoir.zestwriter.view.com.IconFactory;
-
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
-
 
 public class Extract extends MetaContent implements Textual, ContentNode{
     private String _text;
@@ -29,11 +28,6 @@ public class Extract extends MetaContent implements Textual, ContentNode{
     @JsonCreator
     public Extract(@JsonProperty("object") String object, @JsonProperty("slug") String slug, @JsonProperty("title") String title, @JsonProperty("text") String text) {
         super(object, slug, title);
-        this._text = text;
-    }
-
-    public Extract(String object, String slug, String title, String basePath, String text) {
-        super(object, slug, title, basePath);
         this._text = text;
     }
 
@@ -57,7 +51,9 @@ public class Extract extends MetaContent implements Textual, ContentNode{
         } finally {
             try {
                 // Close the writer regardless of what happens...
-                writer.close();
+                if (writer != null) {
+                    writer.close();
+                }
             } catch (Exception ignored) {
             }
         }
@@ -75,7 +71,7 @@ public class Extract extends MetaContent implements Textual, ContentNode{
 
     public String readMarkdown() {
         Path path = Paths.get(this.getFilePath());
-        Scanner scanner  = null;
+        Scanner scanner;
         StringBuilder bfString = new StringBuilder();
         try {
             scanner = new Scanner(path, StandardCharsets.UTF_8.name());
@@ -157,11 +153,9 @@ public class Extract extends MetaContent implements Textual, ContentNode{
 
     @Override
     public String exportContentToMarkdown(int level, int levelDepth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(FunctionTreeFactory.padding(level, '#'));
-        sb.append(" ").append(getTitle()).append("\n\n");
-        sb.append(FunctionTreeFactory.changeLocationImages(FunctionTreeFactory.offsetHeaderMarkdown(readMarkdown(), levelDepth))).append("\n\n");
-        return sb.toString();
+        return FunctionTreeFactory.padding(level, '#') +
+                " " + getTitle() + "\n\n" +
+                FunctionTreeFactory.changeLocationImages(FunctionTreeFactory.offsetHeaderMarkdown(readMarkdown(), levelDepth)) + "\n\n";
     }
 
     @Override

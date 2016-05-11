@@ -3,7 +3,9 @@ package com.zestedesavoir.zestwriter;
 import java.io.IOException;
 import java.util.HashMap;
 
-import com.sun.webkit.plugin.PluginManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.plugins.PluginsManager;
@@ -11,9 +13,10 @@ import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
-
+import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import com.zestedesavoir.zestwriter.view.task.LoginService;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -21,7 +24,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.concurrent.Worker;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -34,8 +39,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MainApp extends Application {
     private Scene scene;
@@ -130,12 +133,9 @@ public class MainApp extends Application {
             if(this.primaryStage.isMaximized() && config.isDisplayWindowPersonnalDimension())
                 config.setDisplayWindowMaximize("true");
 
-            config.saveConfFile();
-
-            Platform.exit();
-            System.exit(0);
+            quitApp();
+            t.consume();
         });
-
         this.primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowWidth(String.valueOf(newValue));
         });
@@ -153,6 +153,20 @@ public class MainApp extends Application {
         initRootLayout();
         showWriter();
         initConnection();
+    }
+
+    @FXML public void exitApplication(ActionEvent event) {
+       quitApp();
+    }
+
+    public void quitApp() {
+        if(this.primaryStage.isMaximized() && config.isDisplayWindowPersonnalDimension())
+            config.setDisplayWindowMaximize("true");
+        config.saveConfFile();
+        if(FunctionTreeFactory.clearContent(getExtracts(), getIndex().getEditorList())) {
+            Platform.exit();
+            System.exit(0);
+        }
     }
 
     public void initRootLayout() {
@@ -238,7 +252,7 @@ public class MainApp extends Application {
         scene.addEventFilter(KeyEvent.KEY_PRESSED, t -> {
             String codeStr = t.getCode().toString();
             if(!key.toString().endsWith("_"+codeStr)){
-                 key.append("_"+codeStr);
+                 key.append("_").append(codeStr);
             }
         });
         scene.addEventFilter(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {

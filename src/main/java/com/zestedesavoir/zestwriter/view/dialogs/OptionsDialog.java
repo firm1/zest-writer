@@ -1,19 +1,25 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
 
-import com.zestedesavoir.zestwriter.view.com.IconFactory;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import org.controlsfx.dialog.FontSelectorDialog;
-
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import org.controlsfx.dialog.FontSelectorDialog;
 
 import java.io.File;
 import java.util.Optional;
@@ -109,6 +115,7 @@ public class OptionsDialog{
         config.setAdvancedServerPort(optAdvancedPort.getText());
 
         config.saveConfFile();
+        config.loadWorkspace();
         optionsWindow.close();
     }
 

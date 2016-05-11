@@ -1,18 +1,16 @@
 package com.zestedesavoir.zestwriter.view.task;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Optional;
-
+import com.zestedesavoir.zestwriter.model.MetadataContent;
+import com.zestedesavoir.zestwriter.utils.ZdsHttp;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zeroturnaround.zip.ZipUtil;
 
-import com.zestedesavoir.zestwriter.model.MetadataContent;
-import com.zestedesavoir.zestwriter.utils.ZdsHttp;
-
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
+import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
 
 public class UploadContentService extends Service<Void>{
 	private ZdsHttp zdsUtils;
@@ -30,27 +28,23 @@ public class UploadContentService extends Service<Void>{
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                if (zdsUtils.isAuthenticated()) {
+                if (zdsUtils.isAuthenticated() && result.isPresent()) {
                     String targetId = result.get().getId();
                     String localSlug = zdsUtils.getLocalSlug();
                     String targetSlug = result.get().getSlug();
 
-                    try {
-                        String pathDir = zdsUtils.getOfflineContentPathDir() + File.separator + localSlug;
-                        updateMessage("Compression : "+targetSlug+" en cours ...");
-                        ZipUtil.pack(new File(pathDir), new File(pathDir + ".zip"));
-                        updateMessage("Import : "+targetSlug+" en cours ...");
-                        if(targetId == null) {
-                            if(!zdsUtils.importNewContent(pathDir+ ".zip")) {
-                                failed();
-                            }
-                        } else {
-                            if(!zdsUtils.importContent(pathDir + ".zip", targetId, targetSlug)) {
-                                failed();
-                            }
+                    String pathDir = zdsUtils.getOfflineContentPathDir() + File.separator + localSlug;
+                    updateMessage("Compression : "+targetSlug+" en cours ...");
+                    ZipUtil.pack(new File(pathDir), new File(pathDir + ".zip"));
+                    updateMessage("Import : "+targetSlug+" en cours ...");
+                    if(targetId == null) {
+                        if(!zdsUtils.importNewContent(pathDir+ ".zip")) {
+                            throw new IOException();
                         }
-                    } catch (IOException e) {
-                        logger.error(e.getMessage(), e);
+                    } else {
+                        if(!zdsUtils.importContent(pathDir + ".zip", targetId, targetSlug)) {
+                            throw new IOException();
+                        }
                     }
 
                     updateMessage("Synchronisation des contenus ...");

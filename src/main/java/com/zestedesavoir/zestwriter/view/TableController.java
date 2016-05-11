@@ -1,8 +1,5 @@
 package com.zestedesavoir.zestwriter.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -19,6 +16,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class ZRow {
     private SimpleListProperty<String> row = new SimpleListProperty<>();
 
@@ -33,7 +33,7 @@ class ZRow {
             lst.add(" - ");
         }
         ObservableList<String> observableList = FXCollections.observableArrayList(lst);
-        this.row = new SimpleListProperty<String>(observableList);
+        this.row = new SimpleListProperty<>(observableList);
 
     }
 
@@ -81,7 +81,7 @@ public class TableController {
         tc.setEditable(true);
         tc.setCellValueFactory(new Callback<CellDataFeatures<ZRow, String>, ObservableValue<String>>() {
             public ObservableValue<String> call(CellDataFeatures<ZRow, String> param) {
-                return new SimpleStringProperty(param.getValue().getRow().get(0).toString());
+                return new SimpleStringProperty(param.getValue().getRow().get(0));
             }
         });
 

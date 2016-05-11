@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.input.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.BorderPane?>
-<?import de.jensd.fx.glyphs.materialdesignicons.*?>
-
+<?import javafx.scene.layout.HBox?>
 <BorderPane prefHeight="600.0" prefWidth="900.0" stylesheets="@../css/dark.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MenuController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="Fichier">
             <items>
-                  <MenuItem mnemonicParsing="false" onAction="#HandleNewButtonAction" text="Nouveau">
+                  <MenuItem fx:id="menuNewContent" mnemonicParsing="false" onAction="#HandleNewButtonAction" text="Nouveau">
                      <graphic>
                         <MaterialDesignIconView fill="#084561" glyphName="FOLDER_PLUS" size="1.8em" />
                      </graphic>
@@ -53,7 +51,7 @@
                       </MenuItem>
                     </items>
                   </Menu>
-              <MenuItem mnemonicParsing="false" onAction="#HandleQuitButtonAction" text="Quitter">
+              <MenuItem fx:id="menuQuit" mnemonicParsing="false" onAction="#HandleQuitButtonAction" text="Quitter">
                      <graphic>
                         <MaterialDesignIconView fill="#084561" glyphName="EXIT_TO_APP" size="1.8em" />
                      </graphic>

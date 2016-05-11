@@ -92,13 +92,4 @@ public final class FlipTable {
     private static String pad(int width, String data) {
         return String.format(" %1$-" + width + "s ", data);
     }
-
-    public static void main(String[] args) {
-        String[] headers = {"Test", "Header"};
-        String[][] data = {
-                {"Foo", "Bar"},
-                {"Kit", "Kat"},
-        };
-        System.out.println(FlipTable.of(headers, data));
-    }
 }

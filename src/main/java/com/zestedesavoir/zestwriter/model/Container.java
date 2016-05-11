@@ -1,5 +1,14 @@
 package com.zestedesavoir.zestwriter.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
+import com.zestedesavoir.zestwriter.view.com.IconFactory;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -7,20 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
-import com.zestedesavoir.zestwriter.view.com.IconFactory;
-
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="type", visible=true)
 @JsonSubTypes({@Type(value = Container.class, name = "null"), @Type(value = Content.class, name = "TUTORIAL"), @Type(value = Content.class, name = "ARTICLE") })
@@ -34,30 +29,6 @@ public class Container extends MetaContent implements ContentNode {
     public Container(@JsonProperty("object") String object, @JsonProperty("slug") String slug, @JsonProperty("title") String title, @JsonProperty("introduction") String introduction, @JsonProperty("conclusion") String conclusion,
             @JsonProperty("children") List<MetaContent> children) {
         super(object, slug, title);
-        this._introduction = new MetaAttribute(introduction, "Introduction");
-        this._conclusion = new MetaAttribute(conclusion, "Conclusion");
-        this._children = children;
-    }
-
-    public Container(String object, String slug, String title, Textual introduction, Textual conclusion,
-            List<MetaContent> children) {
-        super(object, slug, title);
-        this._introduction = introduction;
-        this._conclusion = conclusion;
-        this._children = children;
-    }
-
-    public Container(String object, String slug, String title, String basePath, Textual introduction,
-            Textual conclusion, List<MetaContent> children) {
-        super(object, slug, title, basePath);
-        this._introduction = introduction;
-        this._conclusion = conclusion;
-        this._children = children;
-    }
-
-    public Container(String object, String slug, String title, String basePath, String introduction,
-            String conclusion, ArrayList<MetaContent> children) {
-        super(object, slug, title, basePath);
         this._introduction = new MetaAttribute(introduction, "Introduction");
         this._conclusion = new MetaAttribute(conclusion, "Conclusion");
         this._children = children;
@@ -94,7 +65,7 @@ public class Container extends MetaContent implements ContentNode {
             return _children;
         }
         else {
-            return new ArrayList<MetaContent>();
+            return new ArrayList<>();
         }
     }
 
@@ -132,7 +103,7 @@ public class Container extends MetaContent implements ContentNode {
      * @return number of container-type ancestors
      */
     public int getCountAncestorsContainer(Container content) {
-        int total = 0;
+        int total;
         if(this.getFilePath().equals(content.getFilePath())) {
             return 1;
         }
@@ -173,10 +144,7 @@ public class Container extends MetaContent implements ContentNode {
 
     @Override
     public boolean canTakeExtract() {
-        if(getCountDescendantContainer() > 0) {
-            return false;
-        }
-        return true;
+        return getCountDescendantContainer() <= 0;
     }
 
     @Override
@@ -189,6 +157,8 @@ public class Container extends MetaContent implements ContentNode {
         if(receiver instanceof MetaAttribute) {
             if(receiver.getTitle().equalsIgnoreCase("conclusion")) {
                 return false;
+            } else {
+                return isMoveableIn(((MetaAttribute) receiver).getParent(), root);
             }
         }
         if(receiver instanceof Container) {
@@ -219,9 +189,9 @@ public class Container extends MetaContent implements ContentNode {
         sb.append(FunctionTreeFactory.changeLocationImages(FunctionTreeFactory.offsetHeaderMarkdown(getIntroduction().readMarkdown(), levelDepth))).append("\n\n");
         for(MetaContent c:getChildren()) {
             if(c instanceof Container) {
-                sb.append(((Container) c).exportContentToMarkdown(level+1, levelDepth));
+                sb.append(c.exportContentToMarkdown(level+1, levelDepth));
             } else if (c instanceof Extract) {
-                sb.append(((Extract) c).exportContentToMarkdown(level +1, levelDepth));
+                sb.append(c.exportContentToMarkdown(level +1, levelDepth));
             }
         }
         sb.append(FunctionTreeFactory.changeLocationImages(FunctionTreeFactory.offsetHeaderMarkdown(getConclusion().readMarkdown(), levelDepth))).append("\n\n");

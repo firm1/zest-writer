@@ -1,10 +1,11 @@
 package com.zestedesavoir.zestwriter.view;
 
+import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
+import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
+
 import java.io.IOException;
 import java.util.Optional;
 
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
 import org.python.util.PythonInterpreter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,15 +20,16 @@ import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import com.zestedesavoir.zestwriter.view.com.MdTreeCell;
 
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
@@ -37,11 +39,11 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 
@@ -50,9 +52,16 @@ public class MdTextController {
     private PythonInterpreter pyconsole;
     private final Logger logger;
 
+    @FXML private Hyperlink recentFileLink1;
+    @FXML private Hyperlink recentFileLink2;
+    @FXML private Hyperlink recentFileLink3;
+    @FXML private Hyperlink recentFileLink4;
+    @FXML private Hyperlink recentFileLink5;
+
     @FXML private TabPane EditorList;
     @FXML private TreeView<ContentNode> Summary;
     @FXML private SplitPane splitPane;
+    @FXML public AnchorPane treePane;
     @FXML private Tab Home;
 
     @FXML private void initialize() {
@@ -75,19 +84,17 @@ public class MdTextController {
     }
 
     public void loadFonts() {
-        new Thread(new Runnable() {
-            public void run() {
-                Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Regular.ttf").toExternalForm(), 10);
-                Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Black.ttf").toExternalForm(), 10);
-                Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Bold.ttf").toExternalForm(), 10);
-                Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-BoldItalic.ttf").toExternalForm(), 10);
-                Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-HeavyItalic.ttf").toExternalForm(), 10);
-                Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Italic.ttf").toExternalForm(), 10);
-                Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Light.ttf").toExternalForm(), 10);
-                Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-LightItalic.ttf").toExternalForm(), 10);
+        new Thread(() -> {
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Regular.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Black.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Bold.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-BoldItalic.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-HeavyItalic.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Italic.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Light.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-LightItalic.ttf").toExternalForm(), 10);
 
-                Font.loadFont(MainApp.class.getResource("assets/static/fonts/FiraMono-Regular.ttf").toExternalForm(), 10);
-            }
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/FiraMono-Regular.ttf").toExternalForm(), 10);
         }).start();
     }
 
@@ -120,51 +127,54 @@ public class MdTextController {
         this.mainApp = mainApp;
 
         mainApp.getContents().addListener((ListChangeListener<Content>) change -> {
-            for(Content content:mainApp.getContents()) {
-                FunctionTreeFactory.clearContent(mainApp.getExtracts(), EditorList);
-                openContent(content);
-            }
-        });
-
-        mainApp.getScene().addEventFilter(KeyEvent.KEY_PRESSED, t -> {
-            if (t.getCode().equals(KeyCode.TAB) && t.isControlDown()) {
-                int size = EditorList.getTabs().size();
-
-                if (size > 0) {
-                    TabPaneSkin skin = (TabPaneSkin) EditorList.getSkin();
-                    TabPaneBehavior tabPaneBehavior = (TabPaneBehavior) skin.getBehavior();
-
-                    int selectedIndex = EditorList.getSelectionModel().getSelectedIndex();
-
-                    if (!t.isShiftDown()) {
-                        if (selectedIndex < size -1) {
-                            tabPaneBehavior.selectNextTab();
-                        } else {
-                            tabPaneBehavior.selectTab(EditorList.getTabs().get(0));
-                        }
-                    } else {
-                        if (selectedIndex > 0) {
-                            tabPaneBehavior.selectPreviousTab();
-                        } else {
-                            tabPaneBehavior.selectTab(EditorList.getTabs().get(size - 1));
-                        }
-                    }
-
-                    t.consume();
-                }
-
-            } else if(t.getCode().equals(KeyCode.W) && t.isControlDown()) {
-                if (EditorList.getTabs().size() > 1) {
-                    Tab selectedTab = EditorList.getSelectionModel().getSelectedItem();
-                    Event closeRequestEvent = new Event(Tab.TAB_CLOSE_REQUEST_EVENT);
-                    Event.fireEvent(selectedTab, closeRequestEvent);
-                    Event closedEvent = new Event(Tab.CLOSED_EVENT);
-                    Event.fireEvent(selectedTab, closedEvent);
-                    EditorList.getTabs().remove(selectedTab);
+            if(FunctionTreeFactory.clearContent(mainApp.getExtracts(), EditorList)) {
+                for(Content content:mainApp.getContents()) {
+                    openContent(content);
                 }
             }
         });
 
+        mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.TAB, SHORTCUT_DOWN), () -> switchTabTo(true));
+        mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.TAB, SHORTCUT_DOWN, SHIFT_DOWN), () -> switchTabTo(false));
+        if(FunctionTreeFactory.isMacOs()) {
+            mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.W, SHORTCUT_DOWN), () -> closeCurrentTab());
+        } else {
+            mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.Z, SHORTCUT_DOWN), () -> closeCurrentTab());
+        }
+    }
+
+    public void closeCurrentTab() {
+        if (EditorList.getTabs().size() > 1) {
+            Tab selectedTab = EditorList.getSelectionModel().getSelectedItem();
+            Platform.runLater(() -> {
+                Event.fireEvent(selectedTab, new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
+            });
+        }
+    }
+
+    public void switchTabTo(boolean right) {
+        int size = EditorList.getTabs().size();
+
+        if (size > 0) {
+            TabPaneSkin skin = (TabPaneSkin) EditorList.getSkin();
+            TabPaneBehavior tabPaneBehavior = skin.getBehavior();
+
+            int selectedIndex = EditorList.getSelectionModel().getSelectedIndex();
+
+            if (right) {
+                if (selectedIndex < size -1) {
+                    tabPaneBehavior.selectNextTab();
+                } else {
+                    tabPaneBehavior.selectTab(EditorList.getTabs().get(0));
+                }
+            } else {
+                if (selectedIndex > 0) {
+                    tabPaneBehavior.selectPreviousTab();
+                } else {
+                    tabPaneBehavior.selectTab(EditorList.getTabs().get(size - 1));
+                }
+            }
+        }
     }
 
     public void createTabExtract(Textual extract) throws IOException {
@@ -198,20 +208,24 @@ public class MdTextController {
 
                 alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo, buttonTypeCancel);
                 alert.setResizable(true);
-                alert.getDialogPane().setPrefSize(480, 320);
+                alert.getDialogPane().setPrefSize(280, 320);
 
                 Optional<ButtonType> result = alert.showAndWait();
-                if(result.get() != buttonTypeCancel) {
-                    if (result.get() == buttonTypeYes){
-                        controller.HandleSaveButtonAction(null);
+                if (result.isPresent()) {
+                    if (result.get() != buttonTypeCancel) {
+                        if (result.get() == buttonTypeYes) {
+                            controller.HandleSaveButtonAction(null);
+                        }
+                        Event.fireEvent(tab, new Event(Tab.CLOSED_EVENT));
                     }
-                } else {
-                    t.consume();
                 }
+            } else {
+                Event.fireEvent(tab, new Event(Tab.CLOSED_EVENT));
             }
         });
 
         tab.setOnClosed(t -> {
+            EditorList.getTabs().remove(tab);
             mainApp.getExtracts().remove(extract);
             t.consume();
         });
@@ -250,7 +264,7 @@ public class MdTextController {
                             }
                         } else {
                             TabPaneSkin skin = (TabPaneSkin) EditorList.getSkin();
-                            TabPaneBehavior tabPaneBehavior = (TabPaneBehavior) skin.getBehavior();
+                            TabPaneBehavior tabPaneBehavior = skin.getBehavior();
                             tabPaneBehavior.selectTab(mainApp.getExtracts().get(item.getValue()));
                         }
                     }
@@ -287,20 +301,17 @@ public class MdTextController {
                 });
 
 
-                treeCell.setOnDragOver(new EventHandler<DragEvent>() {
-                    @Override
-                    public void handle(DragEvent dragEvent) {
-                        if(dragObject != null && treeCell.getItem() != null) {
-                            if (!dragObject.getValue().isMoveableIn(treeCell.getItem(), ((Content)Summary.getRoot().getValue())))
-                            {
-                                treeCell.setGraphic(IconFactory.createDeleteIcon());
-                            } else {
-                                treeCell.setGraphic(IconFactory.createArrowDownIcon());
-                                dragEvent.acceptTransferModes(TransferMode.MOVE);
-                            }
+                treeCell.setOnDragOver(dragEvent -> {
+                    if(dragObject != null && treeCell.getItem() != null) {
+                        if (!dragObject.getValue().isMoveableIn(treeCell.getItem(), ((Content)Summary.getRoot().getValue())))
+                        {
+                            treeCell.setGraphic(IconFactory.createDeleteIcon());
+                        } else {
+                            treeCell.setGraphic(IconFactory.createArrowDownIcon());
+                            dragEvent.acceptTransferModes(TransferMode.MOVE);
                         }
-                        dragEvent.consume();
                     }
+                    dragEvent.consume();
                 });
 
                 treeCell.setOnDragDropped(dragEvent -> {
@@ -315,4 +326,5 @@ public class MdTextController {
         });
         logger.info("Contenu stocké dans "+filePath+" ouvert");
     }
+
 }
