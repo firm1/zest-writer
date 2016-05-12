@@ -40,7 +40,7 @@ public class TestApiZds {
      */
     public void testLogin() {
         assertEquals(config.getWorkspacePath(), TEST_DIR.getAbsolutePath()+File.separator+"workspace");
-        if(login != null) {
+        if(login != null && !login.equals("") && password != null && !password.equals("")) {
             ZdsHttp api = new ZdsHttp(config);
             try {
                 assertTrue("Tentative d'authentification au site", api.login(login, password));
@@ -58,12 +58,12 @@ public class TestApiZds {
 
                 for(File on:onlineDir.listFiles()) api.unzipOnlineContent(on.getAbsolutePath());
                 assertTrue(offlineDir.list().length > 0);
-                
+
                 // import
                 File zipfile = new File(offlineDir, "tutoriel-test.zip");
                 ZipUtil.pack(new File(offlineDir, "tutoriel-test"), zipfile);
                 assertTrue(api.importContent(zipfile.getAbsolutePath(), "1312", "tutoriel-test"));
-                
+
                 api.logout();
                 assertFalse(api.isAuthenticated());
             } catch (IOException e) {
