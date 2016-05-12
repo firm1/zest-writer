@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
@@ -705,7 +706,7 @@ public class MenuController{
                     @Override
                     protected Boolean call() throws Exception {
                         String current = mainApp.getConfig().getProps().getProperty("version", "Inconnue");
-                        String versionOnline = mainApp.getConfig().getLastRelease();
+                        String versionOnline = Configuration.getLastRelease();
                         if(versionOnline == null) {
                             throw new IOException();
                         } else {
@@ -728,23 +729,22 @@ public class MenuController{
         checkService.setOnSucceeded(t -> {
             Alert alert = new Alert(AlertType.NONE);
             IconFactory.addAlertLogo(alert);
-            if(!checkService.getValue()) {
-                alert = new Alert(AlertType.WARNING);
-                alert.setTitle("Mise à jour");
+            alert.setTitle("Mise à jour");
+
+            if(!checkService.getValue()){
+                alert.setAlertType(AlertType.WARNING);
                 alert.setHeaderText("Version obsolète");
                 alert.setContentText("La version de Zest Writer que vous utilisez n'est pas à jour. Pensez à faire la mise à jour vers pour profiter des dernières nouveautés");
-            } else {
-                alert = new Alert(AlertType.INFORMATION);
-                IconFactory.addAlertLogo(alert);
-                alert.setTitle("Mise à jour");
+            }else{
+                alert.setAlertType(AlertType.INFORMATION);
                 alert.setHeaderText("Version à jour");
                 alert.setContentText("Vous utilisez actuellement la dernière version publiée de Zest Writer");
             }
+
             alert.showAndWait();
         });
 
         checkService.start();
-
     }
 
     public Text getLabelField(){
