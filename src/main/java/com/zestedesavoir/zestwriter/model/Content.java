@@ -1,5 +1,9 @@
 package com.zestedesavoir.zestwriter.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,14 +13,7 @@ import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties({"basePath", "filePath", "editable", "countChildrenExtract", "countDescendantContainer" ,"rootContent"})
 public class Content extends Container implements ContentNode{
@@ -30,15 +27,6 @@ public class Content extends Container implements ContentNode{
     public Content(@JsonProperty("object") String object, @JsonProperty("slug") String slug, @JsonProperty("title") String title, @JsonProperty("introduction") String introduction, @JsonProperty("conclusion") String conclusion,
             @JsonProperty("children") List<MetaContent> children, @JsonProperty("version") int version, @JsonProperty("licence") String licence, @JsonProperty("description") String description, @JsonProperty("type") String type) {
         super(object, slug, title, introduction, conclusion, children);
-        this._version = version;
-        this._licence = licence;
-        this._description = description;
-        this._type = type;
-    }
-
-    public Content(String object, String slug, String title, String basePath, Textual introduction, Textual conclusion,
-            List<MetaContent> children, int version, String licence, String description, String type) {
-        super(object, slug, title, basePath, introduction, conclusion, children);
         this._version = version;
         this._licence = licence;
         this._description = description;
@@ -123,7 +111,9 @@ public class Content extends Container implements ContentNode{
             e.printStackTrace();
         } finally {
             try {
-                writer.close();
+                if (writer != null) {
+                    writer.close();
+                }
             } catch (Exception ignored) {
             }
         }

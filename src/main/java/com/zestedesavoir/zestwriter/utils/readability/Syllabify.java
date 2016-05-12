@@ -63,18 +63,4 @@ public class Syllabify {
         return syl;
     }
 
-    public static void main(String[] args) {
-        try {
-
-            String w = args[0];
-            int s = syllable(w);
-            System.out.println("---");
-            System.out.println(w);
-            System.out.println(s);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 }

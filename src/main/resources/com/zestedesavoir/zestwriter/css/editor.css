@@ -13,5 +13,6 @@
 }
 
 .lineno {
-    -fx-alignment: top-right;
+    -fx-alignment: top-left;
+    -fx-label-padding: 5, 5, 5, 5;
 }

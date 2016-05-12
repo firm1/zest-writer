@@ -6,7 +6,6 @@ import javafx.scene.control.Dialog;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 
 public class BaseDialog<T> extends Dialog<T>{
 	private GridPane gridPane = new GridPane();

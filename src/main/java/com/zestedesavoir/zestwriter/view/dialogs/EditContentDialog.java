@@ -1,18 +1,13 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.License;
 import com.zestedesavoir.zestwriter.model.TypeContent;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -20,6 +15,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Object>>>{
 	public static ObservableList<TypeContent> typeOptions = FXCollections.observableArrayList(new TypeContent("ARTICLE", "Article"), new TypeContent("TUTORIAL","Tutoriel"));
@@ -53,10 +51,10 @@ public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Objec
 	    TextField title = new TextField(defaultContent.getTitle());
 	    TextField subtitle = new TextField(defaultContent.getDescription());
 	    ComboBox<TypeContent> type = new ComboBox<>(typeOptions);
-	    type.setValue((TypeContent) typeOptions.get(typeOptions.indexOf(new TypeContent(defaultContent.getType(), ""))));
+	    type.setValue(typeOptions.get(typeOptions.indexOf(new TypeContent(defaultContent.getType(), ""))));
 
 	    ComboBox<License> license = new ComboBox<>(licOptions);
-	    license.setValue((License) licOptions.get(licOptions.indexOf(new License(defaultContent.getLicence(), ""))));
+	    license.setValue(licOptions.get(licOptions.indexOf(new License(defaultContent.getLicence(), ""))));
 
 	    grid.add(new Label("Titre du contenu :"), 0, 0);
 	    grid.add(title, 1, 0);
@@ -68,7 +66,7 @@ public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Objec
 	    grid.add(license, 1, 3);
 
 	    // Enable/Disable login button depending on whether a username was entered.
-	    Node validButton = this.getDialogPane().lookupButton(validButtonType);
+		this.getDialogPane().lookupButton(validButtonType);
 
 	    this.getDialogPane().setContent(grid);
 

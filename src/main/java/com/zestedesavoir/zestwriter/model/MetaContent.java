@@ -1,5 +1,10 @@
 package com.zestedesavoir.zestwriter.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -8,11 +13,6 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Function;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonIgnoreProperties({"basePath", "filePath", "editable", "object", "countChildrenExtract", "countDescendantContainer", "rootContent"})
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="object", visible=true)
@@ -31,15 +31,6 @@ public abstract class MetaContent{
         this._title = title;
     }
 
-    public MetaContent(String object, String slug, String title, String basePath) {
-        super();
-        this._object = object;
-        this._slug = slug;
-        this._title = title;
-        this.basePath = basePath;
-    }
-
-
     public Content getRootContent() {
         return rootContent;
     }
@@ -49,8 +40,8 @@ public abstract class MetaContent{
         this.rootContent = rootContent;
         if(this instanceof Container) {
             Container c = ((Container) this);
-            c.getIntroduction().setBasePath(basePath);
-            c.getConclusion().setBasePath(basePath);
+            c.getIntroduction().setRootContent(rootContent, basePath);
+            c.getConclusion().setRootContent(rootContent, basePath);
             for(MetaContent meta: c.getChildren()) {
                 meta.setRootContent(rootContent, basePath);
             }
@@ -122,7 +113,7 @@ public abstract class MetaContent{
         return true;
     }
 
-    private void deleteFile(File file) {
+    public static void deleteFile(File file) {
         if(file.isDirectory()) {
             if(file.list().length==0) {
                 file.delete();

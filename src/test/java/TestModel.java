@@ -3,6 +3,10 @@
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.function.Function;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,9 +14,16 @@ import org.junit.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.model.Container;
 import com.zestedesavoir.zestwriter.model.Content;
+import com.zestedesavoir.zestwriter.model.Extract;
+import com.zestedesavoir.zestwriter.model.MetaAttribute;
+import com.zestedesavoir.zestwriter.model.Textual;
+import com.zestedesavoir.zestwriter.utils.ZdsHttp;
+import com.zestedesavoir.zestwriter.utils.readability.Readability;
+import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 
 public class TestModel {
 
+    private final static String TEST_DIR = System.getProperty("java.io.tmpdir");
     Content content;
     Container part1;
     Container part2;
@@ -24,13 +35,20 @@ public class TestModel {
     Container chapter15;
     Container chapter16;
     Container chapter17;
+    Container chapter21;
+    Container chapter31;
+    Extract extract111;
+    Extract extract112;
+    Extract extract113;
+    Extract extract211;
+    Extract extract212;
 
     @Before
     public void setUp() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         File manifest = new File(getClass().getResource("fixtures").getFile()+File.separator+"le-guide-du-contributeur"+File.separator+"manifest.json");
         content = mapper.readValue(manifest, Content.class);
-        content.setBasePath(manifest.getParentFile().getAbsolutePath());
+        content.setRootContent(content, manifest.getParentFile().getAbsolutePath());
     }
 
     private void loadParts() {
@@ -47,6 +65,17 @@ public class TestModel {
         chapter15 = (Container) part1.getChildren().get(4);
         chapter16 = (Container) part1.getChildren().get(5);
         chapter17 = (Container) part1.getChildren().get(6);
+        chapter21 = (Container) part2.getChildren().get(0);
+        chapter31 = (Container) part3.getChildren().get(0);
+        loadExtracts();
+    }
+
+    private void loadExtracts() {
+        extract111 = (Extract) chapter11.getChildren().get(0);
+        extract112 = (Extract) chapter11.getChildren().get(1);
+        extract113 = (Extract) chapter11.getChildren().get(2);
+        extract211 = (Extract) chapter21.getChildren().get(0);
+        extract212 = (Extract) chapter21.getChildren().get(1);
     }
 
     @Test
@@ -79,6 +108,23 @@ public class TestModel {
         assertEquals("Un chapitre (niveau 3) ne peut pas aller dans un autre chapitre", chapter11.isMoveableIn(chapter16, content), false);
         assertEquals("Le chapitre 1.1 (niveau 3) est déplaceable dans une partie (niveau2)", chapter11.isMoveableIn(part2, content), true);
         assertEquals("Le chapitre 1.1 est déplaceable dans sa propre partie", chapter11.isMoveableIn(part1, content), true);
+        assertEquals("Le chapitre 1.2 est déplaceable après l'introduction de la partie 1", chapter12.isMoveableIn((MetaAttribute) part1.getIntroduction(), content), true);
+        assertEquals("Le chapitre 1.2 n'est pas déplaceable après la conclusion de la partie 1", chapter12.isMoveableIn((MetaAttribute) part1.getConclusion(), content), false);
+        assertEquals("Le chapitre 1.2 n'est pas déplaceable après l'introduction du chapitre 1.1", chapter12.isMoveableIn((MetaAttribute) chapter11.getIntroduction(), content), false);
+        assertEquals("Le chapitre 1.2 n'est pas déplaceable après la conclusion du chapitre 1.1", chapter12.isMoveableIn((MetaAttribute) chapter11.getConclusion(), content), false);
+        assertEquals("Un chapitre ne peut pas prendre un autre conteneur", chapter11.canTakeContainer(content), false);
+        assertEquals("Un chapitre ne peut pas prendre un autre conteneur", chapter16.canTakeContainer(content), false);
+        assertEquals("Une partie peut recevoir un conteneur", part1.canTakeContainer(content), true);
+        assertEquals("Un tutoriel peut recevoir un conteneur", content.canTakeContainer(content), true);
+        assertEquals("Un extrait n'est pas déplaceable à la racine dans un big tuto", extract111.isMoveableIn(content, content), false);
+        assertEquals("Un extrait est déplaceable dans un autre chapitre", extract111.isMoveableIn(chapter12, content), true);
+        assertEquals("Un extrait est déplaceable dans le même chapitre", extract111.isMoveableIn(chapter11, content), true);
+        assertEquals("Un extrait est déplaceable après un extrait du même chapitre", extract111.isMoveableIn(extract112, content), true);
+        assertEquals("Un extrait est déplaceable après un extrait d'un autre chapitre", extract111.isMoveableIn(extract211, content), true);
+        assertEquals("Un extrait est déplaceable après une introduction", extract111.isMoveableIn((MetaAttribute)chapter11.getIntroduction(), content), true);
+        assertEquals("Un extrait n'est pas déplaceable après une conclusion", extract111.isMoveableIn((MetaAttribute)chapter11.getConclusion(), content), false);
+        assertEquals("Une conclusion ne peut pas être déplacée", ((MetaAttribute) chapter11.getConclusion()).isMoveableIn(chapter12, content), false);
+        assertEquals("Une introduction ne peut pas être déplacée", ((MetaAttribute) chapter11.getIntroduction()).isMoveableIn(chapter12, content), false);
     }
 
     @Test
@@ -99,4 +145,117 @@ public class TestModel {
         assertEquals("Un tutoriel est supprimable", content.canDelete(), true);
     }
 
+    @Test
+    public void testRecept() {
+        loadParts();
+        loadChapters();
+        assertEquals("Un chapitre peut recevoir un extrait", chapter11.canTakeExtract(), true);
+        assertEquals("Une partie ne peut pas recevoir d'extrait", part1.canTakeExtract(), false);
+    }
+
+    @Test
+    public void testExport() {
+        loadParts();
+        loadChapters();
+        String res = content.exportContentToMarkdown(0, 2);
+        assertEquals(res == null, false);
+    }
+
+    @Test
+    public void testGenericTextual() {
+        loadParts();
+        loadChapters();
+        Function<Textual, Integer> countWords = (Textual ch) -> {
+            Readability rd = new Readability(ch.readMarkdown());
+            return rd.getWords();
+        };
+
+        Map<Textual, Integer> result = content.doOnTextual(countWords);
+
+    }
+
+    @Test
+    public void testCreateBigTuto() {
+        File workspace = new File(new File(TEST_DIR), "zworkspace");
+        if(!workspace.exists()) {
+            workspace.mkdirs();
+        }
+        String title = "Tutoriel de test";
+        String description = "Description d'un tutoriel de test";
+        String part_1_title = "Première partie";
+        String part_2_title = "Deuxième partie";
+        String chapter_11_title = "Premier chapitre";
+        String chapter_12_title = "Deuxième chapitre";
+        String extract_111_title = "Premier Extrait";
+        String extract_21_title = "Autre Extrait";
+
+        Content bigtuto = new Content("container", ZdsHttp.toSlug(title), title, "introduction.md", "conclusion.md", new ArrayList<>(), 2, "CC-BY", description, "TUTORIAL");
+        assertEquals(bigtuto.getSlug(), "tutoriel-de-test");
+        Container part_1 = new Container("container", ZdsHttp.toSlug(part_1_title), part_1_title, ZdsHttp.toSlug(part_1_title)+"/introduction.md", ZdsHttp.toSlug(part_1_title)+"/conclusion.md", new ArrayList<>());
+        bigtuto.getChildren().add(part_1);
+        assertEquals(part_1.getSlug(), "premiere-partie");
+        Container part_2 = new Container("container", ZdsHttp.toSlug(part_2_title), part_2_title, ZdsHttp.toSlug(part_2_title)+"/introduction.md", ZdsHttp.toSlug(part_2_title)+"/conclusion.md", new ArrayList<>());
+        bigtuto.getChildren().add(part_2);
+        assertEquals(part_2.getSlug(), "deuxieme-partie");
+
+        Container chapter_11 = new Container("container", ZdsHttp.toSlug(chapter_11_title), chapter_11_title, ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_11_title)+"/introduction.md", ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_11_title)+"/conclusion.md", new ArrayList<>());
+        part_1.getChildren().add(chapter_11);
+        assertEquals(chapter_11.getSlug(), "premier-chapitre");
+        Container chapter_12 = new Container("container", ZdsHttp.toSlug(chapter_12_title), chapter_12_title, ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_12_title)+"/introduction.md", ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_12_title)+"/conclusion.md", new ArrayList<>());
+        part_1.getChildren().add(chapter_12);
+        assertEquals(chapter_12.getSlug(), "deuxieme-chapitre");
+
+        Extract extract111 = new Extract("extract", ZdsHttp.toSlug(extract_111_title), extract_111_title, ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_11_title)+"/"+ZdsHttp.toSlug(extract_111_title)+".md");
+        chapter_11.getChildren().add(extract111);
+        assertEquals(extract111.getSlug(), "premier-extrait");
+        Extract extract_21 = new Extract("extract", ZdsHttp.toSlug(extract_21_title), extract_21_title, ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(extract_21_title)+".md");
+        part_2.getChildren().add(extract_21);
+        assertEquals(extract_21.getSlug(), "autre-extrait");
+
+        bigtuto.setRootContent(bigtuto, new File(workspace, bigtuto.getSlug()).getAbsolutePath());
+        // create file
+        try {
+            (new File(bigtuto.getFilePath())).mkdir();
+            (new File(bigtuto.getIntroduction().getFilePath())).createNewFile();
+            (new File(bigtuto.getConclusion().getFilePath())).createNewFile();
+            (new File(bigtuto.getFilePath(), "manifest.json")).createNewFile();
+            (new File(part_1.getFilePath())).mkdir();
+            (new File(part_1.getIntroduction().getFilePath())).createNewFile();
+            (new File(part_1.getConclusion().getFilePath())).createNewFile();
+            (new File(part_2.getFilePath())).mkdir();
+            (new File(part_2.getIntroduction().getFilePath())).createNewFile();
+            (new File(part_2.getConclusion().getFilePath())).createNewFile();
+            (new File(chapter_11.getFilePath())).mkdir();
+            (new File(chapter_11.getIntroduction().getFilePath())).createNewFile();
+            (new File(chapter_11.getConclusion().getFilePath())).createNewFile();
+            (new File(chapter_12.getFilePath())).mkdir();
+            (new File(chapter_12.getIntroduction().getFilePath())).createNewFile();
+            (new File(chapter_12.getConclusion().getFilePath())).createNewFile();
+            (new File(extract111.getFilePath())).createNewFile();
+            (new File(extract_21.getFilePath())).createNewFile();
+
+            bigtuto.getIntroduction().setMarkdown("Introduction du tutoriel");
+            bigtuto.getIntroduction().save();
+            bigtuto.getIntroduction().loadMarkdown();
+            assertEquals(bigtuto.getIntroduction().getMarkdown().trim(), "Introduction du tutoriel");
+            extract_21.setMarkdown("My new content");
+            extract_21.save();
+            extract_21.loadMarkdown();
+            assertEquals(extract_21.getMarkdown().trim(), "My new content");
+
+            part_2.delete();
+            assertEquals((new File(part_2.getFilePath())).exists(), false);
+            extract111.delete();
+            assertEquals((new File(extract111.getFilePath())).exists(), false);
+            chapter_12.delete();
+            assertEquals((new File(chapter_12.getFilePath())).exists(), false);
+            bigtuto.delete();
+            assertEquals((new File(bigtuto.getFilePath())).exists(), false);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            workspace.delete();
+        }
+    }
 }

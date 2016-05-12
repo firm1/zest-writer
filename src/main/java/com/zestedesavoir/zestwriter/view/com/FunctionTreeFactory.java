@@ -1,19 +1,13 @@
 package com.zestedesavoir.zestwriter.view.com;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.regex.Pattern;
-
 import com.zestedesavoir.zestwriter.model.Container;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
 import com.zestedesavoir.zestwriter.model.Extract;
+import com.zestedesavoir.zestwriter.model.MetaAttribute;
 import com.zestedesavoir.zestwriter.model.MetaContent;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
-
 import javafx.application.Platform;
 import javafx.collections.ObservableMap;
 import javafx.event.Event;
@@ -22,7 +16,18 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.util.Pair;
 
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.regex.Pattern;
+
 public class FunctionTreeFactory {
+
+    public static boolean isMacOs() {
+        return System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0;
+    }
+
     public static Map<String,Object> initContentDialog(Content defaultContent) {
         if(defaultContent == null) {
             defaultContent = new Content("container",
@@ -48,15 +53,18 @@ public class FunctionTreeFactory {
 
      }
 
-    public static void clearContent(ObservableMap<Textual, Tab> extracts, TabPane editorList) {
+    public static boolean clearContent(ObservableMap<Textual, Tab> extracts, TabPane editorList) {
         for(Entry<Textual, Tab> entry:extracts.entrySet()) {
             Platform.runLater(() -> {
                 Event.fireEvent(entry.getValue(), new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
-                Event.fireEvent(entry.getValue(), new Event(Tab.CLOSED_EVENT));
-                editorList.getTabs().remove(entry.getValue());
             });
         }
-        extracts.clear();
+        if(editorList.getTabs().size() <= 1) {
+            extracts.clear();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static TreeItem<ContentNode> buildChild(TreeItem<ContentNode> node) {
@@ -73,8 +81,7 @@ public class FunctionTreeFactory {
         }
         else if(node.getValue() instanceof Extract) {
             Extract extract = (Extract) node.getValue();
-            TreeItem<ContentNode> itemExtract = new TreeItem<>((ContentNode) extract);
-            return itemExtract;
+            return new TreeItem<>(extract);
         }
         return node;
     }
@@ -119,5 +126,24 @@ public class FunctionTreeFactory {
     public static String changeLocationImages(String text) {
         String regex = "()(!\\[.*?\\]\\()([^http])(.+?)(\\))";
         return Pattern.compile(regex, Pattern.MULTILINE).matcher(text).replaceAll("$1$2http://zestedesavoir.com/$3$4$5");
+    }
+
+    public static Container getContainerOfMetaAttribute(Container c, MetaAttribute meta) {
+        if(c == null || meta == null) {
+            return null;
+        }
+        if(meta.equals(c.getIntroduction()) || meta.equals(c.getConclusion())) {
+            return c;
+        } else {
+            for(MetaContent ch:c.getChildren()) {
+                if(ch instanceof Container) {
+                    Container result = getContainerOfMetaAttribute((Container) ch, meta);
+                    if(result != null) {
+                        return result;
+                    }
+                }
+            }
+            return null;
+        }
     }
 }

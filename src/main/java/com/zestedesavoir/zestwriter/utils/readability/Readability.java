@@ -20,10 +20,6 @@ public class Readability {
         return characters;
     }
 
-    public Integer getComplex() {
-        return complex;
-    }
-
     public Integer getSentences() {
         return sentences;
     }
@@ -43,39 +39,8 @@ public class Readability {
         this.words = getNumberOfWords(text);
         this.syllables = getNumberOfSyllables(text);
         this.characters = getNumberOfCharacters(text);
-
-
-
-        /*
-        System.out.println("Sentences:" + sentences);
-        System.out.println("Words:" + words);
-        System.out.println("Characters:" + characters);
-        System.out.println("Syllables:" + syllables);
-        System.out.println("Complex Words:" + complex);
-        */
     }
 
-    /**
-     *
-     */
-    public BagOfReadabilityObjects getMetrics() {
-    	BagOfReadabilityObjects bo = new BagOfReadabilityObjects();
-
-    	bo.setARI(this.getARI());
-    	bo.setCharacters(this.getCharacters());
-    	bo.setColemanLiau(this.getColemanLiau());
-    	bo.setComplexwords(this.getComplex());
-    	bo.setFleschKincaid(this.getFleschKincaidGradeLevel());
-    	bo.setFleschReading(this.getFleschReadingEase());
-    	bo.setGunningFog(this.getGunningFog());
-    	bo.setSentences(this.getSentences());
-    	bo.setSMOG(this.getSMOG());
-    	bo.setSMOGIndex(this.getSMOGIndex());
-    	bo.setSyllables(this.getSyllables());
-    	bo.setWords(this.getWords());
-
-    	return bo;
-    }
     /**
      * Returns true is the word contains 3 or more syllables
      *
@@ -237,73 +202,4 @@ public class Readability {
         double score = (5.89 * characters/words) - (30 * sentences/words) - 15.8;
         return Utilities.round(score, 3);
     }
-
-
-
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-
-        String GreenEggsAndHam =    "I do not like them in a box. " +
-                                    "I do not like them with a fox. " +
-                                    "I do not like them in a house. " +
-                                    "I do not like them with a mouse. " +
-                                    "I do not like them here or there. " +
-                                    "I do not like them anywhere. " +
-                                    "I do not like green eggs and ham. " +
-                                    "I do not like them, Sam-I-am.";
-
-
-        Readability r = new Readability(GreenEggsAndHam);
-
-
-        System.out.println("SMOG Index :" + r.getSMOGIndex() );
-        System.out.println("SMOG :" + r.getSMOG() );
-        System.out.println("Flesch Reading Ease :" + r.getFleschReadingEase() );
-        System.out.println("Flesch-Kincaid Grade Level :" + r.getFleschKincaidGradeLevel() );
-        System.out.println("Automated Readability Index :" + r.getARI() );
-        System.out.println("Gunning-Fog Index :" + r.getGunningFog() );
-        System.out.println("Coleman-Liau Index :" + r.getColemanLiau() );
-
-
-
-        System.out.println("\n--------------------------------------------------------\n");
-        String logorrhea = "The word logorrhoea is often used pejoratively " +
-                        "to describe prose that is highly abstract and " +
-                        "contains little concrete language. Since abstract " +
-                        "writing is hard to visualize, it often seems as though " +
-                        "it makes no sense and all the words are excessive. " +
-                        "Writers in academic fields that concern themselves mostly " +
-                        "with the abstract, such as philosophy and especially " +
-                        "postmodernism, often fail to include extensive concrete " +
-                        "examples of their ideas, and so a superficial examination " +
-                        "of their work might lead one to believe that it is all nonsense.";
-
-
-        r = new Readability(logorrhea);
-
-        System.out.println("SMOG Index :" + r.getSMOGIndex() );
-        System.out.println("SMOG :" + r.getSMOG() );
-        System.out.println("Flesch Reading Ease :" + r.getFleschReadingEase() );
-        System.out.println("Flesch-Kincaid Grade Level :" + r.getFleschKincaidGradeLevel() );
-        System.out.println("Automated Readability Index :" + r.getARI() );
-        System.out.println("Gunning-Fog Index :" + r.getGunningFog() );
-        System.out.println("Coleman-Liau Index :" + r.getColemanLiau() );
-
-        String exple = "bonjour mon nom est mister blabla,. \n\nje danse dans la course avec mon petit chaperon rouge.";
-
-        r = new Readability(exple);
-
-        System.out.println("SMOG Index :" + r.getSMOGIndex() );
-        System.out.println("SMOG :" + r.getSMOG() );
-        System.out.println("Flesch Reading Ease :" + r.getFleschReadingEase() );
-        System.out.println("Flesch-Kincaid Grade Level :" + r.getFleschKincaidGradeLevel() );
-        System.out.println("Automated Readability Index :" + r.getARI() );
-        System.out.println("Gunning-Fog Index :" + r.getGunningFog() );
-        System.out.println("Coleman-Liau Index :" + r.getColemanLiau() );
-
-
-    }
-
 }

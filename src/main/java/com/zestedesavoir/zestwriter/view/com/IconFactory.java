@@ -55,6 +55,14 @@ public class IconFactory {
         return makeIcon(MaterialDesignIcon.ARROW_DOWN, "#48a200");
     }
 
+    public static MaterialDesignIconView createLinkIcon() {
+        return makeIcon(MaterialDesignIcon.LINK, "#48a200");
+    }
+
+    public static MaterialDesignIconView createCodeIcon() {
+        return makeIcon(MaterialDesignIcon.CODE_TAGS, "#48a200");
+    }
+
     public static void addAlertLogo(Alert alert){
         Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
         alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));

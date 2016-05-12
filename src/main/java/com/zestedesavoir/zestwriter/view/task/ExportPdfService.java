@@ -1,10 +1,9 @@
 package com.zestedesavoir.zestwriter.view.task;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
+import com.zestedesavoir.zestwriter.model.Content;
+import com.zestedesavoir.zestwriter.utils.ZdsHttp;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -17,11 +16,10 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zestedesavoir.zestwriter.model.Content;
-import com.zestedesavoir.zestwriter.utils.ZdsHttp;
-
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class ExportPdfService extends Service<Void>{
 
