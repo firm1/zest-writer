@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.python.core.PyString;
@@ -81,19 +82,17 @@ public class MdConvertController {
 
         @Override
         public String getName() {
-            // TODO Auto-generated method stub
             return null;
         }
 
         @Override
         public Object getBean() {
-            // TODO Auto-generated method stub
             return null;
         }
     };
 
     @FXML private WebView renderView;
-    @FXML private StyleClassedTextArea SourceText;
+    private StyleClassedTextArea SourceText;
     @FXML private Button SaveButton;
     @FXML private Button RefreshButton;
     @FXML private BorderPane BoxEditor;
@@ -103,6 +102,7 @@ public class MdConvertController {
     public MdConvertController() {
         super();
         logger = LoggerFactory.getLogger(MdConvertController.class);
+        SourceText = new StyleClassedTextArea();
     }
 
     public MdTextController getMdBox() {
@@ -125,8 +125,9 @@ public class MdConvertController {
             BoxRender.setTop(null);
         }
 
-        SourceText.setFont(new Font(config.getEditorFont(), config.getEditorFontsize()));
-        SourceText.setStyle("-fx-font-family: \"" + config.getEditorFont() + "\";");
+        VirtualizedScrollPane<StyleClassedTextArea> vsPane = new VirtualizedScrollPane<StyleClassedTextArea>(SourceText);
+        BoxEditor.setCenter(vsPane);
+        SourceText.setStyle("-fx-font-family: \"" + config.getEditorFont() + "\";-fx-font-size: " + config.getEditorFontsize() + ";");
         SourceText.replaceText(extract.getMarkdown());
         SourceText.getUndoManager().forgetHistory();
         SourceText.textProperty().addListener((observableValue, s, s2) -> {
