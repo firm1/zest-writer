@@ -99,6 +99,7 @@ public class MdConvertController {
     @FXML private BorderPane BoxEditor;
     @FXML private BorderPane BoxRender;
     @FXML private Button FullScreeen;
+    @FXML private Label WordCountLabel;
 
     public MdConvertController() {
         super();
@@ -124,7 +125,7 @@ public class MdConvertController {
             BoxEditor.setTop(null);
             BoxRender.setTop(null);
         }
-
+        WordCountLabel.setText("Nombre de mots : " + extract.getMarkdown().replace("'", " ").split(" ").length);
         SourceText.setFont(new Font(config.getEditorFont(), config.getEditorFontsize()));
         SourceText.setStyle("-fx-font-family: \"" + config.getEditorFont() + "\";");
         SourceText.replaceText(extract.getMarkdown());
@@ -133,6 +134,7 @@ public class MdConvertController {
             tab.setText("! " + extract.getTitle());
             this.isSaved.setValue(false);
             SourceText.getUndoManager().mark();
+            WordCountLabel.setText("Nombre de mots : " + extract.getMarkdown().replace("'", " ").split(" ").length);
             updateRender();
         });
         updateRender();
