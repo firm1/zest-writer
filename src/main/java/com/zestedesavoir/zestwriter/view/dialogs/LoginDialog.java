@@ -51,7 +51,7 @@ public class LoginDialog extends BaseDialog<Pair<String, String>> {
             if(keepConnection.isSelected()){
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Attention !");
-                alert.setContentText("Attention, vos informations d'identification ne sont pas crypté dans le fichier de configuration.");
+                alert.setContentText("Attention, vos informations d'identification ne sont pas chiffrés dans le fichier de configuration.");
                 IconFactory.addAlertLogo(alert);
 
                 alert.showAndWait();
