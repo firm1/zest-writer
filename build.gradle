@@ -60,6 +60,8 @@ repositories {
     mavenCentral()
     maven {
         url "https://dl.bintray.com/firm1/maven"
+    }
+    maven {
         url "https://oss.sonatype.org/content/repositories/snapshots/"
     }
 }
