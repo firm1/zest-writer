@@ -66,22 +66,6 @@ public class Extract extends MetaContent implements Textual, ContentNode{
     }
 
     @Override
-    public boolean canTakeContainer(Content c) {
-        return false;
-    }
-
-    @Override
-    public boolean canTakeExtract() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean isEditable() {
-        return true;
-    }
-
-    @Override
     public boolean isMoveableIn(ContentNode receiver, Content root) {
         if(receiver.getFilePath().equals(getFilePath())) {
             return false;
