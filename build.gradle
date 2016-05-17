@@ -61,9 +61,6 @@ repositories {
     maven {
         url "https://dl.bintray.com/firm1/maven"
     }
-    maven {
-        url "https://oss.sonatype.org/content/repositories/snapshots/"
-    }
 }
 
 sourceSets {
@@ -123,7 +120,7 @@ dependencies {
             'de.jensd:fontawesomefx:8.9',
             'org.zeroturnaround:zt-zip:1.9',
             'org.controlsfx:controlsfx:8.40.10',
-            'org.fxmisc.richtext:richtextfx:1.0.0-SNAPSHOT',
+            'org.fxmisc.richtext:richtextfx:0.6.10',
             'com.zestedesavoir.zmarkdown:java-zmarkdown:2.6.0'
 }
 

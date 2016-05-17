@@ -40,56 +40,12 @@ public class Extract extends MetaContent implements Textual, ContentNode{
     }
 
     @Override
-    public void save() {
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getFilePath()), "UTF8"));
-            writer.append(getMarkdown());
-            writer.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                // Close the writer regardless of what happens...
-                if (writer != null) {
-                    writer.close();
-                }
-            } catch (Exception ignored) {
-            }
-        }
-
-    }
-
-    @Override
     public String getMarkdown() {
         return markdown;
     }
 
     public void setMarkdown(String markdown) {
         this.markdown = markdown;
-    }
-
-    public String readMarkdown() {
-        Path path = Paths.get(this.getFilePath());
-        Scanner scanner;
-        StringBuilder bfString = new StringBuilder();
-        try {
-            scanner = new Scanner(path, StandardCharsets.UTF_8.name());
-            while (scanner.hasNextLine()) {
-                bfString.append(scanner.nextLine());
-                bfString.append("\n");
-            }
-            scanner.close();
-            return bfString.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public void loadMarkdown() {
-        setMarkdown(readMarkdown());
     }
 
     @Override

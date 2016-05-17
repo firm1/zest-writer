@@ -27,25 +27,6 @@ public class MetaAttribute implements Textual, ContentNode{
     }
 
     @Override
-    public void save() {
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getFilePath()), "UTF8"));
-            writer.append(getMarkdown());
-            writer.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (writer != null) {
-                    writer.close();
-                }
-            } catch (Exception ignored) {
-            }
-        }
-    }
-
-    @Override
     public String getMarkdown() {
         return markdown;
     }
@@ -91,58 +72,9 @@ public class MetaAttribute implements Textual, ContentNode{
         return getTitle();
     }
 
-    public String readMarkdown() {
-        Path path = Paths.get(this.getFilePath());
-        StringBuilder bfString = new StringBuilder();
-        try (Scanner scanner = new Scanner(path, StandardCharsets.UTF_8.name())) {
-            while (scanner.hasNextLine()) {
-                bfString.append(scanner.nextLine());
-                bfString.append("\n");
-            }
-            return bfString.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public void loadMarkdown() {
-        setMarkdown(readMarkdown());
-    }
-
     @Override
     public MaterialDesignIconView buildIcon() {
         return IconFactory.createFileBlankIcon();
-    }
-
-    @Override
-    public boolean canDelete() {
-        return false;
-    }
-
-    @Override
-    public boolean canTakeContainer(Content c) {
-        return false;
-    }
-
-    @Override
-    public boolean canTakeExtract() {
-        return false;
-    }
-
-    @Override
-    public boolean isEditable() {
-        return true;
-    }
-
-    @Override
-    public void delete() {
-    }
-
-    @Override
-    public boolean isMoveableIn(ContentNode receiver, Content root) {
-        return false;
     }
 
     @Override

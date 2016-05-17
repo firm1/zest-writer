@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.python.core.PyString;
@@ -23,18 +22,17 @@ import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.FlipTable;
+import com.zestedesavoir.zestwriter.view.com.CustomStyledClassedTextArea;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanPropertyBase;
-import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.concurrent.Worker;
 import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -60,7 +58,6 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
@@ -92,17 +89,17 @@ public class MdConvertController {
     };
 
     @FXML private WebView renderView;
-    private StyleClassedTextArea SourceText;
     @FXML private Button SaveButton;
     @FXML private Button RefreshButton;
     @FXML private BorderPane BoxEditor;
     @FXML private BorderPane BoxRender;
     @FXML private Button FullScreeen;
+    private CustomStyledClassedTextArea SourceText;
 
     public MdConvertController() {
         super();
         logger = LoggerFactory.getLogger(MdConvertController.class);
-        SourceText = new StyleClassedTextArea();
+        SourceText = new CustomStyledClassedTextArea();
     }
 
     public MdTextController getMdBox() {
@@ -125,18 +122,20 @@ public class MdConvertController {
             BoxRender.setTop(null);
         }
 
-        VirtualizedScrollPane<StyleClassedTextArea> vsPane = new VirtualizedScrollPane<StyleClassedTextArea>(SourceText);
-        BoxEditor.setCenter(vsPane);
+        BoxEditor.setCenter(SourceText);
         SourceText.setStyle("-fx-font-family: \"" + config.getEditorFont() + "\";-fx-font-size: " + config.getEditorFontsize() + ";");
-        SourceText.replaceText(extract.getMarkdown());
-        SourceText.getUndoManager().forgetHistory();
+        initRenderTask();
+        Platform.runLater(() -> {
+            SourceText.replaceText(extract.getMarkdown());
+            SourceText.getUndoManager().forgetHistory();
+        });
         SourceText.textProperty().addListener((observableValue, s, s2) -> {
             tab.setText("! " + extract.getTitle());
             this.isSaved.setValue(false);
             SourceText.getUndoManager().mark();
             updateRender();
         });
-        updateRender();
+
         tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.S, SHORTCUT_DOWN), () -> HandleSaveButtonAction(null));
         tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.G, SHORTCUT_DOWN), () -> HandleBoldButtonAction(null));
         tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.I, SHORTCUT_DOWN), () -> HandleItalicButtonAction(null));
@@ -461,81 +460,75 @@ public class MdConvertController {
         }
     }
 
-    @FXML private void updateRender() {
-        if (renderTask != null) {
-            if (renderTask.isRunning()) {
-                renderTask.cancel();
-            }
-        }
+    private void initRenderTask() {
+        StringBuilder before = new StringBuilder();
+        StringBuilder after = new StringBuilder();
 
-        WebEngine webEngine = renderView.getEngine();
+        before.append("<!doctype html><html><head><meta charset='utf-8'><base href='");
+        before.append(MainApp.class.getResource("assets").toExternalForm());
+        before.append("/' />");
+        before.append("<link rel=\"stylesheet\" href=\"");
+        before.append(MainApp.class.getResource("css/content.css").toExternalForm());
+        before.append("\" />");
+        before.append("<link rel=\"stylesheet\" href=\"");
+        before.append(MainApp.class.getResource("assets/static").toExternalForm());
+        before.append("/js/katex/katex.min.css\" />");
+        before.append("<script src=\"").append(MainApp.class.getResource("assets/static").toExternalForm());
+        before.append("/js/katex/katex.min.js\"></script>");
+        before.append("<script src=\"").append(MainApp.class.getResource("assets/static").toExternalForm());
+        before.append("/js/katex/contrib/auto-render.min.js\"></script>");
+        before.append("</head><body>");
 
-        webEngine.getLoadWorker().stateProperty()
-                .addListener((ObservableValue<? extends State> ov, State oldState, State newState) -> {
-                    if (newState == State.SUCCEEDED) {
-                        scrollTo(renderView, xRenderPosition, yRenderPosition);
-                    }
-                });
+        after.append("<script>"+
+                "renderMathInElement("+
+                "document.body,"+
+                "{"+
+                "delimiters: ["+
+                "{left: \"$$\", right: \"$$\", display: true},"+
+                "{left: \"$\", right: \"$\", display: false},"+
+                "]"+
+                "}"+
+                ");"+
+                "</script>");
+        after.append("</body></html>");
 
         renderTask = new Service<String>() {
             @Override
             protected Task<String> createTask() {
                 return new Task<String>() {
                     @Override
-                    protected String call() {
-                        StringBuilder content = new StringBuilder();
-                        content.append("<!doctype html><html><head><meta charset='utf-8'><base href='");
-                        if (!isCancelled()) {
-                            content.append(MainApp.class.getResource("assets").toExternalForm());
-                        }
-                        content.append("/' />");
-                        content.append("<link rel=\"stylesheet\" href=\"");
-                        content.append(MainApp.class.getResource("css/content.css").toExternalForm());
-                        content.append("\" />");
-                        content.append("<link rel=\"stylesheet\" href=\"");
-                        content.append(MainApp.class.getResource("assets/static").toExternalForm());
-                        content.append("/js/katex/katex.min.css\" />");
-                        content.append("<script src=\"").append(MainApp.class.getResource("assets/static").toExternalForm());
-                        content.append("/js/katex/katex.min.js\"></script>");
-                        content.append("<script src=\"").append(MainApp.class.getResource("assets/static").toExternalForm());
-                        content.append("/js/katex/contrib/auto-render.min.js\"></script>");
-                        content.append("</head><body>");
-                        if (!isCancelled()) {
-                            content.append(markdownToHtml(SourceText.getText()));
-                        }
-                        content.append("<script>"+
-                                "renderMathInElement("+
-                                "document.body,"+
-                                "{"+
-                                "delimiters: ["+
-                                "{left: \"$$\", right: \"$$\", display: true},"+
-                                "{left: \"$\", right: \"$\", display: false},"+
-                                "]"+
-                                "}"+
-                                ");"+
-                                "</script>");
-                        content.append("</body></html>");
-                        return content.toString();
+                    protected String call() throws Exception {
+                        return before.toString()+markdownToHtml(SourceText.getText())+after.toString();
                     }
 
                 };
             }
         };
-        renderTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue,
-                                                Worker.State oldValue, Worker.State newValue) -> {
-            switch (newValue) {
-                case FAILED:
-                    break;
-                case CANCELLED:
-                    break;
-                case SUCCEEDED:
-                    yRenderPosition = getVScrollValue(renderView);
-                    xRenderPosition = getHScrollValue(renderView);
-                    webEngine.loadContent(renderTask.valueProperty().getValue());
-                    break;
+        renderTask.setOnFailed(t -> {
+            renderTask.reset();
+        });
+        renderTask.setOnSucceeded(t -> {
+            yRenderPosition = getVScrollValue(renderView);
+            xRenderPosition = getHScrollValue(renderView);
+            renderView.getEngine().loadContent(renderTask.valueProperty().getValue());
+            renderTask.reset();
+
+        });
+    }
+
+    @FXML private void updateRender() {
+
+        if (renderTask != null) {
+            if (!renderTask.isRunning()) {
+                renderTask.start();
+            }
+        }
+        renderView.getEngine().getLoadWorker().stateProperty()
+        .addListener((ObservableValue<? extends State> ov, State oldState, State newState) -> {
+            if (newState == State.SUCCEEDED) {
+                scrollTo(renderView, xRenderPosition, yRenderPosition);
             }
         });
-        renderTask.start();
     }
 
     @FXML private void HandleValidateButtonAction(ActionEvent event) {
@@ -574,11 +567,15 @@ public class MdConvertController {
 
     public String markdownToHtml(String chaine) {
         PythonInterpreter console = getMdBox().getPyconsole();
-        console.set("text", chaine);
-        console.exec(
-                "render = Markdown(extensions=(ZdsExtension({'inline': False, 'emoticons': smileys}),),safe_mode = 'escape', enable_attributes = False, tab_length = 4, output_format = 'html5', smart_emphasis = True, lazy_ol = True).convert(text)");
-        PyString render = console.get("render", PyString.class);
-        return render.toString();
+        if(console != null) {
+            console.set("text", chaine);
+            console.exec(
+                    "render = Markdown(extensions=(ZdsExtension({'inline': False, 'emoticons': smileys}),),safe_mode = 'escape', enable_attributes = False, tab_length = 4, output_format = 'html5', smart_emphasis = True, lazy_ol = True).convert(text)");
+            PyString render = console.get("render", PyString.class);
+            return render.toString();
+        } else {
+            return "<p>Chargement ...</p>";
+        }
     }
 
     private void replaceAction(String defaultString, int defaultOffsetCaret, String beforeString, String afterString) {
