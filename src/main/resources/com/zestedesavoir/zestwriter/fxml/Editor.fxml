@@ -8,7 +8,7 @@
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.web.WebView?>
-<?import org.fxmisc.richtext.StyleClassedTextArea?>
+
 <SplitPane dividerPositions="0.5" prefHeight="633.0" prefWidth="773.0" stylesheets="@../css/dark.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MdConvertController">
    <items>
       <BorderPane fx:id="BoxEditor">
@@ -138,8 +138,7 @@
             </ToolBar>
          </top>
          <center>
-            <StyleClassedTextArea fx:id="SourceText" wrapText="true" BorderPane.alignment="CENTER" >
-            </StyleClassedTextArea>
+
          </center>
       </BorderPane>
       <BorderPane fx:id="BoxRender" prefHeight="200.0" prefWidth="200.0">

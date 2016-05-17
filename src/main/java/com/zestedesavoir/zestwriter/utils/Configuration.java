@@ -1,21 +1,22 @@
 package com.zestedesavoir.zestwriter.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zestedesavoir.zestwriter.MainApp;
-import org.apache.commons.lang.math.NumberUtils;
-import org.apache.http.client.fluent.Request;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
+
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileSystemView;
+
+import org.apache.commons.lang.math.NumberUtils;
+import org.apache.http.client.fluent.Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zestedesavoir.zestwriter.MainApp;
 
 public class Configuration {
     public Properties conf;
@@ -248,8 +249,8 @@ public class Configuration {
         conf.setProperty(ConfigData.EditorFont.getKey(), font);
     }
 
-    public double getEditorFontsize(){
-        return getGenericDoubleDisplay(ConfigData.EditorFontSize);
+    public int getEditorFontsize(){
+        return (int) Math.round(getGenericDoubleDisplay(ConfigData.EditorFontSize));
     }
 
     public void setEditorFontSize(String fontSize){

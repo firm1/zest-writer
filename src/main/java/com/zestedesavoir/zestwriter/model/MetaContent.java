@@ -93,22 +93,6 @@ public abstract class MetaContent{
     public abstract String exportContentToMarkdown(int level, int levelDepth);
     public abstract<R> Map<Textual, R> doOnTextual(Function<Textual,R> f);
 
-    public static void loadMarkdown(Textual textual) {
-        Path path = Paths.get(textual.getFilePath());
-        Scanner scanner;
-        StringBuilder bfString = new StringBuilder();
-        try {
-            scanner = new Scanner(path, StandardCharsets.UTF_8.name());
-            while (scanner.hasNextLine()) {
-                bfString.append(scanner.nextLine());
-                bfString.append("\n");
-            }
-            textual.setMarkdown(bfString.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public boolean canDelete() {
         return true;
     }
