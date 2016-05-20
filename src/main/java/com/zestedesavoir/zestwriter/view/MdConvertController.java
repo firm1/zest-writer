@@ -2,6 +2,7 @@ package com.zestedesavoir.zestwriter.view;
 
 import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
 import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
+import static org.fxmisc.wellbehaved.event.EventPattern.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.Optional;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleClassedTextArea;
+import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 import org.slf4j.Logger;
@@ -55,6 +57,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -136,20 +140,33 @@ public class MdConvertController {
             });
         });
 
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.S, SHORTCUT_DOWN), () -> HandleSaveButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.G, SHORTCUT_DOWN), () -> HandleBoldButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.I, SHORTCUT_DOWN), () -> HandleItalicButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.B, SHORTCUT_DOWN), () -> HandleBarredButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.K, SHORTCUT_DOWN), () -> HandleTouchButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.PLUS, SHORTCUT_DOWN), () -> HandleExpButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.EQUALS, SHORTCUT_DOWN), () -> HandleIndButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.E, SHORTCUT_DOWN), () -> HandleCenterButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.D, SHORTCUT_DOWN, SHIFT_DOWN), () -> HandleRightButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.SPACE, SHORTCUT_DOWN), () -> HandleUnbreakableAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.L, SHORTCUT_DOWN), this::HandleGoToLineAction);
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.F, SHORTCUT_DOWN), this::HandleFindReplaceDialog);
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper .on(keyPressed(KeyCode.S, SHORTCUT_DOWN)).act( ev -> HandleSaveButtonAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper .on(keyPressed(KeyCode.G, SHORTCUT_DOWN)).act( ev -> HandleBoldButtonAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper .on(keyPressed(KeyCode.I, SHORTCUT_DOWN)).act( ev -> HandleItalicButtonAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper .on(keyPressed(KeyCode.B, SHORTCUT_DOWN)).act( ev -> HandleBarredButtonAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper .on(keyPressed(KeyCode.K, SHORTCUT_DOWN)).act( ev -> HandleTouchButtonAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper .on(keyPressed(KeyCode.PLUS, SHORTCUT_DOWN)).act( ev -> HandleExpButtonAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper .on(keyPressed(KeyCode.EQUALS, SHORTCUT_DOWN)).act( ev -> HandleIndButtonAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper .on(keyPressed(KeyCode.E, SHORTCUT_DOWN)).act( ev -> HandleCenterButtonAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper .on(keyPressed(KeyCode.D, SHIFT_DOWN, SHORTCUT_DOWN)).act( ev -> HandleRightButtonAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper .on(keyPressed(KeyCode.SPACE, SHORTCUT_DOWN)).act( ev -> HandleUnbreakableAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper .on(keyPressed(KeyCode.L, SHORTCUT_DOWN)).act( ev -> HandleGoToLineAction()).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper .on(keyPressed(KeyCode.F, SHORTCUT_DOWN)).act( ev -> HandleFindReplaceDialog()).create());
         if(FunctionTreeFactory.isMacOs()) {
-            tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.Q, SHORTCUT_DOWN), () -> SourceText.selectAll());
+            EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                    EventHandlerHelper .on(keyPressed(KeyCode.Q, SHORTCUT_DOWN)).act( ev -> SourceText.selectAll()).create());
         }
 
         tab.setOnSelectionChanged(t -> {
