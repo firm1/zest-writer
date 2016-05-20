@@ -128,12 +128,12 @@ public class MdConvertController {
         Platform.runLater(() -> {
             SourceText.replaceText(extract.getMarkdown());
             SourceText.getUndoManager().forgetHistory();
-        });
-        SourceText.textProperty().addListener((observableValue, s, s2) -> {
-            tab.setText("! " + extract.getTitle());
-            this.isSaved.setValue(false);
-            SourceText.getUndoManager().mark();
-            updateRender();
+            SourceText.textProperty().addListener((observableValue, s, s2) -> {
+                tab.setText("! " + extract.getTitle());
+                this.isSaved.setValue(false);
+                SourceText.getUndoManager().mark();
+                updateRender();
+            });
         });
 
         tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.S, SHORTCUT_DOWN), () -> HandleSaveButtonAction(null));
