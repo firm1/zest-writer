@@ -129,7 +129,7 @@ public class Configuration {
     }
 
     public String getPandocProvider() {
-        return "http://vps146092.ovh.net/2pdf/";
+        return "http://firm1.eu/2pdf/";
     }
 
     public StorageSaver getOfflineSaver() {
