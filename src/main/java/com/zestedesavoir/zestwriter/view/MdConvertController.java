@@ -311,9 +311,6 @@ public class MdConvertController {
         dialog.setTitle("Editeur de tableau");
         dialog.setHeaderText("");
 
-        // Set the icon (must be included in the project).
-        dialog.setGraphic(new ImageView(MainApp.class.getResource("assets/static/icons/table.png").toString()));
-
         // Set the button types.
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 

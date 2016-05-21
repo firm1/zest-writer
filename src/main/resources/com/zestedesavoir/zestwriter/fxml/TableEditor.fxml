@@ -1,34 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
-<BorderPane prefHeight="400.0" prefWidth="600.0" stylesheets="@dark.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.TableController">
+<BorderPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/dark.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.TableController">
    <center>
       <TableView fx:id="tableView" editable="true" prefHeight="300.0" prefWidth="400.0" BorderPane.alignment="CENTER" />
    </center>
    <right>
       <Button mnemonicParsing="false" onAction="#HandleAddColumnButtonAction" BorderPane.alignment="TOP_RIGHT">
-         <graphic>
-            <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@static/icons/add.png" />
-               </image>
-            </ImageView>
-         </graphic>
+        <graphic>
+           <MaterialDesignIconView fill="#084561" glyphName="PLUS" size="1.6em" />
+        </graphic>
       </Button>
    </right>
    <bottom>
       <Button mnemonicParsing="false" onAction="#HandleAddRowButtonAction" BorderPane.alignment="BOTTOM_LEFT">
-         <graphic>
-            <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@static/icons/add.png" />
-               </image>
-            </ImageView>
-         </graphic>
+        <graphic>
+           <MaterialDesignIconView fill="#084561" glyphName="PLUS" size="1.6em" />
+        </graphic>
       </Button>
    </bottom>
 </BorderPane>
