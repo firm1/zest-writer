@@ -4,6 +4,8 @@ import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.util.Pair;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zeroturnaround.zip.ZipUtil;
@@ -15,9 +17,9 @@ import java.util.Optional;
 public class UploadContentService extends Service<Void>{
 	private ZdsHttp zdsUtils;
 	private final Logger logger;
-	private Optional<MetadataContent> result;
+	private Optional<Pair<String, MetadataContent>> result;
 
-	public UploadContentService(ZdsHttp zdsUtils, Optional<MetadataContent> result) {
+	public UploadContentService(ZdsHttp zdsUtils, Optional<Pair<String, MetadataContent>> result) {
 		this.zdsUtils = zdsUtils;
 		this.result = result;
 		logger = LoggerFactory.getLogger(getClass());
@@ -29,20 +31,20 @@ public class UploadContentService extends Service<Void>{
             @Override
             protected Void call() throws Exception {
                 if (zdsUtils.isAuthenticated() && result.isPresent()) {
-                    String targetId = result.get().getId();
+                    String targetId = result.get().getValue().getId();
                     String localSlug = zdsUtils.getLocalSlug();
-                    String targetSlug = result.get().getSlug();
+                    String targetSlug = result.get().getValue().getSlug();
 
                     String pathDir = zdsUtils.getOfflineContentPathDir() + File.separator + localSlug;
                     updateMessage("Compression : "+targetSlug+" en cours ...");
                     ZipUtil.pack(new File(pathDir), new File(pathDir + ".zip"));
                     updateMessage("Import : "+targetSlug+" en cours ...");
-                    if(targetId == null) {
-                        if(!zdsUtils.importNewContent(pathDir+ ".zip")) {
+                    if(result.get().getValue().getType() == null) {
+                        if(!zdsUtils.importNewContent(pathDir+ ".zip", result.get().getKey())) {
                             throw new IOException();
                         }
                     } else {
-                        if(!zdsUtils.importContent(pathDir + ".zip", targetId, targetSlug)) {
+                        if(!zdsUtils.importContent(pathDir + ".zip", targetId, targetSlug, result.get().getKey())) {
                             throw new IOException();
                         }
                     }

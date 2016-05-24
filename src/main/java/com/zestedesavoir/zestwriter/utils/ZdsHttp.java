@@ -1,11 +1,28 @@
 package com.zestedesavoir.zestwriter.utils;
 
-import com.zestedesavoir.zestwriter.model.MetadataContent;
-import javafx.util.Pair;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpCookie;
+import java.nio.charset.Charset;
+import java.nio.file.Paths;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -31,24 +48,9 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpCookie;
-import java.nio.file.Paths;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import com.zestedesavoir.zestwriter.model.MetadataContent;
+
+import javafx.util.Pair;
 
 
 public class ZdsHttp {
@@ -330,7 +332,7 @@ public class ZdsHttp {
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
             builder.addPart("physical", cbFile);
-            builder.addPart("title", new StringBody("Image importee via ZestWriter", ContentType.MULTIPART_FORM_DATA));
+            builder.addPart("title", new StringBody("Image importée via ZestWriter", Charset.forName("UTF-8")));
             builder.addPart("csrfmiddlewaretoken", new StringBody(getCookieValue(cookieStore, "csrftoken"), ContentType.MULTIPART_FORM_DATA));
 
             Pair<Integer, String> resultPost = sendPost(url, builder.build());
@@ -344,10 +346,8 @@ public class ZdsHttp {
         return "http://";
     }
 
-    public boolean importNewContent(String filePath) throws IOException {
-
-        logger.debug("Tentative d'import via l'url : " + getImportNewContenttUrl());
-        HttpGet get = new HttpGet(getImportNewContenttUrl());
+    private boolean uploadContent(String filePath, String url, String msg) throws IOException{
+        HttpGet get = new HttpGet(url);
         HttpResponse response = client.execute(get, context);
         this.cookies = response.getFirstHeader("Set-Cookie").getValue();
 
@@ -357,9 +357,10 @@ public class ZdsHttp {
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         builder.addPart("archive", cbFile);
         builder.addPart("subcategory", new StringBody("15", ContentType.MULTIPART_FORM_DATA));
+        builder.addPart("msg_commit", new StringBody(msg, Charset.forName("UTF-8")));
         builder.addPart("csrfmiddlewaretoken", new StringBody(getCookieValue(cookieStore, "csrftoken"), ContentType.MULTIPART_FORM_DATA));
 
-        Pair<Integer, String> resultPost = sendPost(getImportNewContenttUrl(), builder.build());
+        Pair<Integer, String> resultPost = sendPost(url, builder.build());
         int statusCode = resultPost.getKey();
 
         switch (statusCode) {
@@ -371,31 +372,16 @@ public class ZdsHttp {
 
         return statusCode == 200;
     }
-    public boolean importContent(String filePath, String targetId, String targetSlug)
+    public boolean importNewContent(String filePath, String msg) throws IOException {
+
+        logger.debug("Tentative d'import via l'url : " + getImportNewContenttUrl());
+        return uploadContent(filePath, getImportNewContenttUrl(), msg);
+    }
+
+    public boolean importContent(String filePath, String targetId, String targetSlug, String msg)
             throws IOException {
         logger.debug("Tentative d'import via l'url : " + getImportContenttUrl(targetId, targetSlug));
-        HttpGet get = new HttpGet(getImportContenttUrl(targetId, targetSlug));
-        HttpResponse response = client.execute(get, context);
-        this.cookies = response.getFirstHeader("Set-Cookie").getValue();
-
-        // load file in form
-        FileBody cbFile = new FileBody(new File(filePath));
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-        builder.addPart("archive", cbFile);
-        builder.addPart("csrfmiddlewaretoken", new StringBody(getCookieValue(cookieStore, "csrftoken"), ContentType.MULTIPART_FORM_DATA));
-
-        Pair<Integer, String> resultPost = sendPost(getImportContenttUrl(targetId, targetSlug), builder.build());
-        int statusCode = resultPost.getKey();
-
-        switch (statusCode) {
-            case 404:
-                logger.debug("Your target id and slug is incorrect, please give us real informations");
-            case 403:
-                logger.debug("Your are not authorize to do this task. Please check if your are login");
-        }
-
-        return statusCode == 200;
+        return uploadContent(filePath, getImportContenttUrl(targetId, targetSlug), msg);
     }
 
     public void initInfoOnlineContent(String type) throws IOException {

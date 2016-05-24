@@ -64,7 +64,7 @@ public class TestApiZds {
                 // import
                 File zipfile = new File(offlineDir, "tutoriel-test.zip");
                 ZipUtil.pack(new File(offlineDir, "tutoriel-test"), zipfile);
-                assertTrue(api.importContent(zipfile.getAbsolutePath(), "1312", "tutoriel-test"));
+                assertTrue(api.importContent(zipfile.getAbsolutePath(), "1312", "tutoriel-test", "Message d'import"));
 
                 api.logout();
                 assertFalse(api.isAuthenticated());

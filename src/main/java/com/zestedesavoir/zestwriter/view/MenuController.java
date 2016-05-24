@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 
-import com.zestedesavoir.zestwriter.utils.Configuration;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
@@ -21,6 +20,7 @@ import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.model.Textual;
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
@@ -36,7 +36,6 @@ import com.zestedesavoir.zestwriter.view.task.ExportPdfService;
 import com.zestedesavoir.zestwriter.view.task.LoginService;
 import com.zestedesavoir.zestwriter.view.task.UploadContentService;
 
-import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -47,12 +46,14 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -475,15 +476,39 @@ public class MenuController{
 
 
         List<MetadataContent> contents = new ArrayList<>();
-        contents.add(new MetadataContent(null, "*** Nouveau Contenu ***", null));
+        contents.add(new MetadataContent(null, "---nouveau contenu---", null));
         contents.addAll(mainApp.getZdsutils().getContentListOnline());
 
-        ChoiceDialog<MetadataContent> dialog = new ChoiceDialog<>(null, contents);
+        Dialog<Pair<String, MetadataContent>> dialog = new Dialog<>();
         dialog.setTitle("Choix du tutoriel");
         dialog.setHeaderText("Choisissez le tutoriel vers lequel importer");
-        dialog.setContentText("Tutoriel: ");
+        ButtonType loginButtonType = new ButtonType("Envoyer", ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
-        Optional<MetadataContent> result = dialog.showAndWait();
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextArea msg = new TextArea();
+        msg.setText("Mise à jour via Zest Writer");
+        ChoiceBox<MetadataContent> contenus = new ChoiceBox<>();
+        contenus.setItems(FXCollections.observableArrayList(contents));
+
+        grid.add(new Label("Contenu : "), 0, 0);
+        grid.add(contenus, 1, 0);
+        grid.add(new Label("Message de suivi: "), 0, 1);
+        grid.add(msg, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == loginButtonType) {
+                return new Pair<>(msg.getText(), contenus.getValue());
+            }
+            return null;
+        });
+        Optional<Pair<String, MetadataContent>> result = dialog.showAndWait();
         UploadContentService uploadContentTask = new UploadContentService(mainApp.getZdsutils(), result);
         labelField.textProperty().bind(uploadContentTask.messageProperty());
         uploadContentTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
