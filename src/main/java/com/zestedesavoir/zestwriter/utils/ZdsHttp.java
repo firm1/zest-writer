@@ -268,19 +268,16 @@ public class ZdsHttp {
 
     public String getId(String homeConnectedContent) {
         Document doc = Jsoup.parse(homeConnectedContent);
-        Elements sections = doc.getElementsByClass("my-account-dropdown");
+        Elements sections = doc.select("div.my-account-dropdown > ul > li > a[href^=/contenus/tutoriels]");
         for (Element section : sections) {
-            Elements links = section.getElementsByTag("a");
-            for (Element link : links) {
-                String ref = link.attr("href").trim();
-                if(ref.startsWith("/contenus/tutoriels")) {
-                    String[] splt = ref.split("/");
-                    if(splt.length >= 4) {
-                        return splt[3];
-                    }
-                    else {
-                        return null;
-                    }
+            String ref = section.attr("href").trim();
+            if(ref.startsWith("/contenus/tutoriels")) {
+                String[] splt = ref.split("/");
+                if(splt.length >= 4) {
+                    return splt[3];
+                }
+                else {
+                    return null;
                 }
             }
         }
@@ -406,18 +403,15 @@ public class ZdsHttp {
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
         Document doc = Jsoup.parse(rd.lines().collect(Collectors.joining("\n")));
-        Elements sections = doc.select("article");
+        Elements sections = doc.select("article > a[href^=/contenus/]");
         for (Element section : sections) {
-            Elements links = section.getElementsByTag("a");
-            for (Element link : links) {
-                String ref = link.attr("href").trim();
-                logger.trace("Chaine à decrypter pour trouver le slug : " + ref);
-                if (ref.startsWith("/contenus/")) {
-                    String[] tab = ref.split("/");
-                    MetadataContent onlineContent = new MetadataContent(tab[2], tab[3], type);
-                    if(!getContentListOnline().contains(onlineContent)) {
-                        getContentListOnline().add(onlineContent);
-                    }
+            String ref = section.attr("href").trim();
+            logger.trace("Chaine à decrypter pour trouver le slug : " + ref);
+            if (ref.startsWith("/contenus/")) {
+                String[] tab = ref.split("/");
+                MetadataContent onlineContent = new MetadataContent(tab[2], tab[3], type);
+                if(!getContentListOnline().contains(onlineContent)) {
+                    getContentListOnline().add(onlineContent);
                 }
             }
         }

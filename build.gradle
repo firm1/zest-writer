@@ -115,7 +115,7 @@ dependencies {
             'com.fasterxml.jackson.core:jackson-databind:2.7.4',
             'de.julielab:aliasi-lingpipe:4.1.0',
             'org.python:jython-standalone:2.7.1b3',
-            'org.jsoup:jsoup:1.9.1',
+            'org.jsoup:jsoup:1.9.2',
             'org.slf4j:slf4j-log4j12:1.7.21',
             'de.jensd:fontawesomefx:8.9',
             'org.zeroturnaround:zt-zip:1.9',
