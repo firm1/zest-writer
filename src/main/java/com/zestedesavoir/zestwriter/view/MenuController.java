@@ -380,7 +380,7 @@ public class MenuController{
         }
     }
 
-    @FXML private Service<Void> HandleLoginButtonAction(ActionEvent event){
+    @FXML public Service<Void> HandleLoginButtonAction(ActionEvent event){
         // Button for google
         Button googleAuth = new Button("Connexion via Google", IconFactory.createGoogleIcon());
         LoginDialog dialog = new LoginDialog(googleAuth, mainApp);

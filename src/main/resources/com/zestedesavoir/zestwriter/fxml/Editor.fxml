@@ -53,6 +53,27 @@
                      <graphic>
                         <MaterialDesignIconView fill="#084561" glyphName="KEYBOARD" size="1.8em" />
                      </graphic></Button>
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleLinkButtonAction">
+                    <tooltip>
+                        <Tooltip text="Lien" />
+                    </tooltip>
+                     <graphic>
+                        <MaterialDesignIconView fill="#084561" glyphName="LINK" size="1.8em" />
+                     </graphic></Button>
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleCodeButtonAction">
+                    <tooltip>
+                        <Tooltip text="Code" />
+                    </tooltip>
+                     <graphic>
+                        <MaterialDesignIconView fill="#084561" glyphName="CODE_TAGS" size="1.8em" />
+                     </graphic></Button>
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleImgButtonAction">
+                    <tooltip>
+                        <Tooltip text="Image" />
+                    </tooltip>
+                     <graphic>
+                        <MaterialDesignIconView fill="#084561" glyphName="IMAGE" size="1.8em" />
+                     </graphic></Button>
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleExpButtonAction">
                   	<tooltip>
 				        <Tooltip text="Exposant (CTRL + Maj + '+')" />
@@ -125,14 +146,6 @@
 				    </tooltip>
                      <graphic>
                         <MaterialDesignIconView fill="#084561" glyphName="TABLE" size="1.8em" />
-                     </graphic></Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleLinkButtonAction">
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="LINK" size="1.8em" />
-                     </graphic></Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleCodeButtonAction">
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="CODE_TAGS" size="1.8em" />
                      </graphic></Button>
               </items>
             </ToolBar>

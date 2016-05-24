@@ -27,7 +27,9 @@ import com.zestedesavoir.zestwriter.utils.FlipTable;
 import com.zestedesavoir.zestwriter.view.com.CustomStyledClassedTextArea;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
+import com.zestedesavoir.zestwriter.view.dialogs.AboutDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
+import com.zestedesavoir.zestwriter.view.dialogs.ImageInputDialog;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanPropertyBase;
@@ -235,6 +237,33 @@ public class MdConvertController {
         replaceAction("\n->  ->", 3, "\n-> ", " ->\n");
     }
 
+    @FXML private void HandleImgButtonAction(ActionEvent event) {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainApp.class.getResource("fxml/ImageInput.fxml"));
+
+        try{
+            BorderPane imageDialog = loader.load();
+            ImageInputDialog imageController = loader.getController();
+            if(mainApp.getContents().size() > 0) {
+                imageController.setSourceText(SourceText, mainApp.getZdsutils(), mainApp.getMenuController(), mainApp.getContents().get(0));
+            } else {
+                imageController.setSourceText(SourceText, mainApp.getZdsutils(), mainApp.getMenuController(), null);
+            }
+
+            Stage dialogStage = new Stage();
+            imageController.setStage(dialogStage);
+            dialogStage.setTitle("Ajouter une image");
+
+            Scene scene = new Scene(imageDialog);
+            dialogStage.setScene(scene);
+            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+
+            dialogStage.show();
+        }catch(IOException e){
+            logger.error(e.getMessage(), e);
+        }
+    }
     @FXML private void HandleBulletButtonAction(ActionEvent event) {
         if(SourceText.getSelectedText().isEmpty()){
             SourceText.replaceText(SourceText.getSelection(), "- ");

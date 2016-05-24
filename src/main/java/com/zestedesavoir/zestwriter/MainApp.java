@@ -195,6 +195,12 @@ public class MainApp extends Application {
         }
     }
 
+
+
+    public MenuController getMenuController() {
+        return menuController;
+    }
+
     public void initConnection(){
         if(!config.getAuthentificationUsername().isEmpty() && !config.getAuthentificationPassword().isEmpty()){
             LoginService loginTask = new LoginService(config.getAuthentificationUsername(), config.getAuthentificationPassword(), zdsutils, config);

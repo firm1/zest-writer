@@ -53,6 +53,7 @@ import java.util.zip.ZipInputStream;
 
 public class ZdsHttp {
     private String idUser;
+    private String galleryId;
     private String login;
     private String password;
     private String hostname;
@@ -65,7 +66,6 @@ public class ZdsHttp {
     private String cookies;
     private HttpClientContext context;
     private String localSlug;
-    private String localType;
     private final Logger logger;
     private static String USER_AGENT = "Mozilla/5.0";
     private Configuration config;
@@ -82,12 +82,17 @@ public class ZdsHttp {
     }
 
 
-    public void setLocalSlug(String localSlug) {
-        this.localSlug = localSlug;
+    public String getGalleryId() {
+        return galleryId;
     }
 
-    public void setLocalType(String localType) {
-        this.localType = localType;
+    public void setGalleryId(String galleryId) {
+        this.galleryId = galleryId;
+    }
+
+
+    public void setLocalSlug(String localSlug) {
+        this.localSlug = localSlug;
     }
 
     public List<MetadataContent> getContentListOnline() {
@@ -116,6 +121,14 @@ public class ZdsHttp {
 
     private String getDownloadDraftContentUrl(String id, String slug) {
         return getBaseUrl() + "/contenus/telecharger/" + id + "/" + slug + "/";
+    }
+
+    private String getDraftContentUrl(String id, String slug) {
+        return getBaseUrl() + "/contenus/" + id + "/" + slug + "/";
+    }
+
+    private String getImportImageUrl() {
+        return getBaseUrl() + "/galerie/image/ajouter/" + getGalleryId()+ "/";
     }
 
     private String getImportContenttUrl(String idContent, String slugContent) {
@@ -228,6 +241,29 @@ public class ZdsHttp {
         return new Pair<>(500, null);
     }
 
+    public void initGalleryId(String idContent, String slugContent) throws IOException {
+        String url = getDraftContentUrl(idContent, slugContent);
+        logger.info("Tentative de récupération de la page offline du contenu "+idContent+"("+slugContent+")");
+
+        HttpGet get = new HttpGet(url);
+        HttpResponse response = client.execute(get, context);
+        this.cookies = response.getFirstHeader("Set-Cookie").toString();
+        logger.info("Tentative réussie");
+
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+        Document doc = Jsoup.parse(rd.lines().collect(Collectors.joining("\n")));
+
+        Elements links = doc.select("a[href^=/galerie/]");
+        for (Element link : links) {
+            String ref = link.attr("href").trim();
+            String[] tab = ref.split("/");
+            if(tab.length >= 4) {
+                this.galleryId = tab[2];
+            }
+        }
+    }
+
     public String getId(String homeConnectedContent) {
         Document doc = Jsoup.parse(homeConnectedContent);
         Elements sections = doc.getElementsByClass("my-account-dropdown");
@@ -277,8 +313,35 @@ public class ZdsHttp {
         this.login = null;
         this.password = null;
         this.idUser = null;
+        this.galleryId = null;
         this.cookieStore = null;
         this.authenticated = false;
+    }
+
+    public String importImage(File file) throws IOException {
+        if(getGalleryId() != null) {
+            String url = getImportImageUrl();
+            HttpGet get = new HttpGet(url);
+            HttpResponse response = client.execute(get, context);
+            this.cookies = response.getFirstHeader("Set-Cookie").getValue();
+
+            // load file in form
+            FileBody cbFile = new FileBody(file);
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+            builder.addPart("physical", cbFile);
+            builder.addPart("title", new StringBody("Image importee via ZestWriter", ContentType.MULTIPART_FORM_DATA));
+            builder.addPart("csrfmiddlewaretoken", new StringBody(getCookieValue(cookieStore, "csrftoken"), ContentType.MULTIPART_FORM_DATA));
+
+            Pair<Integer, String> resultPost = sendPost(url, builder.build());
+
+            Document doc = Jsoup.parse(resultPost.getValue());
+            Elements endPoints = doc.select("input[name=avatar_url]");
+            for(Element point:endPoints) {
+                return getBaseUrl() + point.attr("value").trim();
+            }
+        }
+        return "http://";
     }
 
     public boolean importNewContent(String filePath) throws IOException {

@@ -47,6 +47,8 @@ public class TestApiZds {
                 assertTrue("Vérification de l'authentification réussi", api.isAuthenticated());
                 api.initInfoOnlineContent("tutorial");
                 api.initInfoOnlineContent("article");
+                api.initGalleryId("1312", "tutoriel-test");
+                assertEquals(api.getGalleryId(), "3243");
                 api.downloaDraft("1312", "tutorial");
                 api.downloaDraft("1313", "article");
                 File offlineDir = new File(config.getWorkspaceFactory().getOfflineSaver().getBaseDirectory());

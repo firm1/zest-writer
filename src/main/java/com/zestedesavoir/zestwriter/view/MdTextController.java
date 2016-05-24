@@ -244,7 +244,6 @@ public class MdTextController {
 
         // load content informations
         mainApp.getZdsutils().setLocalSlug(content.getSlug());
-        mainApp.getZdsutils().setLocalType(content.getType().toLowerCase());
         TreeItem<ContentNode> rootItem = new TreeItem<>(content);
         rootItem.setExpanded(true);
         Summary.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -324,6 +323,7 @@ public class MdTextController {
                 return treeCell;
             }
         });
+        mainApp.getZdsutils().setGalleryId(null);
         logger.info("Contenu stocké dans "+filePath+" ouvert");
     }
 
