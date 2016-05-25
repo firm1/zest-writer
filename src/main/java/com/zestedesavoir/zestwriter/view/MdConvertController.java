@@ -196,7 +196,7 @@ public class MdConvertController {
         if(precLine >= 0) {
             String line = SourceText.getParagraph(precLine).toString();
             Matcher matcher = recognizeBullet.matcher(line);
-            //TOD : find how combine recognize bullet and number together for breaking following if
+            //TODO : find how combine recognize bullet and number together for breaking following if
             if(!matcher.matches()) {
                 matcher = recognizeNumber.matcher(line);
             }
@@ -216,7 +216,7 @@ public class MdConvertController {
         if(caseLine >= 0) {
             String line = SourceText.getParagraph(caseLine).toString();
             Matcher matcher = recognizeBullet.matcher(line);
-            //TOD : find how combine recognize bullet and number together for breaking following if
+            //TODO : find how combine recognize bullet and number together for breaking following if
             if(!matcher.matches()) {
                 matcher = recognizeNumber.matcher(line);
             }
