@@ -160,6 +160,26 @@
                                                       </RadioButton>
                                                    </children>
                                                 </HBox>
+                                                <Label styleClass="subtitle" text="Rédaction" GridPane.rowIndex="3"></Label>
+                                                <Label text="Rédaction intelligente" GridPane.rowIndex="4">
+                                                   <GridPane.margin>
+                                                      <Insets left="10.0" />
+                                                   </GridPane.margin>
+                                                </Label>
+                                                <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                                   <children>
+                                                      <RadioButton fx:id="optSmartEditorYes" mnemonicParsing="false" onAction="#HandleSmartEditorYes" text="Oui">
+                                                         <toggleGroup>
+                                                            <ToggleGroup fx:id="smartEditor" />
+                                                         </toggleGroup>
+                                                      </RadioButton>
+                                                      <RadioButton fx:id="optSmartEditorNo" mnemonicParsing="false" onAction="#HandleSmartEditorNo" text="Non" toggleGroup="$smartEditor">
+                                                         <padding>
+                                                            <Insets left="15.0" />
+                                                         </padding>
+                                                      </RadioButton>
+                                                   </children>
+                                                </HBox>
                                              </children>
                                           </GridPane>
                                        </children>

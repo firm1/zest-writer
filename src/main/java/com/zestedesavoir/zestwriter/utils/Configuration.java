@@ -37,7 +37,7 @@ public class Configuration {
         DisplayWindowPositionY("data.display.window.position.y", "0"),
 
         WorkspacePath("options.workspace.path", ""),
-        EditorSmart("options.editor.smart", "false"),
+        EditorSmart("options.editor.smart", "true"),
         EditorFont("options.editor.font", "Fira Mono"),
         EditorFontSize("options.editor.fontSize", "14"),
         EditorToolbarView("options.editor.toolbar.view", "yes"),
@@ -247,6 +247,10 @@ public class Configuration {
 
     public void setEditorFont(String font){
         conf.setProperty(ConfigData.EditorFont.getKey(), font);
+    }
+
+    public void setEditorSmart(String smart){
+        conf.setProperty(ConfigData.EditorSmart.getKey(), smart);
     }
 
     public int getEditorFontsize(){

@@ -4,6 +4,8 @@ import java.text.BreakIterator;
 
 import org.fxmisc.richtext.StyleClassedTextArea;
 
+import javafx.scene.input.KeyCode;
+
 public class CustomStyledClassedTextArea extends StyleClassedTextArea{
 
 
@@ -11,6 +13,12 @@ public class CustomStyledClassedTextArea extends StyleClassedTextArea{
     public CustomStyledClassedTextArea() {
         super(true);
         setWrapText(true);
+        /*
+        setOnKeyReleased(t -> {
+            if(t.getCode() == KeyCode.ENTER) {
+                System.out.println("Fin du scroll");
+            }
+        });*/
     }
 
     @Override
@@ -38,5 +46,7 @@ public class CustomStyledClassedTextArea extends StyleClassedTextArea{
 
         moveTo(wordBreakIterator.current(), selectionPolicy);
     }
+
+
 
 }

@@ -2,12 +2,15 @@ package com.zestedesavoir.zestwriter.view;
 
 import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
 import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
-import static org.fxmisc.wellbehaved.event.EventPattern.*;
+import static org.fxmisc.wellbehaved.event.EventPattern.keyPressed;
+import static org.fxmisc.wellbehaved.event.EventPattern.keyReleased;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.fxmisc.richtext.LineNumberFactory;
@@ -27,7 +30,6 @@ import com.zestedesavoir.zestwriter.utils.FlipTable;
 import com.zestedesavoir.zestwriter.view.com.CustomStyledClassedTextArea;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
-import com.zestedesavoir.zestwriter.view.dialogs.AboutDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.ImageInputDialog;
 
@@ -56,11 +58,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -101,6 +99,8 @@ public class MdConvertController {
     @FXML private BorderPane BoxRender;
     @FXML private Button FullScreeen;
     private CustomStyledClassedTextArea SourceText;
+    public final static Pattern recognizeNumber = Pattern.compile("^(\\s*)([\\d][\\.]) (\\s*)(.*)");
+    public final static Pattern recognizeBullet = Pattern.compile("^(\\s*)([*|-]) (\\s*)(.*)");
 
     public MdConvertController() {
         super();
@@ -143,32 +143,38 @@ public class MdConvertController {
         });
 
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper .on(keyPressed(KeyCode.S, SHORTCUT_DOWN)).act( ev -> HandleSaveButtonAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.S, SHORTCUT_DOWN)).act( ev -> HandleSaveButtonAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper .on(keyPressed(KeyCode.G, SHORTCUT_DOWN)).act( ev -> HandleBoldButtonAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.G, SHORTCUT_DOWN)).act( ev -> HandleBoldButtonAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper .on(keyPressed(KeyCode.I, SHORTCUT_DOWN)).act( ev -> HandleItalicButtonAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.I, SHORTCUT_DOWN)).act( ev -> HandleItalicButtonAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper .on(keyPressed(KeyCode.B, SHORTCUT_DOWN)).act( ev -> HandleBarredButtonAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.B, SHORTCUT_DOWN)).act( ev -> HandleBarredButtonAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper .on(keyPressed(KeyCode.K, SHORTCUT_DOWN)).act( ev -> HandleTouchButtonAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.K, SHORTCUT_DOWN)).act( ev -> HandleTouchButtonAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper .on(keyPressed(KeyCode.PLUS, SHORTCUT_DOWN)).act( ev -> HandleExpButtonAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.PLUS, SHORTCUT_DOWN)).act( ev -> HandleExpButtonAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper .on(keyPressed(KeyCode.EQUALS, SHORTCUT_DOWN)).act( ev -> HandleIndButtonAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.EQUALS, SHORTCUT_DOWN)).act( ev -> HandleIndButtonAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper .on(keyPressed(KeyCode.E, SHORTCUT_DOWN)).act( ev -> HandleCenterButtonAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.E, SHORTCUT_DOWN)).act( ev -> HandleCenterButtonAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper .on(keyPressed(KeyCode.D, SHIFT_DOWN, SHORTCUT_DOWN)).act( ev -> HandleRightButtonAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.D, SHIFT_DOWN, SHORTCUT_DOWN)).act( ev -> HandleRightButtonAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper .on(keyPressed(KeyCode.SPACE, SHORTCUT_DOWN)).act( ev -> HandleUnbreakableAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.SPACE, SHORTCUT_DOWN)).act( ev -> HandleUnbreakableAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper .on(keyPressed(KeyCode.L, SHORTCUT_DOWN)).act( ev -> HandleGoToLineAction()).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.L, SHORTCUT_DOWN)).act( ev -> HandleGoToLineAction()).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper .on(keyPressed(KeyCode.F, SHORTCUT_DOWN)).act( ev -> HandleFindReplaceDialog()).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.F, SHORTCUT_DOWN)).act( ev -> HandleFindReplaceDialog()).create());
         if(FunctionTreeFactory.isMacOs()) {
             EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                    EventHandlerHelper .on(keyPressed(KeyCode.Q, SHORTCUT_DOWN)).act( ev -> SourceText.selectAll()).create());
+                    EventHandlerHelper.on(keyPressed(KeyCode.Q, SHORTCUT_DOWN)).act( ev -> SourceText.selectAll()).create());
+        }
+        if(config.getEditorSmart().booleanValue()) {
+            EventHandlerHelper.install(SourceText.onKeyReleasedProperty(),
+                    EventHandlerHelper.on(keyReleased(KeyCode.TAB)).act(ev -> HandleSmartTab()).create());
+            EventHandlerHelper.install(SourceText.onKeyReleasedProperty(),
+                    EventHandlerHelper.on(keyReleased(KeyCode.ENTER)).act(ev -> HandleSmartEnter()).create());
         }
 
         tab.setOnSelectionChanged(t -> {
@@ -182,6 +188,44 @@ public class MdConvertController {
         Platform.runLater(() -> {
             SourceText.requestFocus();
         });
+    }
+
+
+    private void HandleSmartEnter() {
+        int precLine = SourceText.getCurrentParagraph() - 1;
+        if(precLine >= 0) {
+            String line = SourceText.getParagraph(precLine).toString();
+            Matcher matcher = recognizeBullet.matcher(line);
+            //TOD : find how combine recognize bullet and number together for breaking following if
+            if(!matcher.matches()) {
+                matcher = recognizeNumber.matcher(line);
+            }
+            if(matcher.matches()) {
+                if(matcher.group(4).trim().equals("")) {
+                    int positionCaret = SourceText.getCaretPosition();
+                    SourceText.deleteText(positionCaret-line.length() - 1, positionCaret);
+                } else {
+                    SourceText.replaceSelection(matcher.group(1)+matcher.group(2)+" ");
+                }
+            }
+        }
+    }
+
+    private void HandleSmartTab() {
+        int caseLine = SourceText.getCurrentParagraph();
+        if(caseLine >= 0) {
+            String line = SourceText.getParagraph(caseLine).toString();
+            Matcher matcher = recognizeBullet.matcher(line);
+            //TOD : find how combine recognize bullet and number together for breaking following if
+            if(!matcher.matches()) {
+                matcher = recognizeNumber.matcher(line);
+            }
+            if(matcher.matches()) {
+                int positionCaret = SourceText.getCaretPosition();
+                int delta = matcher.group(1).length() + matcher.group(2).length() + matcher.group(3).length() + 1;
+                SourceText.replaceText(positionCaret-delta, positionCaret, "    "+matcher.group(2)+" "+matcher.group(4));
+            }
+        }
     }
 
 

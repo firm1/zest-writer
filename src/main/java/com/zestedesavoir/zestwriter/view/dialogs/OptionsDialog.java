@@ -32,6 +32,7 @@ public class OptionsDialog{
     private String optEditorFont;
     private double optEditorFontSize;
     private String optEditorToolbarView;
+    private boolean optSmartEditor;
 
     @FXML private Hyperlink optionGeneral;
     @FXML private Hyperlink optionEditor;
@@ -49,6 +50,8 @@ public class OptionsDialog{
 
     @FXML private RadioButton optEditorToolbarViewYes;
     @FXML private RadioButton optEditorToolbarViewNo;
+    @FXML private RadioButton optSmartEditorYes;
+    @FXML private RadioButton optSmartEditorNo;
     @FXML private Button optEditorFontButton;
     @FXML private ComboBox<String> optDisplayTheme;
     @FXML private RadioButton optDisplayWindowMaximizeYes;
@@ -89,6 +92,7 @@ public class OptionsDialog{
         config.setEditorFont(optEditorFont);
         config.setEditorFontSize(String.valueOf(optEditorFontSize));
         config.setEditorToolbarView(optEditorToolbarView);
+        config.setEditorSmart(""+optSmartEditor);
 
         config.setDisplayTheme(optDisplayTheme.getValue());
 
@@ -256,6 +260,14 @@ public class OptionsDialog{
         optEditorToolbarView = "no";
     }
 
+    @FXML private void HandleSmartEditorYes(){
+        optSmartEditor = true;
+    }
+
+    @FXML private void HandleSmartEditorNo(){
+        optSmartEditor = false;
+    }
+
     private void setGeneralOptions(){
     }
 
@@ -265,11 +277,17 @@ public class OptionsDialog{
         optEditorFont = config.getEditorFont();
         optEditorFontSize = config.getEditorFontsize();
         optEditorToolbarView = config.getEditorToolbarView();
+        optSmartEditor = config.getEditorSmart();
 
-        if(optEditorToolbarView.toLowerCase().equals("no"))
+        if(optEditorToolbarView.equalsIgnoreCase("no"))
             optEditorToolbarViewNo.setSelected(true);
         else
             optEditorToolbarViewYes.setSelected(true);
+
+        if(optSmartEditor)
+            optSmartEditorYes.setSelected(true);
+        else
+            optSmartEditorNo.setSelected(true);
     }
 
     private void setDisplayOptions(){
