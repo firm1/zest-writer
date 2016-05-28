@@ -353,7 +353,7 @@ public class ZdsHttp {
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         builder.addPart("archive", cbFile);
-        builder.addPart("subcategory", new StringBody("15", ContentType.MULTIPART_FORM_DATA));
+        builder.addPart("subcategory", new StringBody("115", ContentType.MULTIPART_FORM_DATA));
         builder.addPart("msg_commit", new StringBody(msg, Charset.forName("UTF-8")));
         builder.addPart("csrfmiddlewaretoken", new StringBody(getCookieValue(cookieStore, "csrftoken"), ContentType.MULTIPART_FORM_DATA));
 
