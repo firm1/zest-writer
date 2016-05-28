@@ -26,3 +26,23 @@
     -fx-underline:true;
     -fx-text-fill:#154E69;
 }
+
+.box-content {
+    -fx-background-color: #FFF;
+    -fx-border-color: #DDD #DDD #6B8FA0 #DDD;
+}
+
+.box-content .label {
+    -fx-background-color: #FFF;
+}
+
+.box-content .hyperlink {
+    -fx-font-size: 1.6em;
+    -fx-underline: false;
+}
+
+.title-content-home {
+    -fx-font-size: 1.8em;
+    -fx-text-fill: #F8AD32;
+    -fx-padding: 20 10 0 10;
+}

@@ -71,7 +71,7 @@ public class Readability {
     /**
      * Returns the number of words with 3 or more syllables
      *
-     * @param text
+     * @param text input text
      * @return the number of words in the text with 3 or more syllables
      */
     private static Integer getNumberOfComplexWords(String text) {
@@ -96,7 +96,7 @@ public class Readability {
 
     /**
      * Returns the total number of syllables in the words of the text
-     * @param text
+     * @param text input text
      * @return the total number of syllables in the words of the text
      */
     private static Integer getNumberOfSyllables(String text) {
@@ -122,7 +122,6 @@ public class Readability {
      *
      * http://en.wikipedia.org/wiki/SMOG_Index
      *
-     * @param text
      * @return The SMOG index of the text
      */
     public Double getSMOGIndex() {
@@ -134,7 +133,6 @@ public class Readability {
      *
      * http://en.wikipedia.org/wiki/SMOG
      *
-     * @param text
      * @return Retugns the SMOG value for the text
      */
     public Double getSMOG() {
@@ -146,7 +144,6 @@ public class Readability {
      *
      * http://en.wikipedia.org/wiki/Flesch-Kincaid_Readability_Test
      *
-     * @param text
      * @return Returns the Flesch_Reading Ease value for the text
      */
     public Double getFleschReadingEase() {
@@ -160,7 +157,6 @@ public class Readability {
      *
      * http://en.wikipedia.org/wiki/Flesch-Kincaid_Readability_Test
      *
-     * @param text
      * @return Returns the Flesch-Kincaid_Readability_Test value for the text
      */
     public Double getFleschKincaidGradeLevel() {
@@ -172,7 +168,6 @@ public class Readability {
      *
      * http://en.wikipedia.org/wiki/Automated_Readability_Index
      *
-     * @param text
      * @return the Automated Readability Index for text
      */
     public Double getARI() {
@@ -184,7 +179,6 @@ public class Readability {
      *
      * http://en.wikipedia.org/wiki/Gunning-Fog_Index
      *
-     * @param text
      * @return the Gunning-Fog Index for text
      */
     public double getGunningFog() {

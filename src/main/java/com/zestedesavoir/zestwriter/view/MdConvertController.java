@@ -39,6 +39,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -606,7 +607,7 @@ public class MdConvertController {
     @FXML private void updateRender() {
 
         if (renderTask != null) {
-            if (!renderTask.isRunning()) {
+            if(renderTask.getState().equals(State.READY)) {
                 renderTask.start();
             }
         }
@@ -721,12 +722,9 @@ public class MdConvertController {
     /**
      * Scrolls to the specified position.
      *
-     * @param view
-     *            web view that shall be scrolled
-     * @param x
-     *            horizontal scroll value
-     * @param y
-     *            vertical scroll value
+     * @param view web view that shall be scrolled
+     * @param x horizontal scroll value
+     * @param y vertical scroll value
      */
     public void scrollTo(WebView view, int x, int y) {
         view.getEngine().executeScript("window.scrollTo(" + x + ", " + y + ")");
@@ -734,9 +732,9 @@ public class MdConvertController {
 
     /**
      * Returns the vertical scroll value, i.e. thumb position. This is
-     * equivalent to {@link javafx.scene.control.ScrollBar#getValue().
+     * equivalent to {@link javafx.scene.control.ScrollBar#getValue()}.
      *
-     * @param view
+     * @param view web view that shall be scrolled
      * @return vertical scroll value
      */
     public int getVScrollValue(WebView view) {

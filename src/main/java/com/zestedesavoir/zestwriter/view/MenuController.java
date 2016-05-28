@@ -341,11 +341,6 @@ public class MenuController{
             }catch(IOException e){
                 logger.error(e.getMessage(), e);
             }
-
-            menuUpload.setDisable(false);
-            menuLisibility.setDisable(false);
-            menuReport.setDisable(false);
-            menuExport.setDisable(false);
         }
     }
 
@@ -371,14 +366,17 @@ public class MenuController{
                 mainApp.getContents().clear();
                 FunctionTreeFactory.clearContent(mainApp.getExtracts(), mainApp.getIndex().getEditorList());
                 mainApp.getContents().add(content);
-                menuUpload.setDisable(false);
-                menuLisibility.setDisable(false);
-                menuReport.setDisable(false);
-                menuExport.setDisable(false);
             }catch(IOException e){
                 logger.error(e.getMessage(), e);
             }
         }
+    }
+
+    public void activateButtonForOpenContent() {
+        menuUpload.setDisable(false);
+        menuLisibility.setDisable(false);
+        menuReport.setDisable(false);
+        menuExport.setDisable(false);
     }
 
     @FXML public Service<Void> HandleLoginButtonAction(ActionEvent event){

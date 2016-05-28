@@ -3,6 +3,7 @@ package com.zestedesavoir.zestwriter.view;
 import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
 import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -10,6 +11,7 @@ import org.python.util.PythonInterpreter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
 import com.sun.javafx.scene.control.skin.TabPaneSkin;
 import com.zestedesavoir.zestwriter.MainApp;
@@ -20,16 +22,19 @@ import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import com.zestedesavoir.zestwriter.view.com.MdTreeCell;
 
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
@@ -44,6 +49,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 
@@ -52,12 +61,7 @@ public class MdTextController {
     private PythonInterpreter pyconsole;
     private final Logger logger;
 
-    @FXML private Hyperlink recentFileLink1;
-    @FXML private Hyperlink recentFileLink2;
-    @FXML private Hyperlink recentFileLink3;
-    @FXML private Hyperlink recentFileLink4;
-    @FXML private Hyperlink recentFileLink5;
-
+    @FXML private VBox contentBox;
     @FXML private TabPane EditorList;
     @FXML private TreeView<ContentNode> Summary;
     @FXML private SplitPane splitPane;
@@ -141,6 +145,51 @@ public class MdTextController {
         } else {
             mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.W, SHORTCUT_DOWN), () -> closeCurrentTab());
         }
+
+        refreshRecentProject();
+    }
+
+    public void refreshRecentProject() {
+        contentBox.getChildren().clear();
+        ObjectMapper mapper = new ObjectMapper();
+        GridPane gPane = new GridPane();
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setPercentWidth(50);
+        ColumnConstraints col2 = new ColumnConstraints();
+        col2.setPercentWidth(50);
+        gPane.getColumnConstraints().addAll(col1,col2);
+        gPane.setHgap(10);
+        gPane.setVgap(10);
+        gPane.setPadding(new Insets(10, 10, 10, 10));
+        int row=0, col=0, size=2;
+        for(String recentFilePath:mainApp.getConfig().getActions()) {
+            File manifest = new File(recentFilePath + File.separator + "manifest.json");
+            BorderPane bPane = new BorderPane();
+            bPane.setPadding(new Insets(10, 10, 10, 10));
+            bPane.getStyleClass().add("box-content");
+            try {
+                Content c = mapper.readValue(manifest, Content.class);
+                c.setRootContent(c, recentFilePath);
+                Hyperlink link = new Hyperlink(c.getTitle());
+                Label description = new Label(c.getDescription());
+                description.setWrapText(true);
+                MaterialDesignIconView type = IconFactory.createContentIcon(c.getType());
+                link.setOnAction(t -> {
+                    mainApp.getContents().clear();
+                    FunctionTreeFactory.clearContent(mainApp.getExtracts(), mainApp.getIndex().getEditorList());
+                    mainApp.getContents().add(c);
+                });
+                bPane.setTop(link);
+                bPane.setBottom(description);
+                bPane.setLeft(type);
+                gPane.add(bPane, col%size, row);
+            } catch (IOException e) {
+                logger.error("Impossible de lire le contenu répertorié dans : "+recentFilePath, e);
+            }
+            col++;
+            if(col%size==0) row++;
+        }
+        contentBox.getChildren().add(gPane);
     }
 
     public void closeCurrentTab() {
@@ -324,6 +373,11 @@ public class MdTextController {
             }
         });
         mainApp.getZdsutils().setGalleryId(null);
+        mainApp.getMenuController().activateButtonForOpenContent();
+        if(filePath != null && !filePath.equals("null") ) {
+            mainApp.getConfig().addActionProject(filePath);
+            refreshRecentProject();
+        }
         logger.info("Contenu stocké dans "+filePath+" ouvert");
     }
 

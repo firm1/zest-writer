@@ -64,6 +64,17 @@ public class IconFactory {
         return makeIcon(MaterialDesignIcon.CODE_TAGS, "#48a200");
     }
 
+    public static MaterialDesignIconView createContentIcon(String type) {
+        MaterialDesignIconView icon;
+        if(type.equalsIgnoreCase("ARTICLE")) {
+            icon = makeIcon(MaterialDesignIcon.BOOK_OPEN, "#ef9708");
+        } else {
+            icon = makeIcon(MaterialDesignIcon.LIBRARY_BOOKS, "#48a200");
+        }
+        icon.setSize("2em");
+        return icon;
+    }
+
     public static void addAlertLogo(Alert alert){
         Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
         alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));

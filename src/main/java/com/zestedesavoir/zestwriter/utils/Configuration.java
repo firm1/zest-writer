@@ -4,8 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
@@ -20,15 +24,37 @@ import com.zestedesavoir.zestwriter.MainApp;
 
 public class Configuration {
     public Properties conf;
+    public Properties actions;
     private String appName = "zestwriter";
     private String confFileName = "conf.properties";
+    private String actionFileName = "action.properties";
     private String confDirPath;
     private File confFile;
+    private File actionFile;
     private StorageSaver offlineSaver;
     private StorageSaver onlineSaver;
     private LocalDirectoryFactory workspaceFactory;
     private final Logger logger;
     private Properties props;
+
+    public enum ActionData{
+        LastProjects("content.open", "");
+        private String key;
+        private String defaultValue;
+
+        ActionData(String key, String defaultValue){
+            this.key = key;
+            this.defaultValue = defaultValue;
+        }
+
+        public String getKey(){
+            return key;
+        }
+
+        public String getDefaultValue(){
+            return defaultValue;
+        }
+    }
 
     public enum ConfigData{
         DisplayWindowWidth("data.display.window.width", "1000"),
@@ -71,15 +97,38 @@ public class Configuration {
     public Configuration(String homeDir) {
         logger = LoggerFactory.getLogger(Configuration.class);
         confDirPath = homeDir+File.separator+"."+this.appName;
-        String confFilePath = confDirPath+File.separator+this.confFileName;
         File confDir = new File(confDirPath);
-        confFile = new File(confFilePath);
-
         if(!confDir.exists()){
             if(!confDir.mkdir())
                 logger.error("Le fichier de configuration n'a pas pu être créé");
         }
 
+        initConf(confDirPath);
+        initActions(confDirPath);
+    }
+
+    private void initActions(String confDirPath) {
+        actions = new Properties();
+
+        String actionFilePath = confDirPath+File.separator+this.actionFileName;
+        actionFile = new File(actionFilePath);
+
+        if(!actionFile.exists()) {
+            logger.debug("le fichier des actions "+actionFile.getAbsolutePath()+" n'existe pas");
+            saveActionFile();
+        }
+        else {
+            try {
+                actions.load(new FileInputStream(actionFile));
+            } catch (IOException e) {
+                logger.error("Impossible de charger le fichier d'actions", e);
+            }
+        }
+    }
+
+    private void initConf(String confDirPath) {
+        String confFilePath = confDirPath+File.separator+this.confFileName;
+        confFile = new File(confFilePath);
         // defaults config
         props = new Properties();
         try {
@@ -118,7 +167,16 @@ public class Configuration {
             conf.store(new FileOutputStream(confFile), "");
             logger.info("Fichier de configuration enregistré");
         } catch (IOException e) {
-            logger.error("", e);
+            logger.error("Impossible de sauvegarder le fichier de configuration", e);
+        }
+    }
+
+    public void saveActionFile() {
+        try {
+            actions.store(new FileOutputStream(actionFile), "");
+            logger.info("Fichier d'actions enregistré");
+        } catch (IOException e) {
+            logger.error("Impossible de sauvegarder le fichier d'actions", e);
         }
     }
 
@@ -375,5 +433,22 @@ public class Configuration {
 
     public Properties getProps() {
         return props;
+    }
+
+    public List<String> getActions() {
+        return Arrays.asList(actions.getProperty(ActionData.LastProjects.getKey()).split(","));
+    }
+
+    public void addActionProject(String projectFileName) {
+        List<String> existant = Arrays.asList(actions.getProperty(ActionData.LastProjects.getKey()).split(","));
+        List<String> recents = new ArrayList<>(existant);
+        if(recents.contains(projectFileName)) {
+            recents.remove(projectFileName);
+        }
+        recents.add(0, projectFileName);
+
+        actions.put(ActionData.LastProjects.getKey(), recents.stream().limit(5).map(Object::toString).collect(Collectors.joining(",")));
+        saveActionFile();
+        return ;
     }
 }
