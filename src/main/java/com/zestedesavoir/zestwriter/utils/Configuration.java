@@ -436,11 +436,16 @@ public class Configuration {
     }
 
     public List<String> getActions() {
-        return Arrays.asList(actions.getProperty(ActionData.LastProjects.getKey()).split(","));
+        String value = actions.getProperty(ActionData.LastProjects.getKey());
+        if(value != null ) {
+            return Arrays.asList(value.split(","));
+        } else {
+            return new ArrayList<String>();
+        }
     }
 
     public void addActionProject(String projectFileName) {
-        List<String> existant = Arrays.asList(actions.getProperty(ActionData.LastProjects.getKey()).split(","));
+        List<String> existant = getActions();
         List<String> recents = new ArrayList<>(existant);
         if(recents.contains(projectFileName)) {
             recents.remove(projectFileName);
