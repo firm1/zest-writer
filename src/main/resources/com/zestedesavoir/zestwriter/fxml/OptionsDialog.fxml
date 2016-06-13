@@ -15,32 +15,32 @@
                      <children>
                         <VBox prefHeight="410.0" prefWidth="144.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <Hyperlink fx:id="optionGeneral" onAction="#HandleHyperlinkGeneralLabel" style="-fx-border-width: 0;" text="Général" textFill="#656565">
+                              <Hyperlink fx:id="optionGeneral" onAction="#HandleHyperlinkGeneralLabel" style="-fx-border-width: 0;" text="%ui.options.general" textFill="#656565">
                                  <padding>
                                     <Insets bottom="5.0" top="5.0" />
                                  </padding>
                               </Hyperlink>
-                              <Hyperlink fx:id="optionEditor" onAction="#HandleHyperlinkEditorLabel" style="-fx-border-width: 0;" text="Editeur" textFill="#656565">
+                              <Hyperlink fx:id="optionEditor" onAction="#HandleHyperlinkEditorLabel" style="-fx-border-width: 0;" text="%ui.options.editor" textFill="#656565">
                                  <padding>
                                     <Insets bottom="5.0" top="5.0" />
                                  </padding>
                               </Hyperlink>
-                              <Hyperlink fx:id="optionDisplay" onAction="#HandleHyperlinkDisplayLabel" style="-fx-border-width: 0;" text="Affichage" textFill="#656565">
+                              <Hyperlink fx:id="optionDisplay" onAction="#HandleHyperlinkDisplayLabel" style="-fx-border-width: 0;" text="%ui.options.display" textFill="#656565">
                                  <padding>
                                     <Insets bottom="5.0" top="5.0" />
                                  </padding>
                               </Hyperlink>
-                              <Hyperlink fx:id="optionAuthentification" onAction="#HandleHyperlinkAuthentificationLabel" style="-fx-border-width: 0;" text="Authentification" textFill="#656565">
+                              <Hyperlink fx:id="optionAuthentification" onAction="#HandleHyperlinkAuthentificationLabel" style="-fx-border-width: 0;" text="%ui.options.authentication" textFill="#656565">
                                  <padding>
                                     <Insets bottom="5.0" top="5.0" />
                                  </padding>
                               </Hyperlink>
-                              <Hyperlink fx:id="optionAdvanced" onAction="#HandleHyperlinkAdvancedLabel" style="-fx-border-width: 0;" text="Avancé" textFill="#656565">
+                              <Hyperlink fx:id="optionAdvanced" onAction="#HandleHyperlinkAdvancedLabel" style="-fx-border-width: 0;" text="%ui.options.advanced" textFill="#656565">
                                  <padding>
                                     <Insets bottom="5.0" top="5.0" />
                                  </padding>
                               </Hyperlink>
-                              <Hyperlink fx:id="optionShortcut" onAction="#HandleHyperlinkShortcutLabel" style="-fx-border-width: 0;" text="Raccourcis" textFill="#656565" visible="false">
+                              <Hyperlink fx:id="optionShortcut" onAction="#HandleHyperlinkShortcutLabel" style="-fx-border-width: 0;" text="%ui.options.shortcut" textFill="#656565" visible="false">
                                  <padding>
                                     <Insets bottom="5.0" top="5.0" />
                                  </padding>
@@ -62,7 +62,7 @@
                                        <children>
                                           <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0">
                                              <children>
-                                                <Label styleClass="title" text="Général">
+                                                <Label styleClass="title" text="%ui.options.general">
                                                 </Label>
                                              </children>
                                           </HBox>
@@ -77,21 +77,21 @@
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
-                                                <Label styleClass="subtitle" text="Espace de travail">
+                                                <Label styleClass="subtitle" text="%ui.options.workspace">
                                                 </Label>
-                                                <Label text="Chemin" GridPane.rowIndex="1">
+                                                <Label text="%ui.options.workspace.path" GridPane.rowIndex="1">
                                                    <padding>
                                                       <Insets left="10.0" />
                                                    </padding>
                                                 </Label>
                                                 <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                    <children>
-                                                      <Button mnemonicParsing="false" onAction="#HandleGeneralBrowseAction" prefHeight="25.0" prefWidth="150.0" text="Modifier">
+                                                      <Button mnemonicParsing="false" onAction="#HandleGeneralBrowseAction" prefHeight="25.0" prefWidth="150.0" text="%ui.options.workspace.update">
                                                          <graphic>
 									                        <MaterialDesignIconView fill="#084561" glyphName="CAMERA_SWITCH" size="1.8em" />
 									                     </graphic>
                                                       </Button>
-                                                      <Button mnemonicParsing="false" onAction="#HandleGeneralShowAction" prefHeight="25.0" prefWidth="150.0" text="Voir">
+                                                      <Button mnemonicParsing="false" onAction="#HandleGeneralShowAction" prefHeight="25.0" prefWidth="150.0" text="%ui.options.workspace.view">
                                                          <HBox.margin>
                                                             <Insets left="10.0" />
                                                          </HBox.margin>
@@ -116,7 +116,7 @@
                                        <children>
                                           <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0">
                                              <children>
-                                                <Label styleClass="title" text="Editeur">
+                                                <Label styleClass="title" text="%ui.options.editor">
                                                 </Label>
                                              </children>
                                           </HBox>
@@ -133,47 +133,47 @@
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
-                                                <Label styleClass="subtitle" text="Apparence éditeur">
+                                                <Label styleClass="subtitle" text="%ui.options.editor.display">
                                                 </Label>
-                                                <Label text="Police d'écriture" GridPane.rowIndex="1">
+                                                <Label text="%ui.options.editor.font" GridPane.rowIndex="1">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin></Label>
                                                 <Button fx:id="optEditorFontButton" mnemonicParsing="false" onAction="#HandleEditorFontChoice" prefHeight="25.0" prefWidth="352.0" text="Arial" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                 </Button>
-                                                <Label text="Afficher la barre d'outil" GridPane.rowIndex="2">
+                                                <Label text="%ui.options.editor.display_toolbar" GridPane.rowIndex="2">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                                    <children>
-                                                      <RadioButton fx:id="optEditorToolbarViewYes" mnemonicParsing="false" onAction="#HandleEditorToolbarViewYes" text="Oui">
+                                                      <RadioButton fx:id="optEditorToolbarViewYes" mnemonicParsing="false" onAction="#HandleEditorToolbarViewYes" text="%ui.yes">
                                                          <toggleGroup>
                                                             <ToggleGroup fx:id="toolbar" />
                                                          </toggleGroup>
                                                       </RadioButton>
-                                                      <RadioButton fx:id="optEditorToolbarViewNo" mnemonicParsing="false" onAction="#HandleEditorToolbarViewNo" text="Non" toggleGroup="$toolbar">
+                                                      <RadioButton fx:id="optEditorToolbarViewNo" mnemonicParsing="false" onAction="#HandleEditorToolbarViewNo" text="%ui.no" toggleGroup="$toolbar">
                                                          <padding>
                                                             <Insets left="15.0" />
                                                          </padding>
                                                       </RadioButton>
                                                    </children>
                                                 </HBox>
-                                                <Label styleClass="subtitle" text="Rédaction" GridPane.rowIndex="3"></Label>
-                                                <Label text="Rédaction intelligente" GridPane.rowIndex="4">
+                                                <Label styleClass="subtitle" text="%ui.options.write" GridPane.rowIndex="3"></Label>
+                                                <Label text="%ui.options.write.smart" GridPane.rowIndex="4">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </Label>
                                                 <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                                    <children>
-                                                      <RadioButton fx:id="optSmartEditorYes" mnemonicParsing="false" onAction="#HandleSmartEditorYes" text="Oui">
+                                                      <RadioButton fx:id="optSmartEditorYes" mnemonicParsing="false" onAction="#HandleSmartEditorYes" text="%ui.yes">
                                                          <toggleGroup>
                                                             <ToggleGroup fx:id="smartEditor" />
                                                          </toggleGroup>
                                                       </RadioButton>
-                                                      <RadioButton fx:id="optSmartEditorNo" mnemonicParsing="false" onAction="#HandleSmartEditorNo" text="Non" toggleGroup="$smartEditor">
+                                                      <RadioButton fx:id="optSmartEditorNo" mnemonicParsing="false" onAction="#HandleSmartEditorNo" text="%ui.no" toggleGroup="$smartEditor">
                                                          <padding>
                                                             <Insets left="15.0" />
                                                          </padding>
@@ -195,7 +195,7 @@
                                        <children>
                                           <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0">
                                              <children>
-                                                <Label styleClass="title" text="Affichage">
+                                                <Label styleClass="title" text="%ui.options.display">
                                                 </Label>
                                              </children>
                                           </HBox>
@@ -214,27 +214,27 @@
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
-                                                <Label text="Thème" GridPane.rowIndex="2">
+                                                <Label text="%ui.options.display.theme" GridPane.rowIndex="2">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin></Label>
                                                 <ComboBox fx:id="optDisplayTheme" prefHeight="25.0" prefWidth="281.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                <Label text="Mémoriser la dimension de la fenêtre" GridPane.rowIndex="5">
+                                                <Label text="%ui.options.display.save_window_dimension" GridPane.rowIndex="5">
                                                    <padding>
                                                       <Insets left="10.0" />
                                                    </padding></Label>
-                                                <Label text="Mémoriser la position de la fenêtre" GridPane.rowIndex="6">
+                                                <Label text="%ui.options.display.save_window_position" GridPane.rowIndex="6">
                                                    <padding>
                                                       <Insets left="10.0" />
                                                    </padding></Label>
                                                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
                                                    <children>
-                                                      <RadioButton fx:id="optDisplayWindowDimensionYes" mnemonicParsing="false" text="Oui">
+                                                      <RadioButton fx:id="optDisplayWindowDimensionYes" mnemonicParsing="false" text="%ui.yes">
                                                          <toggleGroup>
                                                             <ToggleGroup fx:id="displayDimension" />
                                                          </toggleGroup>
                                                       </RadioButton>
-                                                      <RadioButton fx:id="optDisplayWindowDimensionNo" mnemonicParsing="false" text="Non" toggleGroup="$displayDimension">
+                                                      <RadioButton fx:id="optDisplayWindowDimensionNo" mnemonicParsing="false" text="%ui.no" toggleGroup="$displayDimension">
                                                          <padding>
                                                             <Insets left="10.0" />
                                                          </padding>
@@ -243,42 +243,42 @@
                                                 </HBox>
                                                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
                                                    <children>
-                                                      <RadioButton fx:id="optDisplayWindowPositionYes" mnemonicParsing="false" text="Oui">
+                                                      <RadioButton fx:id="optDisplayWindowPositionYes" mnemonicParsing="false" text="%ui.yes">
                                                          <toggleGroup>
                                                             <ToggleGroup fx:id="displayPosition" />
                                                          </toggleGroup>
                                                       </RadioButton>
-                                                      <RadioButton fx:id="optDisplayWindowPositionNo" mnemonicParsing="false" text="Non" toggleGroup="$displayPosition">
+                                                      <RadioButton fx:id="optDisplayWindowPositionNo" mnemonicParsing="false" text="%ui.no" toggleGroup="$displayPosition">
                                                          <padding>
                                                             <Insets left="10.0" />
                                                          </padding>
                                                       </RadioButton>
                                                    </children>
                                                 </HBox>
-                                                <Label text="Démarrer avec la fenêtre agrandi" GridPane.rowIndex="4">
+                                                <Label text="%ui.options.display.start_big_window" GridPane.rowIndex="4">
                                                    <padding>
                                                       <Insets left="10.0" />
                                                    </padding>
                                                 </Label>
                                                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                                    <children>
-                                                      <RadioButton fx:id="optDisplayWindowMaximizeYes" mnemonicParsing="false" onAction="#HandleDisplayWindowMaximizeYes" text="Oui">
+                                                      <RadioButton fx:id="optDisplayWindowMaximizeYes" mnemonicParsing="false" onAction="#HandleDisplayWindowMaximizeYes" text="%ui.yes">
                                                          <toggleGroup>
                                                             <ToggleGroup fx:id="displayMaximize" />
                                                          </toggleGroup>
                                                       </RadioButton>
-                                                      <RadioButton fx:id="optDisplayWindowMaximizeNo" mnemonicParsing="false" onAction="#HandleDisplayWindowMaximizeNo" text="Non" toggleGroup="$displayMaximize">
+                                                      <RadioButton fx:id="optDisplayWindowMaximizeNo" mnemonicParsing="false" onAction="#HandleDisplayWindowMaximizeNo" text="%ui.no" toggleGroup="$displayMaximize">
                                                          <padding>
                                                             <Insets left="10.0" />
                                                          </padding>
                                                       </RadioButton>
                                                    </children>
                                                 </HBox>
-                                                <Label text="Fenêtre" GridPane.rowIndex="3">
+                                                <Label text="%ui.options.display.window" GridPane.rowIndex="3">
                                                    <font>
                                                       <Font name="System Bold" size="12.0" />
                                                    </font></Label>
-                                                <Label text="Thème" GridPane.rowIndex="1">
+                                                <Label text="%ui.options.display.theme" GridPane.rowIndex="1">
                                                    <font>
                                                       <Font name="System Bold" size="12.0" />
                                                    </font>
@@ -298,7 +298,7 @@
                                        <children>
                                           <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0">
                                              <children>
-                                                <Label styleClass="subtitle" text="Raccourcis">
+                                                <Label styleClass="subtitle" text="%ui.options.shortcut">
                                                 </Label>
                                              </children>
                                           </HBox>
@@ -326,7 +326,7 @@
                                        <children>
                                           <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0" spacing="20.0">
                                              <children>
-                                                <Label styleClass="title" text="Authentification">
+                                                <Label styleClass="title" text="%ui.options.authentication">
                                                 </Label>
                                              </children>
                                           </HBox>
@@ -344,14 +344,14 @@
                                                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                    </rowConstraints>
                                                    <children>
-                                                      <Label styleClass="subtitle" text="Connexion">
+                                                      <Label styleClass="subtitle" text="%ui.options.authentication.connection">
                                                       </Label>
-                                                      <Label text="Nom d'utilisateur" GridPane.rowIndex="1">
+                                                      <Label text="%ui.dialog.auth.username" GridPane.rowIndex="1">
                                                          <padding>
                                                             <Insets left="10.0" />
                                                          </padding>
                                                       </Label>
-                                                      <Label text="Mot de passe" GridPane.rowIndex="2">
+                                                      <Label text="%ui.dialog.auth.password" GridPane.rowIndex="2">
                                                          <padding>
                                                             <Insets left="10.0" />
                                                          </padding>
@@ -360,7 +360,7 @@
                                                       <PasswordField fx:id="optAuthentificationPassword" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                    </children>
                                                 </GridPane>
-                                                <Label text="Attention, vos identifiants ne sont pas chiffrés dans le fichier de configuration et peuvent être lisible pour un humain" textAlignment="CENTER" textFill="RED" wrapText="true" />
+                                                <Label text="%ui.dialog.auth.warning" textAlignment="CENTER" textFill="RED" wrapText="true" />
                                              </children>
                                           </VBox>
                                        </children>
@@ -376,7 +376,7 @@
                                        <children>
                                           <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0" spacing="20.0">
                                              <children>
-                                                <Label styleClass="title" text="Avancé">
+                                                <Label styleClass="title" text="%ui.options.advanced">
                                                 </Label>
                                              </children>
                                           </HBox>
@@ -392,19 +392,19 @@
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
-                                                <Label styleClass="subtitle" text="Serveur">
+                                                <Label styleClass="subtitle" text="%ui.options.advanced.server">
                                                 </Label>
-                                                <Label text="Protocole" GridPane.rowIndex="1">
+                                                <Label text="%ui.options.advanced.protocol" GridPane.rowIndex="1">
                                                    <padding>
                                                       <Insets left="10.0" />
                                                    </padding>
                                                 </Label>
-                                                <Label text="Port" GridPane.rowIndex="3">
+                                                <Label text="%ui.options.advanced.protocol" GridPane.rowIndex="3">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </Label>
-                                                <Label text="Hôte" GridPane.rowIndex="2">
+                                                <Label text="%ui.options.advanced.hostname" GridPane.rowIndex="2">
                                                    <padding>
                                                       <Insets left="10.0" />
                                                    </padding>
@@ -431,19 +431,19 @@
                <children>
                   <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#HandleResetButtonAction" text="Réinitialiser les options">
+                        <Button mnemonicParsing="false" onAction="#HandleResetButtonAction" text="%ui.options.reset">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
                         </Button>
                      </children>
                   </HBox>
-                  <Button mnemonicParsing="false" onAction="#HandleCancelButtonAction" text="Annuler">
+                  <Button mnemonicParsing="false" onAction="#HandleCancelButtonAction" text="%ui.cancel">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#HandleSaveButtonAction" text="Sauvegarder">
+                  <Button mnemonicParsing="false" onAction="#HandleSaveButtonAction" text="%ui.save">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>

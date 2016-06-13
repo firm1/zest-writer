@@ -125,9 +125,9 @@ public class OptionsDialog{
 
     @FXML private void HandleCancelButtonAction(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmer l'annulation");
-        alert.setHeaderText(null);
-        alert.setContentText("Voulez-vous vraiment annuler ? Les modifications apportés ne seront pas enregistré.");
+        alert.setTitle(Configuration.bundle.getString("ui.options.cancel.title"));
+        alert.setHeaderText(Configuration.bundle.getString("ui.options.cancel.header"));
+        alert.setContentText(Configuration.bundle.getString("ui.options.cancel.text"));
         IconFactory.addAlertLogo(alert);
 
         Optional<ButtonType> result = alert.showAndWait();
@@ -141,10 +141,10 @@ public class OptionsDialog{
 
     @FXML private void HandleResetButtonAction(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmer la réinitialisation");
-        alert.setHeaderText("Réinitialisation");
-        alert.setContentText("Attention, une réinitialisation est irréversible, souhaitez-vous vraiment réinitialiser vos options ?");
-        alert.getButtonTypes().setAll(new ButtonType("Oui", ButtonBar.ButtonData.YES), new ButtonType("Non", ButtonBar.ButtonData.NO));
+        alert.setTitle(Configuration.bundle.getString("ui.options.reset.title"));
+        alert.setHeaderText(Configuration.bundle.getString("ui.options.reset.header"));
+        alert.setContentText(Configuration.bundle.getString("ui.options.reset.text"));
+        alert.getButtonTypes().setAll(new ButtonType(Configuration.bundle.getString("ui.yes"), ButtonBar.ButtonData.YES), new ButtonType(Configuration.bundle.getString("ui.no"), ButtonBar.ButtonData.NO));
         IconFactory.addAlertLogo(alert);
 
         Optional<ButtonType> result = alert.showAndWait();
@@ -206,7 +206,7 @@ public class OptionsDialog{
 
     @FXML private void HandleGeneralBrowseAction(){
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Espace de travail");
+        directoryChooser.setTitle(Configuration.bundle.getString("ui.options.workspace"));
         directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 
         File directory = directoryChooser.showDialog(null);
@@ -219,8 +219,8 @@ public class OptionsDialog{
     @FXML private void HandleGeneralShowAction(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         IconFactory.addAlertLogo(alert);
-        alert.setTitle("Chemin de votre espace de travail");
-        alert.setHeaderText("Chemin de votre espace de travail");
+        alert.setTitle(Configuration.bundle.getString("ui.options.workspace.title"));
+        alert.setHeaderText(Configuration.bundle.getString("ui.options.workspace.header"));
         alert.setContentText(config.getWorkspacePath());
         alert.showAndWait();
     }

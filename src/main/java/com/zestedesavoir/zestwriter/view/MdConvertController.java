@@ -120,8 +120,7 @@ public class MdConvertController {
         this.tab = tab;
         this.extract = extract;
 
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("fxml/Editor.fxml"));
+        FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("fxml/Editor.fxml"), Configuration.bundle);
         loader.load();
 
         if(mainApp.getConfig().getEditorToolbarView().equals("no")){
@@ -283,8 +282,7 @@ public class MdConvertController {
     }
 
     @FXML private void HandleImgButtonAction(ActionEvent event) {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("fxml/ImageInput.fxml"));
+        FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("fxml/ImageInput.fxml"), Configuration.bundle);
 
         try{
             BorderPane imageDialog = loader.load();
@@ -366,9 +364,9 @@ public class MdConvertController {
         choices.add("erreur");
 
         ChoiceDialog<String> dialog = new ChoiceDialog<>("information", choices);
-        dialog.setTitle("Choix du bloc");
-        dialog.setHeaderText("Votre type de bloc");
-        dialog.setContentText("Type de bloc: ");
+        dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.bloc.title"));
+        dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.bloc.header"));
+        dialog.setContentText(Configuration.bundle.getString("ui.editor.dialog.bloc.text"));
 
         // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
@@ -388,8 +386,7 @@ public class MdConvertController {
         // Set the button types.
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("fxml/TableEditor.fxml"));
+        FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("fxml/TableEditor.fxml"), Configuration.bundle);
         BorderPane tableEditor = loader.load();
         TableView<ZRow> tbView = (TableView) tableEditor.getCenter();
 
@@ -432,8 +429,8 @@ public class MdConvertController {
 
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Détail du lien");
-        dialog.setHeaderText("");
+        dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.link.title"));
+        dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.link.header"));
 
         // Set the icon (must be included in the project).
         dialog.setGraphic(IconFactory.createLinkIcon());
@@ -451,9 +448,9 @@ public class MdConvertController {
         TextField tLabel = new TextField();
         tLabel.setText(link);
 
-        grid.add(new Label("Lien:"), 0, 0);
+        grid.add(new Label(Configuration.bundle.getString("ui.editor.dialog.link.field.url")), 0, 0);
         grid.add(tLink, 1, 0);
-        grid.add(new Label("Titre du lien"), 0, 1);
+        grid.add(new Label(Configuration.bundle.getString("ui.editor.dialog.link.field.label")), 0, 1);
         grid.add(tLabel, 1, 1);
 
         dialog.getDialogPane().setContent(grid);
@@ -488,8 +485,8 @@ public class MdConvertController {
 
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Editeur de code");
-        dialog.setHeaderText("");
+        dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.code.title"));
+        dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.code.header"));
 
         // Set the icon (must be included in the project).
         dialog.setGraphic(IconFactory.createCodeIcon());
@@ -507,9 +504,9 @@ public class MdConvertController {
         TextArea tCode = new TextArea();
         tCode.setText(code);
 
-        grid.add(new Label("Langage:"), 0, 0);
+        grid.add(new Label(Configuration.bundle.getString("ui.editor.dialog.code.field.lang")), 0, 0);
         grid.add(tLangage, 1, 0);
-        grid.add(new Label("Code"), 0, 1);
+        grid.add(new Label(Configuration.bundle.getString("ui.editor.dialog.code.field.code")), 0, 1);
         grid.add(tCode, 1, 1);
 
         dialog.getDialogPane().setContent(grid);
@@ -644,9 +641,9 @@ public class MdConvertController {
 
     public void HandleGoToLineAction() {
         TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Aller à la ligne");
-        dialog.setHeaderText(null);
-        dialog.setContentText("Numéro de ligne: ");
+        dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.goto.title"));
+        dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.goto.header"));
+        dialog.setContentText(Configuration.bundle.getString("ui.editor.dialog.goto.text"));
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(line -> SourceText.positionCaret(SourceText.position(Integer.parseInt(line)-1, 0).toOffset()));
@@ -662,7 +659,7 @@ public class MdConvertController {
             PyString render = console.get("render", PyString.class);
             return render.toString();
         } else {
-            return "<p>Chargement ...</p>";
+            return "<p>"+Configuration.bundle.getString("ui.task.load")+" ...</p>";
         }
     }
 
@@ -688,14 +685,13 @@ public class MdConvertController {
     }
 
     @FXML private void HandleFindReplaceDialog(){
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("fxml/FindReplaceDialog.fxml"));
+        FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("fxml/FindReplaceDialog.fxml"), Configuration.bundle);
 
         try{
             AnchorPane optionsDialog = loader.load();
 
             Stage dialogStage = new Stage();
-            dialogStage.setTitle("Rechecher / Remplacer");
+            dialogStage.setTitle(Configuration.bundle.getString("ui.dialog.find.title"));
 
             Scene scene = new Scene(optionsDialog);
             dialogStage.setScene(scene);

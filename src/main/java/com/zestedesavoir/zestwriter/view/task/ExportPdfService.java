@@ -1,6 +1,7 @@
 package com.zestedesavoir.zestwriter.view.task;
 
 import com.zestedesavoir.zestwriter.model.Content;
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -70,7 +71,7 @@ public class ExportPdfService extends Service<Void>{
             public boolean downloadPdf() {
                 logger.debug("Tentative de téléchargement du contenu au format Pdf");
                 try {
-                    updateMessage("Conversion en PDF ...");
+                    updateMessage(Configuration.bundle.getString("ui.task.export.prepare.label")+" ...");
                     HttpResponse response = client.execute(post);
                     logger.debug("Début du traitement de la réponse");
                     if(response.getStatusLine().getStatusCode() >= 400) {
@@ -82,7 +83,7 @@ public class ExportPdfService extends Service<Void>{
                     long remain = 0;
                     updateProgress(remain, max);
                     int inByte;
-                    updateMessage("Construction du fichier PDF");
+                    updateMessage(Configuration.bundle.getString("ui.task.export.build.label"));
                     while ((inByte = is.read()) != -1) {
                         fos.write(inByte);
                         remain++;
@@ -105,12 +106,12 @@ public class ExportPdfService extends Service<Void>{
 
             @Override
             protected Void call() throws Exception {
-                updateMessage("Assemblage du contenu");
+                updateMessage(Configuration.bundle.getString("ui.task.export.assemble.label"));
                 content.saveToMarkdown(markdownFile);
 
-                updateMessage("Export  du contenu au format Pdf");
+                updateMessage(Configuration.bundle.getString("ui.task.export.label"));
                 if(!downloadPdf()) {
-                    updateMessage("Erreur Pdf");
+                    updateMessage(Configuration.bundle.getString("ui.task.export.error"));
                     throw new IOException();
                 }
                 return null;

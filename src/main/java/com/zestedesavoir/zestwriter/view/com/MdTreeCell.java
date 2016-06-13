@@ -6,6 +6,7 @@ import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
 import com.zestedesavoir.zestwriter.model.Extract;
 import com.zestedesavoir.zestwriter.model.MetaContent;
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import javafx.scene.control.Alert;
@@ -42,11 +43,11 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 	}
 
 	public void initContextMenu(ContentNode item) {
-        MenuItem addMenuItem1 = new MenuItem("Ajouter un extrait");
-        MenuItem addMenuItem2 = new MenuItem("Ajouter un conteneur");
-        MenuItem addMenuItem3 = new MenuItem("Renommer");
-        MenuItem addMenuItem4 = new MenuItem("Supprimer");
-        MenuItem addMenuItem5 = new MenuItem("Editer");
+        MenuItem addMenuItem1 = new MenuItem(Configuration.bundle.getString("ui.actions.add_extract.label"));
+        MenuItem addMenuItem2 = new MenuItem(Configuration.bundle.getString("ui.actions.add_container.label"));
+        MenuItem addMenuItem3 = new MenuItem(Configuration.bundle.getString("ui.actions.rename.label"));
+        MenuItem addMenuItem4 = new MenuItem(Configuration.bundle.getString("ui.actions.delete.label"));
+        MenuItem addMenuItem5 = new MenuItem(Configuration.bundle.getString("ui.actions.edit.label"));
         addMenuItem1.setGraphic(IconFactory.createFileIcon());
         addMenuItem2.setGraphic(IconFactory.createAddFolderIcon());
         addMenuItem3.setGraphic(IconFactory.createEditIcon());
@@ -74,9 +75,9 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         addMenuItem4.setOnAction(t -> {
             Alert alert = new Alert(AlertType.CONFIRMATION);
             IconFactory.addAlertLogo(alert);
-            alert.setTitle("Confirmation de suppression");
-            alert.setHeaderText(null);
-            alert.setContentText("Êtes vous sur de vouloir supprimer ?");
+            alert.setTitle(Configuration.bundle.getString("ui.dialog.delete.title"));
+            alert.setHeaderText(Configuration.bundle.getString("ui.dialog.delete.header"));
+            alert.setContentText(Configuration.bundle.getString("ui.dialog.delete.text"));
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -96,9 +97,9 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             logger.debug("Tentative d'ajout d'un nouvel extrait");
             TextInputDialog dialog = new TextInputDialog("Extrait");
             Extract extract;
-            dialog.setTitle("Nouvel extrait");
-            dialog.setHeaderText(null);
-            dialog.setContentText("Titre de l'extrait:");
+            dialog.setTitle(Configuration.bundle.getString("ui.dialog.add_extract.title"));
+            dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.add_extract.header"));
+            dialog.setContentText(Configuration.bundle.getString("ui.dialog.add_extract.text")+" :");
 
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
@@ -124,11 +125,11 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
         addMenuItem2.setOnAction(t -> {
             logger.debug("Tentative d'ajout d'un nouveau conteneur");
-            TextInputDialog dialog = new TextInputDialog("Conteneur");
+            TextInputDialog dialog = new TextInputDialog(Configuration.bundle.getString("ui.dialog.add_container"));
 
-            dialog.setTitle("Nouveau conteneur");
-            dialog.setHeaderText(null);
-            dialog.setContentText("Titre du conteneur:");
+            dialog.setTitle(Configuration.bundle.getString("ui.dialog.add_container.title"));
+            dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.add_container.header"));
+            dialog.setContentText(Configuration.bundle.getString("ui.dialog.add_container.text")+" :");
 
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
@@ -169,9 +170,9 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             logger.debug("Tentative de rennomage d'un conteneur ou extrait");
             TreeItem<ContentNode> item1 = index.getSummary().getSelectionModel().getSelectedItem();
             TextInputDialog dialog = new TextInputDialog(item1.getValue().getTitle());
-            dialog.setTitle("Renommer  " + item1.getValue().getTitle());
-            dialog.setHeaderText(null);
-            dialog.setContentText("Nouveau titre : ");
+            dialog.setTitle(Configuration.bundle.getString("ui.dialog.rename.title")+"  " + item1.getValue().getTitle());
+            dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.rename.header"));
+            dialog.setContentText(Configuration.bundle.getString("ui.dialog.rename.text")+" : ");
 
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {

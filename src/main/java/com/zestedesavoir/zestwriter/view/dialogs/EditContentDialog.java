@@ -3,6 +3,7 @@ package com.zestedesavoir.zestwriter.view.dialogs;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.License;
 import com.zestedesavoir.zestwriter.model.TypeContent;
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -18,28 +19,29 @@ import javafx.util.Pair;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Object>>>{
 	public static ObservableList<TypeContent> typeOptions = FXCollections.observableArrayList(new TypeContent("ARTICLE", "Article"), new TypeContent("TUTORIAL","Tutoriel"));
     public static ObservableList<License> licOptions = FXCollections.observableArrayList(
-        new License("CC BY", "Licence CC BY"),
-        new License("CC BY-SA", "Licence CC BY-SA"),
-        new License("CC BY-ND", "Licence CC BY-ND"),
-        new License("CC BY-NC", "Licence CC BY-NC"),
-        new License("CC BY-NC-SA", "Licence CC BY-NC-SA"),
-        new License("CC BY-NC-ND", "Licence CC BY-NC-ND"),
-        new License("Tous droits réservés", "Tout droits réservés"),
-        new License("CC 0", "Licence CC 0")
+        new License("CC BY", Configuration.bundle.getString("ui.content.label.license.ccby")),
+        new License("CC BY-SA", Configuration.bundle.getString("ui.content.label.license.ccbysa")),
+        new License("CC BY-ND", Configuration.bundle.getString("ui.content.label.license.ccbynd")),
+        new License("CC BY-NC", Configuration.bundle.getString("ui.content.label.license.ccbync")),
+        new License("CC BY-NC-SA", Configuration.bundle.getString("ui.content.label.license.ccbyncsa")),
+        new License("CC BY-NC-ND", Configuration.bundle.getString("ui.content.label.license.ccbyncnd")),
+        new License("Tous droits réservés", Configuration.bundle.getString("ui.content.label.license.allright")),
+        new License("CC 0", Configuration.bundle.getString("ui.content.label.license.cc0"))
     );
 
 	public EditContentDialog(Content defaultContent) {
-		super("Nouveau contenu", "Créez un nouveau contenus pour ZdS");
+		super(Configuration.bundle.getString("ui.content.new.title"), Configuration.bundle.getString("ui.content.new.header"));
 
 		// Set the icon (must be included in the project).
 	    this.setGraphic(IconFactory.createAddFolderIcon());
 
 	    // Set the button types.
-	    ButtonType validButtonType = new ButtonType("Enregistrer", ButtonData.OK_DONE);
+	    ButtonType validButtonType = new ButtonType(Configuration.bundle.getString("ui.dialog.save"), ButtonData.OK_DONE);
 	    this.getDialogPane().getButtonTypes().addAll(validButtonType, ButtonType.CANCEL);
 
 	    // Create the username and password labels and fields.
@@ -56,13 +58,13 @@ public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Objec
 	    ComboBox<License> license = new ComboBox<>(licOptions);
 	    license.setValue(licOptions.get(licOptions.indexOf(new License(defaultContent.getLicence(), ""))));
 
-	    grid.add(new Label("Titre du contenu :"), 0, 0);
+	    grid.add(new Label(Configuration.bundle.getString("ui.content.label.title")), 0, 0);
 	    grid.add(title, 1, 0);
-	    grid.add(new Label("Description du contenu:"), 0, 1);
+	    grid.add(new Label(Configuration.bundle.getString("ui.content.label.description")), 0, 1);
 	    grid.add(subtitle, 1, 1);
-	    grid.add(new Label("Type de contenu:"), 0, 2);
+	    grid.add(new Label(Configuration.bundle.getString("ui.content.label.type")), 0, 2);
 	    grid.add(type, 1, 2);
-	    grid.add(new Label("Licence du contenu:"), 0, 3);
+	    grid.add(new Label(Configuration.bundle.getString("ui.content.label.license")), 0, 3);
 	    grid.add(license, 1, 3);
 
 	    // Enable/Disable login button depending on whether a username was entered.

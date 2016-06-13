@@ -20,26 +20,26 @@ public class LoginDialog extends BaseDialog<Pair<String, String>> {
     private MainApp mainApp;
 
 	public LoginDialog(Button googleButton, MainApp mainApp) {
-		super("Connexion", "Connectez vous au site Zeste de Savoir");
+		super(Configuration.bundle.getString("ui.dialog.auth.title"), Configuration.bundle.getString("ui.dialog.auth.header"));
         this.mainApp = mainApp;
         this.config = this.mainApp.getConfig();
 
         this.setGraphic(IconFactory.createLoginIcon());
 
         // Set the button types.
-        ButtonType loginButtonType = new ButtonType("Se connecter", ButtonData.OK_DONE);
+        ButtonType loginButtonType = new ButtonType(Configuration.bundle.getString("ui.dialog.auth.button"), ButtonData.OK_DONE);
         this.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
         TextField username = new TextField();
         username.setPromptText("username");
         PasswordField password = new PasswordField();
         password.setPromptText("password");
-        CheckBox keepConnection = new CheckBox("Rester connecté");
+        CheckBox keepConnection = new CheckBox(Configuration.bundle.getString("ui.dialog.auth.stay"));
 
         getGridPane().add(googleButton, 0, 0, 1, 2);
-        getGridPane().add(new Label("Nom d'utilisateur:"), 1, 0);
+        getGridPane().add(new Label(Configuration.bundle.getString("ui.dialog.auth.username")+":"), 1, 0);
         getGridPane().add(username, 2, 0);
-        getGridPane().add(new Label("Mot de passe:"), 1, 1);
+        getGridPane().add(new Label(Configuration.bundle.getString("ui.dialog.auth.password")+":"), 1, 1);
         getGridPane().add(password, 2, 1);
         getGridPane().add(keepConnection, 2, 2);
 
@@ -50,8 +50,8 @@ public class LoginDialog extends BaseDialog<Pair<String, String>> {
         keepConnection.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if(keepConnection.isSelected()){
                 Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Attention !");
-                alert.setContentText("Attention, vos informations d'identification ne sont pas chiffrés dans le fichier de configuration.");
+                alert.setTitle(Configuration.bundle.getString("ui.dialog.warning.title"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.auth.warning"));
                 IconFactory.addAlertLogo(alert);
 
                 alert.showAndWait();

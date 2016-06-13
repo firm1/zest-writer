@@ -87,8 +87,8 @@ sourceSets {
 task fatJar(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Gradle Jar File',
-            'Implementation-Version': version,
-            'Main-Class': 'com.zestedesavoir.zestwriter.MainApp'
+                'Implementation-Version': version,
+                'Main-Class': 'com.zestedesavoir.zestwriter.MainApp'
     }
     baseName = project.name + '-all'
     zip64 = true

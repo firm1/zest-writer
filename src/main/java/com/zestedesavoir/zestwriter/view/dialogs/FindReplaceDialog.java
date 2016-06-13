@@ -2,6 +2,7 @@ package com.zestedesavoir.zestwriter.view.dialogs;
 
 
 import com.zestedesavoir.zestwriter.MainApp;
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.view.MdConvertController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -229,13 +230,13 @@ public class FindReplaceDialog{
 
             if(action == FindReplaceAction.FIND){
                 if(numberIteration > 0){
-                    iterations.setText(numberIteration + " itérations trouvés");
+                    iterations.setText(numberIteration +" "+Configuration.bundle.getString("ui.dialog.find.plural"));
 
                     searchButton.setDisable(false);
                     replaceButton.setDisable(false);
                     replaceAllButton.setDisable(false);
                 }else{
-                    iterations.setText("0 itération trouvé");
+                    iterations.setText(Configuration.bundle.getString("ui.dialog.find.empty"));
 
                     searchButton.setDisable(true);
                     replaceButton.setDisable(true);
@@ -246,7 +247,7 @@ public class FindReplaceDialog{
     }
 
     private void resetIterationNumber(){
-        iterations.setText("0 itération trouvé");
+        iterations.setText(Configuration.bundle.getString("ui.dialog.find.empty"));
     }
 
     private void textFill(int start, int end, FindReplaceAction action){

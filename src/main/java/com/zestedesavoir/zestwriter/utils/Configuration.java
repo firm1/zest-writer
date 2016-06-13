@@ -1,28 +1,23 @@
 package com.zestedesavoir.zestwriter.utils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.stream.Collectors;
-
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileSystemView;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zestedesavoir.zestwriter.MainApp;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zestedesavoir.zestwriter.MainApp;
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Configuration {
+    private final Logger logger;
     public Properties conf;
     public Properties actions;
     private String appName = "zestwriter";
@@ -34,65 +29,8 @@ public class Configuration {
     private StorageSaver offlineSaver;
     private StorageSaver onlineSaver;
     private LocalDirectoryFactory workspaceFactory;
-    private final Logger logger;
     private Properties props;
-
-    public enum ActionData{
-        LastProjects("content.open", "");
-        private String key;
-        private String defaultValue;
-
-        ActionData(String key, String defaultValue){
-            this.key = key;
-            this.defaultValue = defaultValue;
-        }
-
-        public String getKey(){
-            return key;
-        }
-
-        public String getDefaultValue(){
-            return defaultValue;
-        }
-    }
-
-    public enum ConfigData{
-        DisplayWindowWidth("data.display.window.width", "1000"),
-        DisplayWindowHeight("data.display.window.height", "600"),
-        DisplayWindowPositionX("data.display.window.position.x", "0"),
-        DisplayWindowPositionY("data.display.window.position.y", "0"),
-
-        WorkspacePath("options.workspace.path", ""),
-        EditorSmart("options.editor.smart", "true"),
-        EditorFont("options.editor.font", "Fira Mono"),
-        EditorFontSize("options.editor.fontSize", "14"),
-        EditorToolbarView("options.editor.toolbar.view", "yes"),
-        DisplayTheme("options.display.theme", "Standard"),
-        DisplayWindowPersonnalDimension("options.display.window.standardDimension", "true"),
-        DisplayWindowPersonnalPosition("options.display.window.standardPosition", "true"),
-        DisplayWindowMaximize("options.display.window.maximize", "false"),
-        AuthentificationUsername("options.authentification.username", ""),
-        AuthentificationPassword("options.authentification.password", ""),
-        AdvancedServerProtocol("options.advanced.protocol", "https"),
-        AdvancedServerHost("options.advanced.host", "zestedesavoir.com"),
-        AdvancedServerPort("options.advanced.port", "80");
-
-        private String key;
-        private String defaultValue;
-
-        ConfigData(String key, String defaultValue){
-            this.key = key;
-            this.defaultValue = defaultValue;
-        }
-
-        public String getKey(){
-            return key;
-        }
-
-        public String getDefaultValue(){
-            return defaultValue;
-        }
-    }
+    public static ResourceBundle bundle=ResourceBundle.getBundle("locales/ui", Locale.FRANCE);
 
     public Configuration(String homeDir) {
         logger = LoggerFactory.getLogger(Configuration.class);
@@ -105,6 +43,24 @@ public class Configuration {
 
         initConf(confDirPath);
         initActions(confDirPath);
+    }
+
+    public static String getDefaultWorkspace() {
+        JFileChooser fr = new JFileChooser();
+        FileSystemView fw = fr.getFileSystemView();
+        return fw.getDefaultDirectory().getAbsolutePath() + File.separator + "zwriter-workspace";
+    }
+
+    public static String getLastRelease() throws IOException {
+        String projecUrlRelease = "https://api.github.com/repos/firm1/zest-writer/releases/latest";
+
+        String json = Request.Get(projecUrlRelease).execute().returnContent().asString();
+        ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
+        Map map = mapper.readValue(json, Map.class);
+        if(map.containsKey("tag_name")) {
+            return (String) map.get("tag_name");
+        }
+        return null;
     }
 
     private void initActions(String confDirPath) {
@@ -180,12 +136,6 @@ public class Configuration {
         }
     }
 
-    public static String getDefaultWorkspace() {
-        JFileChooser fr = new JFileChooser();
-        FileSystemView fw = fr.getFileSystemView();
-        return fw.getDefaultDirectory().getAbsolutePath() + File.separator + "zwriter-workspace";
-    }
-
     public String getPandocProvider() {
         return "http://firm1.eu/2pdf/";
     }
@@ -210,19 +160,6 @@ public class Configuration {
         onlineSaver = workspaceFactory.getOnlineSaver();
         logger.info("Espace de travail chargé en mémoire");
     }
-
-    public static String getLastRelease() throws IOException {
-        String projecUrlRelease = "https://api.github.com/repos/firm1/zest-writer/releases/latest";
-
-        String json = Request.Get(projecUrlRelease).execute().returnContent().asString();
-        ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
-        Map map = mapper.readValue(json, Map.class);
-        if(map.containsKey("tag_name")) {
-            return (String) map.get("tag_name");
-        }
-        return null;
-    }
-
 
     /*
      * Zest-Writer data
@@ -249,6 +186,7 @@ public class Configuration {
     public double getDisplayWindowWidth(){
         return getGenericDoubleDisplay(ConfigData.DisplayWindowWidth);
     }
+
     public void setDisplayWindowWidth(String windowWidth){
         conf.setProperty(ConfigData.DisplayWindowWidth.getKey(), windowWidth);
     }
@@ -256,6 +194,7 @@ public class Configuration {
     public double getDisplayWindowHeight(){
         return getGenericDoubleDisplay(ConfigData.DisplayWindowHeight);
     }
+
     public void setDisplayWindowHeight(String windowWidth){
         conf.setProperty(ConfigData.DisplayWindowHeight.getKey(), windowWidth);
     }
@@ -263,6 +202,7 @@ public class Configuration {
     public double getDisplayWindowPositionX(){
         return getGenericDoubleDisplay(ConfigData.DisplayWindowPositionX);
     }
+
     public void setDisplayWindowPositionX(String windowWidth){
         conf.setProperty(ConfigData.DisplayWindowPositionX.getKey(), windowWidth);
     }
@@ -270,6 +210,7 @@ public class Configuration {
     public double getDisplayWindowPositionY(){
         return getGenericDoubleDisplay(ConfigData.DisplayWindowPositionY);
     }
+
     public void setDisplayWindowPositionY(String windowWidth){
         conf.setProperty(ConfigData.DisplayWindowPositionY.getKey(), windowWidth);
     }
@@ -292,6 +233,10 @@ public class Configuration {
         return getGenericBooleanDisplay(ConfigData.EditorSmart);
     }
 
+    public void setEditorSmart(String smart){
+        conf.setProperty(ConfigData.EditorSmart.getKey(), smart);
+    }
+
     public void isEditorSmart(String editorSmart){
         conf.setProperty(ConfigData.EditorSmart.getKey(), editorSmart);
     }
@@ -305,10 +250,6 @@ public class Configuration {
 
     public void setEditorFont(String font){
         conf.setProperty(ConfigData.EditorFont.getKey(), font);
-    }
-
-    public void setEditorSmart(String smart){
-        conf.setProperty(ConfigData.EditorSmart.getKey(), smart);
     }
 
     public int getEditorFontsize(){
@@ -325,6 +266,7 @@ public class Configuration {
         else
             return ConfigData.DisplayTheme.getDefaultValue();
     }
+
     public void setEditorToolbarView(String view){
         if(!view.toLowerCase().equals("yes") && !view.toLowerCase().equals("no"))
             view = ConfigData.EditorToolbarView.getDefaultValue();
@@ -338,6 +280,7 @@ public class Configuration {
         else
             return ConfigData.DisplayTheme.getDefaultValue();
     }
+
     public void setDisplayTheme(String displayTheme){
         conf.setProperty(ConfigData.DisplayTheme.getKey(), displayTheme);
     }
@@ -345,6 +288,7 @@ public class Configuration {
     public boolean isDisplayWindowPersonnalDimension(){
         return getGenericBooleanDisplay(ConfigData.DisplayWindowPersonnalDimension);
     }
+
     public void setDisplayWindowStandardDimension(String standardDimension){
         conf.setProperty(ConfigData.DisplayWindowPersonnalDimension.getKey(), standardDimension);
     }
@@ -352,6 +296,7 @@ public class Configuration {
     public boolean isDisplayWindowPersonnalPosition(){
         return getGenericBooleanDisplay(ConfigData.DisplayWindowPersonnalPosition);
     }
+
     public void setDisplayWindowPersonnalPosition(String standardPosition){
         conf.setProperty(ConfigData.DisplayWindowPersonnalPosition.getKey(), standardPosition);
     }
@@ -359,6 +304,7 @@ public class Configuration {
     public boolean isDisplayWindowMaximize(){
         return getGenericBooleanDisplay(ConfigData.DisplayWindowMaximize);
     }
+
     public void setDisplayWindowMaximize(String maximize){
         conf.setProperty(ConfigData.DisplayWindowMaximize.getKey(), maximize);
     }
@@ -369,6 +315,7 @@ public class Configuration {
         else
             return ConfigData.AuthentificationUsername.getDefaultValue();
     }
+
     public void setAuthentificationUsername(String username){
         conf.setProperty(ConfigData.AuthentificationUsername.getKey(), username);
     }
@@ -455,5 +402,62 @@ public class Configuration {
         actions.put(ActionData.LastProjects.getKey(), recents.stream().limit(5).map(Object::toString).collect(Collectors.joining(",")));
         saveActionFile();
         return ;
+    }
+
+    public enum ActionData{
+        LastProjects("content.open", "");
+        private String key;
+        private String defaultValue;
+
+        ActionData(String key, String defaultValue){
+            this.key = key;
+            this.defaultValue = defaultValue;
+        }
+
+        public String getKey(){
+            return key;
+        }
+
+        public String getDefaultValue(){
+            return defaultValue;
+        }
+    }
+
+    public enum ConfigData{
+        DisplayWindowWidth("data.display.window.width", "1000"),
+        DisplayWindowHeight("data.display.window.height", "600"),
+        DisplayWindowPositionX("data.display.window.position.x", "0"),
+        DisplayWindowPositionY("data.display.window.position.y", "0"),
+
+        WorkspacePath("options.workspace.path", ""),
+        EditorSmart("options.editor.smart", "true"),
+        EditorFont("options.editor.font", "Fira Mono"),
+        EditorFontSize("options.editor.fontSize", "14"),
+        EditorToolbarView("options.editor.toolbar.view", "yes"),
+        DisplayTheme("options.display.theme", "Standard"),
+        DisplayWindowPersonnalDimension("options.display.window.standardDimension", "true"),
+        DisplayWindowPersonnalPosition("options.display.window.standardPosition", "true"),
+        DisplayWindowMaximize("options.display.window.maximize", "false"),
+        AuthentificationUsername("options.authentification.username", ""),
+        AuthentificationPassword("options.authentification.password", ""),
+        AdvancedServerProtocol("options.advanced.protocol", "https"),
+        AdvancedServerHost("options.advanced.host", "zestedesavoir.com"),
+        AdvancedServerPort("options.advanced.port", "80");
+
+        private String key;
+        private String defaultValue;
+
+        ConfigData(String key, String defaultValue){
+            this.key = key;
+            this.defaultValue = defaultValue;
+        }
+
+        public String getKey(){
+            return key;
+        }
+
+        public String getDefaultValue(){
+            return defaultValue;
+        }
     }
 }
