@@ -30,7 +30,7 @@ public class Configuration {
     private StorageSaver onlineSaver;
     private LocalDirectoryFactory workspaceFactory;
     private Properties props;
-    public static ResourceBundle bundle=ResourceBundle.getBundle("locales/ui", Locale.FRANCE);
+    public static ResourceBundle bundle;
 
     public Configuration(String homeDir) {
         logger = LoggerFactory.getLogger(Configuration.class);
@@ -43,6 +43,15 @@ public class Configuration {
 
         initConf(confDirPath);
         initActions(confDirPath);
+        System.out.println("lang = "+getDisplayLang());
+        System.out.println("Locale = "+new Locale(getDisplayLang()));
+        String[] loc = getDisplayLang().split("_");
+        if(loc.length<=1) {
+            bundle = ResourceBundle.getBundle("locales/ui", new Locale(loc[0]));
+        } else {
+            bundle = ResourceBundle.getBundle("locales/ui", new Locale(loc[0], loc[1]));
+        }
+        System.out.println("bundle crée");
     }
 
     public static String getDefaultWorkspace() {
@@ -264,7 +273,7 @@ public class Configuration {
         if(conf.containsKey(ConfigData.EditorToolbarView.getKey()))
             return conf.getProperty(ConfigData.EditorToolbarView.getKey());
         else
-            return ConfigData.DisplayTheme.getDefaultValue();
+            return ConfigData.EditorToolbarView.getDefaultValue();
     }
 
     public void setEditorToolbarView(String view){
@@ -281,8 +290,19 @@ public class Configuration {
             return ConfigData.DisplayTheme.getDefaultValue();
     }
 
+    public String getDisplayLang(){
+        if(conf.containsKey(ConfigData.DisplayLang.getKey()))
+            return conf.getProperty(ConfigData.DisplayLang.getKey());
+        else
+            return ConfigData.DisplayLang.getDefaultValue();
+    }
+
     public void setDisplayTheme(String displayTheme){
         conf.setProperty(ConfigData.DisplayTheme.getKey(), displayTheme);
+    }
+
+    public void setDisplayLang(String displayLang){
+        conf.setProperty(ConfigData.DisplayLang.getKey(), displayLang);
     }
 
     public boolean isDisplayWindowPersonnalDimension(){
@@ -435,6 +455,7 @@ public class Configuration {
         EditorFontSize("options.editor.fontSize", "14"),
         EditorToolbarView("options.editor.toolbar.view", "yes"),
         DisplayTheme("options.display.theme", "Standard"),
+        DisplayLang("options.display.lang", Locale.FRANCE.toString()),
         DisplayWindowPersonnalDimension("options.display.window.standardDimension", "true"),
         DisplayWindowPersonnalPosition("options.display.window.standardPosition", "true"),
         DisplayWindowMaximize("options.display.window.maximize", "false"),
