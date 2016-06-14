@@ -43,15 +43,12 @@ public class Configuration {
 
         initConf(confDirPath);
         initActions(confDirPath);
-        System.out.println("lang = "+getDisplayLang());
-        System.out.println("Locale = "+new Locale(getDisplayLang()));
-        String[] loc = getDisplayLang().split("_");
-        if(loc.length<=1) {
-            bundle = ResourceBundle.getBundle("locales/ui", new Locale(loc[0]));
-        } else {
-            bundle = ResourceBundle.getBundle("locales/ui", new Locale(loc[0], loc[1]));
+        try {
+            bundle = ResourceBundle.getBundle("locales/ui", Lang.getLangFromCode(getDisplayLang()).getLocale());
+        }catch(Exception e) {
+            bundle = ResourceBundle.getBundle("locales/ui", Locale.FRANCE);
+            logger.error("Impossible de charger la langue "+getDisplayLang());
         }
-        System.out.println("bundle crée");
     }
 
     public static String getDefaultWorkspace() {

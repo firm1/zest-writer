@@ -3,7 +3,10 @@ package com.zestedesavoir.zestwriter.view.dialogs;
 
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.utils.Lang;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -55,7 +58,7 @@ public class OptionsDialog{
     @FXML private RadioButton optSmartEditorNo;
     @FXML private Button optEditorFontButton;
     @FXML private ComboBox<String> optDisplayTheme;
-    @FXML private ComboBox<String> optDisplayLang;
+    @FXML private ComboBox<Lang> optDisplayLang;
     @FXML private RadioButton optDisplayWindowMaximizeYes;
     @FXML private RadioButton optDisplayWindowMaximizeNo;
     @FXML private RadioButton optDisplayWindowDimensionYes;
@@ -97,7 +100,7 @@ public class OptionsDialog{
         config.setEditorSmart(""+optSmartEditor);
 
         config.setDisplayTheme(optDisplayTheme.getValue());
-        config.setDisplayLang(optDisplayLang.getValue());
+        config.setDisplayLang(optDisplayLang.getValue().getLocale().toString());
 
         if(optDisplayWindowMaximizeYes.isSelected())
             config.setDisplayWindowMaximize("true");
@@ -297,8 +300,19 @@ public class OptionsDialog{
         optDisplayTheme.getItems().add("Standard");
         optDisplayTheme.setValue(config.getDisplayTheme());
 
-        optDisplayLang.getItems().addAll(Locale.FRANCE.toString(), Locale.ENGLISH.toString());
-        optDisplayLang.setValue(config.getDisplayLang());
+        optDisplayLang.getItems().addAll(Lang.langAvailable);
+        optDisplayLang.setValue(Lang.getLangFromCode(config.getDisplayLang()));
+        optDisplayLang.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Lang>() {
+            @Override
+            public void changed(ObservableValue<? extends Lang> observable, Lang oldValue, Lang newValue) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle(Configuration.bundle.getString("ui.dialog.change_lang.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_lang.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.change_lang.text"));
+
+                alert.showAndWait();
+            }
+        });
 
         if(config.isDisplayWindowMaximize())
             optDisplayWindowMaximizeYes.setSelected(true);
