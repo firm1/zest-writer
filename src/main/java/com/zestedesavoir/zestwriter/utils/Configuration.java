@@ -20,10 +20,6 @@ public class Configuration {
     private final Logger logger;
     public Properties conf;
     public Properties actions;
-    private String appName = "zestwriter";
-    private String confFileName = "conf.properties";
-    private String actionFileName = "action.properties";
-    private String confDirPath;
     private File confFile;
     private File actionFile;
     private StorageSaver offlineSaver;
@@ -34,7 +30,8 @@ public class Configuration {
 
     public Configuration(String homeDir) {
         logger = LoggerFactory.getLogger(Configuration.class);
-        confDirPath = homeDir+File.separator+"."+this.appName;
+        String appName = "zestwriter";
+        String confDirPath = homeDir + File.separator + "." + appName;
         File confDir = new File(confDirPath);
         if(!confDir.exists()){
             if(!confDir.mkdir())
@@ -72,7 +69,8 @@ public class Configuration {
     private void initActions(String confDirPath) {
         actions = new Properties();
 
-        String actionFilePath = confDirPath+File.separator+this.actionFileName;
+        String actionFileName = "action.properties";
+        String actionFilePath = confDirPath+File.separator+ actionFileName;
         actionFile = new File(actionFilePath);
 
         if(!actionFile.exists()) {
@@ -89,7 +87,8 @@ public class Configuration {
     }
 
     private void initConf(String confDirPath) {
-        String confFilePath = confDirPath+File.separator+this.confFileName;
+        String confFileName = "conf.properties";
+        String confFilePath = confDirPath+File.separator+ confFileName;
         confFile = new File(confFilePath);
         // defaults config
         props = new Properties();

@@ -19,7 +19,6 @@ import com.zestedesavoir.zestwriter.model.MetaAttribute;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
-import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 
 public class TestModel {
 
@@ -170,7 +169,7 @@ public class TestModel {
             return rd.getWords();
         };
 
-        Map<Textual, Integer> result = content.doOnTextual(countWords);
+        content.doOnTextual(countWords);
 
     }
 

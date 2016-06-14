@@ -67,10 +67,10 @@ public class Corrector {
         return builder.build().getPlainText();
     }
 
-    private String generate(int k, char c) {
+    private String generate(int k) {
         StringBuilder st = new StringBuilder();
         for (int i = 0; i < k; i++) {
-            st.append(c);
+            st.append(' ');
         }
         return st.toString();
     }
@@ -126,7 +126,7 @@ public class Corrector {
                             wordsToIgnore.addAll(Arrays.asList(part.replaceAll("[^a-zA-Z0-9 ]", "").split(" ")));
                         }
                     } else {
-                        builder.addText(generate(part.length(), ' '));
+                        builder.addText(generate(part.length()));
                     }
                 }
             }

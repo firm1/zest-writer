@@ -12,11 +12,9 @@ import java.io.File;
 
 public class DownloadContentService extends Service<Void>{
 	private ZdsHttp zdsUtils;
-	private final Logger logger;
 
 	public DownloadContentService(ZdsHttp zdsUtils) {
 		this.zdsUtils = zdsUtils;
-		logger = LoggerFactory.getLogger(getClass());
 	}
 
 	@Override

@@ -110,17 +110,17 @@ public class FunctionTreeFactory {
         }
     }
 
-    public static String padding(int number, char car) {
+    public static String padding(int number) {
         StringBuilder sb = new StringBuilder();
         for(int i=0;i<number;i++) {
-            sb.append(car);
+            sb.append('#');
         }
         return sb.toString();
     }
 
     public static String offsetHeaderMarkdown(String text, int level) {
         String regex = "^(#+)(.{0,}?)(#*)$";
-        return Pattern.compile(regex, Pattern.MULTILINE).matcher(text).replaceAll(padding(level,'#')+"$1$2");
+        return Pattern.compile(regex, Pattern.MULTILINE).matcher(text).replaceAll(padding(level)+"$1$2");
     }
 
     public static String changeLocationImages(String text) {

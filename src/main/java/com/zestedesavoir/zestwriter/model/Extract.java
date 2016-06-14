@@ -7,16 +7,10 @@ import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.function.Function;
 
 
@@ -93,7 +87,7 @@ public class Extract extends MetaContent implements Textual, ContentNode{
 
     @Override
     public String exportContentToMarkdown(int level, int levelDepth) {
-        return FunctionTreeFactory.padding(level, '#') +
+        return FunctionTreeFactory.padding(level) +
                 " " + getTitle() + "\n\n" +
                 FunctionTreeFactory.changeLocationImages(FunctionTreeFactory.offsetHeaderMarkdown(readMarkdown(), levelDepth)) + "\n\n";
     }

@@ -4,8 +4,6 @@ import java.text.BreakIterator;
 
 import org.fxmisc.richtext.StyleClassedTextArea;
 
-import javafx.scene.input.KeyCode;
-
 public class CustomStyledClassedTextArea extends StyleClassedTextArea{
 
 
