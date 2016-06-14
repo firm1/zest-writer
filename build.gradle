@@ -112,7 +112,7 @@ dependencies {
     compile 'org.languagetool:language-fr:3.3',
             'org.apache.httpcomponents:fluent-hc:4.5.2',
             'org.apache.httpcomponents:httpmime:4.5.2',
-            'com.fasterxml.jackson.core:jackson-databind:2.7.4',
+            'com.fasterxml.jackson.core:jackson-databind:2.7.5',
             'de.julielab:aliasi-lingpipe:4.1.0',
             'org.python:jython-standalone:2.7.1b3',
             'org.jsoup:jsoup:1.9.2',
