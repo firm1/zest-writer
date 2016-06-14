@@ -1,6 +1,7 @@
 package com.zestedesavoir.zestwriter.view.task;
 
 import com.zestedesavoir.zestwriter.model.MetadataContent;
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -27,7 +28,7 @@ public class DownloadContentService extends Service<Void>{
                 int iterations = 0;
                 if (zdsUtils.isAuthenticated()) {
                     for (MetadataContent meta : zdsUtils.getContentListOnline()) {
-                        updateMessage("Téléchargement : " + meta.getSlug());
+                        updateMessage(Configuration.bundle.getString("ui.task.download.label")+" : " + meta.getSlug());
                         updateProgress(iterations, max);
                         zdsUtils.downloaDraft(meta.getId(), meta.getType());
                         iterations++;
@@ -35,12 +36,12 @@ public class DownloadContentService extends Service<Void>{
 
                     iterations = 0;
                     for (MetadataContent meta : zdsUtils.getContentListOnline()) {
-                        updateMessage("Décompression : " + meta.getSlug());
+                        updateMessage(Configuration.bundle.getString("ui.task.unzip.label")+" : " + meta.getSlug());
                         updateProgress(iterations, max);
                         zdsUtils.unzipOnlineContent(zdsUtils.getOnlineContentPathDir() + File.separator + meta.getSlug() + ".zip");
                         iterations++;
                     }
-                    updateMessage("Terminé");
+                    updateMessage(Configuration.bundle.getString("ui.task.end.label"));
                     updateProgress(iterations, max);
                 }
                 return null;

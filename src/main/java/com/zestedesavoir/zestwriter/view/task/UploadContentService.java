@@ -1,6 +1,7 @@
 package com.zestedesavoir.zestwriter.view.task;
 
 import com.zestedesavoir.zestwriter.model.MetadataContent;
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -36,9 +37,9 @@ public class UploadContentService extends Service<Void>{
                     String targetSlug = result.get().getValue().getSlug();
 
                     String pathDir = zdsUtils.getOfflineContentPathDir() + File.separator + localSlug;
-                    updateMessage("Compression : "+targetSlug+" en cours ...");
+                    updateMessage(Configuration.bundle.getString("ui.task.zip.label")+" : "+targetSlug+" "+Configuration.bundle.getString("ui.task.pending.label")+" ...");
                     ZipUtil.pack(new File(pathDir), new File(pathDir + ".zip"));
-                    updateMessage("Import : "+targetSlug+" en cours ...");
+                    updateMessage(Configuration.bundle.getString("ui.task.import.label")+" : "+targetSlug+" "+Configuration.bundle.getString("ui.task.pending.label")+" ...");
                     if(result.get().getValue().getType() == null) {
                         if(!zdsUtils.importNewContent(pathDir+ ".zip", result.get().getKey())) {
                             throw new IOException();
@@ -49,7 +50,7 @@ public class UploadContentService extends Service<Void>{
                         }
                     }
 
-                    updateMessage("Synchronisation des contenus ...");
+                    updateMessage(Configuration.bundle.getString("ui.task.content.sync")+" ...");
                     try {
                         zdsUtils.getContentListOnline().clear();
                         zdsUtils.initInfoOnlineContent("tutorial");

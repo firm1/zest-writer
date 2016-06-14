@@ -4,6 +4,7 @@ package com.zestedesavoir.zestwriter.view.dialogs;
 import java.io.File;
 
 import com.zestedesavoir.zestwriter.model.Content;
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MenuController;
 import com.zestedesavoir.zestwriter.view.com.CustomStyledClassedTextArea;
@@ -66,9 +67,9 @@ public class ImageInputDialog{
                         menuManager.gethBottomBox().getChildren().clear();
                         alert = new Alert(AlertType.ERROR);
                         IconFactory.addAlertLogo(alert);
-                        alert.setTitle("Connexion");
-                        alert.setHeaderText("Erreur de connexion");
-                        alert.setContentText("Désolé mais vous n'avez pas été authentifié sur le serveur de Zeste de Savoir.");
+                        alert.setTitle(Configuration.bundle.getString("ui.dialog.auth.failed.title"));
+                        alert.setHeaderText(Configuration.bundle.getString("ui.dialog.auth.failed.header"));
+                        alert.setContentText(Configuration.bundle.getString("ui.dialog.auth.failed.text"));
 
                         alert.showAndWait();
                         break;
@@ -91,10 +92,9 @@ public class ImageInputDialog{
             uploadImageTask.setOnFailed( t -> {
                 Alert alert = new Alert(AlertType.ERROR);
                 IconFactory.addAlertLogo(alert);
-                alert.setTitle("Upload de l'image");
-                alert.setHeaderText("Erreur d'envoi");
-                alert.setContentText("Désolé mais nous n'avons pas réussi à envoyer votre image sur le serveur.\n"
-                        + "Aucune galérie correspondante à votre contenu n'a été trouvée sur le serveur, sinon vérifiez l'état de votre connexion internet !");
+                alert.setTitle(Configuration.bundle.getString("ui.dialog.upload.img.failed.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.upload.img.failed.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.upload.img.failed.text"));
                 alert.showAndWait();
             });
             uploadImageTask.setOnSucceeded(t -> {

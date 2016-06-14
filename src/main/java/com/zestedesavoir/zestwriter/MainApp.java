@@ -161,8 +161,7 @@ public class MainApp extends Application {
     public void initRootLayout() {
         try {
             // Load root layout from fxml file.
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("fxml/Root.fxml"));
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("fxml/Root.fxml"), Configuration.bundle);
             rootLayout = loader.load();
 
             menuController = loader.getController();
@@ -179,8 +178,7 @@ public class MainApp extends Application {
 
     public void showWriter() {
         try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("fxml/Index.fxml"));
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("fxml/Index.fxml"), Configuration.bundle);
             AnchorPane writerLayout = loader.load();
 
             rootLayout.setCenter(writerLayout);
@@ -212,8 +210,8 @@ public class MainApp extends Application {
 
             loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
                 Alert alert = new Alert(Alert.AlertType.NONE);
-                alert.setTitle("Connexion");
-                alert.setHeaderText("Etat de connexion");
+                alert.setTitle(Configuration.bundle.getString("ui.dialog.auth.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.auth.state.header"));
 
                 IconFactory.addAlertLogo(alert);
 
@@ -221,7 +219,7 @@ public class MainApp extends Application {
                     case FAILED:
                     case CANCELLED:
                         alert.setAlertType(Alert.AlertType.ERROR);
-                        alert.setContentText("Désolé mais vous n'avez pas été authentifié sur le serveur de Zeste de Savoir.");
+                        alert.setContentText(Configuration.bundle.getString("ui.dialog.auth.failed.text"));
 
                         alert.showAndWait();
                         menuController.getMenuDownload().setDisable(false);

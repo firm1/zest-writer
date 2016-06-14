@@ -1,5 +1,6 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import javafx.concurrent.Worker.State;
 import javafx.scene.control.ButtonType;
@@ -16,7 +17,7 @@ import java.net.CookieManager;
 
 public class GoogleLoginDialog extends Dialog<Pair<String, String>>{
 	public GoogleLoginDialog(LoginDialog parent, ZdsHttp zdsUtils) {
-		this.setTitle("Authentification via Google");
+		this.setTitle(Configuration.bundle.getString("ui.dialog.auth.google.title"));
 
         final WebView browser = new WebView();
         final WebEngine webEngine = browser.getEngine();

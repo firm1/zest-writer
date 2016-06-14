@@ -52,13 +52,13 @@ public class LoginService extends Service<Void>{
             protected Void call() {
                 if(getUsername() != null) {
                     try {
-                        updateMessage("Connexion au site en cours ...");
+                        updateMessage(Configuration.bundle.getString("ui.task.auth.prepare.label")+" ...");
                         if(zdsUtils.login(getUsername(), getPassword())) {
-                            updateMessage("Recherche des contenus ...");
+                            updateMessage(Configuration.bundle.getString("ui.task.auth.init_content")+" ...");
                             zdsUtils.getContentListOnline().clear();
                             zdsUtils.initInfoOnlineContent("tutorial");
                             zdsUtils.initInfoOnlineContent("article");
-                            updateMessage("Vous avez correctement été connecté, vous pouvez désormais télécharger vos contenus");
+                            updateMessage(Configuration.bundle.getString("ui.task.auth.success.text"));
                         } else {
                             config.resetAuthentification();
                             cancel();
@@ -69,7 +69,7 @@ public class LoginService extends Service<Void>{
                     }
                 } else {
                     if(zdsUtils.isAuthenticated()) {
-                        updateMessage("Recherche des contenus ...");
+                        updateMessage(Configuration.bundle.getString("ui.task.auth.init_content")+" ...");
                         try {
                             zdsUtils.getContentListOnline().clear();
                             zdsUtils.initInfoOnlineContent("tutorial");
@@ -77,7 +77,7 @@ public class LoginService extends Service<Void>{
                         } catch (IOException e) {
                             logger.error("Echec de téléchargement des metadonnés des contenus en ligne", e);
                         }
-                        updateMessage("Vous avez correctement été connecté, vous pouvez désormais télécharger vos contenus");
+                        updateMessage(Configuration.bundle.getString("ui.task.auth.success.text"));
                     } else {
                         config.resetAuthentification();
                         cancel();

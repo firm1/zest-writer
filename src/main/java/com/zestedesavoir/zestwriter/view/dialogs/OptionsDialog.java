@@ -3,7 +3,10 @@ package com.zestedesavoir.zestwriter.view.dialogs;
 
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.utils.Lang;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -22,6 +25,7 @@ import javafx.stage.Stage;
 import org.controlsfx.dialog.FontSelectorDialog;
 
 import java.io.File;
+import java.util.Locale;
 import java.util.Optional;
 
 public class OptionsDialog{
@@ -54,6 +58,7 @@ public class OptionsDialog{
     @FXML private RadioButton optSmartEditorNo;
     @FXML private Button optEditorFontButton;
     @FXML private ComboBox<String> optDisplayTheme;
+    @FXML private ComboBox<Lang> optDisplayLang;
     @FXML private RadioButton optDisplayWindowMaximizeYes;
     @FXML private RadioButton optDisplayWindowMaximizeNo;
     @FXML private RadioButton optDisplayWindowDimensionYes;
@@ -95,6 +100,7 @@ public class OptionsDialog{
         config.setEditorSmart(""+optSmartEditor);
 
         config.setDisplayTheme(optDisplayTheme.getValue());
+        config.setDisplayLang(optDisplayLang.getValue().getLocale().toString());
 
         if(optDisplayWindowMaximizeYes.isSelected())
             config.setDisplayWindowMaximize("true");
@@ -125,9 +131,9 @@ public class OptionsDialog{
 
     @FXML private void HandleCancelButtonAction(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmer l'annulation");
-        alert.setHeaderText(null);
-        alert.setContentText("Voulez-vous vraiment annuler ? Les modifications apportés ne seront pas enregistré.");
+        alert.setTitle(Configuration.bundle.getString("ui.options.cancel.title"));
+        alert.setHeaderText(Configuration.bundle.getString("ui.options.cancel.header"));
+        alert.setContentText(Configuration.bundle.getString("ui.options.cancel.text"));
         IconFactory.addAlertLogo(alert);
 
         Optional<ButtonType> result = alert.showAndWait();
@@ -141,10 +147,10 @@ public class OptionsDialog{
 
     @FXML private void HandleResetButtonAction(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmer la réinitialisation");
-        alert.setHeaderText("Réinitialisation");
-        alert.setContentText("Attention, une réinitialisation est irréversible, souhaitez-vous vraiment réinitialiser vos options ?");
-        alert.getButtonTypes().setAll(new ButtonType("Oui", ButtonBar.ButtonData.YES), new ButtonType("Non", ButtonBar.ButtonData.NO));
+        alert.setTitle(Configuration.bundle.getString("ui.options.reset.title"));
+        alert.setHeaderText(Configuration.bundle.getString("ui.options.reset.header"));
+        alert.setContentText(Configuration.bundle.getString("ui.options.reset.text"));
+        alert.getButtonTypes().setAll(new ButtonType(Configuration.bundle.getString("ui.yes"), ButtonBar.ButtonData.YES), new ButtonType(Configuration.bundle.getString("ui.no"), ButtonBar.ButtonData.NO));
         IconFactory.addAlertLogo(alert);
 
         Optional<ButtonType> result = alert.showAndWait();
@@ -206,7 +212,7 @@ public class OptionsDialog{
 
     @FXML private void HandleGeneralBrowseAction(){
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Espace de travail");
+        directoryChooser.setTitle(Configuration.bundle.getString("ui.options.workspace"));
         directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 
         File directory = directoryChooser.showDialog(null);
@@ -219,8 +225,8 @@ public class OptionsDialog{
     @FXML private void HandleGeneralShowAction(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         IconFactory.addAlertLogo(alert);
-        alert.setTitle("Chemin de votre espace de travail");
-        alert.setHeaderText("Chemin de votre espace de travail");
+        alert.setTitle(Configuration.bundle.getString("ui.options.workspace.title"));
+        alert.setHeaderText(Configuration.bundle.getString("ui.options.workspace.header"));
         alert.setContentText(config.getWorkspacePath());
         alert.showAndWait();
     }
@@ -293,6 +299,20 @@ public class OptionsDialog{
     private void setDisplayOptions(){
         optDisplayTheme.getItems().add("Standard");
         optDisplayTheme.setValue(config.getDisplayTheme());
+
+        optDisplayLang.getItems().addAll(Lang.langAvailable);
+        optDisplayLang.setValue(Lang.getLangFromCode(config.getDisplayLang()));
+        optDisplayLang.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Lang>() {
+            @Override
+            public void changed(ObservableValue<? extends Lang> observable, Lang oldValue, Lang newValue) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle(Configuration.bundle.getString("ui.dialog.change_lang.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_lang.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.change_lang.text"));
+
+                alert.showAndWait();
+            }
+        });
 
         if(config.isDisplayWindowMaximize())
             optDisplayWindowMaximizeYes.setSelected(true);

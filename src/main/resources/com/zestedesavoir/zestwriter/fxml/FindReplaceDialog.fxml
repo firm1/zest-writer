@@ -25,8 +25,8 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="Rechercher" />
-                  <Label text="Remplacer par" GridPane.rowIndex="1" />
+                  <Label text="%ui.dialog.find.label" />
+                  <Label text="%ui.dialog.replace.label.by" GridPane.rowIndex="1" />
                   <TextField fx:id="searchField" onKeyReleased="#HandleSearchFieldChange" GridPane.columnIndex="1" />
                   <TextField fx:id="replaceField" onKeyReleased="#HandleReplaceFieldChange" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
@@ -38,22 +38,22 @@
                <children>
                   <VBox alignment="CENTER_LEFT" prefHeight="10.0" prefWidth="300.0">
                      <children>
-                        <CheckBox fx:id="caseSensitive" mnemonicParsing="false" text="Respecter la case">
+                        <CheckBox fx:id="caseSensitive" mnemonicParsing="false" text="%ui.dialog.find.case">
                            <VBox.margin>
                               <Insets bottom="5.0" top="5.0" />
                            </VBox.margin>
                         </CheckBox>
-                        <CheckBox fx:id="wholeWord" mnemonicParsing="false" text="Mot entier uniquement">
+                        <CheckBox fx:id="wholeWord" mnemonicParsing="false" text="%ui.dialog.find.whole_word">
                            <VBox.margin>
                               <Insets bottom="5.0" top="5.0" />
                            </VBox.margin>
                         </CheckBox>
-                        <CheckBox fx:id="markLines" mnemonicParsing="false" text="Marquer les lignes">
+                        <CheckBox fx:id="markLines" mnemonicParsing="false" text="%ui.dialog.find.show_line">
                            <VBox.margin>
                               <Insets bottom="5.0" top="5.0" />
                            </VBox.margin>
                         </CheckBox>
-                        <CheckBox fx:id="selectionOnly" mnemonicParsing="false" text="Sélection uniquement">
+                        <CheckBox fx:id="selectionOnly" mnemonicParsing="false" text="%ui.dialog.find.select_only">
                            <VBox.margin>
                               <Insets bottom="5.0" top="5.0" />
                            </VBox.margin>
@@ -62,17 +62,17 @@
                   </VBox>
                   <VBox alignment="CENTER_LEFT" prefHeight="10.0" prefWidth="300.0">
                      <children>
-                        <Button fx:id="searchButton" mnemonicParsing="false" onAction="#HandleSearchButtonAction" prefHeight="25.0" prefWidth="284.0" text="Rechercher">
+                        <Button fx:id="searchButton" mnemonicParsing="false" onAction="#HandleSearchButtonAction" prefHeight="25.0" prefWidth="284.0" text="%ui.dialog.fin.label">
                            <VBox.margin>
                               <Insets bottom="5.0" top="5.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="replaceButton" mnemonicParsing="false" onAction="#HandleReplaceButtonAction" prefHeight="25.0" prefWidth="404.0" text="Remplacer">
+                        <Button fx:id="replaceButton" mnemonicParsing="false" onAction="#HandleReplaceButtonAction" prefHeight="25.0" prefWidth="404.0" text="%ui.dialog.replace.label">
                            <VBox.margin>
                               <Insets bottom="5.0" top="5.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="replaceAllButton" mnemonicParsing="false" onAction="#HandleReplaceAllButtonAction" prefHeight="25.0" prefWidth="323.0" text="Remplacer tout">
+                        <Button fx:id="replaceAllButton" mnemonicParsing="false" onAction="#HandleReplaceAllButtonAction" prefHeight="25.0" prefWidth="323.0" text="%ui.dialog.replace.label.all">
                            <VBox.margin>
                               <Insets bottom="5.0" top="5.0" />
                            </VBox.margin>
@@ -83,7 +83,7 @@
             </HBox>
             <HBox prefHeight="10.0" prefWidth="200.0">
                <children>
-                  <Label fx:id="iterations" text="0 itération trouvé" />
+                  <Label fx:id="iterations" text="%ui.dialog.find.empty" />
                </children>
                <VBox.margin>
                   <Insets top="10.0" />

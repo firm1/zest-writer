@@ -3,6 +3,7 @@ package com.zestedesavoir.zestwriter.view.task;
 import java.io.File;
 import java.io.IOException;
 
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zeroturnaround.zip.ZipUtil;
@@ -48,11 +49,11 @@ public class UploadImageService extends Service<String>{
                     String targetSlug = find.getSlug();
 
                     if(zdsUtils.getGalleryId() == null ) {
-                        updateMessage("Recherche de la galérie liée au contenu : "+targetSlug);
+                        updateMessage(Configuration.bundle.getString("ui.task.gallery.init")+" : "+targetSlug);
                         zdsUtils.initGalleryId(targetId, targetSlug);
                     }
 
-                    updateMessage("Envoi de l'image "+imageFile.getAbsolutePath()+" vers la gallerie "+zdsUtils.getGalleryId());
+                    updateMessage(Configuration.bundle.getString("ui.task.gallery.send_image")+" "+imageFile.getAbsolutePath()+" "+Configuration.bundle.getString("ui.task.gallery.to")+" "+zdsUtils.getGalleryId());
 
                     return zdsUtils.importImage(imageFile);
                 }

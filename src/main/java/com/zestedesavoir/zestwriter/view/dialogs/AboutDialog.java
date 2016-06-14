@@ -2,6 +2,7 @@ package com.zestedesavoir.zestwriter.view.dialogs;
 
 
 import com.zestedesavoir.zestwriter.MainApp;
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
@@ -11,7 +12,7 @@ public class AboutDialog{
 
     public void setMainApp(MainApp mainApp){
         this.mainApp = mainApp;
-        version.setText(mainApp.getConfig().getProps().getProperty("version", "Inconnue"));
+        version.setText(mainApp.getConfig().getProps().getProperty("version", Configuration.bundle.getString("ui.version.label.unknown")));
     }
 
     @FXML private void HandleGplHyperlinkAction(){

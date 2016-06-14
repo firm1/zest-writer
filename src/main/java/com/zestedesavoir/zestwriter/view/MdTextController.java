@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import org.python.util.PythonInterpreter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -229,8 +230,7 @@ public class MdTextController {
     public void createTabExtract(Textual extract) throws IOException {
         logger.debug("Tentative de création d'un nouvel onglet pour "+extract.getTitle());
         extract.loadMarkdown();
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("fxml/Editor.fxml"));
+        FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("fxml/Editor.fxml"), Configuration.bundle);
         SplitPane writer = loader.load();
         logger.trace("Fichier Editor.fxml chargé");
 
@@ -247,13 +247,13 @@ public class MdTextController {
             if(!controller.isSaved()) {
                 Alert alert = new Alert(AlertType.CONFIRMATION);
                 IconFactory.addAlertLogo(alert);
-                alert.setTitle("Confirmation");
-                alert.setHeaderText("Confirmation de fermeture");
-                alert.setContentText("Vous avez modifié cet extrait. Voulez-vous enregistrer les modifications ?");
+                alert.setTitle(Configuration.bundle.getString("ui.alert.tab.close.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.alert.tab.close.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.alert.tab.close.text"));
 
-                ButtonType buttonTypeYes = new ButtonType("Oui");
-                ButtonType buttonTypeNo = new ButtonType("Non");
-                ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+                ButtonType buttonTypeYes = new ButtonType(Configuration.bundle.getString("ui.yes"));
+                ButtonType buttonTypeNo = new ButtonType(Configuration.bundle.getString("ui.no"));
+                ButtonType buttonTypeCancel = new ButtonType(Configuration.bundle.getString("ui.cancel"), ButtonData.CANCEL_CLOSE);
 
                 alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo, buttonTypeCancel);
                 alert.setResizable(true);

@@ -20,8 +20,8 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Url de l'image" />
-            <Label text="Titre de l'image" GridPane.rowIndex="1" />
+            <Label text="%ui.dialog.image.url" />
+            <Label text="%ui.dialog.image.title" GridPane.rowIndex="1" />
             <TextField fx:id="link" GridPane.columnIndex="1" />
             <TextField fx:id="title" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
@@ -33,7 +33,7 @@
    <bottom>
       <HBox alignment="CENTER" prefHeight="57.0" prefWidth="400.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" text="Insérer" onAction="#HandleInsertAction">
+            <Button mnemonicParsing="false" text="%ui.dialog.image.insert" onAction="#HandleInsertAction">
                 <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </HBox.margin>
@@ -48,7 +48,7 @@
       </HBox>
    </bottom>
    <top>
-      <Button fx:id="selectButton" mnemonicParsing="false" text="Sélectionner l'image depuis votre ordinateur" BorderPane.alignment="CENTER" onAction="#HandleSelectFileAction">
+      <Button fx:id="selectButton" mnemonicParsing="false" text="%ui.dialog.image.select_local" BorderPane.alignment="CENTER" onAction="#HandleSelectFileAction">
          <BorderPane.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </BorderPane.margin>
