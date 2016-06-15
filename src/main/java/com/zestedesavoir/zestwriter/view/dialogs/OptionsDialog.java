@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 import org.controlsfx.dialog.FontSelectorDialog;
 
 import java.io.File;
+import java.util.Locale;
 import java.util.Optional;
 
 public class OptionsDialog{

@@ -25,14 +25,14 @@ javafx {
     systemProperties = ['prism.disableRegionCaching': 'true']
     arguments = []
 
-    // informations |  grep eclipse
+    // informations
     category = "Editor"
     copyright = "Copyright (c) 2016 Zest Writer"
     description = "This is a Markdown Editor for Zeste de Savoir contents"
-    licenseType = "Apache 2.0"
+    licenseType = "GPLv3"
     vendor = "firm1"
     installSystemWide = true
-    menu = true
+    menu = false
 
     // app icons
     icons {
@@ -109,19 +109,19 @@ tasks.minifyCss.dependsOn tasks.processResources
 
 dependencies {
     testCompile 'junit:junit:4.12'
-    compile 'org.languagetool:language-fr:3.3',
-            'org.apache.httpcomponents:fluent-hc:4.5.2',
-            'org.apache.httpcomponents:httpmime:4.5.2',
-            'com.fasterxml.jackson.core:jackson-databind:2.7.5',
-            'de.julielab:aliasi-lingpipe:4.1.0',
-            'org.python:jython-standalone:2.7.1b3',
-            'org.jsoup:jsoup:1.9.2',
-            'org.slf4j:slf4j-log4j12:1.7.21',
-            'de.jensd:fontawesomefx:8.9',
-            'org.zeroturnaround:zt-zip:1.9',
-            'org.controlsfx:controlsfx:8.40.10',
-            'org.fxmisc.richtext:richtextfx:0.6.10',
-            'com.zestedesavoir.zmarkdown:java-zmarkdown:2.6.0'
+    compile group: 'org.languagetool', name: 'language-fr', version: '3.3'
+    compile group: 'org.apache.httpcomponents', name: 'fluent-hc', version: '4.5.2'
+    compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.2'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.7.5'
+    compile group: 'de.julielab', name: 'aliasi-lingpipe', version: '4.1.0'
+    compile group: 'org.python', name: 'jython-standalone', version: '2.7.1b3'
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.9.2'
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.21'
+    compile group: 'de.jensd', name: 'fontawesomefx', version: '8.9'
+    compile group: 'org.zeroturnaround', name: 'zt-zip', version: '1.9'
+    compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.10'
+    compile group: 'org.fxmisc.richtext', name: 'richtextfx', version: '0.6.10'
+    compile group: 'com.zestedesavoir.zmarkdown', name: 'java-zmarkdown', version: '2.6.0'
 }
 
 test {
@@ -153,3 +153,4 @@ tasks.check.dependsOn jacocoTestReport
 task wrapper(type: Wrapper) {
     gradleVersion = '2.8'
 }
+apply plugin: 'java'

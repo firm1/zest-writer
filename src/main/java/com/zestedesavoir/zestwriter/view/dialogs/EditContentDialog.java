@@ -19,6 +19,7 @@ import javafx.util.Pair;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Object>>>{
 	public static ObservableList<TypeContent> typeOptions = FXCollections.observableArrayList(new TypeContent("ARTICLE", "Article"), new TypeContent("TUTORIAL","Tutoriel"));

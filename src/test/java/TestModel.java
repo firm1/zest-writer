@@ -11,7 +11,7 @@ import java.util.function.Function;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+#import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.model.Container;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Extract;
@@ -19,6 +19,7 @@ import com.zestedesavoir.zestwriter.model.MetaAttribute;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
+import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 
 public class TestModel {
 
@@ -169,7 +170,7 @@ public class TestModel {
             return rd.getWords();
         };
 
-        content.doOnTextual(countWords);
+        Map<Textual, Integer> result = content.doOnTextual(countWords);
 
     }
 

@@ -6,6 +6,7 @@ import java.io.IOException;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zeroturnaround.zip.ZipUtil;
 
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.MetadataContent;

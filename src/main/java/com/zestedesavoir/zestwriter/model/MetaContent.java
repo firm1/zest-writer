@@ -6,7 +6,12 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.function.Function;
 
 @JsonIgnoreProperties({"basePath", "filePath", "editable", "object", "countChildrenExtract", "countDescendantContainer", "rootContent"})

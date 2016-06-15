@@ -1,19 +1,7 @@
-/*
- * Created on Mar 2, 2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 package com.zestedesavoir.zestwriter.utils.readability;
 
 import java.math.BigDecimal;
 
-/**
- * @author Panos Ipeirotis
- *
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
- */
 public class Utilities {
 
 	public static Double round(double d, int decimalPlace) {
