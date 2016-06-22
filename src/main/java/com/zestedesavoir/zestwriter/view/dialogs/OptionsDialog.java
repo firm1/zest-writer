@@ -293,10 +293,16 @@ public class OptionsDialog{
         optDisplayTheme.getItems().addAll(Theme.themeAvailable);
         optDisplayTheme.setValue(Theme.getThemeFromFileName(config.getDisplayTheme()));
 
-        optDisplayLang.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Lang>() {
+        optDisplayTheme.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Theme>() {
             @Override
-            public void changed(ObservableValue<? extends Lang> observable, Lang oldValue, Lang newValue) {
-                // TODO : change theme
+            public void changed(ObservableValue<? extends Theme> observable, Theme oldValue, Theme newValue) {
+                Alert alert = new CustomAlert(Alert.AlertType.WARNING);
+                IconFactory.addAlertLogo(alert);
+                alert.setTitle(Configuration.bundle.getString("ui.dialog.change_theme.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_theme.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.change_theme.text"));
+
+                alert.showAndWait();
             }
         });
 
