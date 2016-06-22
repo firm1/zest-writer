@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleClassedTextArea;
@@ -107,6 +108,8 @@ public class MdConvertController {
         super();
         logger = LoggerFactory.getLogger(MdConvertController.class);
         SourceText = new CustomStyledClassedTextArea();
+        System.out.println(SourceText.getStyleClass());
+        System.out.println(SourceText);
     }
 
     public MdTextController getMdBox() {
@@ -286,6 +289,7 @@ public class MdConvertController {
 
         try{
             BorderPane imageDialog = loader.load();
+            FunctionTreeFactory.addTheming(imageDialog, config);
             ImageInputDialog imageController = loader.getController();
             if(mainApp.getContents().size() > 0) {
                 imageController.setSourceText(SourceText, mainApp.getZdsutils(), mainApp.getMenuController(), mainApp.getContents().get(0));
@@ -388,6 +392,7 @@ public class MdConvertController {
 
         FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("fxml/TableEditor.fxml"), Configuration.bundle);
         BorderPane tableEditor = loader.load();
+        FunctionTreeFactory.addTheming(tableEditor, config);
         TableView<ZRow> tbView = (TableView) tableEditor.getCenter();
 
         TableController controller = loader.getController();
@@ -689,6 +694,7 @@ public class MdConvertController {
 
         try{
             AnchorPane optionsDialog = loader.load();
+            FunctionTreeFactory.addTheming(optionsDialog, config);
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle(Configuration.bundle.getString("ui.dialog.find.title"));

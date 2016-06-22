@@ -1,5 +1,6 @@
 package com.zestedesavoir.zestwriter.view.com;
 
+import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Container;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
@@ -7,6 +8,7 @@ import com.zestedesavoir.zestwriter.model.Extract;
 import com.zestedesavoir.zestwriter.model.MetaAttribute;
 import com.zestedesavoir.zestwriter.model.MetaContent;
 import com.zestedesavoir.zestwriter.model.Textual;
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
 import javafx.application.Platform;
 import javafx.collections.ObservableMap;
@@ -14,6 +16,7 @@ import javafx.event.Event;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
+import javafx.scene.layout.Pane;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -145,5 +148,9 @@ public class FunctionTreeFactory {
             }
             return null;
         }
+    }
+
+    public static void addTheming(Pane pane, Configuration config) {
+        pane.getStylesheets().add(MainApp.class.getResource("css/"+config.getDisplayTheme()).toExternalForm());
     }
 }

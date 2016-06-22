@@ -5,7 +5,9 @@ import com.zestedesavoir.zestwriter.MainApp;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 public class IconFactory {
@@ -77,6 +79,7 @@ public class IconFactory {
 
     public static void addAlertLogo(Alert alert){
         Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
+        alert.getDialogPane().getChildren().stream().filter(node -> node instanceof Label).forEach(node -> ((Label)node).setMinHeight(Region.USE_PREF_SIZE));
         alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
     }
 }

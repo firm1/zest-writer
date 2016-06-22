@@ -1,14 +1,10 @@
 .root {
-    -fx-base: #3C3F41;
-    -fx-background: #3C3F41;
-    -fx-control-inner-background: #3C3F41;
-    -fx-text-inner-color: #F8AD32;
+    -fx-text-inner-color: #044763;
 }
 
 
 .menu-bar {
-    -fx-background-color: -fx-base;
-    -fx-border-color: derive(-fx-background, 20%) derive(-fx-background, 20%) -fx-text-inner-color derive(-fx-background, 20%);
+    -fx-border-color: #DDD #DDD #F8AD32 #DDD;
     -fx-border-width: 0 0 3px 0;
 }
 
@@ -25,7 +21,7 @@
 .hyperlink{
     -fx-border-width:0;
     -fx-underline:false;
-    -fx-text-fill: derive(-fx-base, 90%);
+    -fx-text-fill: derive(-fx-text-inner-color, 90%);
 }
 
 .hyperlink:hover{
@@ -33,13 +29,12 @@
 }
 
 .box-content {
-    -fx-border-color: derive(-fx-base, 10%) derive(-fx-base, 10%) -fx-text-inner-color derive(-fx-base, 10%);
-    -fx-background-color: derive(-fx-base, -20%);
+    -fx-border-color: #DDD #DDD -fx-text-inner-color #DDD;
+    -fx-background-color: #FFF;
 }
 
 .box-content .label {
-    -fx-background-color: derive(-fx-base, -20%);
-    -fx-text-fill: derive(-fx-base, 80%);
+    -fx-background-color: #FFF;
 }
 
 .box-content .hyperlink {
@@ -55,6 +50,7 @@
 .home-header-box {
     -fx-border-width: 0 0 2 0;
     -fx-border-color: #FFF;
+    -fx-background-color: -fx-text-inner-color;
 }
 
 .tab-pane > .tab-header-area > .headers-region > .tab:selected > .tab-container > .tab-label {
@@ -66,15 +62,16 @@
     -fx-fill: -fx-text-inner-color;
 }
 
+
 .styled-text-area {
-    -fx-background-color: derive(-fx-background, -20%);
+    -fx-background-color: -fx-background;
 }
 
 .styled-text-area .text {
-    -fx-fill: derive(-fx-background, 90%);
+    -fx-fill: #000;
 }
 
 .lineno {
     -fx-background-color: derive(-fx-base,20%);
-    -fx-text-fill: derive(-fx-background, 90%);
-}
+    -fx-text-fill: #999;
+}*/

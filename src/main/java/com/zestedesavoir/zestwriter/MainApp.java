@@ -3,6 +3,7 @@ package com.zestedesavoir.zestwriter;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.kenai.jffi.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,6 +64,7 @@ public class MainApp extends Application {
             config = new Configuration(System.getProperty("user.home"));
         }
         zdsutils = new ZdsHttp(config);
+
     }
 
     public static void main(String[] args) {
@@ -163,6 +165,7 @@ public class MainApp extends Application {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("fxml/Root.fxml"), Configuration.bundle);
             rootLayout = loader.load();
+            FunctionTreeFactory.addTheming(rootLayout, config);
 
             menuController = loader.getController();
             menuController.setMainApp(this);

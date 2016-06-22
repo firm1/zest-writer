@@ -4,6 +4,7 @@ package com.zestedesavoir.zestwriter.view.dialogs;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Lang;
+import com.zestedesavoir.zestwriter.utils.Theme;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -57,7 +58,7 @@ public class OptionsDialog{
     @FXML private RadioButton optSmartEditorYes;
     @FXML private RadioButton optSmartEditorNo;
     @FXML private Button optEditorFontButton;
-    @FXML private ComboBox<String> optDisplayTheme;
+    @FXML private ComboBox<Theme> optDisplayTheme;
     @FXML private ComboBox<Lang> optDisplayLang;
     @FXML private RadioButton optDisplayWindowMaximizeYes;
     @FXML private RadioButton optDisplayWindowMaximizeNo;
@@ -99,7 +100,7 @@ public class OptionsDialog{
         config.setEditorToolbarView(optEditorToolbarView);
         config.setEditorSmart(""+optSmartEditor);
 
-        config.setDisplayTheme(optDisplayTheme.getValue());
+        config.setDisplayTheme(optDisplayTheme.getValue().getFilename());
         config.setDisplayLang(optDisplayLang.getValue().getLocale().toString());
 
         if(optDisplayWindowMaximizeYes.isSelected())
@@ -297,8 +298,15 @@ public class OptionsDialog{
     }
 
     private void setDisplayOptions(){
-        optDisplayTheme.getItems().add("Standard");
-        optDisplayTheme.setValue(config.getDisplayTheme());
+        optDisplayTheme.getItems().addAll(Theme.themeAvailable);
+        optDisplayTheme.setValue(Theme.getThemeFromFileName(config.getDisplayTheme()));
+
+        optDisplayLang.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Lang>() {
+            @Override
+            public void changed(ObservableValue<? extends Lang> observable, Lang oldValue, Lang newValue) {
+                // TODO : change theme
+            }
+        });
 
         optDisplayLang.getItems().addAll(Lang.langAvailable);
         optDisplayLang.setValue(Lang.getLangFromCode(config.getDisplayLang()));
@@ -306,6 +314,7 @@ public class OptionsDialog{
             @Override
             public void changed(ObservableValue<? extends Lang> observable, Lang oldValue, Lang newValue) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
+                IconFactory.addAlertLogo(alert);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.change_lang.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_lang.header"));
                 alert.setContentText(Configuration.bundle.getString("ui.dialog.change_lang.text"));

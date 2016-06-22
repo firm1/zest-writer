@@ -11,7 +11,7 @@ import java.util.function.Function;
 import org.junit.Before;
 import org.junit.Test;
 
-#import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.model.Container;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Extract;

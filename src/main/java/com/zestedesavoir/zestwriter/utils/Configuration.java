@@ -280,10 +280,12 @@ public class Configuration {
     }
 
     public String getDisplayTheme(){
-        if(conf.containsKey(ConfigData.DisplayTheme.getKey()))
-            return conf.getProperty(ConfigData.DisplayTheme.getKey());
-        else
-            return ConfigData.DisplayTheme.getDefaultValue();
+        if(conf.containsKey(ConfigData.DisplayTheme.getKey())) {
+            if (Theme.getThemeFromFileName(conf.getProperty(ConfigData.DisplayTheme.getKey())) != null) {
+                return conf.getProperty(ConfigData.DisplayTheme.getKey());
+            }
+        }
+        return ConfigData.DisplayTheme.getDefaultValue();
     }
 
     public String getDisplayLang(){
@@ -450,7 +452,7 @@ public class Configuration {
         EditorFont("options.editor.font", "Fira Mono"),
         EditorFontSize("options.editor.fontSize", "14"),
         EditorToolbarView("options.editor.toolbar.view", "yes"),
-        DisplayTheme("options.display.theme", "Standard"),
+        DisplayTheme("options.display.theme", "light.css"),
         DisplayLang("options.display.lang", Locale.FRANCE.toString()),
         DisplayWindowPersonnalDimension("options.display.window.standardDimension", "true"),
         DisplayWindowPersonnalPosition("options.display.window.standardPosition", "true"),

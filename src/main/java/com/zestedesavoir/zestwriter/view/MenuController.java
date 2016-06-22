@@ -383,8 +383,10 @@ public class MenuController{
         // Button for google
         Button googleAuth = new Button(Configuration.bundle.getString("ui.dialog.auth.google.title"), IconFactory.createGoogleIcon());
         LoginDialog dialog = new LoginDialog(googleAuth, mainApp);
+        FunctionTreeFactory.addTheming(dialog.getDialogPane(), mainApp.getConfig());
         googleAuth.setOnAction(t -> {
             GoogleLoginDialog googleDialog = new GoogleLoginDialog(dialog, mainApp.getZdsutils());
+            FunctionTreeFactory.addTheming(googleDialog.getDialogPane(), mainApp.getConfig());
             googleDialog.show();
         });
         Optional<Pair<String, String>> result = dialog.showAndWait();
@@ -551,6 +553,7 @@ public class MenuController{
             }
             else {
                 Alert alert = new Alert(AlertType.ERROR);
+                IconFactory.addAlertLogo(alert);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.upload.content.failed.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.upload.content.failed.header"));
                 alert.setContentText(Configuration.bundle.getString("ui.dialog.upload.content.failed.text.nofile"));
@@ -680,6 +683,7 @@ public class MenuController{
             AnchorPane aboutDialog = loader.load();
             AboutDialog aboutController = loader.getController();
             aboutController.setMainApp(mainApp);
+            FunctionTreeFactory.addTheming(aboutDialog, mainApp.getConfig());
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle(Configuration.bundle.getString("ui.menu.help.about"));
@@ -700,6 +704,7 @@ public class MenuController{
 
         try{
             AnchorPane optionsDialog = loader.load();
+            FunctionTreeFactory.addTheming(optionsDialog, mainApp.getConfig());
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle(Configuration.bundle.getString("ui.menu.options"));
