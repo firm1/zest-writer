@@ -5,6 +5,7 @@ import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.FlipTable;
+import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.com.CustomFXMLLoader;
 import com.zestedesavoir.zestwriter.view.com.CustomStyledClassedTextArea;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
@@ -13,6 +14,9 @@ import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.ImageInputDialog;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanPropertyBase;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
@@ -27,9 +31,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
@@ -70,6 +72,8 @@ public class MdConvertController {
     private final Logger logger;
     private int xRenderPosition = 0;
     private int yRenderPosition = 0;
+    private StringProperty countChars = new SimpleStringProperty();
+    private StringProperty countWords = new SimpleStringProperty();
     private final static String loadString="<p>"+Configuration.bundle.getString("ui.task.load")+" ...</p>";
     private BooleanPropertyBase isSaved = new BooleanPropertyBase(true) {
 
@@ -124,6 +128,7 @@ public class MdConvertController {
         initRenderTask();
         Platform.runLater(() -> {
             SourceText.replaceText(extract.getMarkdown());
+            initStats();
             SourceText.getUndoManager().forgetHistory();
             SourceText.textProperty().addListener((observableValue, s, s2) -> {
                 tab.setText("! " + extract.getTitle());
@@ -173,6 +178,7 @@ public class MdConvertController {
             if(tab.isSelected()) {
                 Platform.runLater(() -> {
                     SourceText.requestFocus();
+                    initStats();
                 });
             }
         });
@@ -613,6 +619,7 @@ public class MdConvertController {
                 scrollTo(renderView, xRenderPosition, yRenderPosition);
             }
         });
+        performStats();
     }
 
     @FXML private void HandleValidateButtonAction(ActionEvent event) {
@@ -636,6 +643,33 @@ public class MdConvertController {
         SourceText.requestFocus();
     }
 
+    public void performStats() {
+        Readability readText = new Readability(SourceText.getText());
+        countChars.setValue("Cararactères : "+readText.getCharacters());
+        countWords.setValue("Mots : "+readText.getWords());
+    }
+
+    public void initStats() {
+        mainApp.getMenuController().hBottomBox.getChildren().clear();
+        mainApp.getMenuController().hBottomBox.getColumnConstraints().clear();
+        mainApp.getMenuController().hBottomBox.setPadding(new Insets(5, 5, 5, 5));
+        ColumnConstraints c1 = new ColumnConstraints();
+        ColumnConstraints c2 = new ColumnConstraints();
+        ColumnConstraints c3 = new ColumnConstraints();
+        c1.setPercentWidth(70);
+        c2.setPercentWidth(15);
+        c2.setPercentWidth(15);
+        Label chars = new Label();
+        Label words = new Label();
+        chars.setStyle("-fx-font-size: 0.9em;");
+        words.setStyle("-fx-font-size: 0.9em;");
+        mainApp.getMenuController().hBottomBox.getColumnConstraints().addAll(c1, c2, c3);
+        mainApp.getMenuController().hBottomBox.add(chars, 1, 0);
+        mainApp.getMenuController().hBottomBox.add(words, 2, 0);
+        chars.textProperty().bind(countChars);
+        words.textProperty().bind(countWords);
+        performStats();
+    }
 
 
     public void HandleGoToLineAction() {

@@ -122,6 +122,6 @@
       </MenuBar>
    </top>
    <bottom>
-      <HBox fx:id="hBottomBox" prefHeight="30.0" BorderPane.alignment="CENTER" />
+      <GridPane fx:id="hBottomBox" prefHeight="30.0" BorderPane.alignment="CENTER" />
    </bottom>
 </BorderPane>

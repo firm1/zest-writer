@@ -73,7 +73,7 @@ public class MenuController{
     @FXML private MenuItem menuReport;
     @FXML private MenuItem menuLisibility;
     @FXML private MenuItem menuGoogle;
-    @FXML private HBox hBottomBox;
+    @FXML public GridPane hBottomBox;
     @FXML private Menu menuExport;
     @FXML private MenuItem menuQuit;
 
@@ -739,7 +739,7 @@ public class MenuController{
         return labelField;
     }
 
-    public HBox gethBottomBox(){
+    public GridPane gethBottomBox(){
         return hBottomBox;
     }
 

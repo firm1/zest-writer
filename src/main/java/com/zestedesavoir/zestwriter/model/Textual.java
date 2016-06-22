@@ -1,5 +1,7 @@
 package com.zestedesavoir.zestwriter.model;
 
+import com.zestedesavoir.zestwriter.utils.readability.Readability;
+
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
