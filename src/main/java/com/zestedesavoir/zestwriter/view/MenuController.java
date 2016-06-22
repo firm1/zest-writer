@@ -286,15 +286,8 @@ public class MenuController{
         if(paramContent != null){
             // find inexistant directory
             String localPath = defaultDirectory.getAbsolutePath() + File.separator + ZdsHttp.toSlug((String)paramContent.get("title"));
-            String realLocalPath = localPath;
+            String realLocalPath = FunctionTreeFactory.getUniqueDirPath(localPath);
             File folder = new File(realLocalPath);
-            int i = 1;
-            while(folder.exists()){
-                realLocalPath = localPath + "-" + i;
-                folder = new File(realLocalPath);
-                i++;
-            }
-            // create directory
             folder.mkdir();
 
             // create manifest.json

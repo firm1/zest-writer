@@ -2,6 +2,7 @@ package com.zestedesavoir.zestwriter.view.com;
 
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.*;
+import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
 import javafx.application.Platform;
 import javafx.collections.ObservableMap;
@@ -12,6 +13,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.layout.Pane;
 import javafx.util.Pair;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -145,5 +147,29 @@ public class FunctionTreeFactory {
 
     public static void addTheming(Pane pane) {
         pane.getStylesheets().add(MainApp.class.getResource("css/"+ MainApp.config.getDisplayTheme()).toExternalForm());
+    }
+
+    public static String getUniqueFilePath(String path, String ext) {
+        String realLocalPath = path + "." + ext;
+        File file = new File(realLocalPath);
+        int i = 1;
+        while(file.exists()){
+            realLocalPath = path + "-" + i + "." + ext;
+            file = new File(realLocalPath);
+            i++;
+        }
+        return file.getAbsolutePath();
+    }
+
+    public static String getUniqueDirPath(String path) {
+        String realLocalPath = path;
+        File file = new File(realLocalPath);
+        int i = 1;
+        while(file.exists()){
+            realLocalPath = path + "-" + i;
+            file = new File(realLocalPath);
+            i++;
+        }
+        return file.getAbsolutePath();
     }
 }

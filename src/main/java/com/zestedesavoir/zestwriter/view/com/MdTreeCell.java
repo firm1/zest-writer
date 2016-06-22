@@ -105,7 +105,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 extract = new Extract("extract",
                         ZdsHttp.toSlug(result.get()),
                         result.get(),
-                        (getItem().getFilePath() + "/" + ZdsHttp.toSlug(result.get()) + ".md").substring(baseFilePath.length()+1));
+                        FunctionTreeFactory.getUniqueFilePath(getItem().getFilePath() + "/" + ZdsHttp.toSlug(result.get()), "md").substring(baseFilePath.length()+1));
                 extract.setRootContent(content, baseFilePath);
                 ((Container)getItem()).getChildren().add(extract);
                 // create file
@@ -133,11 +133,12 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
                 String slug = ZdsHttp.toSlug(result.get());
+                String baseSlug = FunctionTreeFactory.getUniqueDirPath(getItem().getFilePath() + "/" + slug);
                 Container container = new Container("container",
                         slug,
                         result.get(),
-                        (getItem().getFilePath() + "/" + slug + "/" + "introduction.md").substring(baseFilePath.length()+1),
-                        (getItem().getFilePath() + "/" + slug + "/" + "conclusion.md").substring(baseFilePath.length()+1),
+                        (baseSlug + "/" + "introduction.md").substring(baseFilePath.length()+1),
+                        (baseSlug + "/" + "conclusion.md").substring(baseFilePath.length()+1),
                         new ArrayList<>());
                 container.setBasePath(baseFilePath);
                 ((Container)getItem()).getChildren().add(container);
@@ -154,11 +155,15 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                     if (!introFile.exists()) {
                         introFile.createNewFile();
                     }
+                } catch (IOException e) {
+                    logger.error("Erreur lors de la créeation de "+introFile.getAbsolutePath(), e);
+                }
+                try {
                     if (!concluFile.exists()) {
                         concluFile.createNewFile();
                     }
                 } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
+                    logger.error("Erreur lors de la créeation de "+concluFile.getAbsolutePath(), e);
                 }
                 saveManifestJson();
                 index.openContent(content);

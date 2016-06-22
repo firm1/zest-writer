@@ -94,8 +94,6 @@ public class MdConvertController {
         super();
         logger = LoggerFactory.getLogger(MdConvertController.class);
         SourceText = new CustomStyledClassedTextArea();
-        System.out.println(SourceText.getStyleClass());
-        System.out.println(SourceText);
     }
 
     public MdTextController getMdBox() {
