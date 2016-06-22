@@ -129,6 +129,7 @@ public class MdConvertController {
                 SourceText.getUndoManager().mark();
                 updateRender();
             });
+            updateRender();
         });
 
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
@@ -578,6 +579,7 @@ public class MdConvertController {
                 };
             }
         };
+
         renderTask.setOnFailed(t -> {
             renderTask.reset();
         });
