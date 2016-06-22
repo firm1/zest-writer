@@ -12,6 +12,8 @@ import com.zestedesavoir.zestwriter.view.com.*;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,6 +40,7 @@ public class MdTextController {
     private MainApp mainApp;
     private PythonInterpreter pyconsole;
     private final Logger logger;
+    private MdConvertController controllerConvert;
 
     @FXML private VBox contentBox;
     @FXML private TabPane EditorList;
@@ -56,6 +59,14 @@ public class MdTextController {
     }
 
     public void loadConsolePython() {
+        Task task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+
+                return null;
+            }
+        };
+
         new Thread(() -> {
             pyconsole = new PythonInterpreter();
             pyconsole.exec("from markdown import Markdown");
@@ -217,11 +228,11 @@ public class MdTextController {
         EditorList.getTabs().add(tab);
         EditorList.getSelectionModel().select(tab);
 
-        MdConvertController controller = loader.getController();
-        controller.setMdBox(this, extract, tab);
+        controllerConvert = loader.getController();
+        controllerConvert.setMdBox(this, extract, tab);
 
         tab.setOnCloseRequest(t -> {
-            if(!controller.isSaved()) {
+            if(!controllerConvert.isSaved()) {
                 Alert alert = new CustomAlert(AlertType.CONFIRMATION);
                 alert.setTitle(Configuration.bundle.getString("ui.alert.tab.close.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.alert.tab.close.header"));
@@ -239,7 +250,7 @@ public class MdTextController {
                 if (result.isPresent()) {
                     if (result.get() != buttonTypeCancel) {
                         if (result.get() == buttonTypeYes) {
-                            controller.HandleSaveButtonAction(null);
+                            controllerConvert.HandleSaveButtonAction(null);
                         }
                         Event.fireEvent(tab, new Event(Tab.CLOSED_EVENT));
                     }

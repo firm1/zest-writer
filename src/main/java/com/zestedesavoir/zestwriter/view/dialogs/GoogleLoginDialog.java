@@ -111,7 +111,6 @@ public class GoogleLoginDialog extends CustomDialog<Pair<String, String>> {
                                     org.w3c.dom.Node ktem = childIlNodes.item(k);
                                     if(ktem instanceof Element){
                                         Element aItem = ((Element)ktem);
-                                        //System.out.println("BALISE : "+aItem.getNodeName());
                                         if(aItem.getNodeName().equals("A")) {
                                             String ref = aItem.getAttribute("href");
                                             if(ref.startsWith("/contenus/tutoriels")) {

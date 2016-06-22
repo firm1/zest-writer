@@ -15,6 +15,7 @@ import javafx.application.Platform;
 import javafx.beans.property.BooleanPropertyBase;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker.State;
@@ -33,6 +34,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.util.Pair;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.fxmisc.richtext.LineNumberFactory;
@@ -48,6 +50,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,6 +70,7 @@ public class MdConvertController {
     private final Logger logger;
     private int xRenderPosition = 0;
     private int yRenderPosition = 0;
+    private final static String loadString="<p>"+Configuration.bundle.getString("ui.task.load")+" ...</p>";
     private BooleanPropertyBase isSaved = new BooleanPropertyBase(true) {
 
         @Override
@@ -571,7 +575,14 @@ public class MdConvertController {
                 return new Task<String>() {
                     @Override
                     protected String call() throws Exception {
-                        return before.toString()+markdownToHtml(SourceText.getText())+after.toString();
+                        String html = markdownToHtml(SourceText.getText());
+                        if(html != null) {
+                            return before.toString()+html+after.toString();
+                        } else {
+                            Thread.sleep(5000);
+                            throw new IOException();
+
+                        }
                     }
 
                 };
@@ -579,7 +590,7 @@ public class MdConvertController {
         };
 
         renderTask.setOnFailed(t -> {
-            renderTask.reset();
+            renderTask.restart();
         });
         renderTask.setOnSucceeded(t -> {
             yRenderPosition = getVScrollValue(renderView);
@@ -590,8 +601,7 @@ public class MdConvertController {
         });
     }
 
-    @FXML private void updateRender() {
-
+    @FXML public void updateRender() {
         if (renderTask != null) {
             if(renderTask.getState().equals(State.READY)) {
                 renderTask.start();
@@ -648,7 +658,7 @@ public class MdConvertController {
             PyString render = console.get("render", PyString.class);
             return render.toString();
         } else {
-            return "<p>"+Configuration.bundle.getString("ui.task.load")+" ...</p>";
+            return null;
         }
     }
 

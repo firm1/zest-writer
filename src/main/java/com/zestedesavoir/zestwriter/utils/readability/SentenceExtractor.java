@@ -37,7 +37,6 @@ public class SentenceExtractor {
         int sentEndTok;
         for (int i = 0; i < sentenceBoundaries.length; ++i) {
             sentEndTok = sentenceBoundaries[i];
-            // System.out.println("SENTENCE "+(i+1)+": ");
             StringBuilder sb = new StringBuilder();
             for (int j = sentStartTok; j <= sentEndTok; j++) {
                 sb.append(tokens[j]).append(whites[j + 1]);
@@ -45,7 +44,6 @@ public class SentenceExtractor {
                 // System.out.print(tokens[j]+whites[j+1]);
             }
             result[i] = sb.toString();
-            // System.out.println();
             sentStartTok = sentEndTok + 1;
         }
         return result;
