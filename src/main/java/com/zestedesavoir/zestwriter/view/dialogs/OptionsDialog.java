@@ -5,19 +5,12 @@ import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Lang;
 import com.zestedesavoir.zestwriter.utils.Theme;
+import com.zestedesavoir.zestwriter.view.com.CustomAlert;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -26,7 +19,6 @@ import javafx.stage.Stage;
 import org.controlsfx.dialog.FontSelectorDialog;
 
 import java.io.File;
-import java.util.Locale;
 import java.util.Optional;
 
 public class OptionsDialog{
@@ -131,7 +123,7 @@ public class OptionsDialog{
     }
 
     @FXML private void HandleCancelButtonAction(){
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        Alert alert = new CustomAlert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(Configuration.bundle.getString("ui.options.cancel.title"));
         alert.setHeaderText(Configuration.bundle.getString("ui.options.cancel.header"));
         alert.setContentText(Configuration.bundle.getString("ui.options.cancel.text"));
@@ -147,7 +139,7 @@ public class OptionsDialog{
     }
 
     @FXML private void HandleResetButtonAction(){
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        Alert alert = new CustomAlert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(Configuration.bundle.getString("ui.options.reset.title"));
         alert.setHeaderText(Configuration.bundle.getString("ui.options.reset.header"));
         alert.setContentText(Configuration.bundle.getString("ui.options.reset.text"));
@@ -224,7 +216,7 @@ public class OptionsDialog{
     }
 
     @FXML private void HandleGeneralShowAction(){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Alert alert = new CustomAlert(Alert.AlertType.INFORMATION);
         IconFactory.addAlertLogo(alert);
         alert.setTitle(Configuration.bundle.getString("ui.options.workspace.title"));
         alert.setHeaderText(Configuration.bundle.getString("ui.options.workspace.header"));
@@ -313,7 +305,7 @@ public class OptionsDialog{
         optDisplayLang.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Lang>() {
             @Override
             public void changed(ObservableValue<? extends Lang> observable, Lang oldValue, Lang newValue) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
+                Alert alert = new CustomAlert(Alert.AlertType.WARNING);
                 IconFactory.addAlertLogo(alert);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.change_lang.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_lang.header"));

@@ -1,64 +1,29 @@
 package com.zestedesavoir.zestwriter.view;
 
-import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
-import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
-import static org.fxmisc.wellbehaved.event.EventPattern.keyPressed;
-import static org.fxmisc.wellbehaved.event.EventPattern.keyReleased;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.fxmisc.richtext.LineNumberFactory;
-import org.fxmisc.richtext.StyleClassedTextArea;
-import org.fxmisc.wellbehaved.event.EventHandlerHelper;
-import org.python.core.PyString;
-import org.python.util.PythonInterpreter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.DOMException;
-
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.FlipTable;
+import com.zestedesavoir.zestwriter.view.com.CustomFXMLLoader;
 import com.zestedesavoir.zestwriter.view.com.CustomStyledClassedTextArea;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.ImageInputDialog;
-
 import javafx.application.Platform;
 import javafx.beans.property.BooleanPropertyBase;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.concurrent.Worker;
 import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -69,6 +34,27 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.fxmisc.richtext.LineNumberFactory;
+import org.fxmisc.richtext.StyleClassedTextArea;
+import org.fxmisc.wellbehaved.event.EventHandlerHelper;
+import org.python.core.PyString;
+import org.python.util.PythonInterpreter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.DOMException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
+import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
+import static org.fxmisc.wellbehaved.event.EventPattern.keyPressed;
+import static org.fxmisc.wellbehaved.event.EventPattern.keyReleased;
 
 public class MdConvertController {
     private MainApp mainApp;
@@ -123,7 +109,7 @@ public class MdConvertController {
         this.tab = tab;
         this.extract = extract;
 
-        FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("fxml/Editor.fxml"), Configuration.bundle);
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Editor.fxml"));
         loader.load();
 
         if(mainApp.getConfig().getEditorToolbarView().equals("no")){
@@ -285,11 +271,10 @@ public class MdConvertController {
     }
 
     @FXML private void HandleImgButtonAction(ActionEvent event) {
-        FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("fxml/ImageInput.fxml"), Configuration.bundle);
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/ImageInput.fxml"));
 
         try{
             BorderPane imageDialog = loader.load();
-            FunctionTreeFactory.addTheming(imageDialog, config);
             ImageInputDialog imageController = loader.getController();
             if(mainApp.getContents().size() > 0) {
                 imageController.setSourceText(SourceText, mainApp.getZdsutils(), mainApp.getMenuController(), mainApp.getContents().get(0));
@@ -384,15 +369,14 @@ public class MdConvertController {
     @FXML private void HandleTableButtonAction(ActionEvent event) throws IOException {
         // Create the custom dialog.
         Dialog<Pair<ObservableList, ObservableList<ZRow>>> dialog = new Dialog<>();
-        dialog.setTitle("Editeur de tableau");
+        dialog.setTitle(Configuration.bundle.getString("ui.editor.button.table"));
         dialog.setHeaderText("");
 
         // Set the button types.
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("fxml/TableEditor.fxml"), Configuration.bundle);
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/TableEditor.fxml"));
         BorderPane tableEditor = loader.load();
-        FunctionTreeFactory.addTheming(tableEditor, config);
         TableView<ZRow> tbView = (TableView) tableEditor.getCenter();
 
         TableController controller = loader.getController();
@@ -690,11 +674,10 @@ public class MdConvertController {
     }
 
     @FXML private void HandleFindReplaceDialog(){
-        FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("fxml/FindReplaceDialog.fxml"), Configuration.bundle);
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/FindReplaceDialog.fxml"));
 
         try{
             AnchorPane optionsDialog = loader.load();
-            FunctionTreeFactory.addTheming(optionsDialog, config);
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle(Configuration.bundle.getString("ui.dialog.find.title"));

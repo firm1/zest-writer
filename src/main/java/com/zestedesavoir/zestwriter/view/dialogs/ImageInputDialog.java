@@ -7,6 +7,7 @@ import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MenuController;
+import com.zestedesavoir.zestwriter.view.com.CustomAlert;
 import com.zestedesavoir.zestwriter.view.com.CustomStyledClassedTextArea;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import com.zestedesavoir.zestwriter.view.task.UploadImageService;
@@ -65,7 +66,7 @@ public class ImageInputDialog{
                         break;
                     case CANCELLED:
                         menuManager.gethBottomBox().getChildren().clear();
-                        alert = new Alert(AlertType.ERROR);
+                        alert = new CustomAlert(AlertType.ERROR);
                         IconFactory.addAlertLogo(alert);
                         alert.setTitle(Configuration.bundle.getString("ui.dialog.auth.failed.title"));
                         alert.setHeaderText(Configuration.bundle.getString("ui.dialog.auth.failed.header"));
@@ -90,7 +91,7 @@ public class ImageInputDialog{
         if (selectedFile != null) {
             UploadImageService uploadImageTask = new UploadImageService(zdsUtils, content, selectedFile.getAbsoluteFile());
             uploadImageTask.setOnFailed( t -> {
-                Alert alert = new Alert(AlertType.ERROR);
+                Alert alert = new CustomAlert(AlertType.ERROR);
                 IconFactory.addAlertLogo(alert);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.upload.img.failed.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.upload.img.failed.header"));

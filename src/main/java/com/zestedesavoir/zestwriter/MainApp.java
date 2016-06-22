@@ -1,22 +1,16 @@
 package com.zestedesavoir.zestwriter;
 
-import java.io.IOException;
-import java.util.HashMap;
-
-import com.kenai.jffi.Main;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
+import com.zestedesavoir.zestwriter.view.com.CustomAlert;
+import com.zestedesavoir.zestwriter.view.com.CustomFXMLLoader;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import com.zestedesavoir.zestwriter.view.task.LoginService;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -39,6 +33,11 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 public class MainApp extends Application {
     private Scene scene;
@@ -48,7 +47,7 @@ public class MainApp extends Application {
     private ObservableList<Content> contents = FXCollections.observableArrayList();
     private ZdsHttp zdsutils;
     private MdTextController Index;
-    private Configuration config;
+    public static Configuration config;
     private StringBuilder key = new StringBuilder();
     private Logger logger;
     private MenuController menuController;
@@ -163,9 +162,8 @@ public class MainApp extends Application {
     public void initRootLayout() {
         try {
             // Load root layout from fxml file.
-            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("fxml/Root.fxml"), Configuration.bundle);
+            FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Root.fxml"));
             rootLayout = loader.load();
-            FunctionTreeFactory.addTheming(rootLayout, config);
 
             menuController = loader.getController();
             menuController.setMainApp(this);
@@ -181,7 +179,7 @@ public class MainApp extends Application {
 
     public void showWriter() {
         try {
-            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("fxml/Index.fxml"), Configuration.bundle);
+            FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Index.fxml"));
             AnchorPane writerLayout = loader.load();
 
             rootLayout.setCenter(writerLayout);
@@ -212,7 +210,7 @@ public class MainApp extends Application {
             menuController.getLabelField().textProperty().bind(loginTask.messageProperty());
 
             loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
-                Alert alert = new Alert(Alert.AlertType.NONE);
+                Alert alert = new CustomAlert(Alert.AlertType.NONE);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.auth.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.auth.state.header"));
 

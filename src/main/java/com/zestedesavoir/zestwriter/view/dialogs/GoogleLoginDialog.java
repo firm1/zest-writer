@@ -2,6 +2,7 @@ package com.zestedesavoir.zestwriter.view.dialogs;
 
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
+import com.zestedesavoir.zestwriter.view.com.CustomDialog;
 import javafx.concurrent.Worker.State;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -15,7 +16,7 @@ import org.w3c.dom.NodeList;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 
-public class GoogleLoginDialog extends Dialog<Pair<String, String>>{
+public class GoogleLoginDialog extends CustomDialog<Pair<String, String>> {
 	public GoogleLoginDialog(LoginDialog parent, ZdsHttp zdsUtils) {
 		this.setTitle(Configuration.bundle.getString("ui.dialog.auth.google.title"));
 

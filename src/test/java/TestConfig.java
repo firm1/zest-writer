@@ -30,7 +30,8 @@ public class TestConfig {
         assertEquals(config.getAdvancedServerProtocol(), "https");
         assertEquals(config.getAuthentificationPassword(), "");
         assertEquals(config.getAuthentificationUsername(), "");
-        assertEquals(config.getDisplayTheme(), "Standard");
+        assertEquals(config.getDisplayTheme(), "light.css");
+        assertEquals(config.getDisplayLang(), "fr_FR");
         assertEquals(config.getDisplayWindowHeight() > 0, true);
         assertEquals(config.getDisplayWindowWidth() > 0, true);
         assertEquals(config.getDisplayWindowPositionX() == 0, true);
@@ -52,6 +53,8 @@ public class TestConfig {
         assertEquals(config.getDisplayWindowPositionY(), 20, 0);
         config.setAuthentificationUsername("admin");
         config.setAuthentificationPassword("admin");
+        config.setDisplayLang("en");
+        config.setDisplayTheme("dark.css");
         config.saveConfFile();
 
         config = new Configuration(TEST_DIR.getAbsolutePath());
@@ -60,7 +63,8 @@ public class TestConfig {
         assertEquals(config.getAdvancedServerProtocol(), "http");
         assertEquals(config.getAuthentificationUsername(), "admin");
         assertEquals(config.getAuthentificationPassword(), "admin");
-        assertEquals(config.getDisplayTheme(), "Standard");
+        assertEquals(config.getDisplayTheme(), "dark.css");
+        assertEquals(config.getDisplayLang(), "en");
         assertEquals(config.getDisplayWindowHeight(), 600, 0);
         assertEquals(config.getDisplayWindowWidth(), 800, 0);
         assertEquals(config.getDisplayWindowPositionX(), 10, 0);

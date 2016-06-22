@@ -2,6 +2,7 @@ package com.zestedesavoir.zestwriter.view.dialogs;
 
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.view.com.CustomAlert;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import javafx.application.Platform;
 import javafx.scene.Node;
@@ -49,7 +50,7 @@ public class LoginDialog extends BaseDialog<Pair<String, String>> {
 
         keepConnection.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if(keepConnection.isSelected()){
-                Alert alert = new Alert(Alert.AlertType.WARNING);
+                Alert alert = new CustomAlert(Alert.AlertType.WARNING);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.warning.title"));
                 alert.setContentText(Configuration.bundle.getString("ui.dialog.auth.warning"));
                 IconFactory.addAlertLogo(alert);

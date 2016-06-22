@@ -1,20 +1,5 @@
 package com.zestedesavoir.zestwriter.view;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.function.Function;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.python.core.PyString;
-import org.python.util.PythonInterpreter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
@@ -24,18 +9,15 @@ import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
+import com.zestedesavoir.zestwriter.view.com.CustomAlert;
+import com.zestedesavoir.zestwriter.view.com.CustomFXMLLoader;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import com.zestedesavoir.zestwriter.view.dialogs.AboutDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.GoogleLoginDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.LoginDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.OptionsDialog;
-import com.zestedesavoir.zestwriter.view.task.CorrectionService;
-import com.zestedesavoir.zestwriter.view.task.DownloadContentService;
-import com.zestedesavoir.zestwriter.view.task.ExportPdfService;
-import com.zestedesavoir.zestwriter.view.task.LoginService;
-import com.zestedesavoir.zestwriter.view.task.UploadContentService;
-
+import com.zestedesavoir.zestwriter.view.task.*;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -48,19 +30,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -74,6 +46,20 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.python.core.PyString;
+import org.python.util.PythonInterpreter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.function.Function;
 
 public class MenuController{
     private MainApp mainApp;
@@ -84,11 +70,8 @@ public class MenuController{
 
     @FXML private MenuItem menuDownload;
     @FXML private MenuItem menuUpload;
-    @FXML private MenuItem menuLogin;
-    @FXML private MenuItem menuLogout;
     @FXML private MenuItem menuReport;
     @FXML private MenuItem menuLisibility;
-    @FXML private MenuItem menuAbout;
     @FXML private MenuItem menuGoogle;
     @FXML private HBox hBottomBox;
     @FXML private Menu menuExport;
@@ -262,7 +245,7 @@ public class MenuController{
         labelField.textProperty().bind(correctTask.messageProperty());
         textArea.textProperty().bind(correctTask.valueProperty());
         correctTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
-            Alert alert = new Alert(AlertType.NONE);
+            Alert alert = new CustomAlert(AlertType.NONE);
             IconFactory.addAlertLogo(alert);
 
             switch(newValue){
@@ -383,10 +366,8 @@ public class MenuController{
         // Button for google
         Button googleAuth = new Button(Configuration.bundle.getString("ui.dialog.auth.google.title"), IconFactory.createGoogleIcon());
         LoginDialog dialog = new LoginDialog(googleAuth, mainApp);
-        FunctionTreeFactory.addTheming(dialog.getDialogPane(), mainApp.getConfig());
         googleAuth.setOnAction(t -> {
             GoogleLoginDialog googleDialog = new GoogleLoginDialog(dialog, mainApp.getZdsutils());
-            FunctionTreeFactory.addTheming(googleDialog.getDialogPane(), mainApp.getConfig());
             googleDialog.show();
         });
         Optional<Pair<String, String>> result = dialog.showAndWait();
@@ -414,7 +395,7 @@ public class MenuController{
                 case FAILED:
                 case CANCELLED:
                 case SUCCEEDED:
-                    Alert alert = new Alert(AlertType.INFORMATION);
+                    Alert alert = new CustomAlert(AlertType.INFORMATION);
                     IconFactory.addAlertLogo(alert);
                     alert.setTitle(Configuration.bundle.getString("ui.alert.download.success.title"));
                     alert.setHeaderText(Configuration.bundle.getString("ui.alert.download.success.header"));
@@ -438,7 +419,7 @@ public class MenuController{
                     case FAILED:
                     case CANCELLED:
                         hBottomBox.getChildren().clear();
-                        alert = new Alert(AlertType.ERROR);
+                        alert = new CustomAlert(AlertType.ERROR);
                         IconFactory.addAlertLogo(alert);
                         alert.setTitle(Configuration.bundle.getString("ui.dialog.auth.failed.title"));
                         alert.setHeaderText(Configuration.bundle.getString("ui.dialog.auth.failed.header"));
@@ -511,7 +492,7 @@ public class MenuController{
         UploadContentService uploadContentTask = new UploadContentService(mainApp.getZdsutils(), result);
         labelField.textProperty().bind(uploadContentTask.messageProperty());
         uploadContentTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
-            Alert alert = new Alert(AlertType.NONE);
+            Alert alert = new CustomAlert(AlertType.NONE);
             IconFactory.addAlertLogo(alert);
 
             switch(newValue){
@@ -552,7 +533,7 @@ public class MenuController{
                 uploadContentTask.start();
             }
             else {
-                Alert alert = new Alert(AlertType.ERROR);
+                Alert alert = new CustomAlert(AlertType.ERROR);
                 IconFactory.addAlertLogo(alert);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.upload.content.failed.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.upload.content.failed.header"));
@@ -573,7 +554,7 @@ public class MenuController{
                         break;
                     case CANCELLED:
                         hBottomBox.getChildren().clear();
-                        alert = new Alert(AlertType.ERROR);
+                        alert = new CustomAlert(AlertType.ERROR);
                         IconFactory.addAlertLogo(alert);
                         alert.setTitle(Configuration.bundle.getString("ui.dialog.upload.content.failed.title"));
                         alert.setHeaderText(Configuration.bundle.getString("ui.dialog.upload.content.failed.header"));
@@ -604,7 +585,7 @@ public class MenuController{
             mainApp.getConfig().setWorkspacePath(selectedDirectory.getAbsolutePath());
             mainApp.getConfig().loadWorkspace();
 
-            Alert alert = new Alert(AlertType.INFORMATION);
+            Alert alert = new CustomAlert(AlertType.INFORMATION);
             IconFactory.addAlertLogo(alert);
             alert.setTitle(Configuration.bundle.getString("ui.options.workspace"));
             alert.setHeaderText(Configuration.bundle.getString("ui.dialog.workspace.header"));
@@ -628,7 +609,7 @@ public class MenuController{
             content.saveToMarkdown(selectedFile);
             logger.debug("Export réussi vers " + selectedFile.getAbsolutePath());
 
-            Alert alert = new Alert(AlertType.INFORMATION);
+            Alert alert = new CustomAlert(AlertType.INFORMATION);
             IconFactory.addAlertLogo(alert);
             alert.setTitle(Configuration.bundle.getString("ui.dialog.export.success.title"));
             alert.setHeaderText(Configuration.bundle.getString("ui.dialog.export.success.header"));
@@ -653,7 +634,7 @@ public class MenuController{
             ExportPdfService exportPdfTask = new ExportPdfService(mainApp.getConfig().getPandocProvider(), content, selectedFile);
             labelField.textProperty().bind(exportPdfTask.messageProperty());
             pb.progressProperty().bind(exportPdfTask.progressProperty());
-            Alert alert = new Alert(AlertType.NONE);
+            Alert alert = new CustomAlert(AlertType.NONE);
             IconFactory.addAlertLogo(alert);
             exportPdfTask.setOnFailed((WorkerStateEvent ev) -> {
                 alert.setAlertType(AlertType.ERROR);
@@ -677,13 +658,12 @@ public class MenuController{
     }
 
     @FXML private void HandleAboutButtonAction(ActionEvent event){
-        FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("fxml/AboutDialog.fxml"), Configuration.bundle);
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/AboutDialog.fxml"));
 
         try{
             AnchorPane aboutDialog = loader.load();
             AboutDialog aboutController = loader.getController();
             aboutController.setMainApp(mainApp);
-            FunctionTreeFactory.addTheming(aboutDialog, mainApp.getConfig());
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle(Configuration.bundle.getString("ui.menu.help.about"));
@@ -700,11 +680,10 @@ public class MenuController{
     }
 
     @FXML private void HandleOptionsButtonAction(ActionEvent evnet){
-        FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("fxml/OptionsDialog.fxml"), Configuration.bundle);
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/OptionsDialog.fxml"));
 
         try{
             AnchorPane optionsDialog = loader.load();
-            FunctionTreeFactory.addTheming(optionsDialog, mainApp.getConfig());
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle(Configuration.bundle.getString("ui.menu.options"));
@@ -745,7 +724,7 @@ public class MenuController{
         };
 
         checkService.setOnFailed(t -> {
-            Alert alert = new Alert(AlertType.ERROR);
+            Alert alert = new CustomAlert(AlertType.ERROR);
             IconFactory.addAlertLogo(alert);
             alert.setTitle(Configuration.bundle.getString("ui.dialog.check_update.failed.title"));
             alert.setHeaderText(Configuration.bundle.getString("ui.dialog.check_update.failed.header"));
@@ -754,7 +733,7 @@ public class MenuController{
         });
 
         checkService.setOnSucceeded(t -> {
-            Alert alert = new Alert(AlertType.NONE);
+            Alert alert = new CustomAlert(AlertType.NONE);
             IconFactory.addAlertLogo(alert);
             alert.setTitle(Configuration.bundle.getString("ui.dialog.check_update.success.title"));
 

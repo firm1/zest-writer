@@ -1,5 +1,6 @@
 package com.zestedesavoir.zestwriter.view.com;
 
+import com.kenai.jffi.Main;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Container;
 import com.zestedesavoir.zestwriter.model.Content;
@@ -150,7 +151,7 @@ public class FunctionTreeFactory {
         }
     }
 
-    public static void addTheming(Pane pane, Configuration config) {
-        pane.getStylesheets().add(MainApp.class.getResource("css/"+config.getDisplayTheme()).toExternalForm());
+    public static void addTheming(Pane pane) {
+        pane.getStylesheets().add(MainApp.class.getResource("css/"+ MainApp.config.getDisplayTheme()).toExternalForm());
     }
 }

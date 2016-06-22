@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.view.com.*;
 import org.python.util.PythonInterpreter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +20,6 @@ import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
 import com.zestedesavoir.zestwriter.model.Textual;
-import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
-import com.zestedesavoir.zestwriter.view.com.IconFactory;
-import com.zestedesavoir.zestwriter.view.com.MdTreeCell;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.application.Platform;
@@ -230,7 +228,7 @@ public class MdTextController {
     public void createTabExtract(Textual extract) throws IOException {
         logger.debug("Tentative de création d'un nouvel onglet pour "+extract.getTitle());
         extract.loadMarkdown();
-        FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("fxml/Editor.fxml"), Configuration.bundle);
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Editor.fxml"));
         SplitPane writer = loader.load();
         logger.trace("Fichier Editor.fxml chargé");
 
@@ -245,7 +243,7 @@ public class MdTextController {
 
         tab.setOnCloseRequest(t -> {
             if(!controller.isSaved()) {
-                Alert alert = new Alert(AlertType.CONFIRMATION);
+                Alert alert = new CustomAlert(AlertType.CONFIRMATION);
                 IconFactory.addAlertLogo(alert);
                 alert.setTitle(Configuration.bundle.getString("ui.alert.tab.close.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.alert.tab.close.header"));

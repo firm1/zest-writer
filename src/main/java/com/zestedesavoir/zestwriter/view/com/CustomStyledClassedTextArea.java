@@ -6,8 +6,6 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 
 public class CustomStyledClassedTextArea extends StyleClassedTextArea{
 
-
-
     public CustomStyledClassedTextArea() {
         super(true);
         setWrapText(true);
