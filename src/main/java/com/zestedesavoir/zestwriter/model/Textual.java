@@ -44,7 +44,7 @@ public interface Textual{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return "";
     }
     default void loadMarkdown() {
         setMarkdown(readMarkdown());
