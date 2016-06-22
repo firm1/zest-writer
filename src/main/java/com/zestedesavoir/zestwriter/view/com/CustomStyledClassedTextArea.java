@@ -1,8 +1,8 @@
 package com.zestedesavoir.zestwriter.view.com;
 
-import java.text.BreakIterator;
-
 import org.fxmisc.richtext.StyleClassedTextArea;
+
+import java.text.BreakIterator;
 
 public class CustomStyledClassedTextArea extends StyleClassedTextArea{
 

@@ -1,15 +1,7 @@
 package com.zestedesavoir.zestwriter.view.com;
 
-import com.kenai.jffi.Main;
 import com.zestedesavoir.zestwriter.MainApp;
-import com.zestedesavoir.zestwriter.model.Container;
-import com.zestedesavoir.zestwriter.model.Content;
-import com.zestedesavoir.zestwriter.model.ContentNode;
-import com.zestedesavoir.zestwriter.model.Extract;
-import com.zestedesavoir.zestwriter.model.MetaAttribute;
-import com.zestedesavoir.zestwriter.model.MetaContent;
-import com.zestedesavoir.zestwriter.model.Textual;
-import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.model.*;
 import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
 import javafx.application.Platform;
 import javafx.collections.ObservableMap;

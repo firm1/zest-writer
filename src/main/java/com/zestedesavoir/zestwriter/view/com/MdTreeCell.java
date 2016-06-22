@@ -74,7 +74,6 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
         addMenuItem4.setOnAction(t -> {
             Alert alert = new CustomAlert(AlertType.CONFIRMATION);
-            IconFactory.addAlertLogo(alert);
             alert.setTitle(Configuration.bundle.getString("ui.dialog.delete.title"));
             alert.setHeaderText(Configuration.bundle.getString("ui.dialog.delete.header"));
             alert.setContentText(Configuration.bundle.getString("ui.dialog.delete.text"));

@@ -246,7 +246,6 @@ public class MenuController{
         textArea.textProperty().bind(correctTask.valueProperty());
         correctTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
             Alert alert = new CustomAlert(AlertType.NONE);
-            IconFactory.addAlertLogo(alert);
 
             switch(newValue){
                 case FAILED:
@@ -396,7 +395,6 @@ public class MenuController{
                 case CANCELLED:
                 case SUCCEEDED:
                     Alert alert = new CustomAlert(AlertType.INFORMATION);
-                    IconFactory.addAlertLogo(alert);
                     alert.setTitle(Configuration.bundle.getString("ui.alert.download.success.title"));
                     alert.setHeaderText(Configuration.bundle.getString("ui.alert.download.success.header"));
                     alert.setContentText(Configuration.bundle.getString("ui.alert.download.success.text"));
@@ -420,7 +418,6 @@ public class MenuController{
                     case CANCELLED:
                         hBottomBox.getChildren().clear();
                         alert = new CustomAlert(AlertType.ERROR);
-                        IconFactory.addAlertLogo(alert);
                         alert.setTitle(Configuration.bundle.getString("ui.dialog.auth.failed.title"));
                         alert.setHeaderText(Configuration.bundle.getString("ui.dialog.auth.failed.header"));
                         alert.setContentText(Configuration.bundle.getString("ui.dialog.auth.failed.text"));
@@ -493,7 +490,6 @@ public class MenuController{
         labelField.textProperty().bind(uploadContentTask.messageProperty());
         uploadContentTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
             Alert alert = new CustomAlert(AlertType.NONE);
-            IconFactory.addAlertLogo(alert);
 
             switch(newValue){
                 case FAILED:
@@ -534,7 +530,6 @@ public class MenuController{
             }
             else {
                 Alert alert = new CustomAlert(AlertType.ERROR);
-                IconFactory.addAlertLogo(alert);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.upload.content.failed.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.upload.content.failed.header"));
                 alert.setContentText(Configuration.bundle.getString("ui.dialog.upload.content.failed.text.nofile"));
@@ -555,7 +550,6 @@ public class MenuController{
                     case CANCELLED:
                         hBottomBox.getChildren().clear();
                         alert = new CustomAlert(AlertType.ERROR);
-                        IconFactory.addAlertLogo(alert);
                         alert.setTitle(Configuration.bundle.getString("ui.dialog.upload.content.failed.title"));
                         alert.setHeaderText(Configuration.bundle.getString("ui.dialog.upload.content.failed.header"));
                         alert.setContentText(Configuration.bundle.getString("ui.dialog.upload.content.failed.text"));
@@ -586,7 +580,6 @@ public class MenuController{
             mainApp.getConfig().loadWorkspace();
 
             Alert alert = new CustomAlert(AlertType.INFORMATION);
-            IconFactory.addAlertLogo(alert);
             alert.setTitle(Configuration.bundle.getString("ui.options.workspace"));
             alert.setHeaderText(Configuration.bundle.getString("ui.dialog.workspace.header"));
             alert.setContentText(Configuration.bundle.getString("ui.dialog.workspace.text") + " " + mainApp.getConfig().getWorkspacePath());
@@ -610,7 +603,6 @@ public class MenuController{
             logger.debug("Export réussi vers " + selectedFile.getAbsolutePath());
 
             Alert alert = new CustomAlert(AlertType.INFORMATION);
-            IconFactory.addAlertLogo(alert);
             alert.setTitle(Configuration.bundle.getString("ui.dialog.export.success.title"));
             alert.setHeaderText(Configuration.bundle.getString("ui.dialog.export.success.header"));
             alert.setContentText(Configuration.bundle.getString("ui.dialog.export.success.text")+" \"" + selectedFile.getAbsolutePath() + "\"");
@@ -635,7 +627,6 @@ public class MenuController{
             labelField.textProperty().bind(exportPdfTask.messageProperty());
             pb.progressProperty().bind(exportPdfTask.progressProperty());
             Alert alert = new CustomAlert(AlertType.NONE);
-            IconFactory.addAlertLogo(alert);
             exportPdfTask.setOnFailed((WorkerStateEvent ev) -> {
                 alert.setAlertType(AlertType.ERROR);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.export.failed.title"));
@@ -725,7 +716,6 @@ public class MenuController{
 
         checkService.setOnFailed(t -> {
             Alert alert = new CustomAlert(AlertType.ERROR);
-            IconFactory.addAlertLogo(alert);
             alert.setTitle(Configuration.bundle.getString("ui.dialog.check_update.failed.title"));
             alert.setHeaderText(Configuration.bundle.getString("ui.dialog.check_update.failed.header"));
             alert.setContentText(Configuration.bundle.getString("ui.dialog.check_update.failed.text"));
@@ -734,7 +724,6 @@ public class MenuController{
 
         checkService.setOnSucceeded(t -> {
             Alert alert = new CustomAlert(AlertType.NONE);
-            IconFactory.addAlertLogo(alert);
             alert.setTitle(Configuration.bundle.getString("ui.dialog.check_update.success.title"));
 
             if(!checkService.getValue()){

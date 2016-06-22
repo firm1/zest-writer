@@ -2,12 +2,10 @@ package com.zestedesavoir.zestwriter.view.com;
 
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
 
 public class CustomFXMLLoader extends FXMLLoader{
 

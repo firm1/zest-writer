@@ -6,7 +6,6 @@ import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Lang;
 import com.zestedesavoir.zestwriter.utils.Theme;
 import com.zestedesavoir.zestwriter.view.com.CustomAlert;
-import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -127,7 +126,6 @@ public class OptionsDialog{
         alert.setTitle(Configuration.bundle.getString("ui.options.cancel.title"));
         alert.setHeaderText(Configuration.bundle.getString("ui.options.cancel.header"));
         alert.setContentText(Configuration.bundle.getString("ui.options.cancel.text"));
-        IconFactory.addAlertLogo(alert);
 
         Optional<ButtonType> result = alert.showAndWait();
 
@@ -144,7 +142,6 @@ public class OptionsDialog{
         alert.setHeaderText(Configuration.bundle.getString("ui.options.reset.header"));
         alert.setContentText(Configuration.bundle.getString("ui.options.reset.text"));
         alert.getButtonTypes().setAll(new ButtonType(Configuration.bundle.getString("ui.yes"), ButtonBar.ButtonData.YES), new ButtonType(Configuration.bundle.getString("ui.no"), ButtonBar.ButtonData.NO));
-        IconFactory.addAlertLogo(alert);
 
         Optional<ButtonType> result = alert.showAndWait();
 
@@ -217,7 +214,6 @@ public class OptionsDialog{
 
     @FXML private void HandleGeneralShowAction(){
         Alert alert = new CustomAlert(Alert.AlertType.INFORMATION);
-        IconFactory.addAlertLogo(alert);
         alert.setTitle(Configuration.bundle.getString("ui.options.workspace.title"));
         alert.setHeaderText(Configuration.bundle.getString("ui.options.workspace.header"));
         alert.setContentText(config.getWorkspacePath());
@@ -297,7 +293,6 @@ public class OptionsDialog{
             @Override
             public void changed(ObservableValue<? extends Theme> observable, Theme oldValue, Theme newValue) {
                 Alert alert = new CustomAlert(Alert.AlertType.WARNING);
-                IconFactory.addAlertLogo(alert);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.change_theme.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_theme.header"));
                 alert.setContentText(Configuration.bundle.getString("ui.dialog.change_theme.text"));
@@ -312,7 +307,6 @@ public class OptionsDialog{
             @Override
             public void changed(ObservableValue<? extends Lang> observable, Lang oldValue, Lang newValue) {
                 Alert alert = new CustomAlert(Alert.AlertType.WARNING);
-                IconFactory.addAlertLogo(alert);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.change_lang.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_lang.header"));
                 alert.setContentText(Configuration.bundle.getString("ui.dialog.change_lang.text"));

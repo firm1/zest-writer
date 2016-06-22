@@ -1,10 +1,8 @@
 package com.zestedesavoir.zestwriter.view.com;
 
-import com.zestedesavoir.zestwriter.utils.Configuration;
 import javafx.beans.NamedArg;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.layout.Pane;
 
 public class CustomAlert extends Alert{
 

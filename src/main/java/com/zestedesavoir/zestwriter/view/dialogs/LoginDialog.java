@@ -6,14 +6,8 @@ import com.zestedesavoir.zestwriter.view.com.CustomAlert;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import javafx.application.Platform;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.util.Pair;
 
 public class LoginDialog extends BaseDialog<Pair<String, String>> {
@@ -53,7 +47,6 @@ public class LoginDialog extends BaseDialog<Pair<String, String>> {
                 Alert alert = new CustomAlert(Alert.AlertType.WARNING);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.warning.title"));
                 alert.setContentText(Configuration.bundle.getString("ui.dialog.auth.warning"));
-                IconFactory.addAlertLogo(alert);
 
                 alert.showAndWait();
             }

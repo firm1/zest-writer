@@ -1,7 +1,6 @@
 package com.zestedesavoir.zestwriter.view.com;
 
 import com.zestedesavoir.zestwriter.MainApp;
-
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.scene.control.Alert;
