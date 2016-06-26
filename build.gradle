@@ -26,7 +26,7 @@ javafx {
     arguments = []
 
     // informations
-    category = "Editor"
+    category = "Office"
     copyright = "Copyright (c) 2016 Zest Writer"
     description = "This is a Markdown Editor for Zeste de Savoir contents"
     licenseType = "GPLv3"
