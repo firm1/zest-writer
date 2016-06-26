@@ -4,6 +4,7 @@ import org.languagetool.JLanguageTool;
 import org.languagetool.language.French;
 import org.languagetool.markup.AnnotatedText;
 import org.languagetool.markup.AnnotatedTextBuilder;
+import org.languagetool.rules.Rule;
 import org.languagetool.rules.RuleMatch;
 import org.languagetool.rules.spelling.SpellingCheckRule;
 
@@ -120,9 +121,9 @@ public class Corrector {
                 if (inMarkup) {
                     builder.addMarkup(part);
                 } else {
-                    if (CountPre == 0 && CountSup == 0) {
+                    if (CountPre == 0 && CountSup == 0) { // if we aren't in inline code or not in footnote
                         builder.addText(part);
-                        if (CountCode > 0 || CountEm == 0) {
+                        if (CountCode > 0 || CountEm > 0) { // ignore code or italic
                             wordsToIgnore.addAll(Arrays.asList(part.replaceAll("[^a-zA-Z0-9 ]", "").split(" ")));
                         }
                     } else {
@@ -139,6 +140,7 @@ public class Corrector {
         StringBuilder bf = new StringBuilder(htmlContent);
 
         langTool.getAllActiveRules().stream().filter(rule -> rule instanceof SpellingCheckRule).forEach(rule -> ((SpellingCheckRule) rule).addIgnoreTokens(wordsToIgnore));
+
         List<RuleMatch> matches = new ArrayList<>();
         try {
             matches = langTool.check(markup);
