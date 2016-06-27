@@ -7,7 +7,7 @@ import org.testfx.api.FxRobot;
 
 import static org.testfx.api.FxToolkit.*;
 
-public class AddNewContent extends FxRobot {
+public class AddNewContentTest extends FxRobot {
 
     // Name of the created new content in the test
     public static final String NEW_CONTENT_TITLE = "Nouveau contenu";
