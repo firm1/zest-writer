@@ -38,6 +38,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.Pair;
+import netscape.javascript.JSException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleClassedTextArea;
@@ -630,8 +631,8 @@ public class MdConvertController {
         try {
             String result = corrector.checkHtmlContent(s);
             WebEngine webEngine = renderView.getEngine();
-            webEngine.loadContent("<!doctype html><html lang='fr'><head><meta charset='utf-8'><base href='file://"
-                    + MainApp.class.getResource(".").getPath() + "' /></head><body>" + result + "</body></html>");
+            webEngine.loadContent("<!doctype html><html lang='fr'><head><meta charset='utf-8'><base href='"
+                    + MainApp.class.getResource("assets").toExternalForm() + "' /></head><body>" + result + "</body></html>");
             webEngine.setUserStyleSheetLocation(MainApp.class.getResource("css/content.css").toExternalForm());
         } catch (DOMException e) {
             logger.error(e.getMessage(), e);
@@ -767,7 +768,12 @@ public class MdConvertController {
      * @return vertical scroll value
      */
     public int getVScrollValue(WebView view) {
-        return (Integer) view.getEngine().executeScript("document.body.scrollTop");
+        try {
+            return (Integer) view.getEngine().executeScript("document.body.scrollTop");
+        }
+        catch(JSException e) {
+            return 0;
+        }
     }
 
     /**
@@ -778,6 +784,11 @@ public class MdConvertController {
      * @return horizontal scroll value
      */
     public int getHScrollValue(WebView view) {
-        return (Integer) view.getEngine().executeScript("document.body.scrollLeft");
+        try {
+            return (Integer) view.getEngine().executeScript("document.body.scrollLeft");
+        }
+        catch(JSException e) {
+            return 0;
+        }
     }
 }
