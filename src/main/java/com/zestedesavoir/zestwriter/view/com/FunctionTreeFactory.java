@@ -5,6 +5,7 @@ import com.zestedesavoir.zestwriter.model.*;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.Event;
 import javafx.scene.control.Tab;
@@ -15,6 +16,7 @@ import javafx.util.Pair;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -53,9 +55,7 @@ public class FunctionTreeFactory {
 
     public static boolean clearContent(ObservableMap<Textual, Tab> extracts, TabPane editorList) {
         for(Entry<Textual, Tab> entry:extracts.entrySet()) {
-            Platform.runLater(() -> {
-                Event.fireEvent(entry.getValue(), new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
-            });
+            Event.fireEvent(entry.getValue(), new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
         }
         if(editorList.getTabs().size() <= 1) {
             extracts.clear();
@@ -171,5 +171,14 @@ public class FunctionTreeFactory {
             i++;
         }
         return file.getAbsolutePath();
+    }
+
+    public static void switchContent(Content content, ObservableList<Content> contents) {
+        if(contents.size() > 0) {
+            contents.set(0, content);
+        } else {
+            contents.add(content);
+        }
+
     }
 }

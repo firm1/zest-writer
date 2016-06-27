@@ -120,12 +120,14 @@ public class MdTextController {
         this.mainApp = mainApp;
 
         mainApp.getContents().addListener((ListChangeListener<Content>) change -> {
-            if(FunctionTreeFactory.clearContent(mainApp.getExtracts(), EditorList)) {
-                Summary.setRoot(null);
-                for(Content content:mainApp.getContents()) {
-                    openContent(content);
+            Platform.runLater(() -> {
+                if (FunctionTreeFactory.clearContent(mainApp.getExtracts(), EditorList)) {
+                    Summary.setRoot(null);
+                    for (Content content : mainApp.getContents()) {
+                        openContent(content);
+                    }
                 }
-            }
+            });
         });
 
         mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.TAB, SHORTCUT_DOWN), () -> switchTabTo(true));
@@ -165,9 +167,7 @@ public class MdTextController {
                 description.setWrapText(true);
                 MaterialDesignIconView type = IconFactory.createContentIcon(c.getType());
                 link.setOnAction(t -> {
-                    mainApp.getContents().clear();
-                    FunctionTreeFactory.clearContent(mainApp.getExtracts(), mainApp.getIndex().getEditorList());
-                    mainApp.getContents().add(c);
+                    FunctionTreeFactory.switchContent(c, mainApp.getContents());
                 });
                 bPane.setTop(link);
                 bPane.setBottom(description);
@@ -277,6 +277,7 @@ public class MdTextController {
 
     public void openContent(Content content) {
     	String filePath = content.getBasePath();
+        mainApp.getExtracts().clear();
         logger.debug("Tentative d'ouverture du contenu stocké dans "+filePath);
 
         // load content informations
@@ -296,7 +297,7 @@ public class MdTextController {
                             try {
                                 createTabExtract((Textual)item.getValue());
                             } catch (IOException e) {
-                                logger.error(e.getMessage(), e);
+                                logger.error("Problème lors de la création de l'extrait", e);
                             }
                         } else {
                             TabPaneSkin skin = (TabPaneSkin) EditorList.getSkin();

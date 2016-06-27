@@ -309,9 +309,7 @@ public class MenuController{
                 conclu.createNewFile();
                 Content content = mapper.readValue(manifest, Content.class);
                 content.setRootContent(content, realLocalPath);
-                mainApp.getContents().clear();
-                FunctionTreeFactory.clearContent(mainApp.getExtracts(), mainApp.getIndex().getEditorList());
-                mainApp.getContents().add(content);
+                FunctionTreeFactory.switchContent(content, mainApp.getContents());
 
             }catch(IOException e){
                 logger.error(e.getMessage(), e);
@@ -338,9 +336,7 @@ public class MenuController{
             try{
                 content = mapper.readValue(manifest, Content.class);
                 content.setRootContent(content, selectedDirectory.getAbsolutePath());
-                mainApp.getContents().clear();
-                FunctionTreeFactory.clearContent(mainApp.getExtracts(), mainApp.getIndex().getEditorList());
-                mainApp.getContents().add(content);
+                FunctionTreeFactory.switchContent(content, mainApp.getContents());
             }catch(IOException e){
                 logger.error(e.getMessage(), e);
             }

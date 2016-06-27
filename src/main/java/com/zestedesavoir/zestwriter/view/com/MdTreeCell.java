@@ -41,7 +41,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 		this.index = index;
         if(index.getMainApp().getContents().size() > 0) {
             this.content = index.getMainApp().getContents().stream().findFirst().get();
-            this.baseFilePath = ((Content) index.getSummary().getRoot().getValue()).getBasePath();
+            this.baseFilePath = this.content.getBasePath();
         }
         else {
             this.content = null;
