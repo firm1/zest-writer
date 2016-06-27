@@ -75,10 +75,10 @@ sourceSets {
     }
     test {
         java {
-            srcDir 'src/test/java'
+            srcDirs = ['src/test/java', 'src/integrationTest/java']
         }
         resources {
-            srcDir 'src/test/resources'
+            srcDirs = ['src/test/resources', 'src/integrationTest/resources']
             exclude 'src/test/resources/log4j.properties'
         }
     }
