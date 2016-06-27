@@ -108,8 +108,17 @@ tasks.cssToBin.dependsOn tasks.minifyCss
 tasks.minifyCss.dependsOn tasks.processResources
 
 dependencies {
-    testCompile 'junit:junit:4.12'
     compile group: 'org.languagetool', name: 'language-fr', version: '3.4'
+
+    // Junit dependency need to be sync with testfx library. Check https://github.com/TestFX/TestFX for more information.
+    testCompile "junit:junit:4.10"
+
+    // Library for integration testing for JavaFX.
+    testCompile "org.testfx:testfx-core:4.0.+"
+    testCompile "org.testfx:testfx-legacy:4.0.+", {
+        exclude group: "junit", module: "junit"
+    }
+
     compile group: 'org.apache.httpcomponents', name: 'fluent-hc', version: '4.5.2'
     compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.2'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.7.5'
