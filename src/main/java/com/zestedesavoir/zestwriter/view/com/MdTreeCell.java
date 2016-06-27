@@ -2,23 +2,24 @@ package com.zestedesavoir.zestwriter.view.com;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
-import com.zestedesavoir.zestwriter.model.Container;
-import com.zestedesavoir.zestwriter.model.Content;
-import com.zestedesavoir.zestwriter.model.ContentNode;
-import com.zestedesavoir.zestwriter.model.Extract;
-import com.zestedesavoir.zestwriter.model.MetaContent;
+import com.zestedesavoir.zestwriter.model.*;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
+import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.MdTextController;
-import javafx.scene.control.Alert;
+import com.zestedesavoir.zestwriter.view.dialogs.BaseDialog;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.geometry.Side;
+import javafx.scene.chart.*;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.control.TextInputDialog;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class MdTreeCell extends TreeCell<ContentNode>{
@@ -55,11 +57,19 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         MenuItem addMenuItem3 = new MenuItem(Configuration.bundle.getString("ui.actions.rename.label"));
         MenuItem addMenuItem4 = new MenuItem(Configuration.bundle.getString("ui.actions.delete.label"));
         MenuItem addMenuItem5 = new MenuItem(Configuration.bundle.getString("ui.actions.edit.label"));
+        Menu menuStats = new Menu(Configuration.bundle.getString("ui.actions.stats.label"));
+        MenuItem menuStatCountHisto = new MenuItem(Configuration.bundle.getString("ui.actions.stats.count.histo"));
+        MenuItem menuStatCountPie = new MenuItem(Configuration.bundle.getString("ui.actions.stats.count.pie"));
+        menuStats.getItems().add(menuStatCountHisto);
+        menuStats.getItems().add(menuStatCountPie);
         addMenuItem1.setGraphic(IconFactory.createFileIcon());
         addMenuItem2.setGraphic(IconFactory.createAddFolderIcon());
         addMenuItem3.setGraphic(IconFactory.createEditIcon());
         addMenuItem4.setGraphic(IconFactory.createRemoveIcon());
         addMenuItem5.setGraphic(IconFactory.createEditIcon());
+        menuStats.setGraphic(IconFactory.createStatsIcon());
+        menuStatCountHisto.setGraphic(IconFactory.createStatsHistoIcon());
+        menuStatCountPie.setGraphic(IconFactory.createStatsPieIcon());
         addMenu.getItems().clear();
 
         if (item.canTakeContainer(((Content)index.getSummary().getRoot().getValue()))) {
@@ -73,6 +83,10 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         }
         if (item instanceof Content) {
             addMenu.getItems().add(addMenuItem5);
+        }
+        if(item instanceof Container) {
+            addMenu.getItems().add(new SeparatorMenuItem());
+            addMenu.getItems().add(menuStats);
         }
         if (item.canDelete()) {
             addMenu.getItems().add(new SeparatorMenuItem());
@@ -222,6 +236,72 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }
+        });
+
+        menuStatCountHisto.setOnAction(t -> {
+            logger.debug("Tentative de calcul des statistiques de type histogramme");
+            BaseDialog dialog = new BaseDialog(Configuration.bundle.getString("ui.actions.stats.label"), Configuration.bundle.getString("ui.actions.stats.header")+" "+getItem().getTitle());
+            dialog.getDialogPane().setPrefSize(800, 600);
+            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+
+            // draw
+            final CategoryAxis xAxis = new CategoryAxis();
+            final NumberAxis yAxis = new NumberAxis();
+            final BarChart<String,Number> barChart = new BarChart<>(xAxis, yAxis);
+            barChart.setCategoryGap(5);
+            barChart.setBarGap(5);
+
+            xAxis.setLabel(Configuration.bundle.getString("ui.actions.stats.xaxis"));
+            yAxis.setLabel(Configuration.bundle.getString("ui.actions.stats.yaxis"));
+
+            XYChart.Series series1 = new XYChart.Series();
+            series1.setName(Configuration.bundle.getString("ui.actions.stats.type.histogram"));
+            Container container = (Container) getItem();
+            Function<Textual, Integer> performCount = (Textual ch) -> {
+                String md = ch.readMarkdown();
+                Readability readText = new Readability(md);
+                return readText.getCharacters();
+            };
+            Map<Textual, Integer> stat = container.doOnTextual(performCount);
+            for(Map.Entry<Textual, Integer> st:stat.entrySet()) {
+                if(!(st.getKey() instanceof MetaAttribute)) {
+                    series1.getData().add(new XYChart.Data(st.getKey().getTitle(), st.getValue()));
+                }
+            }
+            barChart.getData().addAll(series1);
+            dialog.getDialogPane().setContent(barChart);
+            dialog.setResizable(true);
+            dialog.showAndWait();
+        });
+
+        menuStatCountPie.setOnAction(t -> {
+            logger.debug("Tentative de calcul des statistiques de type Camembert");
+            BaseDialog dialog = new BaseDialog(Configuration.bundle.getString("ui.actions.stats.label"), Configuration.bundle.getString("ui.actions.stats.header")+" "+getItem().getTitle());
+            dialog.getDialogPane().setPrefSize(800, 600);
+            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+
+            // draw
+            ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+            Container container = (Container) getItem();
+            Function<Textual, Integer> performCount = (Textual ch) -> {
+                String md = ch.readMarkdown();
+                Readability readText = new Readability(md);
+                return readText.getCharacters();
+            };
+            Map<Textual, Integer> stat = container.doOnTextual(performCount);
+            for(Map.Entry<Textual, Integer> st:stat.entrySet()) {
+                if(!(st.getKey() instanceof MetaAttribute)) {
+                    pieChartData.add(new PieChart.Data(st.getKey().getTitle(), st.getValue()));
+                }
+            }
+            final PieChart chart = new PieChart(pieChartData);
+
+            chart.setTitle(Configuration.bundle.getString("ui.actions.stats.type.pie"));
+            chart.setLegendVisible(false);
+
+            dialog.getDialogPane().setContent(chart);
+            dialog.setResizable(true);
+            dialog.showAndWait();
         });
     }
 

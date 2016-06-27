@@ -57,6 +57,18 @@ public class IconFactory {
         return makeIcon(MaterialDesignIcon.ARROW_DOWN, "#48a200");
     }
 
+    public static MaterialDesignIconView createStatsIcon() {
+        return makeIcon(MaterialDesignIcon.CHART_AREASPLINE, "#48a200");
+    }
+
+    public static MaterialDesignIconView createStatsHistoIcon() {
+        return makeIcon(MaterialDesignIcon.CHART_BAR, "#48a200");
+    }
+
+    public static MaterialDesignIconView createStatsPieIcon() {
+        return makeIcon(MaterialDesignIcon.CHART_PIE, "#48a200");
+    }
+
     public static MaterialDesignIconView createLinkIcon() {
         return makeIcon(MaterialDesignIcon.LINK, "#48a200");
     }
