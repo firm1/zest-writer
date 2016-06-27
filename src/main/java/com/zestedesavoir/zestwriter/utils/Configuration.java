@@ -422,6 +422,17 @@ public class Configuration {
         return ;
     }
 
+    public void delActionProject(String projectFileName) {
+        List<String> existant = getActions();
+        List<String> recents = new ArrayList<>(existant);
+        if(recents.contains(projectFileName)) {
+            recents.remove(projectFileName);
+        }
+        actions.put(ActionData.LastProjects.getKey(), recents.stream().limit(5).map(Object::toString).collect(Collectors.joining(",")));
+        saveActionFile();
+        return ;
+    }
+
     public enum ActionData{
         LastProjects("content.open", "");
         private String key;

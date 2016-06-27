@@ -80,7 +80,7 @@ public class MenuController{
 
     public MenuController(){
         super();
-        logger = LoggerFactory.getLogger(MenuController.class);
+        logger = LoggerFactory.getLogger(getClass());
     }
 
     public void setMainApp(MainApp mainApp){

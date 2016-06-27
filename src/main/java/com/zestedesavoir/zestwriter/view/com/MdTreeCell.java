@@ -1,6 +1,7 @@
 package com.zestedesavoir.zestwriter.view.com;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Container;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class MdTreeCell extends TreeCell<ContentNode>{
 	private MdTextController index;
@@ -37,8 +39,13 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
     public MdTreeCell(MdTextController index) {
 		this.index = index;
-		this.content = index.getMainApp().getContents().get(0);
-		this.baseFilePath = ((Content) index.getSummary().getRoot().getValue()).getBasePath();
+        if(index.getMainApp().getContents().size() > 0) {
+            this.content = index.getMainApp().getContents().stream().findFirst().get();
+            this.baseFilePath = ((Content) index.getSummary().getRoot().getValue()).getBasePath();
+        }
+        else {
+            this.content = null;
+        }
 		this.logger = LoggerFactory.getLogger(getClass());
 	}
 
@@ -81,14 +88,25 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 logger.debug("Tentative de suppression");
-                // delete in logical tree
-                Container parentContainer = (Container) getTreeItem().getParent().getValue();
-                parentContainer.getChildren().remove(getItem());
-                // delete in gui tree
-                getTreeItem().getParent().getChildren().remove(getTreeItem());
-                // delete physically file
-                getItem().delete();
-                saveManifestJson();
+                if(getTreeItem().getValue() instanceof Content) {
+                    Content deleteContent = (Content) getTreeItem().getValue();
+                    // delete last projects
+                    MainApp.config.delActionProject(deleteContent.getFilePath());
+                    // delete physically file
+                    deleteContent.delete();
+                    // delete in logical tree
+                    index.getMainApp().getContents().clear();
+                    index.refreshRecentProject();
+                } else {
+                    // delete in logical tree
+                    Container parentContainer = (Container) getTreeItem().getParent().getValue();
+                    parentContainer.getChildren().remove(getItem());
+                    // delete in gui tree
+                    getTreeItem().getParent().getChildren().remove(getTreeItem());
+                    // delete physically file
+                    getItem().delete();
+                    saveManifestJson();
+                }
             }
         });
 

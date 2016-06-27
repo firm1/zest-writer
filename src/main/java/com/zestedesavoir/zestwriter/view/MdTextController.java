@@ -121,6 +121,7 @@ public class MdTextController {
 
         mainApp.getContents().addListener((ListChangeListener<Content>) change -> {
             if(FunctionTreeFactory.clearContent(mainApp.getExtracts(), EditorList)) {
+                Summary.setRoot(null);
                 for(Content content:mainApp.getContents()) {
                     openContent(content);
                 }
