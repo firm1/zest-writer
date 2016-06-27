@@ -57,6 +57,8 @@ Les instructions se trouvent sur [ce post](https://zestedesavoir.com/forums/suje
 
 ![](http://zestedesavoir.com/media/galleries/2958/0796bf63-8ff3-41a1-9550-2c9ff31089b2.png)
 
+![](http://zestedesavoir.com/media/galleries/2958/90d51a40-f5ba-431f-8a55-c4c556048535.png)
+
 ## Fonctionnalités supportées
 
 ### La rédaction
