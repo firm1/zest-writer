@@ -60,7 +60,7 @@ public class MainApp extends Application {
         super();
         logger = LoggerFactory.getLogger(MenuController.class);
 
-        if(args.length > 0) {
+        if(args != null && args.length > 0) {
             config = new Configuration(args[0]);
         } else {
             File sample = new File(System.getProperty("user.home"));
