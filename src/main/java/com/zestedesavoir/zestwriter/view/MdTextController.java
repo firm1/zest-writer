@@ -156,28 +156,30 @@ public class MdTextController {
         int row=0, col=0, size=2;
         for(String recentFilePath:mainApp.getConfig().getActions()) {
             File manifest = new File(recentFilePath + File.separator + "manifest.json");
-            BorderPane bPane = new BorderPane();
-            bPane.setPadding(new Insets(10, 10, 10, 10));
-            bPane.getStyleClass().add("box-content");
-            try {
-                Content c = mapper.readValue(manifest, Content.class);
-                c.setRootContent(c, recentFilePath);
-                Hyperlink link = new Hyperlink(c.getTitle());
-                Label description = new Label(c.getDescription());
-                description.setWrapText(true);
-                MaterialDesignIconView type = IconFactory.createContentIcon(c.getType());
-                link.setOnAction(t -> {
-                    FunctionTreeFactory.switchContent(c, mainApp.getContents());
-                });
-                bPane.setTop(link);
-                bPane.setBottom(description);
-                bPane.setLeft(type);
-                gPane.add(bPane, col%size, row);
-            } catch (IOException e) {
-                logger.error("Impossible de lire le contenu répertorié dans : "+recentFilePath, e);
+            if(manifest.exists()) {
+                BorderPane bPane = new BorderPane();
+                bPane.setPadding(new Insets(10, 10, 10, 10));
+                bPane.getStyleClass().add("box-content");
+                try {
+                    Content c = mapper.readValue(manifest, Content.class);
+                    c.setRootContent(c, recentFilePath);
+                    Hyperlink link = new Hyperlink(c.getTitle());
+                    Label description = new Label(c.getDescription());
+                    description.setWrapText(true);
+                    MaterialDesignIconView type = IconFactory.createContentIcon(c.getType());
+                    link.setOnAction(t -> {
+                        FunctionTreeFactory.switchContent(c, mainApp.getContents());
+                    });
+                    bPane.setTop(link);
+                    bPane.setBottom(description);
+                    bPane.setLeft(type);
+                    gPane.add(bPane, col % size, row);
+                } catch (IOException e) {
+                    logger.error("Impossible de lire le contenu répertorié dans : " + recentFilePath, e);
+                }
+                col++;
+                if (col % size == 0) row++;
             }
-            col++;
-            if(col%size==0) row++;
         }
         contentBox.getChildren().add(gPane);
     }
