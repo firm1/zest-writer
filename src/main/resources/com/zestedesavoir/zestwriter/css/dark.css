@@ -79,6 +79,12 @@
     -fx-text-fill: derive(-fx-background, 90%);
 }
 
+.subtitle {
+    -fx-font-weight: bold;
+    -fx-font-size: 13pt;
+    -fx-text-fill: #ea9408;
+    -fx-label-padding: 20;
+}
 .label-bottom {
     -fx-fill: #FFF;
 }

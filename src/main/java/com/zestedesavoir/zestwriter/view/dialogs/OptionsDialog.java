@@ -30,20 +30,6 @@ public class OptionsDialog{
     private String optEditorToolbarView;
     private boolean optSmartEditor;
 
-    @FXML private Hyperlink optionGeneral;
-    @FXML private Hyperlink optionEditor;
-    @FXML private Hyperlink optionDisplay;
-    @FXML private Hyperlink optionShortcut;
-    @FXML private Hyperlink optionAuthentification;
-    @FXML private Hyperlink optionAdvanced;
-
-    @FXML private AnchorPane optionGeneralPane;
-    @FXML private AnchorPane optionEditorPane;
-    @FXML private AnchorPane optionDisplayPane;
-    @FXML private AnchorPane optionShortcutPane;
-    @FXML private AnchorPane optionAuthentificationPane;
-    @FXML private AnchorPane optionAdvancedPane;
-
     @FXML private RadioButton optEditorToolbarViewYes;
     @FXML private RadioButton optEditorToolbarViewNo;
     @FXML private RadioButton optSmartEditorYes;
@@ -78,11 +64,6 @@ public class OptionsDialog{
 
     public void setWindow(Stage window){
         this.optionsWindow = window;
-    }
-
-    @FXML private void initialize(){
-        hideAllPane();
-        optionGeneralPane.setVisible(true);
     }
 
     @FXML private void HandleSaveButtonAction(){
@@ -150,54 +131,6 @@ public class OptionsDialog{
                 resetOptions();
             }
         }
-    }
-
-    @FXML private void HandleHyperlinkGeneralLabel(){
-        hideAllPane();
-        optionGeneralPane.setVisible(true);
-
-        resetHyperlinkColor();
-        optionGeneral.setTextFill(Color.BLACK);
-    }
-
-    @FXML private void HandleHyperlinkEditorLabel(){
-        hideAllPane();
-        optionEditorPane.setVisible(true);
-
-        resetHyperlinkColor();
-        optionEditor.setTextFill(Color.BLACK);
-    }
-
-    @FXML private void HandleHyperlinkDisplayLabel(){
-        hideAllPane();
-        optionDisplayPane.setVisible(true);
-
-        resetHyperlinkColor();
-        optionDisplay.setTextFill(Color.BLACK);
-    }
-
-    @FXML private void HandleHyperlinkShortcutLabel(){
-        hideAllPane();
-        optionShortcutPane.setVisible(true);
-
-        resetHyperlinkColor();
-        optionShortcut.setTextFill(Color.BLACK);
-    }
-
-    @FXML private void HandleHyperlinkAuthentificationLabel(){
-        hideAllPane();
-        optionAuthentificationPane.setVisible(true);
-
-        resetHyperlinkColor();
-        optionAuthentification.setTextFill(Color.BLACK);
-    }
-
-    @FXML private void HandleHyperlinkAdvancedLabel(){
-        hideAllPane();
-        optionAdvancedPane.setVisible(true);
-
-        resetHyperlinkColor();
-        optionAdvanced.setTextFill(Color.BLACK);
     }
 
     @FXML private void HandleGeneralBrowseAction(){
@@ -353,24 +286,6 @@ public class OptionsDialog{
         optAdvancedProtocol.setValue(config.getAdvancedServerProtocol());
         optAdvancedHost.setText(config.getAdvancedServerHost());
         optAdvancedPort.setText(config.getAdvancedServerPort());
-    }
-
-    private void resetHyperlinkColor(){
-        optionGeneral.setTextFill(Color.web("#656565"));
-        optionEditor.setTextFill(Color.web("#656565"));
-        optionDisplay.setTextFill(Color.web("#656565"));
-        optionShortcut.setTextFill(Color.web("#656565"));
-        optionAuthentification.setTextFill(Color.web("#656565"));
-        optionAdvanced.setTextFill(Color.web("#656565"));
-    }
-
-    private void hideAllPane(){
-        optionGeneralPane.setVisible(false);
-        optionEditorPane.setVisible(false);
-        optionDisplayPane.setVisible(false);
-        optionShortcutPane.setVisible(false);
-        optionAuthentificationPane.setVisible(false);
-        optionAdvancedPane.setVisible(false);
     }
 
     private void resetOptions(){
