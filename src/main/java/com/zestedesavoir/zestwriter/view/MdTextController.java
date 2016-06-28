@@ -187,9 +187,7 @@ public class MdTextController {
     public void closeCurrentTab() {
         if (EditorList.getTabs().size() > 1) {
             Tab selectedTab = EditorList.getSelectionModel().getSelectedItem();
-            Platform.runLater(() -> {
-                Event.fireEvent(selectedTab, new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
-            });
+            Event.fireEvent(selectedTab, new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
         }
     }
 
@@ -256,6 +254,8 @@ public class MdTextController {
                             controllerConvert.HandleSaveButtonAction(null);
                         }
                         Event.fireEvent(tab, new Event(Tab.CLOSED_EVENT));
+                    } else {
+                        t.consume();
                     }
                 }
             } else {
