@@ -1,3 +1,6 @@
+package integration;
+
+import annotation.MediumTest;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import javafx.collections.ObservableList;
@@ -37,6 +40,7 @@ public class AddNewContentTest extends FxRobot {
      * This test doesn't check if article file (manifest and other file) are created.
      */
     @Test
+    @MediumTest
     public void createNewArticleTest() {
         assertContentHaveBeenCreated("Article");
     }
@@ -47,6 +51,7 @@ public class AddNewContentTest extends FxRobot {
      * This test doesn't check if article file (manifest and other file) are created.
      */
     @Test
+    @MediumTest
     public void createNewTutorialTest() {
         assertContentHaveBeenCreated("Tutoriel");
     }
