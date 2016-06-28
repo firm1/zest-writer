@@ -104,6 +104,8 @@ public class MainApp extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Zest Writer");
         this.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("assets/static/icons/logo.png")));
+        this.primaryStage.setMinWidth(800);
+        this.primaryStage.setMinHeight(500);
 
         if(config.isDisplayWindowMaximize()){
             this.primaryStage.setMaximized(true);
