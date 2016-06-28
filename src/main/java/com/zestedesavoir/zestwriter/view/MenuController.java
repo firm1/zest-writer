@@ -650,7 +650,8 @@ public class MenuController{
             Scene scene = new Scene(aboutDialog);
             dialogStage.setScene(scene);
             dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setResizable(false);
+            dialogStage.initModality(Modality.WINDOW_MODAL);
 
             dialogStage.show();
         }catch(IOException e){
