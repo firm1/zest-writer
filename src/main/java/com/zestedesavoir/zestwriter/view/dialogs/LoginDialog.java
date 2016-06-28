@@ -44,7 +44,7 @@ public class LoginDialog extends BaseDialog<Pair<String, String>> {
 
         keepConnection.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if(keepConnection.isSelected()){
-                Alert alert = new CustomAlert(Alert.AlertType.WARNING);
+                Alert alert = new CustomAlert(Alert.AlertType.WARNING, mainApp.getPrimaryStage());
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.warning.title"));
                 alert.setContentText(Configuration.bundle.getString("ui.dialog.auth.warning"));
 

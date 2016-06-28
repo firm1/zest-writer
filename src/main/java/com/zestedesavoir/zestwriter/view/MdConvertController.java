@@ -287,9 +287,9 @@ public class MdConvertController {
             BorderPane imageDialog = loader.load();
             ImageInputDialog imageController = loader.getController();
             if(mainApp.getContents().size() > 0) {
-                imageController.setSourceText(SourceText, mainApp.getZdsutils(), mainApp.getMenuController(), mainApp.getContents().get(0));
+                imageController.setSourceText(mainApp, SourceText, mainApp.getZdsutils(), mainApp.getMenuController(), mainApp.getContents().get(0));
             } else {
-                imageController.setSourceText(SourceText, mainApp.getZdsutils(), mainApp.getMenuController(), null);
+                imageController.setSourceText(mainApp, SourceText, mainApp.getZdsutils(), mainApp.getMenuController(), null);
             }
 
             Stage dialogStage = new Stage();

@@ -209,7 +209,7 @@ public class MainApp extends Application {
             menuController.getLabelField().textProperty().bind(loginTask.messageProperty());
 
             loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
-                Alert alert = new CustomAlert(Alert.AlertType.NONE);
+                Alert alert = new CustomAlert(Alert.AlertType.NONE, primaryStage);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.auth.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.auth.state.header"));
 

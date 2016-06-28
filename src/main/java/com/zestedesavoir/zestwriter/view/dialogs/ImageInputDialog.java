@@ -1,6 +1,7 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
 
+import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
@@ -22,6 +23,7 @@ import javafx.stage.Stage;
 import java.io.File;
 
 public class ImageInputDialog{
+    private MainApp mainApp;
     private CustomStyledClassedTextArea SourceText;
     private ZdsHttp zdsUtils;
     private MenuController menuManager;
@@ -31,7 +33,8 @@ public class ImageInputDialog{
     @FXML private TextField link;
     @FXML private TextField title;
 
-    public void setSourceText(CustomStyledClassedTextArea SourceText, ZdsHttp zdsUtils, MenuController menuManager, Content content){
+    public void setSourceText(MainApp mainApp, CustomStyledClassedTextArea SourceText, ZdsHttp zdsUtils, MenuController menuManager, Content content){
+        this.mainApp = mainApp;
         this.SourceText = SourceText;
         this.zdsUtils = zdsUtils;
         this.menuManager = menuManager;
@@ -64,7 +67,7 @@ public class ImageInputDialog{
                         break;
                     case CANCELLED:
                         menuManager.gethBottomBox().getChildren().clear();
-                        alert = new CustomAlert(AlertType.ERROR);
+                        alert = new CustomAlert(AlertType.ERROR, mainApp.getPrimaryStage());
                         alert.setTitle(Configuration.bundle.getString("ui.dialog.auth.failed.title"));
                         alert.setHeaderText(Configuration.bundle.getString("ui.dialog.auth.failed.header"));
                         alert.setContentText(Configuration.bundle.getString("ui.dialog.auth.failed.text"));
@@ -89,7 +92,7 @@ public class ImageInputDialog{
         if (selectedFile != null) {
             UploadImageService uploadImageTask = new UploadImageService(zdsUtils, content, selectedFile.getAbsoluteFile());
             uploadImageTask.setOnFailed( t -> {
-                Alert alert = new CustomAlert(AlertType.ERROR);
+                Alert alert = new CustomAlert(AlertType.ERROR, mainApp.getPrimaryStage());
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.upload.img.failed.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.upload.img.failed.header"));
                 alert.setContentText(Configuration.bundle.getString("ui.dialog.upload.img.failed.text"));

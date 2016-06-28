@@ -32,6 +32,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class MdTreeCell extends TreeCell<ContentNode>{
+    private MainApp mainApp;
 	private MdTextController index;
 	private String baseFilePath;
 	private final Logger logger;
@@ -39,7 +40,8 @@ public class MdTreeCell extends TreeCell<ContentNode>{
     private Content content;
 
 
-    public MdTreeCell(MdTextController index) {
+    public MdTreeCell(MainApp mainApp, MdTextController index) {
+        this.mainApp = mainApp;
 		this.index = index;
         if(index.getMainApp().getContents().size() > 0) {
             this.content = index.getMainApp().getContents().stream().findFirst().get();
@@ -94,7 +96,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         }
 
         addMenuItem4.setOnAction(t -> {
-            Alert alert = new CustomAlert(AlertType.CONFIRMATION);
+            Alert alert = new CustomAlert(AlertType.CONFIRMATION, mainApp.getPrimaryStage());
             alert.setTitle(Configuration.bundle.getString("ui.dialog.delete.title"));
             alert.setHeaderText(Configuration.bundle.getString("ui.dialog.delete.header"));
             alert.setContentText(Configuration.bundle.getString("ui.dialog.delete.text"));

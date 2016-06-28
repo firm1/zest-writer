@@ -236,7 +236,7 @@ public class MdTextController {
 
         tab.setOnCloseRequest(t -> {
             if(!controllerConvert.isSaved()) {
-                Alert alert = new CustomAlert(AlertType.CONFIRMATION);
+                Alert alert = new CustomAlert(AlertType.CONFIRMATION, mainApp.getPrimaryStage());
                 alert.setTitle(Configuration.bundle.getString("ui.alert.tab.close.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.alert.tab.close.header"));
                 alert.setContentText(Configuration.bundle.getString("ui.alert.tab.close.text"));
@@ -317,7 +317,7 @@ public class MdTextController {
 
             @Override
             public TreeCell<ContentNode> call(TreeView<ContentNode> extractTreeView) {
-            	MdTreeCell treeCell = new MdTreeCell(getThis());
+            	MdTreeCell treeCell = new MdTreeCell(mainApp, getThis());
 
                 treeCell.setOnDragDetected(mouseEvent -> {
                     dragObject = treeCell.getTreeItem();
