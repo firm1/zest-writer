@@ -84,6 +84,7 @@ public class ImageInputDialog{
 
     private void selectAndUploadImage() {
         FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             UploadImageService uploadImageTask = new UploadImageService(zdsUtils, content, selectedFile.getAbsoluteFile());
