@@ -48,6 +48,7 @@ public class OptionsDialog{
     @FXML private ComboBox<String> optAdvancedProtocol;
     @FXML private TextField optAdvancedHost;
     @FXML private TextField optAdvancedPort;
+    @FXML private Label workspacepath;
 
 
     public void setMainApp(MainApp mainApp){
@@ -60,6 +61,8 @@ public class OptionsDialog{
         setShortcutOptions();
         setAuthentificationOptions();
         setAdvancedOptions();
+
+        workspacepath.setText(config.getWorkspacePath());
     }
 
     public void setWindow(Stage window){
@@ -143,14 +146,6 @@ public class OptionsDialog{
         if(directory != null && directory.exists()){
             config.setWorkspacePath(directory.getAbsolutePath());
         }
-    }
-
-    @FXML private void HandleGeneralShowAction(){
-        Alert alert = new CustomAlert(Alert.AlertType.INFORMATION);
-        alert.setTitle(Configuration.bundle.getString("ui.options.workspace.title"));
-        alert.setHeaderText(Configuration.bundle.getString("ui.options.workspace.header"));
-        alert.setContentText(config.getWorkspacePath());
-        alert.showAndWait();
     }
 
     @FXML private void HandleEditorFontChoice(){
