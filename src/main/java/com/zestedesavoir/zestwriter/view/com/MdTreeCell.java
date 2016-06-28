@@ -242,7 +242,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             logger.debug("Tentative de calcul des statistiques de type histogramme");
             BaseDialog dialog = new BaseDialog(Configuration.bundle.getString("ui.actions.stats.label"), Configuration.bundle.getString("ui.actions.stats.header")+" "+getItem().getTitle());
             dialog.getDialogPane().setPrefSize(800, 600);
-            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+            dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.bundle.getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
 
             // draw
             final CategoryAxis xAxis = new CategoryAxis();
@@ -278,7 +278,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             logger.debug("Tentative de calcul des statistiques de type Camembert");
             BaseDialog dialog = new BaseDialog(Configuration.bundle.getString("ui.actions.stats.label"), Configuration.bundle.getString("ui.actions.stats.header")+" "+getItem().getTitle());
             dialog.getDialogPane().setPrefSize(800, 600);
-            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+            dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.bundle.getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
 
             // draw
             ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
