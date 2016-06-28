@@ -42,15 +42,20 @@ public class AddNewContentTest extends FxRobot {
     }
 
     /*
-     * Create new content from a visible main window.
+     * The goal of this integration test is to create new tutorial and check if we can see his name on the left.
      *
-     * This method is created for sharing code between createNewTutorialTest and createNewTutorialArticle
+     * This test doesn't check if article file (manifest and other file) are created.
      */
     @Test
     public void createNewTutorialTest() {
         assertContentHaveBeenCreated("Tutoriel");
     }
 
+    /*
+     * Create new content from a visible main window.
+     *
+     * This method is created for sharing code between createNewTutorialTest and createNewTutorialArticle
+     */
     private void assertContentHaveBeenCreated (String typeContent) {
 
         clickOn("Fichier");
