@@ -39,6 +39,7 @@ import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
 public class MdTextController {
     private MainApp mainApp;
     private PythonInterpreter pyconsole;
+    public static boolean pythonStarted=false;
     private final Logger logger;
     private MdConvertController controllerConvert;
 
@@ -73,6 +74,7 @@ public class MdTextController {
             pyconsole.exec("from markdown.extensions.zds import ZdsExtension");
             pyconsole.exec("from smileys_definition import smileys");
             logger.info("PYTHON STARTED");
+            pythonStarted=true;
         }).start();
     }
 

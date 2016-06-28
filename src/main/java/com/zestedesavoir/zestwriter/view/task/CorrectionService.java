@@ -35,6 +35,15 @@ public class CorrectionService extends Service<String>{
                 Function<Textual, String> prepareValidationReport = (Textual ext) -> {
                     updateMessage(ext.getTitle());
                     String markdown = ext.readMarkdown();
+                    int i=0;
+                    while(!MdTextController.pythonStarted) {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+
+                        }
+                    }
+
                     String htmlText = StringEscapeUtils.unescapeHtml(MenuController.markdownToHtml(mdText, markdown));
                     return corrector.checkHtmlContentToText(htmlText, ext.getTitle());
                 };
