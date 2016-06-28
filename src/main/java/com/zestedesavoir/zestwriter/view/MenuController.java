@@ -34,10 +34,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
@@ -653,7 +650,8 @@ public class MenuController{
             Scene scene = new Scene(aboutDialog);
             dialogStage.setScene(scene);
             dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setResizable(false);
+            dialogStage.initModality(Modality.WINDOW_MODAL);
 
             dialogStage.show();
         }catch(IOException e){
@@ -665,7 +663,7 @@ public class MenuController{
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/OptionsDialog.fxml"));
 
         try{
-            AnchorPane optionsDialog = loader.load();
+            BorderPane optionsDialog = loader.load();
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle(Configuration.bundle.getString("ui.menu.options"));

@@ -1,454 +1,282 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
-<?import javafx.geometry.Insets?>
+<?import de.jensd.fx.glyphs.materialdesignicons.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="600.0" stylesheets="@../css/OptionsDialog.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.dialogs.OptionsDialog">
-   <children>
-      <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <HBox prefHeight="410.0" prefWidth="200.0">
-               <children>
-                  <AnchorPane prefHeight="200.0" prefWidth="150.0">
-                     <children>
-                        <VBox prefHeight="410.0" prefWidth="144.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <children>
-                              <Hyperlink fx:id="optionGeneral" onAction="#HandleHyperlinkGeneralLabel" style="-fx-border-width: 0;" text="%ui.options.general" textFill="#656565">
-                                 <padding>
-                                    <Insets bottom="5.0" top="5.0" />
-                                 </padding>
-                              </Hyperlink>
-                              <Hyperlink fx:id="optionEditor" onAction="#HandleHyperlinkEditorLabel" style="-fx-border-width: 0;" text="%ui.options.editor" textFill="#656565">
-                                 <padding>
-                                    <Insets bottom="5.0" top="5.0" />
-                                 </padding>
-                              </Hyperlink>
-                              <Hyperlink fx:id="optionDisplay" onAction="#HandleHyperlinkDisplayLabel" style="-fx-border-width: 0;" text="%ui.options.display" textFill="#656565">
-                                 <padding>
-                                    <Insets bottom="5.0" top="5.0" />
-                                 </padding>
-                              </Hyperlink>
-                              <Hyperlink fx:id="optionAuthentification" onAction="#HandleHyperlinkAuthentificationLabel" style="-fx-border-width: 0;" text="%ui.options.authentication" textFill="#656565">
-                                 <padding>
-                                    <Insets bottom="5.0" top="5.0" />
-                                 </padding>
-                              </Hyperlink>
-                              <Hyperlink fx:id="optionAdvanced" onAction="#HandleHyperlinkAdvancedLabel" style="-fx-border-width: 0;" text="%ui.options.advanced" textFill="#656565">
-                                 <padding>
-                                    <Insets bottom="5.0" top="5.0" />
-                                 </padding>
-                              </Hyperlink>
-                              <Hyperlink fx:id="optionShortcut" onAction="#HandleHyperlinkShortcutLabel" style="-fx-border-width: 0;" text="%ui.options.shortcut" textFill="#656565" visible="false">
-                                 <padding>
-                                    <Insets bottom="5.0" top="5.0" />
-                                 </padding>
-                              </Hyperlink>
-                           </children>
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                        </VBox>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane prefHeight="200.0" prefWidth="450.0">
-                     <children>
-                        <StackPane prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <children>
-                              <AnchorPane fx:id="optionGeneralPane" prefHeight="200.0" prefWidth="450.0">
-                                 <children>
-                                    <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.dialogs.OptionsDialog">
+   <center>
+           <TabPane tabClosingPolicy="UNAVAILABLE">
+               <tabs>
+                   <Tab text="%ui.options.general">
+                       <content>
+                           <AnchorPane minHeight="0.0" minWidth="0.0">
+                               <children>
+                                   <VBox prefHeight="360.0" prefWidth="591.0" spacing="10.0">
                                        <children>
-                                          <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0">
-                                             <children>
-                                                <Label styleClass="title" text="%ui.options.general">
-                                                </Label>
-                                             </children>
-                                          </HBox>
-                                          <GridPane vgap="20.0">
-                                             <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="210.0" minWidth="10.0" prefWidth="150.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="303.0" minWidth="10.0" prefWidth="285.0" />
-                                             </columnConstraints>
-                                             <rowConstraints>
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                             </rowConstraints>
-                                             <children>
-                                                <Label styleClass="subtitle" text="%ui.options.workspace">
-                                                </Label>
-                                                <Label text="%ui.options.workspace.path" GridPane.rowIndex="1">
-                                                   <padding>
-                                                      <Insets left="10.0" />
-                                                   </padding>
-                                                </Label>
-                                                <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                                   <children>
-                                                      <Button mnemonicParsing="false" onAction="#HandleGeneralBrowseAction" prefHeight="25.0" prefWidth="150.0" text="%ui.options.workspace.update">
-                                                         <graphic>
-									                        <MaterialDesignIconView fill="#084561" glyphName="CAMERA_SWITCH" size="1.8em" />
-									                     </graphic>
-                                                      </Button>
-                                                      <Button mnemonicParsing="false" onAction="#HandleGeneralShowAction" prefHeight="25.0" prefWidth="150.0" text="%ui.options.workspace.view">
-                                                         <HBox.margin>
-                                                            <Insets left="10.0" />
-                                                         </HBox.margin>
-                                                         <graphic>
-									                        <MaterialDesignIconView fill="#084561" glyphName="EYE" size="1.8em" />
-									                     </graphic>
-                                                      </Button>
-                                                   </children>
-                                                </HBox>
-                                             </children>
-                                          </GridPane>
+                                           <Label styleClass="subtitle" text="%ui.options.workspace">
+                                               <VBox.margin>
+                                                   <Insets />
+                                               </VBox.margin>
+                                           </Label>
+                                           <GridPane hgap="20.0">
+                                               <columnConstraints>
+                                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="364.0" minWidth="10.0" prefWidth="364.0" />
+                                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="206.0" minWidth="10.0" prefWidth="147.0" />
+                                               </columnConstraints>
+                                               <rowConstraints>
+                                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                               </rowConstraints>
+                                               <children>
+                                                   <Button mnemonicParsing="false" onAction="#HandleGeneralBrowseAction" text="%ui.options.workspace.update" GridPane.columnIndex="1">
+                                                       <graphic>
+                                                           <MaterialDesignIconView fill="#084561" glyphName="CAMERA_SWITCH" size="1.8em" />
+                                                       </graphic>
+                                                   </Button>
+                                                   <Label fx:id="workspacepath" text="%ui.options.workspace.path" wrapText="true" />
+                                               </children>
+                                               <padding>
+                                                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                               </padding>
+                                           </GridPane>
                                        </children>
                                        <padding>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                        </padding>
-                                    </VBox>
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane fx:id="optionEditorPane" prefHeight="200.0" prefWidth="450.0" visible="false">
-                                 <children>
-                                    <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                   </VBox>
+                               </children>
+                           </AnchorPane>
+                       </content>
+                   </Tab>
+                   <Tab text="%ui.options.editor">
+                       <content>
+                           <AnchorPane minHeight="0.0" minWidth="0.0">
+                               <children>
+                                   <VBox layoutX="14.0" prefHeight="359.0" prefWidth="579.0">
                                        <children>
-                                          <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0">
-                                             <children>
-                                                <Label styleClass="title" text="%ui.options.editor">
-                                                </Label>
-                                             </children>
-                                          </HBox>
-                                          <GridPane vgap="20.0">
-                                             <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="210.0" minWidth="10.0" prefWidth="151.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="294.0" minWidth="10.0" prefWidth="279.0" />
-                                             </columnConstraints>
-                                             <rowConstraints>
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                             </rowConstraints>
-                                             <children>
-                                                <Label styleClass="subtitle" text="%ui.options.editor.display">
-                                                </Label>
-                                                <Label text="%ui.options.editor.font" GridPane.rowIndex="1">
-                                                   <GridPane.margin>
-                                                      <Insets left="10.0" />
-                                                   </GridPane.margin></Label>
-                                                <Button fx:id="optEditorFontButton" mnemonicParsing="false" onAction="#HandleEditorFontChoice" prefHeight="25.0" prefWidth="352.0" text="Arial" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                                </Button>
-                                                <Label text="%ui.options.editor.display_toolbar" GridPane.rowIndex="2">
-                                                   <GridPane.margin>
-                                                      <Insets left="10.0" />
-                                                   </GridPane.margin>
-                                                </Label>
-                                                <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                                   <children>
-                                                      <RadioButton fx:id="optEditorToolbarViewYes" mnemonicParsing="false" onAction="#HandleEditorToolbarViewYes" text="%ui.yes">
-                                                         <toggleGroup>
-                                                            <ToggleGroup fx:id="toolbar" />
-                                                         </toggleGroup>
-                                                      </RadioButton>
-                                                      <RadioButton fx:id="optEditorToolbarViewNo" mnemonicParsing="false" onAction="#HandleEditorToolbarViewNo" text="%ui.no" toggleGroup="$toolbar">
-                                                         <padding>
-                                                            <Insets left="15.0" />
-                                                         </padding>
-                                                      </RadioButton>
-                                                   </children>
-                                                </HBox>
-                                                <Label styleClass="subtitle" text="%ui.options.write" GridPane.rowIndex="3"></Label>
-                                                <Label text="%ui.options.write.smart" GridPane.rowIndex="4">
-                                                   <GridPane.margin>
-                                                      <Insets left="10.0" />
-                                                   </GridPane.margin>
-                                                </Label>
-                                                <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                                   <children>
-                                                      <RadioButton fx:id="optSmartEditorYes" mnemonicParsing="false" onAction="#HandleSmartEditorYes" text="%ui.yes">
-                                                         <toggleGroup>
-                                                            <ToggleGroup fx:id="smartEditor" />
-                                                         </toggleGroup>
-                                                      </RadioButton>
-                                                      <RadioButton fx:id="optSmartEditorNo" mnemonicParsing="false" onAction="#HandleSmartEditorNo" text="%ui.no" toggleGroup="$smartEditor">
-                                                         <padding>
-                                                            <Insets left="15.0" />
-                                                         </padding>
-                                                      </RadioButton>
-                                                   </children>
-                                                </HBox>
-                                             </children>
-                                          </GridPane>
+                                           <Label styleClass="subtitle" text="%ui.options.editor.display" />
+                                           <GridPane hgap="20.0">
+                                               <columnConstraints>
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                               </columnConstraints>
+                                               <rowConstraints>
+                                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                               </rowConstraints>
+                                               <children>
+                                                   <Label text="%ui.options.editor.font" />
+                                                   <Button fx:id="optEditorFontButton" mnemonicParsing="false" onAction="#HandleEditorFontChoice" GridPane.columnIndex="1" />
+                                                   <Label text="%ui.options.editor.display_toolbar" GridPane.rowIndex="1" />
+                                                   <RadioButton fx:id="optEditorToolbarViewYes" mnemonicParsing="false" onAction="#HandleEditorToolbarViewYes" text="%ui.yes" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                       <toggleGroup>
+                                                           <ToggleGroup fx:id="toolbar" />
+                                                       </toggleGroup></RadioButton>
+                                                   <RadioButton fx:id="optEditorToolbarViewNo" mnemonicParsing="false" onAction="#HandleEditorToolbarViewNo" text="%ui.no" toggleGroup="$toolbar" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                               </children>
+                                               <padding>
+                                                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                               </padding>
+                                           </GridPane>
+                                           <Label styleClass="subtitle" text="Rédaction" />
+                                           <GridPane hgap="20.0">
+                                               <columnConstraints>
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                               </columnConstraints>
+                                               <rowConstraints>
+                                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                               </rowConstraints>
+                                               <children>
+                                                   <Label text="%ui.options.write.smart" />
+                                                   <RadioButton fx:id="optSmartEditorYes" mnemonicParsing="false" onAction="#HandleSmartEditorYes" text="%ui.yes" GridPane.columnIndex="1">
+                                                       <toggleGroup>
+                                                           <ToggleGroup fx:id="smartEditor" />
+                                                       </toggleGroup></RadioButton>
+                                                   <RadioButton fx:id="optSmartEditorNo" mnemonicParsing="false" onAction="#HandleSmartEditorNo" text="%ui.no" toggleGroup="$smartEditor" GridPane.columnIndex="2" />
+                                               </children>
+                                               <padding>
+                                                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                               </padding>
+                                           </GridPane>
                                        </children>
-                                       <padding>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                       </padding>
-                                    </VBox>
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane fx:id="optionDisplayPane" prefHeight="200.0" prefWidth="450.0">
-                                 <children>
-                                    <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                   </VBox>
+                               </children>
+                           </AnchorPane>
+                       </content>
+                   </Tab>
+                   <Tab text="%ui.options.display">
+                       <content>
+                           <AnchorPane minHeight="0.0" minWidth="0.0">
+                               <children>
+                                   <VBox prefHeight="357.0" prefWidth="593.0">
                                        <children>
-                                          <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0">
-                                             <children>
-                                                <Label styleClass="title" text="%ui.options.display">
-                                                </Label>
-                                             </children>
-                                          </HBox>
-                                          <GridPane vgap="20.0">
-                                             <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                             </columnConstraints>
-                                             <rowConstraints>
-                                                <RowConstraints />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                             </rowConstraints>
-                                             <children>
-                                                <Label styleClass="subtitle" text="%ui.options.display.theme" GridPane.rowIndex="1" />
-                                                <Label text="%ui.options.display.theme" GridPane.rowIndex="2">
-                                                   <GridPane.margin>
-                                                      <Insets left="10.0" />
-                                                   </GridPane.margin></Label>
-                                                <ComboBox fx:id="optDisplayTheme" prefHeight="25.0" prefWidth="281.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                <Label text="%ui.options.display.lang" GridPane.rowIndex="3">
-                                                   <GridPane.margin>
-                                                      <Insets left="10.0" />
-                                                   </GridPane.margin></Label>
-                                                <ComboBox fx:id="optDisplayLang" prefHeight="25.0" prefWidth="281.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                <Label styleClass="subtitle" text="%ui.options.display.window" GridPane.rowIndex="4" />
-                                                <Label text="%ui.options.display.start_big_window" GridPane.rowIndex="5">
-                                                   <padding>
-                                                      <Insets left="10.0" />
-                                                   </padding>
-                                                </Label>
-                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                                                   <children>
-                                                      <RadioButton fx:id="optDisplayWindowMaximizeYes" mnemonicParsing="false" onAction="#HandleDisplayWindowMaximizeYes" text="%ui.yes">
-                                                         <toggleGroup>
-                                                            <ToggleGroup fx:id="displayMaximize" />
-                                                         </toggleGroup>
-                                                      </RadioButton>
-                                                      <RadioButton fx:id="optDisplayWindowMaximizeNo" mnemonicParsing="false" onAction="#HandleDisplayWindowMaximizeNo" text="%ui.no" toggleGroup="$displayMaximize">
-                                                         <padding>
-                                                            <Insets left="10.0" />
-                                                         </padding>
-                                                      </RadioButton>
-                                                   </children>
-                                                </HBox>
-                                                <Label text="%ui.options.display.save_window_dimension" GridPane.rowIndex="6">
-                                                <padding>
-                                                   <Insets left="10.0" />
-                                                </padding></Label>
-                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
-                                                   <children>
-                                                      <RadioButton fx:id="optDisplayWindowDimensionYes" mnemonicParsing="false" text="%ui.yes">
-                                                         <toggleGroup>
-                                                            <ToggleGroup fx:id="displayDimension" />
-                                                         </toggleGroup>
-                                                      </RadioButton>
-                                                      <RadioButton fx:id="optDisplayWindowDimensionNo" mnemonicParsing="false" text="%ui.no" toggleGroup="$displayDimension">
-                                                         <padding>
-                                                            <Insets left="10.0" />
-                                                         </padding>
-                                                      </RadioButton>
-                                                   </children>
-                                                </HBox>
-                                                <Label text="%ui.options.display.save_window_position" GridPane.rowIndex="7">
-                                                <padding>
-                                                   <Insets left="10.0" />
-                                                </padding></Label>
-                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
-                                                   <children>
-                                                      <RadioButton fx:id="optDisplayWindowPositionYes" mnemonicParsing="false" text="%ui.yes">
-                                                         <toggleGroup>
-                                                            <ToggleGroup fx:id="displayPosition" />
-                                                         </toggleGroup>
-                                                      </RadioButton>
-                                                      <RadioButton fx:id="optDisplayWindowPositionNo" mnemonicParsing="false" text="%ui.no" toggleGroup="$displayPosition">
-                                                         <padding>
-                                                            <Insets left="10.0" />
-                                                         </padding>
-                                                      </RadioButton>
-                                                   </children>
-                                                </HBox>
-                                             </children>
-                                          </GridPane>
+                                           <Label styleClass="subtitle" text="%ui.options.display.theme" />
+                                           <GridPane hgap="20.0">
+                                               <columnConstraints>
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                               </columnConstraints>
+                                               <rowConstraints>
+                                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                               </rowConstraints>
+                                               <children>
+                                                   <Label text="%ui.options.display.theme" />
+                                                   <Label text="%ui.options.display.lang" GridPane.rowIndex="1" />
+                                                   <ComboBox fx:id="optDisplayTheme" prefWidth="200.0" GridPane.columnIndex="1" />
+                                                   <ComboBox fx:id="optDisplayLang" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                               </children>
+                                               <padding>
+                                                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                               </padding>
+                                           </GridPane>
+                                           <Label styleClass="subtitle" text="%ui.options.display.window" />
+                                           <GridPane hgap="20.0">
+                                               <columnConstraints>
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                               </columnConstraints>
+                                               <rowConstraints>
+                                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                               </rowConstraints>
+                                               <children>
+                                                   <Label text="%ui.options.display.start_big_window" />
+                                                   <Label text="%ui.options.display.save_window_dimension" GridPane.rowIndex="1" />
+                                                   <Label text="%ui.options.display.save_window_position" GridPane.rowIndex="2" />
+                                                   <RadioButton fx:id="optDisplayWindowMaximizeYes" mnemonicParsing="false" onAction="#HandleDisplayWindowMaximizeYes" text="%ui.yes" GridPane.columnIndex="1">
+                                                       <toggleGroup>
+                                                           <ToggleGroup fx:id="displayMaximize" />
+                                                       </toggleGroup></RadioButton>
+                                                   <RadioButton fx:id="optDisplayWindowDimensionYes" mnemonicParsing="false" text="%ui.yes" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                       <toggleGroup>
+                                                           <ToggleGroup fx:id="displayDimension" />
+                                                       </toggleGroup></RadioButton>
+                                                   <RadioButton fx:id="optDisplayWindowPositionYes" mnemonicParsing="false" text="%ui.yes" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                       <toggleGroup>
+                                                           <ToggleGroup fx:id="displayPosition" />
+                                                       </toggleGroup>
+                                                   </RadioButton>
+                                                   <RadioButton fx:id="optDisplayWindowMaximizeNo" mnemonicParsing="false" onAction="#HandleDisplayWindowMaximizeNo" text="%ui.no" toggleGroup="$displayMaximize" GridPane.columnIndex="2" />
+                                                   <RadioButton fx:id="optDisplayWindowDimensionNo" mnemonicParsing="false" text="%ui.no" toggleGroup="$displayDimension" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                   <RadioButton fx:id="optDisplayWindowPositionNo" mnemonicParsing="false" text="%ui.no" toggleGroup="$displayPosition" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                               </children>
+                                               <padding>
+                                                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                               </padding>
+                                           </GridPane>
                                        </children>
-                                       <padding>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                       </padding>
-                                    </VBox>
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane fx:id="optionShortcutPane" prefHeight="200.0" prefWidth="450.0" visible="false">
-                                 <children>
-                                    <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                   </VBox>
+                               </children>
+                           </AnchorPane>
+                       </content>
+                   </Tab>
+                   <Tab text="%ui.options.authentication">
+                       <content>
+                           <AnchorPane minHeight="0.0" minWidth="0.0">
+                               <children>
+                                   <VBox>
                                        <children>
-                                          <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0">
-                                             <children>
-                                                <Label styleClass="subtitle" text="%ui.options.shortcut">
-                                                </Label>
-                                             </children>
-                                          </HBox>
-                                          <GridPane vgap="20.0">
-                                             <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                             </columnConstraints>
-                                             <rowConstraints>
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                             </rowConstraints>
-                                          </GridPane>
+                                           <VBox>
+                                               <children>
+                                                   <Label styleClass="subtitle" text="%ui.options.authentication.connection" />
+                                                   <GridPane hgap="20.0">
+                                                       <columnConstraints>
+                                                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                       </columnConstraints>
+                                                       <rowConstraints>
+                                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                       </rowConstraints>
+                                                       <children>
+                                                           <Label text="%ui.dialog.auth.username" />
+                                                           <Label text="%ui.dialog.auth.password" GridPane.rowIndex="1" />
+                                                           <TextField fx:id="optAuthentificationUsername" maxWidth="150.0" GridPane.columnIndex="1" />
+                                                           <PasswordField fx:id="optAuthentificationPassword" maxWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                       </children>
+                                                       <padding>
+                                                           <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                                       </padding>
+                                                   </GridPane>
+                                               </children>
+                                           </VBox>
+                                           <Label prefHeight="83.0" prefWidth="594.0" style="-fx-text-fill: RED;" text="%ui.dialog.auth.warning" textAlignment="CENTER" wrapText="true" />
                                        </children>
-                                       <padding>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                       </padding>
-                                    </VBox>
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane fx:id="optionAuthentificationPane" prefHeight="200.0" prefWidth="450.0" visible="false">
-                                 <children>
-                                    <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                   </VBox>
+                               </children>
+                           </AnchorPane>
+                       </content>
+                   </Tab>
+                   <Tab text="%ui.options.advanced">
+                       <content>
+                           <AnchorPane minHeight="0.0" minWidth="0.0">
+                               <children>
+                                   <VBox prefHeight="361.0" prefWidth="592.0">
                                        <children>
-                                          <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0" spacing="20.0">
-                                             <children>
-                                                <Label styleClass="title" text="%ui.options.authentication">
-                                                </Label>
-                                             </children>
-                                          </HBox>
-                                          <VBox spacing="20.0">
-                                             <children>
-                                                <GridPane vgap="20.0">
-                                                   <columnConstraints>
-                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="210.0" minWidth="10.0" prefWidth="150.0" />
-                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="327.0" minWidth="10.0" prefWidth="325.0" />
-                                                   </columnConstraints>
-                                                   <rowConstraints>
-                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                   </rowConstraints>
-                                                   <children>
-                                                      <Label styleClass="subtitle" text="%ui.options.authentication.connection">
-                                                      </Label>
-                                                      <Label text="%ui.dialog.auth.username" GridPane.rowIndex="1">
-                                                         <padding>
-                                                            <Insets left="10.0" />
-                                                         </padding>
-                                                      </Label>
-                                                      <Label text="%ui.dialog.auth.password" GridPane.rowIndex="2">
-                                                         <padding>
-                                                            <Insets left="10.0" />
-                                                         </padding>
-                                                      </Label>
-                                                      <TextField fx:id="optAuthentificationUsername" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                      <PasswordField fx:id="optAuthentificationPassword" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                   </children>
-                                                </GridPane>
-                                                <Label text="%ui.dialog.auth.warning" textAlignment="CENTER" textFill="RED" wrapText="true" />
-                                             </children>
-                                          </VBox>
+                                           <Label styleClass="subtitle" text="%ui.options.advanced.server" />
+                                           <GridPane hgap="20.0">
+                                               <columnConstraints>
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                               </columnConstraints>
+                                               <rowConstraints>
+                                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                               </rowConstraints>
+                                               <children>
+                                                   <Label text="%ui.options.advanced.protocol" />
+                                                   <Label text="%ui.options.advanced.protocol" GridPane.rowIndex="1" />
+                                                   <Label text="%ui.options.advanced.hostname" GridPane.rowIndex="2" />
+                                                   <TextField fx:id="optAdvancedHost" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                   <TextField fx:id="optAdvancedPort" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                   <ComboBox fx:id="optAdvancedProtocol" GridPane.columnIndex="1" />
+                                               </children>
+                                               <padding>
+                                                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                               </padding>
+                                           </GridPane>
                                        </children>
-                                       <padding>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                       </padding>
-                                    </VBox>
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane fx:id="optionAdvancedPane" prefHeight="200.0" prefWidth="450.0" visible="false">
-                                 <children>
-                                    <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                       <children>
-                                          <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0" spacing="20.0">
-                                             <children>
-                                                <Label styleClass="title" text="%ui.options.advanced">
-                                                </Label>
-                                             </children>
-                                          </HBox>
-                                          <GridPane vgap="20.0">
-                                             <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="210.0" minWidth="10.0" prefWidth="150.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="327.0" minWidth="10.0" prefWidth="325.0" />
-                                             </columnConstraints>
-                                             <rowConstraints>
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                             </rowConstraints>
-                                             <children>
-                                                <Label styleClass="subtitle" text="%ui.options.advanced.server">
-                                                </Label>
-                                                <Label text="%ui.options.advanced.protocol" GridPane.rowIndex="1">
-                                                   <padding>
-                                                      <Insets left="10.0" />
-                                                   </padding>
-                                                </Label>
-                                                <Label text="%ui.options.advanced.protocol" GridPane.rowIndex="3">
-                                                   <GridPane.margin>
-                                                      <Insets left="10.0" />
-                                                   </GridPane.margin>
-                                                </Label>
-                                                <Label text="%ui.options.advanced.hostname" GridPane.rowIndex="2">
-                                                   <padding>
-                                                      <Insets left="10.0" />
-                                                   </padding>
-                                                </Label>
-                                                <ComboBox fx:id="optAdvancedProtocol" prefWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <TextField fx:id="optAdvancedHost" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                <TextField fx:id="optAdvancedPort" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                             </children>
-                                          </GridPane>
-                                       </children>
-                                       <padding>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                       </padding>
-                                    </VBox>
-                                 </children>
-                              </AnchorPane>
-                           </children>
-                        </StackPane>
-                     </children>
-                  </AnchorPane>
-               </children>
-            </HBox>
-            <HBox alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="200.0">
-               <children>
-                  <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
-                     <children>
+                                   </VBox>
+                               </children>
+                           </AnchorPane>
+                       </content>
+                   </Tab>
+               </tabs>
+           </TabPane>
+   </center>
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" prefHeight="40.0">
+            <children>
+                <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                    <children>
                         <Button mnemonicParsing="false" onAction="#HandleResetButtonAction" text="%ui.options.reset">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
+                            <HBox.margin>
+                                <Insets left="10.0" />
+                            </HBox.margin>
                         </Button>
-                     </children>
-                  </HBox>
-                  <Button mnemonicParsing="false" onAction="#HandleCancelButtonAction" text="%ui.cancel">
-                     <HBox.margin>
+                    </children>
+                </HBox>
+                <Button mnemonicParsing="false" onAction="#HandleCancelButtonAction" text="%ui.cancel">
+                    <HBox.margin>
                         <Insets right="10.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button mnemonicParsing="false" onAction="#HandleSaveButtonAction" text="%ui.save">
-                     <HBox.margin>
+                    </HBox.margin>
+                </Button>
+                <Button mnemonicParsing="false" onAction="#HandleSaveButtonAction" text="%ui.save">
+                    <HBox.margin>
                         <Insets right="10.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-   </children>
-</AnchorPane>
+                    </HBox.margin>
+                </Button>
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>

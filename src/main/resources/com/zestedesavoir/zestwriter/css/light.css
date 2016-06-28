@@ -75,3 +75,10 @@
     -fx-background-color: derive(-fx-base,20%);
     -fx-text-fill: #999;
 }
+
+.subtitle {
+    -fx-font-weight: bold;
+    -fx-font-size: 13pt;
+    -fx-text-fill: #ea9408;
+    -fx-label-padding: 20;
+}
