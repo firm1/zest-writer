@@ -15,7 +15,7 @@ public class LoginDialog extends BaseDialog<Pair<String, String>> {
     private MainApp mainApp;
 
 	public LoginDialog(Button googleButton, MainApp mainApp) {
-		super(Configuration.bundle.getString("ui.dialog.auth.title"), Configuration.bundle.getString("ui.dialog.auth.header"));
+		super(mainApp, Configuration.bundle.getString("ui.dialog.auth.title"), Configuration.bundle.getString("ui.dialog.auth.header"));
         this.mainApp = mainApp;
         this.config = this.mainApp.getConfig();
 

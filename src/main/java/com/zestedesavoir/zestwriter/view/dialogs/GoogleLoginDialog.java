@@ -1,5 +1,6 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
+import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.com.CustomDialog;
@@ -16,7 +17,8 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 
 public class GoogleLoginDialog extends CustomDialog<Pair<String, String>> {
-	public GoogleLoginDialog(LoginDialog parent, ZdsHttp zdsUtils) {
+	public GoogleLoginDialog(MainApp mainApp, LoginDialog parent, ZdsHttp zdsUtils) {
+        super(mainApp.getPrimaryStage());
 		this.setTitle(Configuration.bundle.getString("ui.dialog.auth.google.title"));
 
         final WebView browser = new WebView();

@@ -136,7 +136,7 @@ public class MenuController{
         }
 
         // Create the custom dialog.
-        CustomDialog<Pair<String, String>> dialog = new CustomDialog<>();
+        CustomDialog<Pair<String, String>> dialog = new CustomDialog<>(mainApp.getPrimaryStage());
         dialog.setTitle(Configuration.bundle.getString("ui.menu.edit.readable.flesch_index"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.menu.edit.readable.flesch_index.header"));
 
@@ -196,7 +196,7 @@ public class MenuController{
         }
 
         // Create the custom dialog.
-        CustomDialog<Pair<String, String>> dialog = new CustomDialog<>();
+        CustomDialog<Pair<String, String>> dialog = new CustomDialog<>(mainApp.getPrimaryStage());
         dialog.setTitle(Configuration.bundle.getString("ui.menu.edit.readable.gunning_index"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.menu.edit.readable.gunning_index.header"));
 
@@ -276,7 +276,7 @@ public class MenuController{
 
         defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
 
-        Map<String, Object> paramContent = FunctionTreeFactory.initContentDialog(null);
+        Map<String, Object> paramContent = FunctionTreeFactory.initContentDialog(mainApp, null);
 
         if(paramContent != null){
             // find inexistant directory
@@ -350,7 +350,7 @@ public class MenuController{
         Button googleAuth = new Button(Configuration.bundle.getString("ui.dialog.auth.google.title"), IconFactory.createGoogleIcon());
         LoginDialog dialog = new LoginDialog(googleAuth, mainApp);
         googleAuth.setOnAction(t -> {
-            GoogleLoginDialog googleDialog = new GoogleLoginDialog(dialog, mainApp.getZdsutils());
+            GoogleLoginDialog googleDialog = new GoogleLoginDialog(mainApp, dialog, mainApp.getZdsutils());
             googleDialog.show();
         });
         Optional<Pair<String, String>> result = dialog.showAndWait();
@@ -441,7 +441,7 @@ public class MenuController{
         contents.add(new MetadataContent(null, "---"+Configuration.bundle.getString("ui.content.new.title")+"---", null));
         contents.addAll(mainApp.getZdsutils().getContentListOnline());
 
-        Dialog<Pair<String, MetadataContent>> dialog = new CustomDialog<>();
+        Dialog<Pair<String, MetadataContent>> dialog = new CustomDialog<>(mainApp.getPrimaryStage());
         dialog.setTitle(Configuration.bundle.getString("ui.content.select.title"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.content.select.header"));
         ButtonType loginButtonType = new ButtonType(Configuration.bundle.getString("ui.content.select.button.send"), ButtonData.OK_DONE);
