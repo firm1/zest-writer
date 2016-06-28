@@ -78,3 +78,7 @@
     -fx-background-color: derive(-fx-base,20%);
     -fx-text-fill: derive(-fx-background, 90%);
 }
+
+.label-bottom {
+    -fx-fill: #FFF;
+}

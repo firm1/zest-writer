@@ -9,10 +9,7 @@ import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
-import com.zestedesavoir.zestwriter.view.com.CustomAlert;
-import com.zestedesavoir.zestwriter.view.com.CustomFXMLLoader;
-import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
-import com.zestedesavoir.zestwriter.view.com.IconFactory;
+import com.zestedesavoir.zestwriter.view.com.*;
 import com.zestedesavoir.zestwriter.view.dialogs.AboutDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.GoogleLoginDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.LoginDialog;
@@ -91,6 +88,7 @@ public class MenuController{
         if(FunctionTreeFactory.isMacOs()) {
             menuQuit.setAccelerator(new KeyCodeCombination(KeyCode.A, KeyCombination.SHORTCUT_DOWN));
         }
+        labelField.getStyleClass().addAll("label-bottom");
     }
 
     @FXML private void HandleQuitButtonAction(ActionEvent event){
@@ -141,7 +139,7 @@ public class MenuController{
         }
 
         // Create the custom dialog.
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        CustomDialog<Pair<String, String>> dialog = new CustomDialog<>();
         dialog.setTitle(Configuration.bundle.getString("ui.menu.edit.readable.flesch_index"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.menu.edit.readable.flesch_index.header"));
 
@@ -201,7 +199,7 @@ public class MenuController{
         }
 
         // Create the custom dialog.
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        CustomDialog<Pair<String, String>> dialog = new CustomDialog<>();
         dialog.setTitle(Configuration.bundle.getString("ui.menu.edit.readable.gunning_index"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.menu.edit.readable.gunning_index.header"));
 
@@ -360,7 +358,7 @@ public class MenuController{
         });
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
-        hBottomBox.getChildren().addAll(labelField);
+        hBottomBox.add(labelField, 0, 0);
         LoginService loginTask = new LoginService(mainApp.getZdsutils(), mainApp.getConfig());
         result.ifPresent(usernamePassword -> {
             loginTask.setUsername(usernamePassword.getKey());
@@ -374,7 +372,8 @@ public class MenuController{
         prerequisitesForData();
 
         hBottomBox.getChildren().clear();
-        hBottomBox.getChildren().addAll(pb, labelField);
+        hBottomBox.add(pb, 0, 0);
+        hBottomBox.add(labelField, 1, 0);
         DownloadContentService downloadContentTask = new DownloadContentService(mainApp.getZdsutils());
         labelField.textProperty().bind(downloadContentTask.messageProperty());
         pb.progressProperty().bind(downloadContentTask.progressProperty());
@@ -438,14 +437,14 @@ public class MenuController{
         prerequisitesForData();
 
         hBottomBox.getChildren().clear();
-        hBottomBox.getChildren().addAll(labelField);
+        hBottomBox.add(labelField, 0, 0);
 
 
         List<MetadataContent> contents = new ArrayList<>();
         contents.add(new MetadataContent(null, "---"+Configuration.bundle.getString("ui.content.new.title")+"---", null));
         contents.addAll(mainApp.getZdsutils().getContentListOnline());
 
-        Dialog<Pair<String, MetadataContent>> dialog = new Dialog<>();
+        Dialog<Pair<String, MetadataContent>> dialog = new CustomDialog<>();
         dialog.setTitle(Configuration.bundle.getString("ui.content.select.title"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.content.select.header"));
         ButtonType loginButtonType = new ButtonType(Configuration.bundle.getString("ui.content.select.button.send"), ButtonData.OK_DONE);
@@ -613,7 +612,8 @@ public class MenuController{
 
         if(selectedDirectory != null){
             hBottomBox.getChildren().clear();
-            hBottomBox.getChildren().addAll(pb, labelField);
+            hBottomBox.add(pb, 0, 0);
+            hBottomBox.add(labelField, 1, 0);
             ExportPdfService exportPdfTask = new ExportPdfService(mainApp.getConfig().getPandocProvider(), content, selectedFile);
             labelField.textProperty().bind(exportPdfTask.messageProperty());
             pb.progressProperty().bind(exportPdfTask.progressProperty());
