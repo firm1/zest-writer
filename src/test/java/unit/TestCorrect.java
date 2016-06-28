@@ -1,3 +1,5 @@
+package unit;
+
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.junit.Before;
