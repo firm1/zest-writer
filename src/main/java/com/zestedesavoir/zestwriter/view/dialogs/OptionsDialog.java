@@ -1,6 +1,7 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
 
+import com.kenai.jffi.Main;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Lang;
@@ -139,7 +140,7 @@ public class OptionsDialog{
     @FXML private void HandleGeneralBrowseAction(){
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle(Configuration.bundle.getString("ui.options.workspace"));
-        directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        directoryChooser.setInitialDirectory(MainApp.defaultHome);
 
         File directory = directoryChooser.showDialog(null);
 
