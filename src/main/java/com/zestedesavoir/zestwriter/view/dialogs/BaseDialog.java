@@ -10,8 +10,8 @@ import javafx.stage.Stage;
 public class BaseDialog<T> extends CustomDialog<T> {
 	private GridPane gridPane = new GridPane();
 
-	public BaseDialog(MainApp mainApp, String title) {
-		super(mainApp.getPrimaryStage());
+	public BaseDialog(String title) {
+		super();
 		this.setTitle(title);
 		this.setHeaderText(null);
 		Stage stage= (Stage)this.getDialogPane().getScene().getWindow();
@@ -22,8 +22,8 @@ public class BaseDialog<T> extends CustomDialog<T> {
 		gridPane.setPadding(new Insets(20, 10, 10, 10));
 	}
 
-	public BaseDialog(MainApp mainApp, String title, String header) {
-		this(mainApp, title);
+	public BaseDialog(String title, String header) {
+		this(title);
 		this.setHeaderText(header);
 	}
 

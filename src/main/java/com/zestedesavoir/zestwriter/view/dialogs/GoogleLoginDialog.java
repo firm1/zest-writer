@@ -17,8 +17,8 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 
 public class GoogleLoginDialog extends CustomDialog<Pair<String, String>> {
-	public GoogleLoginDialog(MainApp mainApp, LoginDialog parent, ZdsHttp zdsUtils) {
-        super(mainApp.getPrimaryStage());
+	public GoogleLoginDialog(LoginDialog parent) {
+        super();
 		this.setTitle(Configuration.bundle.getString("ui.dialog.auth.google.title"));
 
         final WebView browser = new WebView();
@@ -45,7 +45,7 @@ public class GoogleLoginDialog extends CustomDialog<Pair<String, String>> {
                     Element logbox = getLogBox(elementary);
                     String pseudo = getPseudo(logbox);
                     String id = getId(logbox);
-                    zdsUtils.authToGoogle(manager.getCookieStore().getCookies(), pseudo, id);
+                    MainApp.getZdsutils().authToGoogle(manager.getCookieStore().getCookies(), pseudo, id);
                     getThis().close();
                     parent.close();
                 } else {

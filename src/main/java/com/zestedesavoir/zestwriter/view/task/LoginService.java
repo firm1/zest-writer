@@ -1,7 +1,7 @@
 package com.zestedesavoir.zestwriter.view.task;
 
+import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -10,26 +10,21 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 public class LoginService extends Service<Void>{
-	private ZdsHttp zdsUtils;
-    private Configuration config;
 	private final Logger logger;
 	private String username;
 	private String password;
 
-	public LoginService(String username, String password, ZdsHttp zdsUtils, Configuration config) {
-	    this(zdsUtils, config);
+	public LoginService(String username, String password) {
+        logger = LoggerFactory.getLogger(getClass());
 		this.username = username;
 		this.password = password;
 	}
 
-	public LoginService(ZdsHttp zdsUtils, Configuration config) {
-	    this.zdsUtils = zdsUtils;
-	    this.config = config;
+    public LoginService() {
         logger = LoggerFactory.getLogger(getClass());
-	}
+    }
 
-
-	public String getUsername() {
+    public String getUsername() {
         return username;
     }
 
@@ -53,33 +48,33 @@ public class LoginService extends Service<Void>{
                 if(getUsername() != null) {
                     try {
                         updateMessage(Configuration.bundle.getString("ui.task.auth.prepare.label")+" ...");
-                        if(zdsUtils.login(getUsername(), getPassword())) {
+                        if(MainApp.getZdsutils().login(getUsername(), getPassword())) {
                             updateMessage(Configuration.bundle.getString("ui.task.auth.init_content")+" ...");
-                            zdsUtils.getContentListOnline().clear();
-                            zdsUtils.initInfoOnlineContent("tutorial");
-                            zdsUtils.initInfoOnlineContent("article");
+                            MainApp.getZdsutils().getContentListOnline().clear();
+                            MainApp.getZdsutils().initInfoOnlineContent("tutorial");
+                            MainApp.getZdsutils().initInfoOnlineContent("article");
                             updateMessage(Configuration.bundle.getString("ui.task.auth.success.text"));
                         } else {
-                            config.resetAuthentification();
+                            MainApp.getConfig().resetAuthentification();
                             cancel();
                         }
                     } catch (Exception e) {
-                        config.resetAuthentification();
+                        MainApp.getConfig().resetAuthentification();
                         cancel();
                     }
                 } else {
-                    if(zdsUtils.isAuthenticated()) {
+                    if(MainApp.getZdsutils().isAuthenticated()) {
                         updateMessage(Configuration.bundle.getString("ui.task.auth.init_content")+" ...");
                         try {
-                            zdsUtils.getContentListOnline().clear();
-                            zdsUtils.initInfoOnlineContent("tutorial");
-                            zdsUtils.initInfoOnlineContent("article");
+                            MainApp.getZdsutils().getContentListOnline().clear();
+                            MainApp.getZdsutils().initInfoOnlineContent("tutorial");
+                            MainApp.getZdsutils().initInfoOnlineContent("article");
                         } catch (IOException e) {
                             logger.error("Echec de téléchargement des metadonnés des contenus en ligne", e);
                         }
                         updateMessage(Configuration.bundle.getString("ui.task.auth.success.text"));
                     } else {
-                        config.resetAuthentification();
+                        MainApp.getConfig().resetAuthentification();
                         cancel();
                     }
                 }

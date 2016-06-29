@@ -1,38 +1,33 @@
 package com.zestedesavoir.zestwriter.view.task;
 
+import com.zestedesavoir.zestwriter.MainApp;
+import com.zestedesavoir.zestwriter.model.Content;
+import com.zestedesavoir.zestwriter.model.MetadataContent;
+import com.zestedesavoir.zestwriter.utils.Configuration;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 
-import com.zestedesavoir.zestwriter.utils.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.zeroturnaround.zip.ZipUtil;
-
-import com.zestedesavoir.zestwriter.model.Content;
-import com.zestedesavoir.zestwriter.model.MetadataContent;
-import com.zestedesavoir.zestwriter.utils.ZdsHttp;
-
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
-
 public class UploadImageService extends Service<String>{
-	private ZdsHttp zdsUtils;
-	private Content content;
+    private final Logger logger;
+    private Content content;
 	private File imageFile;
-	private final Logger logger;
 
-	public UploadImageService(ZdsHttp zdsUtils, Content content, File imageFile) {
-		this.zdsUtils = zdsUtils;
-		this.content = content;
-		this.imageFile = imageFile;
+    public UploadImageService(Content content, File imageFile) {
+        this.content = content;
+        this.imageFile = imageFile;
 		logger = LoggerFactory.getLogger(getClass());
 	}
 
 	public MetadataContent getContentFromSlug() {
-	    for(MetadataContent c: zdsUtils.getContentListOnline()) {
-	        if(c.getSlug().equals(zdsUtils.getLocalSlug()) && c.getType().equalsIgnoreCase(content.getType())) {
-	            return c;
-	        }
+        for (MetadataContent c : MainApp.getZdsutils().getContentListOnline()) {
+            if (c.getSlug().equals(MainApp.getZdsutils().getLocalSlug()) && c.getType().equalsIgnoreCase(content.getType())) {
+                return c;
+            }
 	    }
 	    return null;
 	}
@@ -41,21 +36,21 @@ public class UploadImageService extends Service<String>{
         return new Task<String>() {
             @Override
             protected String call() throws Exception {
-                if (zdsUtils.isAuthenticated()) {
+                if (MainApp.getZdsutils().isAuthenticated()) {
                     MetadataContent find = getContentFromSlug();
                     if(find == null ) throw new IOException();
 
                     String targetId = find.getId();
                     String targetSlug = find.getSlug();
 
-                    if(zdsUtils.getGalleryId() == null ) {
+                    if (MainApp.getZdsutils().getGalleryId() == null) {
                         updateMessage(Configuration.bundle.getString("ui.task.gallery.init")+" : "+targetSlug);
-                        zdsUtils.initGalleryId(targetId, targetSlug);
+                        MainApp.getZdsutils().initGalleryId(targetId, targetSlug);
                     }
 
-                    updateMessage(Configuration.bundle.getString("ui.task.gallery.send_image")+" "+imageFile.getAbsolutePath()+" "+Configuration.bundle.getString("ui.task.gallery.to")+" "+zdsUtils.getGalleryId());
+                    updateMessage(Configuration.bundle.getString("ui.task.gallery.send_image") + " " + imageFile.getAbsolutePath() + " " + Configuration.bundle.getString("ui.task.gallery.to") + " " + MainApp.getZdsutils().getGalleryId());
 
-                    return zdsUtils.importImage(imageFile);
+                    return MainApp.getZdsutils().importImage(imageFile);
                 }
                 return null;
             }

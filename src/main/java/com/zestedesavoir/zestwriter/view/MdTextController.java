@@ -12,7 +12,6 @@ import com.zestedesavoir.zestwriter.view.com.*;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -37,18 +36,21 @@ import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
 import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
 
 public class MdTextController {
-    private MainApp mainApp;
-    private PythonInterpreter pyconsole;
     public static boolean pythonStarted=false;
     private final Logger logger;
+    @FXML public AnchorPane treePane;
+    private MainApp mainApp;
+    private PythonInterpreter pyconsole;
     private MdConvertController controllerConvert;
-
     @FXML private VBox contentBox;
     @FXML private TabPane EditorList;
     @FXML private TreeView<ContentNode> Summary;
     @FXML private SplitPane splitPane;
-    @FXML public AnchorPane treePane;
-    @FXML private Tab Home;
+
+    public MdTextController() {
+        super();
+        logger = LoggerFactory.getLogger(MdTextController.class);
+    }
 
     @FXML private void initialize() {
         loadConsolePython();
@@ -93,13 +95,12 @@ public class MdTextController {
         }).start();
     }
 
-    public MdTextController() {
-        super();
-        logger = LoggerFactory.getLogger(MdTextController.class);
-    }
-
     public PythonInterpreter getPyconsole() {
         return pyconsole;
+    }
+
+    public void setPyconsole(PythonInterpreter pyconsole) {
+        this.pyconsole = pyconsole;
     }
 
     public SplitPane getSplitPane() {
@@ -108,10 +109,6 @@ public class MdTextController {
 
     public TreeView<ContentNode> getSummary() {
         return Summary;
-    }
-
-    public void setPyconsole(PythonInterpreter pyconsole) {
-        this.pyconsole = pyconsole;
     }
 
     public MainApp getMainApp() {
@@ -236,7 +233,7 @@ public class MdTextController {
 
         tab.setOnCloseRequest(t -> {
             if(!controllerConvert.isSaved()) {
-                Alert alert = new CustomAlert(AlertType.CONFIRMATION, mainApp.getPrimaryStage());
+                Alert alert = new CustomAlert(AlertType.CONFIRMATION);
                 alert.setTitle(Configuration.bundle.getString("ui.alert.tab.close.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.alert.tab.close.header"));
                 alert.setContentText(Configuration.bundle.getString("ui.alert.tab.close.text"));
@@ -317,7 +314,7 @@ public class MdTextController {
 
             @Override
             public TreeCell<ContentNode> call(TreeView<ContentNode> extractTreeView) {
-            	MdTreeCell treeCell = new MdTreeCell(mainApp, getThis());
+            	MdTreeCell treeCell = new MdTreeCell(getThis());
 
                 treeCell.setOnDragDetected(mouseEvent -> {
                     dragObject = treeCell.getTreeItem();

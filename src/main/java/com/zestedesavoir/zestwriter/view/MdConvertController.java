@@ -1,5 +1,6 @@
 package com.zestedesavoir.zestwriter.view;
 
+import com.kenai.jffi.Main;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
@@ -14,12 +15,10 @@ import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.ImageInputDialog;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanPropertyBase;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker.State;
@@ -31,12 +30,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import javafx.util.Pair;
 import netscape.javascript.JSException;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -53,7 +54,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,7 +64,6 @@ import static org.fxmisc.wellbehaved.event.EventPattern.keyReleased;
 
 public class MdConvertController {
     private MainApp mainApp;
-    private Configuration config;
     private MdTextController mdBox;
     private Tab tab;
     private Textual extract;
@@ -75,7 +74,6 @@ public class MdConvertController {
     private int yRenderPosition = 0;
     private StringProperty countChars = new SimpleStringProperty();
     private StringProperty countWords = new SimpleStringProperty();
-    private final static String loadString="<p>"+Configuration.bundle.getString("ui.task.load")+" ...</p>";
     private BooleanPropertyBase isSaved = new BooleanPropertyBase(true) {
 
         @Override
@@ -91,10 +89,8 @@ public class MdConvertController {
 
     @FXML private WebView renderView;
     @FXML private Button SaveButton;
-    @FXML private Button RefreshButton;
     @FXML private BorderPane BoxEditor;
     @FXML private BorderPane BoxRender;
-    @FXML private Button FullScreeen;
     private CustomStyledClassedTextArea SourceText;
     public final static Pattern recognizeNumber = Pattern.compile("^(\\s*)([\\d][\\.]) (\\s*)(.*)");
     public final static Pattern recognizeBullet = Pattern.compile("^(\\s*)([*|-]) (\\s*)(.*)");
@@ -111,7 +107,6 @@ public class MdConvertController {
 
     public void setMdBox(MdTextController mdBox, Textual extract, Tab tab) throws IOException {
         this.mainApp = mdBox.getMainApp();
-        this.config = mainApp.getConfig();
         this.mdBox = mdBox;
         this.tab = tab;
         this.extract = extract;
@@ -125,7 +120,7 @@ public class MdConvertController {
         }
 
         BoxEditor.setCenter(SourceText);
-        SourceText.setStyle("-fx-font-family: \"" + config.getEditorFont() + "\";-fx-font-size: " + config.getEditorFontsize() + ";");
+        SourceText.setStyle("-fx-font-family: \"" + MainApp.getConfig().getEditorFont() + "\";-fx-font-size: " + MainApp.getConfig().getEditorFontsize() + ";");
         initRenderTask();
         Platform.runLater(() -> {
             SourceText.replaceText(extract.getMarkdown());
@@ -168,7 +163,7 @@ public class MdConvertController {
             EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
                     EventHandlerHelper.on(keyPressed(KeyCode.Q, SHORTCUT_DOWN)).act( ev -> SourceText.selectAll()).create());
         }
-        if(config.getEditorSmart().booleanValue()) {
+        if(MainApp.getConfig().getEditorSmart().booleanValue()) {
             EventHandlerHelper.install(SourceText.onKeyReleasedProperty(),
                     EventHandlerHelper.on(keyReleased(KeyCode.TAB)).act(ev -> HandleSmartTab()).create());
             EventHandlerHelper.install(SourceText.onKeyReleasedProperty(),
@@ -287,9 +282,9 @@ public class MdConvertController {
             BorderPane imageDialog = loader.load();
             ImageInputDialog imageController = loader.getController();
             if(mainApp.getContents().size() > 0) {
-                imageController.setSourceText(mainApp, SourceText, mainApp.getZdsutils(), mainApp.getMenuController(), mainApp.getContents().get(0));
+                imageController.setSourceText(SourceText, mainApp.getZdsutils(), mainApp.getMenuController(), mainApp.getContents().get(0));
             } else {
-                imageController.setSourceText(mainApp, SourceText, mainApp.getZdsutils(), mainApp.getMenuController(), null);
+                imageController.setSourceText(SourceText, mainApp.getZdsutils(), mainApp.getMenuController(), null);
             }
 
             Stage dialogStage = new Stage();

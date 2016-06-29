@@ -34,8 +34,8 @@ public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Objec
         new License("CC 0", Configuration.bundle.getString("ui.content.label.license.cc0"))
     );
 
-	public EditContentDialog(MainApp mainApp, Content defaultContent) {
-		super(mainApp, Configuration.bundle.getString("ui.content.new.title"), Configuration.bundle.getString("ui.content.new.header"));
+	public EditContentDialog(Content defaultContent) {
+		super(Configuration.bundle.getString("ui.content.new.title"), Configuration.bundle.getString("ui.content.new.header"));
 
 		// Set the icon (must be included in the project).
 	    this.setGraphic(IconFactory.createAddFolderIcon());

@@ -12,12 +12,10 @@ import javafx.util.Pair;
 
 public class LoginDialog extends BaseDialog<Pair<String, String>> {
     private Configuration config;
-    private MainApp mainApp;
 
-	public LoginDialog(Button googleButton, MainApp mainApp) {
-		super(mainApp, Configuration.bundle.getString("ui.dialog.auth.title"), Configuration.bundle.getString("ui.dialog.auth.header"));
-        this.mainApp = mainApp;
-        this.config = this.mainApp.getConfig();
+	public LoginDialog(Button googleButton) {
+		super(Configuration.bundle.getString("ui.dialog.auth.title"), Configuration.bundle.getString("ui.dialog.auth.header"));
+        this.config = MainApp.getConfig();
 
         this.setGraphic(IconFactory.createLoginIcon());
 
@@ -44,7 +42,7 @@ public class LoginDialog extends BaseDialog<Pair<String, String>> {
 
         keepConnection.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if(keepConnection.isSelected()){
-                Alert alert = new CustomAlert(Alert.AlertType.WARNING, mainApp.getPrimaryStage());
+                Alert alert = new CustomAlert(Alert.AlertType.WARNING);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.warning.title"));
                 alert.setContentText(Configuration.bundle.getString("ui.dialog.auth.warning"));
 

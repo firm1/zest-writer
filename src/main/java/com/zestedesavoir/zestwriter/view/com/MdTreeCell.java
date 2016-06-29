@@ -32,7 +32,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class MdTreeCell extends TreeCell<ContentNode>{
-    private MainApp mainApp;
 	private MdTextController index;
 	private String baseFilePath;
 	private final Logger logger;
@@ -40,8 +39,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
     private Content content;
 
 
-    public MdTreeCell(MainApp mainApp, MdTextController index) {
-        this.mainApp = mainApp;
+    public MdTreeCell(MdTextController index) {
 		this.index = index;
         if(index.getMainApp().getContents().size() > 0) {
             this.content = index.getMainApp().getContents().stream().findFirst().get();
@@ -96,7 +94,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         }
 
         addMenuItem4.setOnAction(t -> {
-            Alert alert = new CustomAlert(AlertType.CONFIRMATION, mainApp.getPrimaryStage());
+            Alert alert = new CustomAlert(AlertType.CONFIRMATION);
             alert.setTitle(Configuration.bundle.getString("ui.dialog.delete.title"));
             alert.setHeaderText(Configuration.bundle.getString("ui.dialog.delete.header"));
             alert.setContentText(Configuration.bundle.getString("ui.dialog.delete.text"));
@@ -226,7 +224,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         addMenuItem5.setOnAction(t -> {
             logger.debug("Tentative d'édition d'un contenu");
             try {
-                Map<String,Object> paramContent= FunctionTreeFactory.initContentDialog(mainApp, content);
+                Map<String,Object> paramContent= FunctionTreeFactory.initContentDialog(content);
                 if(paramContent != null) {
                     index.getSummary().getRoot().getValue().setTitle(paramContent.get("title").toString());
                     ((Content) index.getSummary().getRoot().getValue()).setDescription(paramContent.get("description").toString());
@@ -242,7 +240,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
         menuStatCountHisto.setOnAction(t -> {
             logger.debug("Tentative de calcul des statistiques de type histogramme");
-            BaseDialog dialog = new BaseDialog(mainApp, Configuration.bundle.getString("ui.actions.stats.label"), Configuration.bundle.getString("ui.actions.stats.header")+" "+getItem().getTitle());
+            BaseDialog dialog = new BaseDialog(Configuration.bundle.getString("ui.actions.stats.label"), Configuration.bundle.getString("ui.actions.stats.header")+" "+getItem().getTitle());
             dialog.getDialogPane().setPrefSize(800, 600);
             dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.bundle.getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
 
@@ -278,7 +276,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
         menuStatCountPie.setOnAction(t -> {
             logger.debug("Tentative de calcul des statistiques de type Camembert");
-            BaseDialog dialog = new BaseDialog(mainApp, Configuration.bundle.getString("ui.actions.stats.label"), Configuration.bundle.getString("ui.actions.stats.header")+" "+getItem().getTitle());
+            BaseDialog dialog = new BaseDialog(Configuration.bundle.getString("ui.actions.stats.label"), Configuration.bundle.getString("ui.actions.stats.header")+" "+getItem().getTitle());
             dialog.getDialogPane().setPrefSize(800, 600);
             dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.bundle.getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
 

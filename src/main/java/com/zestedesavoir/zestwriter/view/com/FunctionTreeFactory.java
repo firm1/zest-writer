@@ -28,7 +28,7 @@ public class FunctionTreeFactory {
         return System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0;
     }
 
-    public static Map<String,Object> initContentDialog(MainApp mainApp, Content defaultContent) {
+    public static Map<String,Object> initContentDialog(Content defaultContent) {
         if(defaultContent == null) {
             defaultContent = new Content("container",
                     "",
@@ -42,7 +42,7 @@ public class FunctionTreeFactory {
                     EditContentDialog.typeOptions.get(1).getCode());
         }
         // Create wizard
-        EditContentDialog dialog = new EditContentDialog(mainApp, defaultContent);
+        EditContentDialog dialog = new EditContentDialog(defaultContent);
 
         Optional<Pair<String, Map<String, Object>>> result = dialog.showAndWait();
         if(result.isPresent()) {

@@ -10,8 +10,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -106,7 +104,7 @@ public class OptionsDialog{
     }
 
     @FXML private void HandleCancelButtonAction(){
-        Alert alert = new CustomAlert(Alert.AlertType.CONFIRMATION, mainApp.getPrimaryStage());
+        Alert alert = new CustomAlert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(Configuration.bundle.getString("ui.options.cancel.title"));
         alert.setHeaderText(Configuration.bundle.getString("ui.options.cancel.header"));
         alert.setContentText(Configuration.bundle.getString("ui.options.cancel.text"));
@@ -121,7 +119,7 @@ public class OptionsDialog{
     }
 
     @FXML private void HandleResetButtonAction(){
-        Alert alert = new CustomAlert(Alert.AlertType.CONFIRMATION, mainApp.getPrimaryStage());
+        Alert alert = new CustomAlert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(Configuration.bundle.getString("ui.options.reset.title"));
         alert.setHeaderText(Configuration.bundle.getString("ui.options.reset.header"));
         alert.setContentText(Configuration.bundle.getString("ui.options.reset.text"));
@@ -220,7 +218,7 @@ public class OptionsDialog{
         optDisplayTheme.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Theme>() {
             @Override
             public void changed(ObservableValue<? extends Theme> observable, Theme oldValue, Theme newValue) {
-                Alert alert = new CustomAlert(Alert.AlertType.WARNING, mainApp.getPrimaryStage());
+                Alert alert = new CustomAlert(Alert.AlertType.WARNING);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.change_theme.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_theme.header"));
                 alert.setContentText(Configuration.bundle.getString("ui.dialog.change_theme.text"));
@@ -234,7 +232,7 @@ public class OptionsDialog{
         optDisplayLang.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Lang>() {
             @Override
             public void changed(ObservableValue<? extends Lang> observable, Lang oldValue, Lang newValue) {
-                Alert alert = new CustomAlert(Alert.AlertType.WARNING, mainApp.getPrimaryStage());
+                Alert alert = new CustomAlert(Alert.AlertType.WARNING);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.change_lang.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_lang.header"));
                 alert.setContentText(Configuration.bundle.getString("ui.dialog.change_lang.text"));

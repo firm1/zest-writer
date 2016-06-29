@@ -39,18 +39,18 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class MainApp extends Application {
+    public static Configuration config;
+    public static String[] args;
+    private static Stage primaryStage;
+    private static ZdsHttp zdsutils;
     private Scene scene;
-    private Stage primaryStage;
     private BorderPane rootLayout;
     private ObservableMap<Textual, Tab> extracts = FXCollections.observableMap(new HashMap<>());
     private ObservableList<Content> contents = FXCollections.observableArrayList();
-    private ZdsHttp zdsutils;
     private MdTextController Index;
-    public static Configuration config;
     private StringBuilder key = new StringBuilder();
     private Logger logger;
     private MenuController menuController;
-    public static String[] args;
 
     public MainApp() {
         super();
@@ -71,12 +71,16 @@ public class MainApp extends Application {
     }
 
 
-    public Configuration getConfig() {
+    public static Configuration getConfig() {
         return config;
     }
 
-    public Stage getPrimaryStage() {
+    public static Stage getPrimaryStage() {
         return primaryStage;
+    }
+
+    public static ZdsHttp getZdsutils() {
+        return zdsutils;
     }
 
     public Scene getScene() {
@@ -89,10 +93,6 @@ public class MainApp extends Application {
 
     public ObservableList<Content> getContents() {
         return contents;
-    }
-
-    public ZdsHttp getZdsutils() {
-        return zdsutils;
     }
 
     public ObservableMap<Textual, Tab> getExtracts() {
@@ -201,7 +201,7 @@ public class MainApp extends Application {
 
     public void initConnection(){
         if(!config.getAuthentificationUsername().isEmpty() && !config.getAuthentificationPassword().isEmpty()){
-            LoginService loginTask = new LoginService(config.getAuthentificationUsername(), config.getAuthentificationPassword(), zdsutils, config);
+            LoginService loginTask = new LoginService(config.getAuthentificationUsername(), config.getAuthentificationPassword());
 
             menuController.getMenuDownload().setDisable(true);
             menuController.gethBottomBox().getChildren().clear();
@@ -209,7 +209,7 @@ public class MainApp extends Application {
             menuController.getLabelField().textProperty().bind(loginTask.messageProperty());
 
             loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
-                Alert alert = new CustomAlert(Alert.AlertType.NONE, primaryStage);
+                Alert alert = new CustomAlert(Alert.AlertType.NONE);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.auth.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.auth.state.header"));
 
