@@ -638,49 +638,27 @@ public class MenuController{
     @FXML private void HandleAboutButtonAction(ActionEvent event){
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/AboutDialog.fxml"));
 
-        try{
-            AnchorPane aboutDialog = loader.load();
-            AboutDialog aboutController = loader.getController();
-            aboutController.setMainApp(mainApp);
+        Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.help.about"));
+        dialogStage.setResizable(false);
 
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle(Configuration.bundle.getString("ui.menu.help.about"));
+        AboutDialog aboutController = loader.getController();
+        aboutController.setMainApp(mainApp);
 
-            Scene scene = new Scene(aboutDialog);
-            dialogStage.setScene(scene);
-            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
-            dialogStage.setResizable(false);
-            dialogStage.initModality(Modality.WINDOW_MODAL);
-
-            dialogStage.show();
-        }catch(IOException e){
-            logger.error(e.getMessage(), e);
-        }
+        dialogStage.show();
     }
 
     @FXML private void HandleOptionsButtonAction(ActionEvent evnet){
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/OptionsDialog.fxml"));
 
-        try{
-            BorderPane optionsDialog = loader.load();
+        Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.options"));
+        dialogStage.setResizable(false);
 
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle(Configuration.bundle.getString("ui.menu.options"));
 
-            Scene scene = new Scene(optionsDialog);
-            dialogStage.setScene(scene);
-            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
-            dialogStage.setResizable(false);
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
+        OptionsDialog optionsController = loader.getController();
+        optionsController.setMainApp(mainApp);
+        optionsController.setWindow(dialogStage);
 
-            OptionsDialog optionsController = loader.getController();
-            optionsController.setMainApp(mainApp);
-            optionsController.setWindow(dialogStage);
-
-            dialogStage.show();
-        }catch(IOException e){
-            logger.error(e.getMessage(), e);
-        }
+        dialogStage.show();
     }
 
     @FXML private void HandleCheckUpdateButtonAction(ActionEvent event){

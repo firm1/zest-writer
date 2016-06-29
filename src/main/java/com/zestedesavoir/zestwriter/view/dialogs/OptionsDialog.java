@@ -51,7 +51,7 @@ public class OptionsDialog{
 
     public void setMainApp(MainApp mainApp){
         this.mainApp = mainApp;
-        this.config = this.mainApp.getConfig();
+        this.config = MainApp.getConfig();
 
         setGeneralOptions();
         setEditorOptions();

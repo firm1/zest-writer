@@ -7,10 +7,7 @@ import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.FlipTable;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
-import com.zestedesavoir.zestwriter.view.com.CustomFXMLLoader;
-import com.zestedesavoir.zestwriter.view.com.CustomStyledClassedTextArea;
-import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
-import com.zestedesavoir.zestwriter.view.com.IconFactory;
+import com.zestedesavoir.zestwriter.view.com.*;
 import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.ImageInputDialog;
 import javafx.application.Platform;
@@ -114,7 +111,7 @@ public class MdConvertController {
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Editor.fxml"));
         loader.load();
 
-        if(mainApp.getConfig().getEditorToolbarView().equals("no")){
+        if(MainApp.getConfig().getEditorToolbarView().equals("no")){
             BoxEditor.setTop(null);
             BoxRender.setTop(null);
         }
@@ -278,28 +275,17 @@ public class MdConvertController {
     @FXML private void HandleImgButtonAction(ActionEvent event) {
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/ImageInput.fxml"));
 
-        try{
-            BorderPane imageDialog = loader.load();
-            ImageInputDialog imageController = loader.getController();
-            if(mainApp.getContents().size() > 0) {
-                imageController.setSourceText(SourceText, mainApp.getZdsutils(), mainApp.getMenuController(), mainApp.getContents().get(0));
-            } else {
-                imageController.setSourceText(SourceText, mainApp.getZdsutils(), mainApp.getMenuController(), null);
-            }
+        Stage dialogStage = new CustomStage(loader, "Ajouter une image");
 
-            Stage dialogStage = new Stage();
-            imageController.setStage(dialogStage);
-            dialogStage.setTitle("Ajouter une image");
-
-            Scene scene = new Scene(imageDialog);
-            dialogStage.setScene(scene);
-            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
-
-            dialogStage.show();
-        }catch(IOException e){
-            logger.error(e.getMessage(), e);
+        ImageInputDialog imageController = loader.getController();
+        if(mainApp.getContents().size() > 0) {
+            imageController.setSourceText(SourceText, MainApp.getZdsutils(), mainApp.getMenuController(), mainApp.getContents().get(0));
+        } else {
+            imageController.setSourceText(SourceText, MainApp.getZdsutils(), mainApp.getMenuController(), null);
         }
+        imageController.setStage(dialogStage);
+
+        dialogStage.show();
     }
     @FXML private void HandleBulletButtonAction(ActionEvent event) {
         if(SourceText.getSelectedText().isEmpty()){
@@ -716,27 +702,16 @@ public class MdConvertController {
     @FXML private void HandleFindReplaceDialog(){
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/FindReplaceDialog.fxml"));
 
-        try{
-            AnchorPane optionsDialog = loader.load();
+        Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.dialog.find.title"));
+        dialogStage.setTitle(Configuration.bundle.getString("ui.dialog.find.title"));
+        dialogStage.setResizable(false);
 
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle(Configuration.bundle.getString("ui.dialog.find.title"));
+        FindReplaceDialog findReplaceDialog = loader.getController();
+        findReplaceDialog.setMainApp(mainApp);
+        findReplaceDialog.setWindow(dialogStage);
+        findReplaceDialog.setMdConvertController(this);
 
-            Scene scene = new Scene(optionsDialog);
-            dialogStage.setScene(scene);
-            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
-            dialogStage.setResizable(false);
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
-
-            FindReplaceDialog findReplaceDialog = loader.getController();
-            findReplaceDialog.setMainApp(mainApp);
-            findReplaceDialog.setWindow(dialogStage);
-            findReplaceDialog.setMdConvertController(this);
-
-            dialogStage.show();
-        }catch(IOException e){
-            logger.error(e.getMessage(), e);
-        }
+        dialogStage.show();
     }
 
 

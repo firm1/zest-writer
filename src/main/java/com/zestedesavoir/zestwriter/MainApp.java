@@ -101,41 +101,41 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Zest Writer");
-        this.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("assets/static/icons/logo.png")));
+        MainApp.primaryStage = primaryStage;
+        MainApp.primaryStage.setTitle("Zest Writer");
+        MainApp.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("assets/static/icons/logo.png")));
 
         if(config.isDisplayWindowMaximize()){
-            this.primaryStage.setMaximized(true);
+            MainApp.primaryStage.setMaximized(true);
         }else{
             if(config.isDisplayWindowPersonnalDimension()){
-                this.primaryStage.setWidth(config.getDisplayWindowWidth());
-                this.primaryStage.setHeight(config.getDisplayWindowHeight());
+                MainApp.primaryStage.setWidth(config.getDisplayWindowWidth());
+                MainApp.primaryStage.setHeight(config.getDisplayWindowHeight());
             }else{
-                this.primaryStage.setWidth(Double.parseDouble(Configuration.ConfigData.DisplayWindowWidth.getDefaultValue()));
-                this.primaryStage.setHeight(Double.parseDouble(Configuration.ConfigData.DisplayWindowHeight.getDefaultValue()));
+                MainApp.primaryStage.setWidth(Double.parseDouble(Configuration.ConfigData.DisplayWindowWidth.getDefaultValue()));
+                MainApp.primaryStage.setHeight(Double.parseDouble(Configuration.ConfigData.DisplayWindowHeight.getDefaultValue()));
             }
             if(config.isDisplayWindowPersonnalPosition()){
-                this.primaryStage.setX(config.getDisplayWindowPositionX());
-                this.primaryStage.setY(config.getDisplayWindowPositionY());
+                MainApp.primaryStage.setX(config.getDisplayWindowPositionX());
+                MainApp.primaryStage.setY(config.getDisplayWindowPositionY());
             }
         }
 
 
-        this.primaryStage.setOnCloseRequest(t -> {
+        MainApp.primaryStage.setOnCloseRequest(t -> {
             quitApp();
             t.consume();
         });
-        this.primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> {
+        MainApp.primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowWidth(String.valueOf(newValue));
         });
-        this.primaryStage.heightProperty().addListener((observable, oldValue, newValue) -> {
+        MainApp.primaryStage.heightProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowHeight(String.valueOf(newValue));
         });
-        this.primaryStage.xProperty().addListener((observable, oldValue, newValue) -> {
+        MainApp.primaryStage.xProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowPositionX(String.valueOf(newValue));
         });
-        this.primaryStage.yProperty().addListener((observable, oldValue, newValue) -> {
+        MainApp.primaryStage.yProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowPositionY(String.valueOf(newValue));
         });
 
@@ -149,7 +149,7 @@ public class MainApp extends Application {
     }
 
     public void quitApp() {
-        if(this.primaryStage.isMaximized() && config.isDisplayWindowPersonnalDimension())
+        if(primaryStage.isMaximized() && config.isDisplayWindowPersonnalDimension())
             config.setDisplayWindowMaximize("true");
         config.saveConfFile();
         if(FunctionTreeFactory.clearContent(getExtracts(), getIndex().getEditorList())) {
