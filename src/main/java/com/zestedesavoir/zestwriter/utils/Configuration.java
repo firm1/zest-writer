@@ -224,8 +224,10 @@ public class Configuration {
      * Zest-Writer options
      */
     public String getWorkspacePath(){
-        if(conf.containsKey(ConfigData.WorkspacePath.getKey()))
-            return conf.getProperty(ConfigData.WorkspacePath.getKey());
+        String workspacePath = conf.getProperty(ConfigData.WorkspacePath.getKey());
+
+        if(workspacePath != null && !workspacePath.isEmpty())
+            return workspacePath;
         else
             return Configuration.getDefaultWorkspace();
     }
