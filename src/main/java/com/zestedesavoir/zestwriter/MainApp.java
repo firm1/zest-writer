@@ -35,6 +35,9 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -51,6 +54,7 @@ public class MainApp extends Application {
     private Logger logger;
     private MenuController menuController;
     public static String[] args;
+    public static File defaultHome;
 
     public MainApp() {
         super();
@@ -59,7 +63,16 @@ public class MainApp extends Application {
         if(args.length > 0) {
             config = new Configuration(args[0]);
         } else {
-            config = new Configuration(System.getProperty("user.home"));
+            File sample = new File(System.getProperty("user.home"));
+            if(sample.canWrite()) {
+                defaultHome = sample;
+            } else {
+                JFileChooser fr = new JFileChooser();
+                FileSystemView fw = fr.getFileSystemView();
+                defaultHome = fw.getDefaultDirectory();
+            }
+            logger.info("Répertoire Home par defaut : "+defaultHome);
+            config = new Configuration(defaultHome.getAbsolutePath());
         }
         zdsutils = new ZdsHttp(config);
 

@@ -1,6 +1,7 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
 
+import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
@@ -84,7 +85,7 @@ public class ImageInputDialog{
 
     private void selectAndUploadImage() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        fileChooser.setInitialDirectory(MainApp.defaultHome);
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             UploadImageService uploadImageTask = new UploadImageService(zdsUtils, content, selectedFile.getAbsoluteFile());
