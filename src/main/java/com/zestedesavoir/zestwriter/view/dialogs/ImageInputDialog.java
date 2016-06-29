@@ -88,7 +88,7 @@ public class ImageInputDialog{
         fileChooser.setInitialDirectory(MainApp.defaultHome);
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
-            UploadImageService uploadImageTask = new UploadImageService(zdsUtils, content, selectedFile.getAbsoluteFile());
+            UploadImageService uploadImageTask = new UploadImageService(content, selectedFile.getAbsoluteFile());
             uploadImageTask.setOnFailed( t -> {
                 Alert alert = new CustomAlert(AlertType.ERROR);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.upload.img.failed.title"));

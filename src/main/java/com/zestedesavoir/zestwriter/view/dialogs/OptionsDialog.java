@@ -11,8 +11,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -54,7 +52,7 @@ public class OptionsDialog{
 
     public void setMainApp(MainApp mainApp){
         this.mainApp = mainApp;
-        this.config = this.mainApp.getConfig();
+        this.config = MainApp.getConfig();
 
         setGeneralOptions();
         setEditorOptions();

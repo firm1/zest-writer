@@ -1,5 +1,6 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
+import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.License;
 import com.zestedesavoir.zestwriter.model.TypeContent;

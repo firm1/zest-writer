@@ -12,12 +12,10 @@ import javafx.util.Pair;
 
 public class LoginDialog extends BaseDialog<Pair<String, String>> {
     private Configuration config;
-    private MainApp mainApp;
 
-	public LoginDialog(Button googleButton, MainApp mainApp) {
+	public LoginDialog(Button googleButton) {
 		super(Configuration.bundle.getString("ui.dialog.auth.title"), Configuration.bundle.getString("ui.dialog.auth.header"));
-        this.mainApp = mainApp;
-        this.config = this.mainApp.getConfig();
+        this.config = MainApp.getConfig();
 
         this.setGraphic(IconFactory.createLoginIcon());
 

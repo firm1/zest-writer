@@ -11,6 +11,7 @@ public class BaseDialog<T> extends CustomDialog<T> {
 	private GridPane gridPane = new GridPane();
 
 	public BaseDialog(String title) {
+		super();
 		this.setTitle(title);
 		this.setHeaderText(null);
 		Stage stage= (Stage)this.getDialogPane().getScene().getWindow();

@@ -12,7 +12,6 @@ import com.zestedesavoir.zestwriter.view.com.*;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -37,18 +36,21 @@ import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
 import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
 
 public class MdTextController {
-    private MainApp mainApp;
-    private PythonInterpreter pyconsole;
     public static boolean pythonStarted=false;
     private final Logger logger;
+    @FXML public AnchorPane treePane;
+    private MainApp mainApp;
+    private PythonInterpreter pyconsole;
     private MdConvertController controllerConvert;
-
     @FXML private VBox contentBox;
     @FXML private TabPane EditorList;
     @FXML private TreeView<ContentNode> Summary;
     @FXML private SplitPane splitPane;
-    @FXML public AnchorPane treePane;
-    @FXML private Tab Home;
+
+    public MdTextController() {
+        super();
+        logger = LoggerFactory.getLogger(MdTextController.class);
+    }
 
     @FXML private void initialize() {
         loadConsolePython();
@@ -93,13 +95,12 @@ public class MdTextController {
         }).start();
     }
 
-    public MdTextController() {
-        super();
-        logger = LoggerFactory.getLogger(MdTextController.class);
-    }
-
     public PythonInterpreter getPyconsole() {
         return pyconsole;
+    }
+
+    public void setPyconsole(PythonInterpreter pyconsole) {
+        this.pyconsole = pyconsole;
     }
 
     public SplitPane getSplitPane() {
@@ -108,10 +109,6 @@ public class MdTextController {
 
     public TreeView<ContentNode> getSummary() {
         return Summary;
-    }
-
-    public void setPyconsole(PythonInterpreter pyconsole) {
-        this.pyconsole = pyconsole;
     }
 
     public MainApp getMainApp() {
@@ -156,7 +153,7 @@ public class MdTextController {
         gPane.setVgap(10);
         gPane.setPadding(new Insets(10, 10, 10, 10));
         int row=0, col=0, size=2;
-        for(String recentFilePath:mainApp.getConfig().getActions()) {
+        for(String recentFilePath: MainApp.getConfig().getActions()) {
             File manifest = new File(recentFilePath + File.separator + "manifest.json");
             if(manifest.exists()) {
                 BorderPane bPane = new BorderPane();
@@ -285,7 +282,7 @@ public class MdTextController {
         logger.debug("Tentative d'ouverture du contenu stocké dans "+filePath);
 
         // load content informations
-        mainApp.getZdsutils().setLocalSlug(content.getSlug());
+        MainApp.getZdsutils().setLocalSlug(content.getSlug());
         TreeItem<ContentNode> rootItem = new TreeItem<>(content);
         rootItem.setExpanded(true);
         Summary.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -365,10 +362,10 @@ public class MdTextController {
                 return treeCell;
             }
         });
-        mainApp.getZdsutils().setGalleryId(null);
+        MainApp.getZdsutils().setGalleryId(null);
         mainApp.getMenuController().activateButtonForOpenContent();
         if(filePath != null && !filePath.equals("null") ) {
-            mainApp.getConfig().addActionProject(filePath);
+            MainApp.getConfig().addActionProject(filePath);
             refreshRecentProject();
         }
         logger.info("Contenu stocké dans "+filePath+" ouvert");

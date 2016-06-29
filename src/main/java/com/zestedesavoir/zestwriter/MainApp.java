@@ -42,14 +42,14 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class MainApp extends Application {
+    public static Configuration config;
+    private static Stage primaryStage;
+    private static ZdsHttp zdsutils;
     private Scene scene;
-    private Stage primaryStage;
     private BorderPane rootLayout;
     private ObservableMap<Textual, Tab> extracts = FXCollections.observableMap(new HashMap<>());
     private ObservableList<Content> contents = FXCollections.observableArrayList();
-    private ZdsHttp zdsutils;
     private MdTextController Index;
-    public static Configuration config;
     private StringBuilder key = new StringBuilder();
     private Logger logger;
     private MenuController menuController;
@@ -84,12 +84,16 @@ public class MainApp extends Application {
     }
 
 
-    public Configuration getConfig() {
+    public static Configuration getConfig() {
         return config;
     }
 
-    public Stage getPrimaryStage() {
+    public static Stage getPrimaryStage() {
         return primaryStage;
+    }
+
+    public static ZdsHttp getZdsutils() {
+        return zdsutils;
     }
 
     public Scene getScene() {
@@ -104,53 +108,51 @@ public class MainApp extends Application {
         return contents;
     }
 
-    public ZdsHttp getZdsutils() {
-        return zdsutils;
-    }
-
     public ObservableMap<Textual, Tab> getExtracts() {
         return extracts;
     }
 
     @Override
     public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Zest Writer");
-        this.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("assets/static/icons/logo.png")));
-        this.primaryStage.setMinWidth(800);
-        this.primaryStage.setMinHeight(500);
+
+        MainApp.primaryStage = primaryStage;
+        MainApp.primaryStage.setTitle("Zest Writer");
+        MainApp.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("assets/static/icons/logo.png")));
+        MainApp.primaryStage.setMinWidth(800);
+        MainApp.primaryStage.setMinHeight(500);
+
 
         if(config.isDisplayWindowMaximize()){
-            this.primaryStage.setMaximized(true);
+            MainApp.primaryStage.setMaximized(true);
         }else{
             if(config.isDisplayWindowPersonnalDimension()){
-                this.primaryStage.setWidth(config.getDisplayWindowWidth());
-                this.primaryStage.setHeight(config.getDisplayWindowHeight());
+                MainApp.primaryStage.setWidth(config.getDisplayWindowWidth());
+                MainApp.primaryStage.setHeight(config.getDisplayWindowHeight());
             }else{
-                this.primaryStage.setWidth(Double.parseDouble(Configuration.ConfigData.DisplayWindowWidth.getDefaultValue()));
-                this.primaryStage.setHeight(Double.parseDouble(Configuration.ConfigData.DisplayWindowHeight.getDefaultValue()));
+                MainApp.primaryStage.setWidth(Double.parseDouble(Configuration.ConfigData.DisplayWindowWidth.getDefaultValue()));
+                MainApp.primaryStage.setHeight(Double.parseDouble(Configuration.ConfigData.DisplayWindowHeight.getDefaultValue()));
             }
             if(config.isDisplayWindowPersonnalPosition()){
-                this.primaryStage.setX(config.getDisplayWindowPositionX());
-                this.primaryStage.setY(config.getDisplayWindowPositionY());
+                MainApp.primaryStage.setX(config.getDisplayWindowPositionX());
+                MainApp.primaryStage.setY(config.getDisplayWindowPositionY());
             }
         }
 
 
-        this.primaryStage.setOnCloseRequest(t -> {
+        MainApp.primaryStage.setOnCloseRequest(t -> {
             quitApp();
             t.consume();
         });
-        this.primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> {
+        MainApp.primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowWidth(String.valueOf(newValue));
         });
-        this.primaryStage.heightProperty().addListener((observable, oldValue, newValue) -> {
+        MainApp.primaryStage.heightProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowHeight(String.valueOf(newValue));
         });
-        this.primaryStage.xProperty().addListener((observable, oldValue, newValue) -> {
+        MainApp.primaryStage.xProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowPositionX(String.valueOf(newValue));
         });
-        this.primaryStage.yProperty().addListener((observable, oldValue, newValue) -> {
+        MainApp.primaryStage.yProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowPositionY(String.valueOf(newValue));
         });
 
@@ -164,7 +166,7 @@ public class MainApp extends Application {
     }
 
     public void quitApp() {
-        if(this.primaryStage.isMaximized() && config.isDisplayWindowPersonnalDimension())
+        if(primaryStage.isMaximized() && config.isDisplayWindowPersonnalDimension())
             config.setDisplayWindowMaximize("true");
         config.saveConfFile();
         if(FunctionTreeFactory.clearContent(getExtracts(), getIndex().getEditorList())) {
@@ -216,7 +218,7 @@ public class MainApp extends Application {
 
     public void initConnection(){
         if(!config.getAuthentificationUsername().isEmpty() && !config.getAuthentificationPassword().isEmpty()){
-            LoginService loginTask = new LoginService(config.getAuthentificationUsername(), config.getAuthentificationPassword(), zdsutils, config);
+            LoginService loginTask = new LoginService(config.getAuthentificationUsername(), config.getAuthentificationPassword());
 
             menuController.getMenuDownload().setDisable(true);
             menuController.gethBottomBox().getChildren().clear();
