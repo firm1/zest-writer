@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
+import java.util.*;
 
 import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
 import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
@@ -38,7 +38,6 @@ import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
 public class MdTextController {
     public static boolean pythonStarted=false;
     private final Logger logger;
-    @FXML public AnchorPane treePane;
     private MainApp mainApp;
     private PythonInterpreter pyconsole;
     private MdConvertController controllerConvert;
@@ -46,6 +45,17 @@ public class MdTextController {
     @FXML private TabPane EditorList;
     @FXML private TreeView<ContentNode> Summary;
     @FXML private SplitPane splitPane;
+
+    @FXML public AnchorPane treePane;
+    @FXML private Label titleContentHome;
+
+    // Handle the control of the grid homepage (where projects are listed when the app open)
+    private TilePane gridPaneHomePage;
+
+    // Padding, marginal and vertical gap
+    private static final int PADDING_BETWEEN_CELL = 10;
+    private static final int HORIZONTAL_GAP_BETWEEN_CELL = 10;
+    private static final int VERTICAL_GAP_BETWEEN_CELL = 10;
 
     public MdTextController() {
         super();
@@ -55,6 +65,16 @@ public class MdTextController {
     @FXML private void initialize() {
         loadConsolePython();
         loadFonts();
+
+        // Initialize grid homepage
+        contentBox.setFillWidth(false);
+        gridPaneHomePage = new TilePane();
+
+        gridPaneHomePage.setHgap(HORIZONTAL_GAP_BETWEEN_CELL);
+        gridPaneHomePage.setVgap(VERTICAL_GAP_BETWEEN_CELL);
+        gridPaneHomePage.setPadding(new Insets(PADDING_BETWEEN_CELL, PADDING_BETWEEN_CELL, PADDING_BETWEEN_CELL, PADDING_BETWEEN_CELL));
+
+        contentBox.getChildren().add(gridPaneHomePage);
     }
 
     public TabPane getEditorList() {
@@ -140,47 +160,41 @@ public class MdTextController {
         refreshRecentProject();
     }
 
+    /**
+     * Refresh list of recent opening project.
+     */
     public void refreshRecentProject() {
-        contentBox.getChildren().clear();
-        ObjectMapper mapper = new ObjectMapper();
-        GridPane gPane = new GridPane();
-        ColumnConstraints col1 = new ColumnConstraints();
-        col1.setPercentWidth(50);
-        ColumnConstraints col2 = new ColumnConstraints();
-        col2.setPercentWidth(50);
-        gPane.getColumnConstraints().addAll(col1,col2);
-        gPane.setHgap(10);
-        gPane.setVgap(10);
-        gPane.setPadding(new Insets(10, 10, 10, 10));
-        int row=0, col=0, size=2;
-        for(String recentFilePath: MainApp.getConfig().getActions()) {
+
+        gridPaneHomePage.getChildren().clear();
+
+        for(String recentFilePath: mainApp.getConfig().getActions()) {
+
             File manifest = new File(recentFilePath + File.separator + "manifest.json");
             if(manifest.exists()) {
                 BorderPane bPane = new BorderPane();
                 bPane.setPadding(new Insets(10, 10, 10, 10));
                 bPane.getStyleClass().add("box-content");
                 try {
+                    ObjectMapper mapper = new ObjectMapper();
                     Content c = mapper.readValue(manifest, Content.class);
                     c.setRootContent(c, recentFilePath);
                     Hyperlink link = new Hyperlink(c.getTitle());
                     Label description = new Label(c.getDescription());
                     description.setWrapText(true);
                     MaterialDesignIconView type = IconFactory.createContentIcon(c.getType());
-                    link.setOnAction(t -> {
-                        FunctionTreeFactory.switchContent(c, mainApp.getContents());
-                    });
+                    link.setOnAction(t -> FunctionTreeFactory.switchContent(c, mainApp.getContents()));
                     bPane.setTop(link);
                     bPane.setBottom(description);
                     bPane.setLeft(type);
-                    gPane.add(bPane, col % size, row);
+                    bPane.setMinWidth(450);
+                    gridPaneHomePage.getChildren().add(bPane);
+
+                    titleContentHome.setVisible(true);
                 } catch (IOException e) {
                     logger.error("Impossible de lire le contenu répertorié dans : " + recentFilePath, e);
                 }
-                col++;
-                if (col % size == 0) row++;
             }
         }
-        contentBox.getChildren().add(gPane);
     }
 
     public void closeCurrentTab() {

@@ -612,9 +612,9 @@ public class MdConvertController {
         try {
             String result = corrector.checkHtmlContent(s);
             WebEngine webEngine = renderView.getEngine();
-            webEngine.loadContent("<!doctype html><html lang='fr'><head><meta charset='utf-8'><base href='"
-                    + MainApp.class.getResource("assets").toExternalForm() + "' /></head><body>" + result + "</body></html>");
+            webEngine.loadContent("<!doctype html><html lang='fr'><head><meta charset='utf-8'>" + MainApp.class.getResource("assets").toExternalForm() + "' /></head><body>" + result + "</body></html>");
             webEngine.setUserStyleSheetLocation(MainApp.class.getResource("css/content.css").toExternalForm());
+            webEngine.setJavaScriptEnabled(true);
         } catch (DOMException e) {
             logger.error(e.getMessage(), e);
         }

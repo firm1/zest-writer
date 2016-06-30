@@ -67,7 +67,7 @@
                                     </VBox>
                                     <VBox fx:id="contentBox">
                                        <children>
-                                       <Label styleClass="title-content-home" text="%ui.home.last_content"></Label>
+                                       <Label fx:id="titleContentHome" styleClass="title-content-home" text="%ui.home.last_content" visible="false"></Label>
                                        </children>
                                        <padding>
                                           <Insets bottom="10.0" left="10.0" right="10.0" />
