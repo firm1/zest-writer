@@ -4,15 +4,9 @@ import com.zestedesavoir.zestwriter.utils.Corrector;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.languagetool.JLanguageTool;
-import org.languagetool.language.French;
-import org.languagetool.markup.AnnotatedText;
-import org.languagetool.rules.RuleMatch;
 
-import java.util.List;
-
+import static com.aliasi.test.unit.Asserts.assertNotEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 
 public class TestCorrect {
 
