@@ -22,7 +22,6 @@ public class AddNewContentTest extends FxRobot {
 
     private MainApp mainApp;
 
-
     @BeforeClass
     public static void setupSpec() throws Exception {
         Stage primaryStage = registerPrimaryStage();
