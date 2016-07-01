@@ -542,7 +542,7 @@ public class MdConvertController {
         before.append("/js/katex/katex.min.js\"></script>");
         before.append("<script src=\"").append(MainApp.class.getResource("assets/static").toExternalForm());
         before.append("/js/katex/contrib/auto-render.min.js\"></script>");
-        before.append("<style type='text/css'>.baseline-fix {font-size: 0px;}</style></head><body>");
+        before.append("<style type='text/css'>.baseline-fix {font-size: 0px;} .fontsize-ensurer span {display:none;}</style></head><body>");
 
         after.append("<script>"+
                 "renderMathInElement("+
