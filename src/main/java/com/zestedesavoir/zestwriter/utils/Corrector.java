@@ -22,7 +22,7 @@ public class Corrector {
     public Corrector() {
         langTool = new JLanguageTool(new French());
         wordsToIgnore = new ArrayList<>();
-        langTool.disableRule("WHITESPACE_RULE");
+        langTool.disableRules(Arrays.asList("FRENCH_WHITESPACE", "WHITESPACE_RULE"));
     }
 
 
@@ -124,7 +124,7 @@ public class Corrector {
                     if (CountPre == 0 && CountSup == 0) { // if we aren't in inline code or not in footnote
                         builder.addText(part);
                         if (CountCode > 0 || CountEm > 0) { // ignore code or italic
-                            wordsToIgnore.addAll(Arrays.asList(part.replaceAll("[^a-zA-Z0-9 ]", "").split(" ")));
+                            wordsToIgnore.add(part);
                         }
                     } else {
                         builder.addText(generate(part.length()));
@@ -139,7 +139,7 @@ public class Corrector {
         AnnotatedText markup = makeAnnotatedText(htmlContent);
         StringBuilder bf = new StringBuilder(htmlContent);
 
-        langTool.getAllActiveRules().stream().filter(rule -> rule instanceof SpellingCheckRule).forEach(rule -> ((SpellingCheckRule) rule).addIgnoreTokens(wordsToIgnore));
+        langTool.getAllActiveRules().stream().filter(rule -> rule instanceof SpellingCheckRule).forEach(rule -> ((SpellingCheckRule) rule).acceptPhrases(wordsToIgnore));
 
         List<RuleMatch> matches = new ArrayList<>();
         try {
