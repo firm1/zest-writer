@@ -1,7 +1,6 @@
 package integration;
 
 import annotation.LargeTest;
-import annotation.MediumTest;
 import com.zestedesavoir.zestwriter.MainApp;
 import integration.util.Configuration;
 import integration.util.UtilFixtureLeGuideDuContributeur;
@@ -17,11 +16,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;
 
-import static org.loadui.testfx.GuiTest.waitUntil;
-import static org.loadui.testfx.controls.impl.VisibleNodesMatcher.visible;
-import static org.testfx.api.FxToolkit.registerPrimaryStage;
-import static org.testfx.api.FxToolkit.setupApplication;
-import static org.testfx.api.FxToolkit.setupStage;
+import static org.testfx.api.FxToolkit.*;
 
 public class DownloadNewContentTest extends FxRobot {
 

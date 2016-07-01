@@ -56,6 +56,9 @@ public class MainApp extends Application {
     public static String[] args;
     public static File defaultHome;
 
+    public static final int SIZE_WINDOW_MIN_WIDTH = 800;
+    public static final int SIZE_WINDOW_MIN_HEIGHT = 500;
+
     public MainApp() {
         super();
         logger = LoggerFactory.getLogger(MenuController.class);
@@ -114,13 +117,11 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
-        MainApp.primaryStage = primaryStage;
-        MainApp.primaryStage.setTitle("Zest Writer");
-        MainApp.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("assets/static/icons/logo.png")));
-        MainApp.primaryStage.setMinWidth(800);
-        MainApp.primaryStage.setMinHeight(500);
-
+        this.primaryStage = primaryStage;
+        this.primaryStage.setTitle("Zest Writer");
+        this.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("assets/static/icons/logo.png")));
+        this.primaryStage.setMinWidth(SIZE_WINDOW_MIN_WIDTH);
+        this.primaryStage.setMinHeight(SIZE_WINDOW_MIN_HEIGHT);
 
         if(config.isDisplayWindowMaximize()){
             MainApp.primaryStage.setMaximized(true);
