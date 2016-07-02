@@ -4,7 +4,6 @@ import annotation.LargeTest;
 import com.zestedesavoir.zestwriter.MainApp;
 import integration.util.Configuration;
 import integration.util.UtilFixtureLeGuideDuContributeur;
-import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -18,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 
 import static org.loadui.testfx.GuiTest.waitUntil;
 import static org.loadui.testfx.controls.Commons.hasText;
-import static org.loadui.testfx.controls.impl.VisibleNodesMatcher.visible;
 import static org.testfx.api.FxToolkit.*;
 
 public class DownloadNewContentTest extends FxRobot {
@@ -41,12 +39,17 @@ public class DownloadNewContentTest extends FxRobot {
     public void downloadNewContent() throws IOException, InterruptedException, URISyntaxException {
         UtilFixtureLeGuideDuContributeur.loadFixtureLeGuideDuContributeur(mainApp);
 
+        sleep(2, TimeUnit.SECONDS);
+
         clickOn("Synchronisation");
         clickOn("Téléchargez vos contenus ZdS");
 
-        write(Configuration.username);
-        press(KeyCode.TAB);
-        write(Configuration.password);
+        clickOn("#username").write(Configuration.username);
+        waitUntil("#username", hasText(Configuration.username));
+
+        clickOn("#password").write(Configuration.password);
+        waitUntil("#password", hasText(Configuration.password));
+
         clickOn("Se connecter");
 
         sleep(45, TimeUnit.SECONDS);
