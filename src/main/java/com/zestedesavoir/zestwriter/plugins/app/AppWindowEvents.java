@@ -14,7 +14,7 @@ public class AppWindowEvents{
 
     public AppWindowEvents(MainApp mainApp, ArrayList<Plugin> plugins){
         this.mainApp = mainApp;
-        this.window = mainApp.getPrimaryStage();
+        this.window = MainApp.getPrimaryStage();
         this.plugins = plugins;
         setMainWindowEvents();
     }

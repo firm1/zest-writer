@@ -11,15 +11,16 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 import java.util.ArrayList;
 
 public class AppEditorEvents{
-    private MainApp mainApp;
-    private MdConvertController editor;
-    private StyleClassedTextArea sourceText;
-    private ArrayList<Plugin> plugins;
+    private static MdConvertController editor;
+    private static StyleClassedTextArea sourceText;
+    private static ArrayList<Plugin> plugins;
 
-    public AppEditorEvents(MainApp mainApp, ArrayList<Plugin> plugins, MdConvertController editor){
-        this.mainApp = mainApp;
-        this.plugins = plugins;
-        this.editor = editor;
+    public AppEditorEvents(ArrayList<Plugin> plugins){
+        AppEditorEvents.plugins = plugins;
+    }
+
+    public static void setEditor(MdConvertController editor){
+        AppEditorEvents.editor = editor;
 
         if(editor != null){
             sourceText = editor.getSourceText();
@@ -27,7 +28,7 @@ public class AppEditorEvents{
         }
     }
 
-    private void setEditorEvents(){
+    private static void setEditorEvents(){
         sourceText.caretPositionProperty().addListener((observable, oldValue, newValue) -> {
             for(Plugin plugin : plugins){
                 plugin.method("onEditorPositionChange", new Class[]{Integer.TYPE, Integer.TYPE}, oldValue, newValue);

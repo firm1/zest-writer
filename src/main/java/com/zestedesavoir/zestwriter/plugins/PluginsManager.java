@@ -38,11 +38,15 @@ public class PluginsManager{
         plugins.forEach(Plugin::disable);
     }
 
+    public void setPluginEditor(MdConvertController editor){
+        AppEditorEvents.setEditor(editor);
+    }
+
     private void windowEvents(){
         new AppWindowEvents(mainApp, plugins);
     }
 
     private void editorEvents(){
-        new AppEditorEvents(mainApp, plugins, editor);
+        new AppEditorEvents(plugins);
     }
 }
