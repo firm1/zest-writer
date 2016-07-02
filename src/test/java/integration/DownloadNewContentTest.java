@@ -52,7 +52,7 @@ public class DownloadNewContentTest extends FxRobot {
 
         clickOn("Se connecter");
 
-        sleep(45, TimeUnit.SECONDS);
+        sleep(35, TimeUnit.SECONDS);
         clickOn("OK");
 
 
