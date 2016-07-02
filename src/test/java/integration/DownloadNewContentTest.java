@@ -49,9 +49,10 @@ public class DownloadNewContentTest extends FxRobot {
         sleep(15, TimeUnit.SECONDS);
         clickOn("OK");
 
-        assert (new File(Configuration.getWorkspacePath(mainApp) + "recap-communautaire-1-1/" + File.separator + "manifest.json").exists());
-        assert (new File(Configuration.getWorkspacePath(mainApp) + "introduction-au-protocole-wamp-2/" + File.separator + "manifest.json").exists());
-        assert (new File(Configuration.getWorkspacePath(mainApp) + "creez-des-applications-pour-android-1/" + File.separator + "manifest.json").exists());
+
+        assert (new File(Configuration.getWorkspacePath(mainApp) +  File.separator + "recap-communautaire-1-1/" + File.separator + "manifest.json").exists());
+        assert (new File(Configuration.getWorkspacePath(mainApp) +  File.separator + "introduction-au-protocole-wamp-2/" + File.separator + "manifest.json").exists());
+        assert (new File(Configuration.getWorkspacePath(mainApp) +  File.separator + "creez-des-applications-pour-android-1/" + File.separator + "manifest.json").exists());
 
     }
 
