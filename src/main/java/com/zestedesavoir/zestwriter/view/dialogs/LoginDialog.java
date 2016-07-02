@@ -24,8 +24,10 @@ public class LoginDialog extends BaseDialog<Pair<String, String>> {
         this.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
         TextField username = new TextField();
+        username.setId("username");
         username.setPromptText("username");
         PasswordField password = new PasswordField();
+        password.setId("password");
         password.setPromptText("password");
         CheckBox keepConnection = new CheckBox(Configuration.bundle.getString("ui.dialog.auth.stay"));
 

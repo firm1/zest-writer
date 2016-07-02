@@ -51,9 +51,14 @@ public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Objec
 	    grid.setPadding(new Insets(20, 150, 10, 10));
 
 	    TextField title = new TextField(defaultContent.getTitle());
+		title.setId("title");
+
 	    TextField subtitle = new TextField(defaultContent.getDescription());
+		subtitle.setId("subtitle");
+
 	    ComboBox<TypeContent> type = new ComboBox<>(typeOptions);
-	    type.setValue(typeOptions.get(typeOptions.indexOf(new TypeContent(defaultContent.getType(), ""))));
+		type.setId("type");
+		type.setValue(typeOptions.get(typeOptions.indexOf(new TypeContent(defaultContent.getType(), ""))));
 
 	    ComboBox<License> license = new ComboBox<>(licOptions);
 	    license.setValue(licOptions.get(licOptions.indexOf(new License(defaultContent.getLicence(), ""))));
