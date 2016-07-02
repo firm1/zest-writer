@@ -3,10 +3,8 @@ package integration;
 import annotation.MediumTest;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,6 +13,8 @@ import org.testfx.api.FxRobot;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
+import static org.loadui.testfx.GuiTest.waitUntil;
+import static org.loadui.testfx.controls.Commons.hasText;
 import static org.testfx.api.FxToolkit.*;
 
 public class AddNewContentTest extends FxRobot {
@@ -72,7 +72,11 @@ public class AddNewContentTest extends FxRobot {
         clickOn("Nouveau");
 
         clickOn("#title").write(NEW_CONTENT_TITLE);
+        waitUntil("#title", hasText(NEW_CONTENT_TITLE));
+
         clickOn("#subtitle").write(NEW_CONTENT_SUBTITLE);
+        waitUntil("#subtitle", hasText(NEW_CONTENT_SUBTITLE));
+
         clickOn("#type").clickOn(typeContent);
 
         clickOn("Enregistrer");
