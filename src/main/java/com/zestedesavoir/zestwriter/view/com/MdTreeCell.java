@@ -203,7 +203,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         });
 
         addMenuItem3.setOnAction(t -> {
-            logger.debug("Tentative de rennomage d'un conteneur ou extrait");
+            logger.debug("Tentative de renommage d'un conteneur ou extrait");
             TreeItem<ContentNode> item1 = index.getSummary().getSelectionModel().getSelectedItem();
             TextInputDialog dialog = new TextInputDialog(item1.getValue().getTitle());
             dialog.setTitle(Configuration.bundle.getString("ui.dialog.rename.title")+"  " + item1.getValue().getTitle());
@@ -213,7 +213,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
                 if (!result.get().trim().equals("")) {
-                    item1.getValue().setTitle(result.get());
+                    item1.getValue().renameTitle(result.get());
                     saveManifestJson();
                     index.openContent(content);
                 }
@@ -226,10 +226,11 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             try {
                 Map<String,Object> paramContent= FunctionTreeFactory.initContentDialog(content);
                 if(paramContent != null) {
-                    index.getSummary().getRoot().getValue().setTitle(paramContent.get("title").toString());
+                    index.getSummary().getRoot().getValue().renameTitle(paramContent.get("title").toString());
                     ((Content) index.getSummary().getRoot().getValue()).setDescription(paramContent.get("description").toString());
                     ((Content) index.getSummary().getRoot().getValue()).setType(paramContent.get("type").toString());
                     ((Content) index.getSummary().getRoot().getValue()).setLicence(paramContent.get("licence").toString());
+                    baseFilePath = ((Content) index.getSummary().getRoot().getValue()).getBasePath();
                     saveManifestJson();
                     index.openContent(content);
                 }

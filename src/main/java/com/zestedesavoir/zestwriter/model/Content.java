@@ -3,6 +3,8 @@ package com.zestedesavoir.zestwriter.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.zestedesavoir.zestwriter.utils.ZdsHttp;
+import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -123,4 +125,17 @@ public class Content extends Container implements ContentNode{
         }
     }
 
+    @Override
+    public void renameTitle(String newTitle) {
+        String oldPath = getFilePath();
+        Path workspace = Paths.get(getFilePath()).getParent();
+        String newPath = FunctionTreeFactory.getUniqueDirPath(workspace.toAbsolutePath()+ File.separator+ ZdsHttp.toSlug(newTitle));
+        String newSlug = (new File(newPath)).getName();
+        setTitle(newTitle);
+        setSlug(newSlug);
+        setBasePath(newPath);
+        File oldDir = new File(oldPath);
+        File newDir = new File(newPath);
+        oldDir.renameTo(newDir);
+    }
 }

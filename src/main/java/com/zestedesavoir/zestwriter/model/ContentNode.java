@@ -24,4 +24,7 @@ public interface ContentNode {
         return true;
     }
     default void delete() {}
+    default void renameTitle(String title) {
+        setTitle(title);
+    }
 }
