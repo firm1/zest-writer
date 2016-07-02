@@ -31,12 +31,8 @@ public class UtilFixtureLeGuideDuContributeur extends FxRobot {
             FileUtils.deleteDirectory(to);
         }
 
-        // absolute path to le guide du contributeur's fixatures
-        URL location = UtilFixtureLeGuideDuContributeur.class.getResource("/fixtures/le-guide-du-contributeur/introduction.md");
-        String pathWithFileName = location.getPath().toString().replaceFirst("^/(.:/)", "$1");
-
-        Path path = Paths.get(pathWithFileName);
-        File from = new File(path.getParent().toString());
+        // absolute path to le guide du contributeur's fixtures
+        File from = new File(integration.util.Configuration.getPathFixtureLeGuideDuContributeur());
 
         FileUtils.copyDirectory(from, to);
     }
