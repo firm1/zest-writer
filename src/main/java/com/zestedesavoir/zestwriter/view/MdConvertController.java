@@ -112,8 +112,6 @@ public class MdConvertController {
         this.tab = tab;
         this.extract = extract;
 
-        mainApp.getPluginsManager().setEditor(this);
-
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Editor.fxml"));
         loader.load();
 

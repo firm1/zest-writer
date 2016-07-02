@@ -7,34 +7,12 @@ import com.zestedesavoir.zestwriter.view.MdConvertController;
 import java.util.ArrayList;
 import java.util.Collections;
 
-abstract public class ZwPlugin{
-    private ArrayList<Class> listener = new ArrayList<>();
-    protected MainApp mainApp;
-    private MdConvertController editor;
+public interface ZwPlugin{
+    void onEnable(MainApp mainApp);
 
-    protected ZwPlugin getZwPlugin(){
-        return this;
-    }
+    void onDisable();
 
-    abstract public ZwPlugin onDefine();
+    ZwPluginVersion getVersion();
 
-    abstract public void onEnable(MainApp mainApp);
-
-    abstract public void onDisable();
-
-    abstract public ZwPluginVersion getVersion();
-
-    abstract public ArrayList<Class> getListener();
-
-    protected MainApp getMainApp(){
-        return mainApp;
-    }
-
-    protected MdConvertController getEditor(){
-        return editor;
-    }
-
-    public void setEditor(MdConvertController editor){
-        this.editor = editor;
-    }
+    ArrayList<Class> getListener();
 }

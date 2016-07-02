@@ -32,7 +32,7 @@ public class PluginsLoader{
 
     public PluginsLoader(MainApp mainApp){
         this.mainApp = mainApp;
-        this.config = this.mainApp.getConfig();
+        this.config = MainApp.getConfig();
 
         logger = LoggerFactory.getLogger(PluginsLoader.class);
     }

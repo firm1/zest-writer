@@ -17,7 +17,6 @@ import java.util.Objects;
 public class Plugin{
     private MainApp mainApp;
     private ArrayList<Class> listenerClass = new ArrayList<>();
-    private ZwPlugin zwPlugin;
     private Class plugin;
     private Logger logger;
     private String name;
@@ -46,9 +45,6 @@ public class Plugin{
     public void enable(){
         logger.debug("[PLUGINS] Enable <" + name + ">");
         enabled = true;
-
-        logger.debug("[PLUGINS]   Call <onDefine> method");
-        zwPlugin = (ZwPlugin)method("onDefine");
 
         logger.debug("[PLUGINS]   Version: " + method("getVersion"));
 
@@ -149,10 +145,6 @@ public class Plugin{
 
     public void setEnabled(boolean enabled){
         this.enabled = !pluginError && enabled;
-    }
-
-    public void setEditor(MdConvertController editor){
-        zwPlugin.setEditor(editor);
     }
 
     public void setName(String name){

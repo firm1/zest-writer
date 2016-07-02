@@ -28,16 +28,6 @@ public class PluginsManager{
         editorEvents();
     }
 
-    public void setEditor(MdConvertController editor){
-        this.editor = editor;
-
-        for(Plugin plugin : plugins){
-            plugin.setEditor(editor);
-        }
-
-        editorEvents();
-    }
-
     public void enablePlugins(){
         logger.info("[PLUGINS] Enable plugins");
         plugins.forEach(Plugin::enable);
