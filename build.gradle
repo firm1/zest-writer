@@ -13,6 +13,12 @@ processResources {
     }
 }
 
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 // Configures plugin
 javafx {
     // Application name and ID presented by target OS
