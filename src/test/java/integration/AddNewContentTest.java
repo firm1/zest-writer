@@ -61,7 +61,6 @@ public class AddNewContentTest extends FxRobot {
      * This method is created for sharing code between createNewTutorialTest and createNewTutorialArticle
      */
     private void assertContentHaveBeenCreated (String typeContent) {
-
         clickOn("Fichier");
         clickOn("Nouveau");
 
@@ -70,8 +69,6 @@ public class AddNewContentTest extends FxRobot {
         clickOn("#type").clickOn(typeContent);
 
         clickOn("Enregistrer");
-
-        clickOn(NEW_CONTENT_TITLE);
 
         // Assert that main information have been added to the list
         ObservableList<Content> content = mainApp.getContents();
