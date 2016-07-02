@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Function;
 
+import integration.util.Configuration;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,7 +47,7 @@ public class TestModel {
     @Before
     public void setUp() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        File manifest = new File(getClass().getResource("fixtures").getFile()+File.separator+"le-guide-du-contributeur"+File.separator+"manifest.json");
+        File manifest = new File(Configuration.getPathFixtureLeGuideDuContributeur() + File.separator+"manifest.json");
         content = mapper.readValue(manifest, Content.class);
         content.setRootContent(content, manifest.getParentFile().getAbsolutePath());
     }
