@@ -7,16 +7,10 @@ import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.function.Function;
 
 
@@ -40,56 +34,12 @@ public class Extract extends MetaContent implements Textual, ContentNode{
     }
 
     @Override
-    public void save() {
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getFilePath()), "UTF8"));
-            writer.append(getMarkdown());
-            writer.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                // Close the writer regardless of what happens...
-                if (writer != null) {
-                    writer.close();
-                }
-            } catch (Exception ignored) {
-            }
-        }
-
-    }
-
-    @Override
     public String getMarkdown() {
         return markdown;
     }
 
     public void setMarkdown(String markdown) {
         this.markdown = markdown;
-    }
-
-    public String readMarkdown() {
-        Path path = Paths.get(this.getFilePath());
-        Scanner scanner;
-        StringBuilder bfString = new StringBuilder();
-        try {
-            scanner = new Scanner(path, StandardCharsets.UTF_8.name());
-            while (scanner.hasNextLine()) {
-                bfString.append(scanner.nextLine());
-                bfString.append("\n");
-            }
-            scanner.close();
-            return bfString.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public void loadMarkdown() {
-        setMarkdown(readMarkdown());
     }
 
     @Override
@@ -107,22 +57,6 @@ public class Extract extends MetaContent implements Textual, ContentNode{
     @Override
     public MaterialDesignIconView buildIcon() {
         return IconFactory.createFileIcon();
-    }
-
-    @Override
-    public boolean canTakeContainer(Content c) {
-        return false;
-    }
-
-    @Override
-    public boolean canTakeExtract() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean isEditable() {
-        return true;
     }
 
     @Override
@@ -153,7 +87,7 @@ public class Extract extends MetaContent implements Textual, ContentNode{
 
     @Override
     public String exportContentToMarkdown(int level, int levelDepth) {
-        return FunctionTreeFactory.padding(level, '#') +
+        return FunctionTreeFactory.padding(level) +
                 " " + getTitle() + "\n\n" +
                 FunctionTreeFactory.changeLocationImages(FunctionTreeFactory.offsetHeaderMarkdown(readMarkdown(), levelDepth)) + "\n\n";
     }

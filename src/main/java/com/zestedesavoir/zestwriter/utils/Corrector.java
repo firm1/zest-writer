@@ -4,6 +4,7 @@ import org.languagetool.JLanguageTool;
 import org.languagetool.language.French;
 import org.languagetool.markup.AnnotatedText;
 import org.languagetool.markup.AnnotatedTextBuilder;
+import org.languagetool.rules.Rule;
 import org.languagetool.rules.RuleMatch;
 import org.languagetool.rules.spelling.SpellingCheckRule;
 
@@ -21,7 +22,7 @@ public class Corrector {
     public Corrector() {
         langTool = new JLanguageTool(new French());
         wordsToIgnore = new ArrayList<>();
-        langTool.disableRule("WHITESPACE_RULE");
+        langTool.disableRules(Arrays.asList("FRENCH_WHITESPACE", "WHITESPACE_RULE"));
     }
 
 
@@ -67,10 +68,10 @@ public class Corrector {
         return builder.build().getPlainText();
     }
 
-    private String generate(int k, char c) {
+    private String generate(int k) {
         StringBuilder st = new StringBuilder();
         for (int i = 0; i < k; i++) {
-            st.append(c);
+            st.append(' ');
         }
         return st.toString();
     }
@@ -120,13 +121,13 @@ public class Corrector {
                 if (inMarkup) {
                     builder.addMarkup(part);
                 } else {
-                    if (CountPre == 0 && CountSup == 0) {
+                    if (CountPre == 0 && CountSup == 0) { // if we aren't in inline code or not in footnote
                         builder.addText(part);
-                        if (CountCode > 0 || CountEm == 0) {
-                            wordsToIgnore.addAll(Arrays.asList(part.replaceAll("[^a-zA-Z0-9 ]", "").split(" ")));
+                        if (CountCode > 0 || CountEm > 0) { // ignore code or italic
+                            wordsToIgnore.add(part);
                         }
                     } else {
-                        builder.addText(generate(part.length(), ' '));
+                        builder.addText(generate(part.length()));
                     }
                 }
             }
@@ -138,7 +139,8 @@ public class Corrector {
         AnnotatedText markup = makeAnnotatedText(htmlContent);
         StringBuilder bf = new StringBuilder(htmlContent);
 
-        langTool.getAllActiveRules().stream().filter(rule -> rule instanceof SpellingCheckRule).forEach(rule -> ((SpellingCheckRule) rule).addIgnoreTokens(wordsToIgnore));
+        langTool.getAllActiveRules().stream().filter(rule -> rule instanceof SpellingCheckRule).forEach(rule -> ((SpellingCheckRule) rule).acceptPhrases(wordsToIgnore));
+
         List<RuleMatch> matches = new ArrayList<>();
         try {
             matches = langTool.check(markup);

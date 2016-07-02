@@ -148,11 +148,6 @@ public class Container extends MetaContent implements ContentNode {
     }
 
     @Override
-    public boolean isEditable() {
-        return true;
-    }
-
-    @Override
     public boolean isMoveableIn(ContentNode receiver, Content root) {
         if(receiver instanceof MetaAttribute) {
             if(receiver.getTitle().equalsIgnoreCase("conclusion")) {
@@ -184,7 +179,7 @@ public class Container extends MetaContent implements ContentNode {
     @Override
     public String exportContentToMarkdown(int level, int levelDepth) {
         StringBuilder sb = new StringBuilder();
-        sb.append(FunctionTreeFactory.padding(level, '#'));
+        sb.append(FunctionTreeFactory.padding(level));
         sb.append(" ").append(getTitle()).append("\n\n");
         sb.append(FunctionTreeFactory.changeLocationImages(FunctionTreeFactory.offsetHeaderMarkdown(getIntroduction().readMarkdown(), levelDepth))).append("\n\n");
         for(MetaContent c:getChildren()) {

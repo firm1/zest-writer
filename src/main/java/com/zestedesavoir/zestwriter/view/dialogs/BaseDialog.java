@@ -1,16 +1,17 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
 import com.zestedesavoir.zestwriter.MainApp;
+import com.zestedesavoir.zestwriter.view.com.CustomDialog;
 import javafx.geometry.Insets;
-import javafx.scene.control.Dialog;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-public class BaseDialog<T> extends Dialog<T>{
+public class BaseDialog<T> extends CustomDialog<T> {
 	private GridPane gridPane = new GridPane();
 
 	public BaseDialog(String title) {
+		super();
 		this.setTitle(title);
 		this.setHeaderText(null);
 		Stage stage= (Stage)this.getDialogPane().getScene().getWindow();

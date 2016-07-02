@@ -1,11 +1,28 @@
 package com.zestedesavoir.zestwriter.utils;
 
-import com.zestedesavoir.zestwriter.model.MetadataContent;
-import javafx.util.Pair;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpCookie;
+import java.nio.charset.Charset;
+import java.nio.file.Paths;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -31,28 +48,14 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpCookie;
-import java.nio.file.Paths;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import com.zestedesavoir.zestwriter.model.MetadataContent;
+
+import javafx.util.Pair;
 
 
 public class ZdsHttp {
     private String idUser;
+    private String galleryId;
     private String login;
     private String password;
     private String hostname;
@@ -65,7 +68,6 @@ public class ZdsHttp {
     private String cookies;
     private HttpClientContext context;
     private String localSlug;
-    private String localType;
     private final Logger logger;
     private static String USER_AGENT = "Mozilla/5.0";
     private Configuration config;
@@ -82,12 +84,17 @@ public class ZdsHttp {
     }
 
 
-    public void setLocalSlug(String localSlug) {
-        this.localSlug = localSlug;
+    public String getGalleryId() {
+        return galleryId;
     }
 
-    public void setLocalType(String localType) {
-        this.localType = localType;
+    public void setGalleryId(String galleryId) {
+        this.galleryId = galleryId;
+    }
+
+
+    public void setLocalSlug(String localSlug) {
+        this.localSlug = localSlug;
     }
 
     public List<MetadataContent> getContentListOnline() {
@@ -116,6 +123,14 @@ public class ZdsHttp {
 
     private String getDownloadDraftContentUrl(String id, String slug) {
         return getBaseUrl() + "/contenus/telecharger/" + id + "/" + slug + "/";
+    }
+
+    private String getDraftContentUrl(String id, String slug) {
+        return getBaseUrl() + "/contenus/" + id + "/" + slug + "/";
+    }
+
+    private String getImportImageUrl() {
+        return getBaseUrl() + "/galerie/image/ajouter/" + getGalleryId()+ "/";
     }
 
     private String getImportContenttUrl(String idContent, String slugContent) {
@@ -228,21 +243,41 @@ public class ZdsHttp {
         return new Pair<>(500, null);
     }
 
+    public void initGalleryId(String idContent, String slugContent) throws IOException {
+        String url = getDraftContentUrl(idContent, slugContent);
+        logger.info("Tentative de récupération de la page offline du contenu "+idContent+"("+slugContent+")");
+
+        HttpGet get = new HttpGet(url);
+        HttpResponse response = client.execute(get, context);
+        this.cookies = response.getFirstHeader("Set-Cookie").toString();
+        logger.info("Tentative réussie");
+
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+        Document doc = Jsoup.parse(rd.lines().collect(Collectors.joining("\n")));
+
+        Elements links = doc.select("a[href^=/galerie/]");
+        for (Element link : links) {
+            String ref = link.attr("href").trim();
+            String[] tab = ref.split("/");
+            if(tab.length >= 4) {
+                this.galleryId = tab[2];
+            }
+        }
+    }
+
     public String getId(String homeConnectedContent) {
         Document doc = Jsoup.parse(homeConnectedContent);
-        Elements sections = doc.getElementsByClass("my-account-dropdown");
+        Elements sections = doc.select("div.my-account-dropdown > ul > li > a[href^=/contenus/tutoriels]");
         for (Element section : sections) {
-            Elements links = section.getElementsByTag("a");
-            for (Element link : links) {
-                String ref = link.attr("href").trim();
-                if(ref.startsWith("/contenus/tutoriels")) {
-                    String[] splt = ref.split("/");
-                    if(splt.length >= 4) {
-                        return splt[3];
-                    }
-                    else {
-                        return null;
-                    }
+            String ref = section.attr("href").trim();
+            if(ref.startsWith("/contenus/tutoriels")) {
+                String[] splt = ref.split("/");
+                if(splt.length >= 4) {
+                    return splt[3];
+                }
+                else {
+                    return null;
                 }
             }
         }
@@ -277,14 +312,39 @@ public class ZdsHttp {
         this.login = null;
         this.password = null;
         this.idUser = null;
+        this.galleryId = null;
         this.cookieStore = null;
         this.authenticated = false;
     }
 
-    public boolean importNewContent(String filePath) throws IOException {
+    public String importImage(File file) throws IOException {
+        if(getGalleryId() != null) {
+            String url = getImportImageUrl();
+            HttpGet get = new HttpGet(url);
+            HttpResponse response = client.execute(get, context);
+            this.cookies = response.getFirstHeader("Set-Cookie").getValue();
 
-        logger.debug("Tentative d'import via l'url : " + getImportNewContenttUrl());
-        HttpGet get = new HttpGet(getImportNewContenttUrl());
+            // load file in form
+            FileBody cbFile = new FileBody(file);
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+            builder.addPart("physical", cbFile);
+            builder.addPart("title", new StringBody("Image importée via ZestWriter", Charset.forName("UTF-8")));
+            builder.addPart("csrfmiddlewaretoken", new StringBody(getCookieValue(cookieStore, "csrftoken"), ContentType.MULTIPART_FORM_DATA));
+
+            Pair<Integer, String> resultPost = sendPost(url, builder.build());
+
+            Document doc = Jsoup.parse(resultPost.getValue());
+            Elements endPoints = doc.select("input[name=avatar_url]");
+            for(Element point:endPoints) {
+                return getBaseUrl() + point.attr("value").trim();
+            }
+        }
+        return "http://";
+    }
+
+    private boolean uploadContent(String filePath, String url, String msg) throws IOException{
+        HttpGet get = new HttpGet(url);
         HttpResponse response = client.execute(get, context);
         this.cookies = response.getFirstHeader("Set-Cookie").getValue();
 
@@ -293,10 +353,11 @@ public class ZdsHttp {
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         builder.addPart("archive", cbFile);
-        builder.addPart("subcategory", new StringBody("15", ContentType.MULTIPART_FORM_DATA));
+        builder.addPart("subcategory", new StringBody("115", ContentType.MULTIPART_FORM_DATA));
+        builder.addPart("msg_commit", new StringBody(msg, Charset.forName("UTF-8")));
         builder.addPart("csrfmiddlewaretoken", new StringBody(getCookieValue(cookieStore, "csrftoken"), ContentType.MULTIPART_FORM_DATA));
 
-        Pair<Integer, String> resultPost = sendPost(getImportNewContenttUrl(), builder.build());
+        Pair<Integer, String> resultPost = sendPost(url, builder.build());
         int statusCode = resultPost.getKey();
 
         switch (statusCode) {
@@ -308,31 +369,16 @@ public class ZdsHttp {
 
         return statusCode == 200;
     }
-    public boolean importContent(String filePath, String targetId, String targetSlug)
+    public boolean importNewContent(String filePath, String msg) throws IOException {
+
+        logger.debug("Tentative d'import via l'url : " + getImportNewContenttUrl());
+        return uploadContent(filePath, getImportNewContenttUrl(), msg);
+    }
+
+    public boolean importContent(String filePath, String targetId, String targetSlug, String msg)
             throws IOException {
         logger.debug("Tentative d'import via l'url : " + getImportContenttUrl(targetId, targetSlug));
-        HttpGet get = new HttpGet(getImportContenttUrl(targetId, targetSlug));
-        HttpResponse response = client.execute(get, context);
-        this.cookies = response.getFirstHeader("Set-Cookie").getValue();
-
-        // load file in form
-        FileBody cbFile = new FileBody(new File(filePath));
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-        builder.addPart("archive", cbFile);
-        builder.addPart("csrfmiddlewaretoken", new StringBody(getCookieValue(cookieStore, "csrftoken"), ContentType.MULTIPART_FORM_DATA));
-
-        Pair<Integer, String> resultPost = sendPost(getImportContenttUrl(targetId, targetSlug), builder.build());
-        int statusCode = resultPost.getKey();
-
-        switch (statusCode) {
-            case 404:
-                logger.debug("Your target id and slug is incorrect, please give us real informations");
-            case 403:
-                logger.debug("Your are not authorize to do this task. Please check if your are login");
-        }
-
-        return statusCode == 200;
+        return uploadContent(filePath, getImportContenttUrl(targetId, targetSlug), msg);
     }
 
     public void initInfoOnlineContent(String type) throws IOException {
@@ -357,18 +403,15 @@ public class ZdsHttp {
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
         Document doc = Jsoup.parse(rd.lines().collect(Collectors.joining("\n")));
-        Elements sections = doc.select("article");
+        Elements sections = doc.select("article > a[href^=/contenus/]");
         for (Element section : sections) {
-            Elements links = section.getElementsByTag("a");
-            for (Element link : links) {
-                String ref = link.attr("href").trim();
-                logger.trace("Chaine à decrypter pour trouver le slug : " + ref);
-                if (ref.startsWith("/contenus/")) {
-                    String[] tab = ref.split("/");
-                    MetadataContent onlineContent = new MetadataContent(tab[2], tab[3], type);
-                    if(!getContentListOnline().contains(onlineContent)) {
-                        getContentListOnline().add(onlineContent);
-                    }
+            String ref = section.attr("href").trim();
+            logger.trace("Chaine à decrypter pour trouver le slug : " + ref);
+            if (ref.startsWith("/contenus/")) {
+                String[] tab = ref.split("/");
+                MetadataContent onlineContent = new MetadataContent(tab[2], tab[3], type);
+                if(!getContentListOnline().contains(onlineContent)) {
+                    getContentListOnline().add(onlineContent);
                 }
             }
         }

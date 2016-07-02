@@ -1,11 +1,5 @@
 package com.zestedesavoir.zestwriter;
 
-import java.io.IOException;
-import java.util.HashMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.plugins.PluginsManager;
@@ -13,10 +7,10 @@ import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
+import com.zestedesavoir.zestwriter.view.com.CustomAlert;
+import com.zestedesavoir.zestwriter.view.com.CustomFXMLLoader;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
-import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import com.zestedesavoir.zestwriter.view.task.LoginService;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -39,21 +33,30 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 
 public class MainApp extends Application {
+    public static Configuration config;
+    private static Stage primaryStage;
+    private static ZdsHttp zdsutils;
     private Scene scene;
-    private Stage primaryStage;
     private BorderPane rootLayout;
     private ObservableMap<Textual, Tab> extracts = FXCollections.observableMap(new HashMap<>());
     private ObservableList<Content> contents = FXCollections.observableArrayList();
-    private ZdsHttp zdsutils;
     private MdTextController Index;
-    private Configuration config;
     private StringBuilder key = new StringBuilder();
     private Logger logger;
     private MenuController menuController;
     private PluginsManager pm;
     public static String[] args;
+    public static File defaultHome;
 
     public MainApp() {
         super();
@@ -62,9 +65,19 @@ public class MainApp extends Application {
         if(args.length > 0) {
             config = new Configuration(args[0]);
         } else {
-            config = new Configuration(System.getProperty("user.home"));
+            File sample = new File(System.getProperty("user.home"));
+            if(sample.canWrite()) {
+                defaultHome = sample;
+            } else {
+                JFileChooser fr = new JFileChooser();
+                FileSystemView fw = fr.getFileSystemView();
+                defaultHome = fw.getDefaultDirectory();
+            }
+            logger.info("Répertoire Home par defaut : "+defaultHome);
+            config = new Configuration(defaultHome.getAbsolutePath());
         }
         zdsutils = new ZdsHttp(config);
+
     }
 
     public static void main(String[] args) {
@@ -73,12 +86,16 @@ public class MainApp extends Application {
     }
 
 
-    public Configuration getConfig() {
+    public static Configuration getConfig() {
         return config;
     }
 
-    public Stage getPrimaryStage() {
+    public static Stage getPrimaryStage() {
         return primaryStage;
+    }
+
+    public static ZdsHttp getZdsutils() {
+        return zdsutils;
     }
 
     public Scene getScene() {
@@ -93,10 +110,6 @@ public class MainApp extends Application {
         return contents;
     }
 
-    public ZdsHttp getZdsutils() {
-        return zdsutils;
-    }
-
     public ObservableMap<Textual, Tab> getExtracts() {
         return extracts;
     }
@@ -107,45 +120,49 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Zest Writer");
-        this.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("assets/static/icons/logo.png")));
+
+        MainApp.primaryStage = primaryStage;
+        MainApp.primaryStage.setTitle("Zest Writer");
+        MainApp.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("assets/static/icons/logo.png")));
+        MainApp.primaryStage.setMinWidth(800);
+        MainApp.primaryStage.setMinHeight(500);
+
 
         if(config.isDisplayWindowMaximize()){
-            this.primaryStage.setMaximized(true);
+            MainApp.primaryStage.setMaximized(true);
         }else{
             if(config.isDisplayWindowPersonnalDimension()){
-                this.primaryStage.setWidth(config.getDisplayWindowWidth());
-                this.primaryStage.setHeight(config.getDisplayWindowHeight());
+                MainApp.primaryStage.setWidth(config.getDisplayWindowWidth());
+                MainApp.primaryStage.setHeight(config.getDisplayWindowHeight());
             }else{
-                this.primaryStage.setWidth(Double.parseDouble(Configuration.ConfigData.DisplayWindowWidth.getDefaultValue()));
-                this.primaryStage.setHeight(Double.parseDouble(Configuration.ConfigData.DisplayWindowHeight.getDefaultValue()));
+                MainApp.primaryStage.setWidth(Double.parseDouble(Configuration.ConfigData.DisplayWindowWidth.getDefaultValue()));
+                MainApp.primaryStage.setHeight(Double.parseDouble(Configuration.ConfigData.DisplayWindowHeight.getDefaultValue()));
             }
             if(config.isDisplayWindowPersonnalPosition()){
-                this.primaryStage.setX(config.getDisplayWindowPositionX());
-                this.primaryStage.setY(config.getDisplayWindowPositionY());
+                MainApp.primaryStage.setX(config.getDisplayWindowPositionX());
+                MainApp.primaryStage.setY(config.getDisplayWindowPositionY());
             }
         }
 
-        this.primaryStage.setOnCloseRequest(t -> {
+        MainApp.primaryStage.setOnCloseRequest(t -> {
             pm.disablePlugins();
 
-            if(this.primaryStage.isMaximized() && config.isDisplayWindowPersonnalDimension())
+            if(MainApp.primaryStage.isMaximized() && config.isDisplayWindowPersonnalDimension())
                 config.setDisplayWindowMaximize("true");
 
             quitApp();
             t.consume();
         });
-        this.primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> {
+        MainApp.primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowWidth(String.valueOf(newValue));
         });
-        this.primaryStage.heightProperty().addListener((observable, oldValue, newValue) -> {
+        MainApp.primaryStage.heightProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowHeight(String.valueOf(newValue));
         });
-        this.primaryStage.xProperty().addListener((observable, oldValue, newValue) -> {
+        MainApp.primaryStage.xProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowPositionX(String.valueOf(newValue));
         });
-        this.primaryStage.yProperty().addListener((observable, oldValue, newValue) -> {
+        MainApp.primaryStage.yProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowPositionY(String.valueOf(newValue));
         });
 
@@ -160,7 +177,7 @@ public class MainApp extends Application {
     }
 
     public void quitApp() {
-        if(this.primaryStage.isMaximized() && config.isDisplayWindowPersonnalDimension())
+        if(primaryStage.isMaximized() && config.isDisplayWindowPersonnalDimension())
             config.setDisplayWindowMaximize("true");
         config.saveConfFile();
         if(FunctionTreeFactory.clearContent(getExtracts(), getIndex().getEditorList())) {
@@ -172,8 +189,7 @@ public class MainApp extends Application {
     public void initRootLayout() {
         try {
             // Load root layout from fxml file.
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("fxml/Root.fxml"));
+            FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Root.fxml"));
             rootLayout = loader.load();
 
             menuController = loader.getController();
@@ -190,8 +206,7 @@ public class MainApp extends Application {
 
     public void showWriter() {
         try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("fxml/Index.fxml"));
+            FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Index.fxml"));
             AnchorPane writerLayout = loader.load();
 
             rootLayout.setCenter(writerLayout);
@@ -206,9 +221,15 @@ public class MainApp extends Application {
         }
     }
 
+
+
+    public MenuController getMenuController() {
+        return menuController;
+    }
+
     public void initConnection(){
         if(!config.getAuthentificationUsername().isEmpty() && !config.getAuthentificationPassword().isEmpty()){
-            LoginService loginTask = new LoginService(config.getAuthentificationUsername(), config.getAuthentificationPassword(), zdsutils, config);
+            LoginService loginTask = new LoginService(config.getAuthentificationUsername(), config.getAuthentificationPassword());
 
             menuController.getMenuDownload().setDisable(true);
             menuController.gethBottomBox().getChildren().clear();
@@ -216,17 +237,16 @@ public class MainApp extends Application {
             menuController.getLabelField().textProperty().bind(loginTask.messageProperty());
 
             loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
-                Alert alert = new Alert(Alert.AlertType.NONE);
-                alert.setTitle("Connexion");
-                alert.setHeaderText("Etat de connexion");
+                Alert alert = new CustomAlert(Alert.AlertType.NONE);
+                alert.setTitle(Configuration.bundle.getString("ui.dialog.auth.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.auth.state.header"));
 
-                IconFactory.addAlertLogo(alert);
 
                 switch(newValue){
                     case FAILED:
                     case CANCELLED:
                         alert.setAlertType(Alert.AlertType.ERROR);
-                        alert.setContentText("Désolé mais vous n'avez pas été authentifié sur le serveur de Zeste de Savoir.");
+                        alert.setContentText(Configuration.bundle.getString("ui.dialog.auth.failed.text"));
 
                         alert.showAndWait();
                         menuController.getMenuDownload().setDisable(false);

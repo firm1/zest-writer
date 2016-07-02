@@ -1,9 +1,11 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
+import com.zestedesavoir.zestwriter.MainApp;
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
+import com.zestedesavoir.zestwriter.view.com.CustomDialog;
 import javafx.concurrent.Worker.State;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -14,9 +16,10 @@ import org.w3c.dom.NodeList;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 
-public class GoogleLoginDialog extends Dialog<Pair<String, String>>{
-	public GoogleLoginDialog(LoginDialog parent, ZdsHttp zdsUtils) {
-		this.setTitle("Authentification via Google");
+public class GoogleLoginDialog extends CustomDialog<Pair<String, String>> {
+	public GoogleLoginDialog(LoginDialog parent) {
+        super();
+		this.setTitle(Configuration.bundle.getString("ui.dialog.auth.google.title"));
 
         final WebView browser = new WebView();
         final WebEngine webEngine = browser.getEngine();
@@ -42,7 +45,7 @@ public class GoogleLoginDialog extends Dialog<Pair<String, String>>{
                     Element logbox = getLogBox(elementary);
                     String pseudo = getPseudo(logbox);
                     String id = getId(logbox);
-                    zdsUtils.authToGoogle(manager.getCookieStore().getCookies(), pseudo, id);
+                    MainApp.getZdsutils().authToGoogle(manager.getCookieStore().getCookies(), pseudo, id);
                     getThis().close();
                     parent.close();
                 } else {
@@ -110,7 +113,6 @@ public class GoogleLoginDialog extends Dialog<Pair<String, String>>{
                                     org.w3c.dom.Node ktem = childIlNodes.item(k);
                                     if(ktem instanceof Element){
                                         Element aItem = ((Element)ktem);
-                                        //System.out.println("BALISE : "+aItem.getNodeName());
                                         if(aItem.getNodeName().equals("A")) {
                                             String ref = aItem.getAttribute("href");
                                             if(ref.startsWith("/contenus/tutoriels")) {

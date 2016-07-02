@@ -45,10 +45,19 @@ public class MetadataContent {
     public boolean equals(Object obj) {
         if(obj instanceof MetadataContent) {
             MetadataContent ob = (MetadataContent) obj;
-            if(getId() == null || ob.getId() == null) {
-                return false;
+            if(getId() == null) {
+                if(getType() == null) {
+                    return ob.getId() == null && getSlug().equals(ob.getSlug()) && ob.getType() == null;
+                } else {
+                    return ob.getId() == null && getSlug().equals(ob.getSlug()) && getType().equals(ob.getType());
+                }
+            } else {
+                if(getType() == null) {
+                    return getId().equals(ob.getId()) && getSlug().equals(ob.getSlug()) && ob.getType() == null;
+                } else {
+                    return getId().equals(ob.getId()) && getSlug().equals(ob.getSlug()) && getType().equals(ob.getType());
+                }
             }
-            return getId().equals(ob.getId()) && getSlug().equals(ob.getSlug()) && getType().equals(ob.getType());
         }
         return super.equals(obj);
     }

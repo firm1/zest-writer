@@ -1,68 +1,56 @@
 package com.zestedesavoir.zestwriter.view;
 
-import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
-import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
-
-import java.io.IOException;
-import java.util.Optional;
-
-import org.python.util.PythonInterpreter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
 import com.sun.javafx.scene.control.skin.TabPaneSkin;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
 import com.zestedesavoir.zestwriter.model.Textual;
-import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
-import com.zestedesavoir.zestwriter.view.com.IconFactory;
-import com.zestedesavoir.zestwriter.view.com.MdTreeCell;
-
+import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.view.com.*;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
+import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.TransferMode;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.*;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
+import org.python.util.PythonInterpreter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
+
+import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
+import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
 
 public class MdTextController {
+    public static boolean pythonStarted=false;
+    private final Logger logger;
+    @FXML public AnchorPane treePane;
     private MainApp mainApp;
     private PythonInterpreter pyconsole;
-    private final Logger logger;
-
-    @FXML private Hyperlink recentFileLink1;
-    @FXML private Hyperlink recentFileLink2;
-    @FXML private Hyperlink recentFileLink3;
-    @FXML private Hyperlink recentFileLink4;
-    @FXML private Hyperlink recentFileLink5;
-
+    private MdConvertController controllerConvert;
+    @FXML private VBox contentBox;
     @FXML private TabPane EditorList;
     @FXML private TreeView<ContentNode> Summary;
     @FXML private SplitPane splitPane;
-    @FXML public AnchorPane treePane;
-    @FXML private Tab Home;
+
+    public MdTextController() {
+        super();
+        logger = LoggerFactory.getLogger(MdTextController.class);
+    }
 
     @FXML private void initialize() {
         loadConsolePython();
@@ -74,12 +62,21 @@ public class MdTextController {
     }
 
     public void loadConsolePython() {
+        Task task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+
+                return null;
+            }
+        };
+
         new Thread(() -> {
             pyconsole = new PythonInterpreter();
             pyconsole.exec("from markdown import Markdown");
             pyconsole.exec("from markdown.extensions.zds import ZdsExtension");
             pyconsole.exec("from smileys_definition import smileys");
             logger.info("PYTHON STARTED");
+            pythonStarted=true;
         }).start();
     }
 
@@ -98,13 +95,12 @@ public class MdTextController {
         }).start();
     }
 
-    public MdTextController() {
-        super();
-        logger = LoggerFactory.getLogger(MdTextController.class);
-    }
-
     public PythonInterpreter getPyconsole() {
         return pyconsole;
+    }
+
+    public void setPyconsole(PythonInterpreter pyconsole) {
+        this.pyconsole = pyconsole;
     }
 
     public SplitPane getSplitPane() {
@@ -115,10 +111,6 @@ public class MdTextController {
         return Summary;
     }
 
-    public void setPyconsole(PythonInterpreter pyconsole) {
-        this.pyconsole = pyconsole;
-    }
-
     public MainApp getMainApp() {
         return mainApp;
     }
@@ -127,28 +119,74 @@ public class MdTextController {
         this.mainApp = mainApp;
 
         mainApp.getContents().addListener((ListChangeListener<Content>) change -> {
-            if(FunctionTreeFactory.clearContent(mainApp.getExtracts(), EditorList)) {
-                for(Content content:mainApp.getContents()) {
-                    openContent(content);
+            Platform.runLater(() -> {
+                if (FunctionTreeFactory.clearContent(mainApp.getExtracts(), EditorList)) {
+                    Summary.setRoot(null);
+                    for (Content content : mainApp.getContents()) {
+                        openContent(content);
+                    }
                 }
-            }
+            });
         });
 
         mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.TAB, SHORTCUT_DOWN), () -> switchTabTo(true));
         mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.TAB, SHORTCUT_DOWN, SHIFT_DOWN), () -> switchTabTo(false));
         if(FunctionTreeFactory.isMacOs()) {
-            mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.W, SHORTCUT_DOWN), () -> closeCurrentTab());
-        } else {
             mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.Z, SHORTCUT_DOWN), () -> closeCurrentTab());
+        } else {
+            mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.W, SHORTCUT_DOWN), () -> closeCurrentTab());
         }
+
+        refreshRecentProject();
+    }
+
+    public void refreshRecentProject() {
+        contentBox.getChildren().clear();
+        ObjectMapper mapper = new ObjectMapper();
+        GridPane gPane = new GridPane();
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setPercentWidth(50);
+        ColumnConstraints col2 = new ColumnConstraints();
+        col2.setPercentWidth(50);
+        gPane.getColumnConstraints().addAll(col1,col2);
+        gPane.setHgap(10);
+        gPane.setVgap(10);
+        gPane.setPadding(new Insets(10, 10, 10, 10));
+        int row=0, col=0, size=2;
+        for(String recentFilePath: MainApp.getConfig().getActions()) {
+            File manifest = new File(recentFilePath + File.separator + "manifest.json");
+            if(manifest.exists()) {
+                BorderPane bPane = new BorderPane();
+                bPane.setPadding(new Insets(10, 10, 10, 10));
+                bPane.getStyleClass().add("box-content");
+                try {
+                    Content c = mapper.readValue(manifest, Content.class);
+                    c.setRootContent(c, recentFilePath);
+                    Hyperlink link = new Hyperlink(c.getTitle());
+                    Label description = new Label(c.getDescription());
+                    description.setWrapText(true);
+                    MaterialDesignIconView type = IconFactory.createContentIcon(c.getType());
+                    link.setOnAction(t -> {
+                        FunctionTreeFactory.switchContent(c, mainApp.getContents());
+                    });
+                    bPane.setTop(link);
+                    bPane.setBottom(description);
+                    bPane.setLeft(type);
+                    gPane.add(bPane, col % size, row);
+                } catch (IOException e) {
+                    logger.error("Impossible de lire le contenu répertorié dans : " + recentFilePath, e);
+                }
+                col++;
+                if (col % size == 0) row++;
+            }
+        }
+        contentBox.getChildren().add(gPane);
     }
 
     public void closeCurrentTab() {
         if (EditorList.getTabs().size() > 1) {
             Tab selectedTab = EditorList.getSelectionModel().getSelectedItem();
-            Platform.runLater(() -> {
-                Event.fireEvent(selectedTab, new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
-            });
+            Event.fireEvent(selectedTab, new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
         }
     }
 
@@ -180,8 +218,7 @@ public class MdTextController {
     public void createTabExtract(Textual extract) throws IOException {
         logger.debug("Tentative de création d'un nouvel onglet pour "+extract.getTitle());
         extract.loadMarkdown();
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("fxml/Editor.fxml"));
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Editor.fxml"));
         SplitPane writer = loader.load();
         logger.trace("Fichier Editor.fxml chargé");
 
@@ -191,32 +228,33 @@ public class MdTextController {
         EditorList.getTabs().add(tab);
         EditorList.getSelectionModel().select(tab);
 
-        MdConvertController controller = loader.getController();
-        controller.setMdBox(this, extract, tab);
+        controllerConvert = loader.getController();
+        controllerConvert.setMdBox(this, extract, tab);
 
         tab.setOnCloseRequest(t -> {
-            if(!controller.isSaved()) {
-                Alert alert = new Alert(AlertType.CONFIRMATION);
-                IconFactory.addAlertLogo(alert);
-                alert.setTitle("Confirmation");
-                alert.setHeaderText("Confirmation de fermeture");
-                alert.setContentText("Vous avez modifié cet extrait. Voulez-vous enregistrer les modifications ?");
+            if(!controllerConvert.isSaved()) {
+                Alert alert = new CustomAlert(AlertType.CONFIRMATION);
+                alert.setTitle(Configuration.bundle.getString("ui.alert.tab.close.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.alert.tab.close.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.alert.tab.close.text"));
 
-                ButtonType buttonTypeYes = new ButtonType("Oui");
-                ButtonType buttonTypeNo = new ButtonType("Non");
-                ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+                ButtonType buttonTypeYes = new ButtonType(Configuration.bundle.getString("ui.yes"));
+                ButtonType buttonTypeNo = new ButtonType(Configuration.bundle.getString("ui.no"));
+                ButtonType buttonTypeCancel = new ButtonType(Configuration.bundle.getString("ui.cancel"), ButtonData.CANCEL_CLOSE);
 
                 alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo, buttonTypeCancel);
                 alert.setResizable(true);
-                alert.getDialogPane().setPrefSize(280, 320);
+                alert.getDialogPane().setPrefSize(400, 200);
 
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.isPresent()) {
                     if (result.get() != buttonTypeCancel) {
                         if (result.get() == buttonTypeYes) {
-                            controller.HandleSaveButtonAction(null);
+                            controllerConvert.HandleSaveButtonAction(null);
                         }
                         Event.fireEvent(tab, new Event(Tab.CLOSED_EVENT));
+                    } else {
+                        t.consume();
                     }
                 }
             } else {
@@ -240,11 +278,11 @@ public class MdTextController {
 
     public void openContent(Content content) {
     	String filePath = content.getBasePath();
+        mainApp.getExtracts().clear();
         logger.debug("Tentative d'ouverture du contenu stocké dans "+filePath);
 
         // load content informations
-        mainApp.getZdsutils().setLocalSlug(content.getSlug());
-        mainApp.getZdsutils().setLocalType(content.getType().toLowerCase());
+        MainApp.getZdsutils().setLocalSlug(content.getSlug());
         TreeItem<ContentNode> rootItem = new TreeItem<>(content);
         rootItem.setExpanded(true);
         Summary.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -260,7 +298,7 @@ public class MdTextController {
                             try {
                                 createTabExtract((Textual)item.getValue());
                             } catch (IOException e) {
-                                logger.error(e.getMessage(), e);
+                                logger.error("Problème lors de la création de l'extrait", e);
                             }
                         } else {
                             TabPaneSkin skin = (TabPaneSkin) EditorList.getSkin();
@@ -324,6 +362,12 @@ public class MdTextController {
                 return treeCell;
             }
         });
+        MainApp.getZdsutils().setGalleryId(null);
+        mainApp.getMenuController().activateButtonForOpenContent();
+        if(filePath != null && !filePath.equals("null") ) {
+            MainApp.getConfig().addActionProject(filePath);
+            refreshRecentProject();
+        }
         logger.info("Contenu stocké dans "+filePath+" ouvert");
     }
 

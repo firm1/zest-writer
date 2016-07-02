@@ -1,74 +1,66 @@
 package com.zestedesavoir.zestwriter.view;
 
-import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
-import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.fxmisc.richtext.LineNumberFactory;
-import org.fxmisc.richtext.StyleClassedTextArea;
-import org.python.core.PyString;
-import org.python.util.PythonInterpreter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.DOMException;
-
+import com.kenai.jffi.Main;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.FlipTable;
-import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
-import com.zestedesavoir.zestwriter.view.com.IconFactory;
+import com.zestedesavoir.zestwriter.utils.readability.Readability;
+import com.zestedesavoir.zestwriter.view.com.*;
 import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
-
+import com.zestedesavoir.zestwriter.view.dialogs.ImageInputDialog;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanPropertyBase;
-import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.concurrent.Worker;
 import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import netscape.javascript.JSException;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.fxmisc.richtext.LineNumberFactory;
+import org.fxmisc.richtext.StyleClassedTextArea;
+import org.fxmisc.wellbehaved.event.EventHandlerHelper;
+import org.python.core.PyString;
+import org.python.util.PythonInterpreter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.DOMException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
+import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
+import static org.fxmisc.wellbehaved.event.EventPattern.keyPressed;
+import static org.fxmisc.wellbehaved.event.EventPattern.keyReleased;
 
 public class MdConvertController {
     private MainApp mainApp;
-    private Configuration config;
     private MdTextController mdBox;
     private Tab tab;
     private Textual extract;
@@ -77,32 +69,33 @@ public class MdConvertController {
     private final Logger logger;
     private int xRenderPosition = 0;
     private int yRenderPosition = 0;
+    private StringProperty countChars = new SimpleStringProperty();
+    private StringProperty countWords = new SimpleStringProperty();
     private BooleanPropertyBase isSaved = new BooleanPropertyBase(true) {
 
         @Override
         public String getName() {
-            // TODO Auto-generated method stub
             return null;
         }
 
         @Override
         public Object getBean() {
-            // TODO Auto-generated method stub
             return null;
         }
     };
 
     @FXML private WebView renderView;
-    @FXML private StyleClassedTextArea SourceText;
     @FXML private Button SaveButton;
-    @FXML private Button RefreshButton;
     @FXML private BorderPane BoxEditor;
     @FXML private BorderPane BoxRender;
-    @FXML private Button FullScreeen;
+    private CustomStyledClassedTextArea SourceText;
+    public final static Pattern recognizeNumber = Pattern.compile("^(\\s*)([\\d][\\.]) (\\s*)(.*)");
+    public final static Pattern recognizeBullet = Pattern.compile("^(\\s*)([*|-]) (\\s*)(.*)");
 
     public MdConvertController() {
         super();
         logger = LoggerFactory.getLogger(MdConvertController.class);
+        SourceText = new CustomStyledClassedTextArea();
     }
 
     public MdTextController getMdBox() {
@@ -115,53 +108,76 @@ public class MdConvertController {
 
     public void setMdBox(MdTextController mdBox, Textual extract, Tab tab) throws IOException {
         this.mainApp = mdBox.getMainApp();
-        this.config = mainApp.getConfig();
         this.mdBox = mdBox;
         this.tab = tab;
         this.extract = extract;
 
         mainApp.getPluginsManager().setEditor(this);
 
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("fxml/Editor.fxml"));
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Editor.fxml"));
         loader.load();
 
-        if(mainApp.getConfig().getEditorToolbarView().equals("no")){
+        if(MainApp.getConfig().getEditorToolbarView().equals("no")){
             BoxEditor.setTop(null);
             BoxRender.setTop(null);
         }
 
-        SourceText.setFont(new Font(config.getEditorFont(), config.getEditorFontsize()));
-        SourceText.setStyle("-fx-font-family: \"" + config.getEditorFont() + "\";");
-        SourceText.replaceText(extract.getMarkdown());
-        SourceText.getUndoManager().forgetHistory();
-        SourceText.textProperty().addListener((observableValue, s, s2) -> {
-            tab.setText("! " + extract.getTitle());
-            this.isSaved.setValue(false);
-            SourceText.getUndoManager().mark();
+        BoxEditor.setCenter(SourceText);
+        SourceText.setStyle("-fx-font-family: \"" + MainApp.getConfig().getEditorFont() + "\";-fx-font-size: " + MainApp.getConfig().getEditorFontsize() + ";");
+        initRenderTask();
+        Platform.runLater(() -> {
+            SourceText.replaceText(extract.getMarkdown());
+            initStats();
+            SourceText.getUndoManager().forgetHistory();
+            SourceText.textProperty().addListener((observableValue, s, s2) -> {
+                tab.setText("! " + extract.getTitle());
+                this.isSaved.setValue(false);
+                SourceText.getUndoManager().mark();
+                updateRender();
+            });
             updateRender();
         });
-        updateRender();
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.S, SHORTCUT_DOWN), () -> HandleSaveButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.G, SHORTCUT_DOWN), () -> HandleBoldButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.I, SHORTCUT_DOWN), () -> HandleItalicButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.B, SHORTCUT_DOWN), () -> HandleBarredButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.K, SHORTCUT_DOWN), () -> HandleTouchButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.PLUS, SHORTCUT_DOWN), () -> HandleExpButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.EQUALS, SHORTCUT_DOWN), () -> HandleIndButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.E, SHORTCUT_DOWN), () -> HandleCenterButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.D, SHORTCUT_DOWN, SHIFT_DOWN), () -> HandleRightButtonAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.SPACE, SHORTCUT_DOWN), () -> HandleUnbreakableAction(null));
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.L, SHORTCUT_DOWN), this::HandleGoToLineAction);
-        tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.F, SHORTCUT_DOWN), this::HandleFindReplaceDialog);
+
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper.on(keyPressed(KeyCode.S, SHORTCUT_DOWN)).act( ev -> HandleSaveButtonAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper.on(keyPressed(KeyCode.G, SHORTCUT_DOWN)).act( ev -> HandleBoldButtonAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper.on(keyPressed(KeyCode.I, SHORTCUT_DOWN)).act( ev -> HandleItalicButtonAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper.on(keyPressed(KeyCode.B, SHORTCUT_DOWN)).act( ev -> HandleBarredButtonAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper.on(keyPressed(KeyCode.K, SHORTCUT_DOWN)).act( ev -> HandleTouchButtonAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper.on(keyPressed(KeyCode.PLUS, SHORTCUT_DOWN)).act( ev -> HandleExpButtonAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper.on(keyPressed(KeyCode.EQUALS, SHORTCUT_DOWN)).act( ev -> HandleIndButtonAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper.on(keyPressed(KeyCode.E, SHORTCUT_DOWN)).act( ev -> HandleCenterButtonAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper.on(keyPressed(KeyCode.D, SHIFT_DOWN, SHORTCUT_DOWN)).act( ev -> HandleRightButtonAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper.on(keyPressed(KeyCode.SPACE, SHORTCUT_DOWN)).act( ev -> HandleUnbreakableAction(null)).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper.on(keyPressed(KeyCode.L, SHORTCUT_DOWN)).act( ev -> HandleGoToLineAction()).create());
+        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                EventHandlerHelper.on(keyPressed(KeyCode.F, SHORTCUT_DOWN)).act( ev -> HandleFindReplaceDialog()).create());
         if(FunctionTreeFactory.isMacOs()) {
-            tab.getContent().getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.Q, SHORTCUT_DOWN), () -> SourceText.selectAll());
+            EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+                    EventHandlerHelper.on(keyPressed(KeyCode.Q, SHORTCUT_DOWN)).act( ev -> SourceText.selectAll()).create());
+        }
+        if(MainApp.getConfig().getEditorSmart().booleanValue()) {
+            EventHandlerHelper.install(SourceText.onKeyReleasedProperty(),
+                    EventHandlerHelper.on(keyReleased(KeyCode.TAB)).act(ev -> HandleSmartTab()).create());
+            EventHandlerHelper.install(SourceText.onKeyReleasedProperty(),
+                    EventHandlerHelper.on(keyReleased(KeyCode.ENTER)).act(ev -> HandleSmartEnter()).create());
         }
 
         tab.setOnSelectionChanged(t -> {
             if(tab.isSelected()) {
                 Platform.runLater(() -> {
                     SourceText.requestFocus();
+                    initStats();
                 });
             }
         });
@@ -169,6 +185,44 @@ public class MdConvertController {
         Platform.runLater(() -> {
             SourceText.requestFocus();
         });
+    }
+
+
+    private void HandleSmartEnter() {
+        int precLine = SourceText.getCurrentParagraph() - 1;
+        if(precLine >= 0) {
+            String line = SourceText.getParagraph(precLine).toString();
+            Matcher matcher = recognizeBullet.matcher(line);
+            //TODO : find how combine recognize bullet and number together for breaking following if
+            if(!matcher.matches()) {
+                matcher = recognizeNumber.matcher(line);
+            }
+            if(matcher.matches()) {
+                if(matcher.group(4).trim().equals("")) {
+                    int positionCaret = SourceText.getCaretPosition();
+                    SourceText.deleteText(positionCaret-line.length() - 1, positionCaret);
+                } else {
+                    SourceText.replaceSelection(matcher.group(1)+matcher.group(2)+" ");
+                }
+            }
+        }
+    }
+
+    private void HandleSmartTab() {
+        int caseLine = SourceText.getCurrentParagraph();
+        if(caseLine >= 0) {
+            String line = SourceText.getParagraph(caseLine).toString();
+            Matcher matcher = recognizeBullet.matcher(line);
+            //TODO : find how combine recognize bullet and number together for breaking following if
+            if(!matcher.matches()) {
+                matcher = recognizeNumber.matcher(line);
+            }
+            if(matcher.matches()) {
+                int positionCaret = SourceText.getCaretPosition();
+                int delta = matcher.group(1).length() + matcher.group(2).length() + matcher.group(3).length() + 1;
+                SourceText.replaceText(positionCaret-delta, positionCaret, "    "+matcher.group(2)+" "+matcher.group(4));
+            }
+        }
     }
 
 
@@ -224,6 +278,21 @@ public class MdConvertController {
         replaceAction("\n->  ->", 3, "\n-> ", " ->\n");
     }
 
+    @FXML private void HandleImgButtonAction(ActionEvent event) {
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/ImageInput.fxml"));
+
+        Stage dialogStage = new CustomStage(loader, "Ajouter une image");
+
+        ImageInputDialog imageController = loader.getController();
+        if(mainApp.getContents().size() > 0) {
+            imageController.setSourceText(SourceText, MainApp.getZdsutils(), mainApp.getMenuController(), mainApp.getContents().get(0));
+        } else {
+            imageController.setSourceText(SourceText, MainApp.getZdsutils(), mainApp.getMenuController(), null);
+        }
+        imageController.setStage(dialogStage);
+
+        dialogStage.show();
+    }
     @FXML private void HandleBulletButtonAction(ActionEvent event) {
         if(SourceText.getSelectedText().isEmpty()){
             SourceText.replaceText(SourceText.getSelection(), "- ");
@@ -281,9 +350,9 @@ public class MdConvertController {
         choices.add("erreur");
 
         ChoiceDialog<String> dialog = new ChoiceDialog<>("information", choices);
-        dialog.setTitle("Choix du bloc");
-        dialog.setHeaderText("Votre type de bloc");
-        dialog.setContentText("Type de bloc: ");
+        dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.bloc.title"));
+        dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.bloc.header"));
+        dialog.setContentText(Configuration.bundle.getString("ui.editor.dialog.bloc.text"));
 
         // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
@@ -297,17 +366,13 @@ public class MdConvertController {
     @FXML private void HandleTableButtonAction(ActionEvent event) throws IOException {
         // Create the custom dialog.
         Dialog<Pair<ObservableList, ObservableList<ZRow>>> dialog = new Dialog<>();
-        dialog.setTitle("Editeur de tableau");
+        dialog.setTitle(Configuration.bundle.getString("ui.editor.button.table"));
         dialog.setHeaderText("");
-
-        // Set the icon (must be included in the project).
-        dialog.setGraphic(new ImageView(MainApp.class.getResource("assets/static/icons/table.png").toString()));
 
         // Set the button types.
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("fxml/TableEditor.fxml"));
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/TableEditor.fxml"));
         BorderPane tableEditor = loader.load();
         TableView<ZRow> tbView = (TableView) tableEditor.getCenter();
 
@@ -350,8 +415,8 @@ public class MdConvertController {
 
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Détail du lien");
-        dialog.setHeaderText("");
+        dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.link.title"));
+        dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.link.header"));
 
         // Set the icon (must be included in the project).
         dialog.setGraphic(IconFactory.createLinkIcon());
@@ -369,9 +434,9 @@ public class MdConvertController {
         TextField tLabel = new TextField();
         tLabel.setText(link);
 
-        grid.add(new Label("Lien:"), 0, 0);
+        grid.add(new Label(Configuration.bundle.getString("ui.editor.dialog.link.field.url")), 0, 0);
         grid.add(tLink, 1, 0);
-        grid.add(new Label("Titre du lien"), 0, 1);
+        grid.add(new Label(Configuration.bundle.getString("ui.editor.dialog.link.field.label")), 0, 1);
         grid.add(tLabel, 1, 1);
 
         dialog.getDialogPane().setContent(grid);
@@ -406,8 +471,8 @@ public class MdConvertController {
 
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Editeur de code");
-        dialog.setHeaderText("");
+        dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.code.title"));
+        dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.code.header"));
 
         // Set the icon (must be included in the project).
         dialog.setGraphic(IconFactory.createCodeIcon());
@@ -425,9 +490,9 @@ public class MdConvertController {
         TextArea tCode = new TextArea();
         tCode.setText(code);
 
-        grid.add(new Label("Langage:"), 0, 0);
+        grid.add(new Label(Configuration.bundle.getString("ui.editor.dialog.code.field.lang")), 0, 0);
         grid.add(tLangage, 1, 0);
-        grid.add(new Label("Code"), 0, 1);
+        grid.add(new Label(Configuration.bundle.getString("ui.editor.dialog.code.field.code")), 0, 1);
         grid.add(tCode, 1, 1);
 
         dialog.getDialogPane().setContent(grid);
@@ -466,81 +531,83 @@ public class MdConvertController {
         }
     }
 
-    @FXML private void updateRender() {
-        if (renderTask != null) {
-            if (renderTask.isRunning()) {
-                renderTask.cancel();
-            }
-        }
+    private void initRenderTask() {
+        StringBuilder before = new StringBuilder();
+        StringBuilder after = new StringBuilder();
 
-        WebEngine webEngine = renderView.getEngine();
+        before.append("<!doctype html><html><head><meta charset='utf-8'><base href='");
+        before.append(MainApp.class.getResource("assets").toExternalForm());
+        before.append("/' />");
+        before.append("<link rel=\"stylesheet\" href=\"");
+        before.append(MainApp.class.getResource("css/content.css").toExternalForm());
+        before.append("\" />");
+        before.append("<link rel=\"stylesheet\" href=\"");
+        before.append(MainApp.class.getResource("assets/static").toExternalForm());
+        before.append("/js/katex/katex.min.css\" />");
+        before.append("<script src=\"").append(MainApp.class.getResource("assets/static").toExternalForm());
+        before.append("/js/katex/katex.min.js\"></script>");
+        before.append("<script src=\"").append(MainApp.class.getResource("assets/static").toExternalForm());
+        before.append("/js/katex/contrib/auto-render.min.js\"></script>");
+        before.append("<style type='text/css'>.baseline-fix {font-size: 0px;} .fontsize-ensurer span {display:none;}</style></head><body>");
 
-        webEngine.getLoadWorker().stateProperty()
-                .addListener((ObservableValue<? extends State> ov, State oldState, State newState) -> {
-                    if (newState == State.SUCCEEDED) {
-                        scrollTo(renderView, xRenderPosition, yRenderPosition);
-                    }
-                });
+        after.append("<script>"+
+                "renderMathInElement("+
+                "document.body,"+
+                "{"+
+                "delimiters: ["+
+                "{left: \"$$\", right: \"$$\", display: true},"+
+                "{left: \"$\", right: \"$\", display: false},"+
+                "]"+
+                "}"+
+                ");"+
+                "</script>");
+        after.append("</body></html>");
 
         renderTask = new Service<String>() {
             @Override
             protected Task<String> createTask() {
                 return new Task<String>() {
                     @Override
-                    protected String call() {
-                        StringBuilder content = new StringBuilder();
-                        content.append("<!doctype html><html><head><meta charset='utf-8'><base href='");
-                        if (!isCancelled()) {
-                            content.append(MainApp.class.getResource("assets").toExternalForm());
+                    protected String call() throws Exception {
+                        String html = markdownToHtml(SourceText.getText());
+                        if(html != null) {
+                            return before.toString()+html+after.toString();
+                        } else {
+                            Thread.sleep(5000);
+                            throw new IOException();
+
                         }
-                        content.append("/' />");
-                        content.append("<link rel=\"stylesheet\" href=\"");
-                        content.append(MainApp.class.getResource("css/content.css").toExternalForm());
-                        content.append("\" />");
-                        content.append("<link rel=\"stylesheet\" href=\"");
-                        content.append(MainApp.class.getResource("assets/static").toExternalForm());
-                        content.append("/js/katex/katex.min.css\" />");
-                        content.append("<script src=\"").append(MainApp.class.getResource("assets/static").toExternalForm());
-                        content.append("/js/katex/katex.min.js\"></script>");
-                        content.append("<script src=\"").append(MainApp.class.getResource("assets/static").toExternalForm());
-                        content.append("/js/katex/contrib/auto-render.min.js\"></script>");
-                        content.append("</head><body>");
-                        if (!isCancelled()) {
-                            content.append(markdownToHtml(SourceText.getText()));
-                        }
-                        content.append("<script>"+
-                                "renderMathInElement("+
-                                "document.body,"+
-                                "{"+
-                                "delimiters: ["+
-                                "{left: \"$$\", right: \"$$\", display: true},"+
-                                "{left: \"$\", right: \"$\", display: false},"+
-                                "]"+
-                                "}"+
-                                ");"+
-                                "</script>");
-                        content.append("</body></html>");
-                        return content.toString();
                     }
 
                 };
             }
         };
-        renderTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue,
-                                                Worker.State oldValue, Worker.State newValue) -> {
-            switch (newValue) {
-                case FAILED:
-                    break;
-                case CANCELLED:
-                    break;
-                case SUCCEEDED:
-                    yRenderPosition = getVScrollValue(renderView);
-                    xRenderPosition = getHScrollValue(renderView);
-                    webEngine.loadContent(renderTask.valueProperty().getValue());
-                    break;
+
+        renderTask.setOnFailed(t -> {
+            renderTask.restart();
+        });
+        renderTask.setOnSucceeded(t -> {
+            yRenderPosition = getVScrollValue(renderView);
+            xRenderPosition = getHScrollValue(renderView);
+            renderView.getEngine().loadContent(renderTask.valueProperty().getValue());
+            renderTask.reset();
+
+        });
+    }
+
+    @FXML public void updateRender() {
+        if (renderTask != null) {
+            if(renderTask.getState().equals(State.READY)) {
+                renderTask.start();
+            }
+        }
+        renderView.getEngine().getLoadWorker().stateProperty()
+        .addListener((ObservableValue<? extends State> ov, State oldState, State newState) -> {
+            if (newState == State.SUCCEEDED) {
+                scrollTo(renderView, xRenderPosition, yRenderPosition);
             }
         });
-        renderTask.start();
+        performStats();
     }
 
     @FXML private void HandleValidateButtonAction(ActionEvent event) {
@@ -551,8 +618,8 @@ public class MdConvertController {
         try {
             String result = corrector.checkHtmlContent(s);
             WebEngine webEngine = renderView.getEngine();
-            webEngine.loadContent("<!doctype html><html lang='fr'><head><meta charset='utf-8'><base href='file://"
-                    + MainApp.class.getResource(".").getPath() + "' /></head><body>" + result + "</body></html>");
+            webEngine.loadContent("<!doctype html><html lang='fr'><head><meta charset='utf-8'><base href='"
+                    + MainApp.class.getResource("assets").toExternalForm() + "' /></head><body>" + result + "</body></html>");
             webEngine.setUserStyleSheetLocation(MainApp.class.getResource("css/content.css").toExternalForm());
         } catch (DOMException e) {
             logger.error(e.getMessage(), e);
@@ -564,13 +631,40 @@ public class MdConvertController {
         SourceText.requestFocus();
     }
 
+    public void performStats() {
+        Readability readText = new Readability(SourceText.getText());
+        countChars.setValue("Cararactères : "+readText.getCharacters());
+        countWords.setValue("Mots : "+readText.getWords());
+    }
+
+    public void initStats() {
+        mainApp.getMenuController().hBottomBox.getChildren().clear();
+        mainApp.getMenuController().hBottomBox.getColumnConstraints().clear();
+        mainApp.getMenuController().hBottomBox.setPadding(new Insets(5, 5, 5, 5));
+        ColumnConstraints c1 = new ColumnConstraints();
+        ColumnConstraints c2 = new ColumnConstraints();
+        ColumnConstraints c3 = new ColumnConstraints();
+        c1.setPercentWidth(70);
+        c2.setPercentWidth(15);
+        c2.setPercentWidth(15);
+        Label chars = new Label();
+        Label words = new Label();
+        chars.setStyle("-fx-font-size: 0.9em;");
+        words.setStyle("-fx-font-size: 0.9em;");
+        mainApp.getMenuController().hBottomBox.getColumnConstraints().addAll(c1, c2, c3);
+        mainApp.getMenuController().hBottomBox.add(chars, 1, 0);
+        mainApp.getMenuController().hBottomBox.add(words, 2, 0);
+        chars.textProperty().bind(countChars);
+        words.textProperty().bind(countWords);
+        performStats();
+    }
 
 
     public void HandleGoToLineAction() {
         TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Aller à la ligne");
-        dialog.setHeaderText(null);
-        dialog.setContentText("Numéro de ligne: ");
+        dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.goto.title"));
+        dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.goto.header"));
+        dialog.setContentText(Configuration.bundle.getString("ui.editor.dialog.goto.text"));
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(line -> SourceText.positionCaret(SourceText.position(Integer.parseInt(line)-1, 0).toOffset()));
@@ -579,11 +673,15 @@ public class MdConvertController {
 
     public String markdownToHtml(String chaine) {
         PythonInterpreter console = getMdBox().getPyconsole();
-        console.set("text", chaine);
-        console.exec(
-                "render = Markdown(extensions=(ZdsExtension({'inline': False, 'emoticons': smileys}),),safe_mode = 'escape', enable_attributes = False, tab_length = 4, output_format = 'html5', smart_emphasis = True, lazy_ol = True).convert(text)");
-        PyString render = console.get("render", PyString.class);
-        return render.toString();
+        if(console != null) {
+            console.set("text", chaine);
+            console.exec(
+                    "render = Markdown(extensions=(ZdsExtension({'inline': False, 'emoticons': smileys}),),safe_mode = 'escape', enable_attributes = False, tab_length = 4, output_format = 'html5', smart_emphasis = True, lazy_ol = True).convert(text)");
+            PyString render = console.get("render", PyString.class);
+            return render.toString();
+        } else {
+            return null;
+        }
     }
 
     private void replaceAction(String defaultString, int defaultOffsetCaret, String beforeString, String afterString) {
@@ -608,41 +706,26 @@ public class MdConvertController {
     }
 
     @FXML private void HandleFindReplaceDialog(){
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("fxml/FindReplaceDialog.fxml"));
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/FindReplaceDialog.fxml"));
 
-        try{
-            AnchorPane optionsDialog = loader.load();
+        Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.dialog.find.title"));
+        dialogStage.setTitle(Configuration.bundle.getString("ui.dialog.find.title"));
+        dialogStage.setResizable(false);
 
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle("Rechecher / Remplacer");
+        FindReplaceDialog findReplaceDialog = loader.getController();
+        findReplaceDialog.setMainApp(mainApp);
+        findReplaceDialog.setWindow(dialogStage);
+        findReplaceDialog.setMdConvertController(this);
 
-            Scene scene = new Scene(optionsDialog);
-            dialogStage.setScene(scene);
-            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
-            dialogStage.setResizable(false);
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
-
-            FindReplaceDialog findReplaceDialog = loader.getController();
-            findReplaceDialog.setMainApp(mainApp);
-            findReplaceDialog.setWindow(dialogStage);
-            findReplaceDialog.setMdConvertController(this);
-
-            dialogStage.show();
-        }catch(IOException e){
-            logger.error(e.getMessage(), e);
-        }
+        dialogStage.show();
     }
 
     /**
      * Scrolls to the specified position.
      *
-     * @param view
-     *            web view that shall be scrolled
-     * @param x
-     *            horizontal scroll value
-     * @param y
-     *            vertical scroll value
+     * @param view web view that shall be scrolled
+     * @param x horizontal scroll value
+     * @param y vertical scroll value
      */
     public void scrollTo(WebView view, int x, int y) {
         view.getEngine().executeScript("window.scrollTo(" + x + ", " + y + ")");
@@ -650,13 +733,18 @@ public class MdConvertController {
 
     /**
      * Returns the vertical scroll value, i.e. thumb position. This is
-     * equivalent to {@link javafx.scene.control.ScrollBar#getValue().
+     * equivalent to {@link javafx.scene.control.ScrollBar#getValue()}.
      *
-     * @param view
+     * @param view web view that shall be scrolled
      * @return vertical scroll value
      */
     public int getVScrollValue(WebView view) {
-        return (Integer) view.getEngine().executeScript("document.body.scrollTop");
+        try {
+            return (Integer) view.getEngine().executeScript("document.body.scrollTop");
+        }
+        catch(JSException e) {
+            return 0;
+        }
     }
 
     /**
@@ -667,6 +755,11 @@ public class MdConvertController {
      * @return horizontal scroll value
      */
     public int getHScrollValue(WebView view) {
-        return (Integer) view.getEngine().executeScript("document.body.scrollLeft");
+        try {
+            return (Integer) view.getEngine().executeScript("document.body.scrollLeft");
+        }
+        catch(JSException e) {
+            return 0;
+        }
     }
 }

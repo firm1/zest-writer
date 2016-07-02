@@ -4,7 +4,9 @@ import com.zestedesavoir.zestwriter.MainApp;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 public class IconFactory {
@@ -55,6 +57,18 @@ public class IconFactory {
         return makeIcon(MaterialDesignIcon.ARROW_DOWN, "#48a200");
     }
 
+    public static MaterialDesignIconView createStatsIcon() {
+        return makeIcon(MaterialDesignIcon.CHART_AREASPLINE, "#48a200");
+    }
+
+    public static MaterialDesignIconView createStatsHistoIcon() {
+        return makeIcon(MaterialDesignIcon.CHART_BAR, "#48a200");
+    }
+
+    public static MaterialDesignIconView createStatsPieIcon() {
+        return makeIcon(MaterialDesignIcon.CHART_PIE, "#48a200");
+    }
+
     public static MaterialDesignIconView createLinkIcon() {
         return makeIcon(MaterialDesignIcon.LINK, "#48a200");
     }
@@ -63,8 +77,20 @@ public class IconFactory {
         return makeIcon(MaterialDesignIcon.CODE_TAGS, "#48a200");
     }
 
+    public static MaterialDesignIconView createContentIcon(String type) {
+        MaterialDesignIconView icon;
+        if(type.equalsIgnoreCase("ARTICLE")) {
+            icon = makeIcon(MaterialDesignIcon.BOOK_OPEN, "#ef9708");
+        } else {
+            icon = makeIcon(MaterialDesignIcon.LIBRARY_BOOKS, "#48a200");
+        }
+        icon.setSize("2em");
+        return icon;
+    }
+
     public static void addAlertLogo(Alert alert){
         Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
+        alert.getDialogPane().getChildren().stream().filter(node -> node instanceof Label).forEach(node -> ((Label)node).setMinHeight(Region.USE_PREF_SIZE));
         alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
     }
 }

@@ -1,21 +1,16 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
 
+import com.kenai.jffi.Main;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.view.com.IconFactory;
+import com.zestedesavoir.zestwriter.utils.Lang;
+import com.zestedesavoir.zestwriter.utils.Theme;
+import com.zestedesavoir.zestwriter.view.com.CustomAlert;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
+import javafx.scene.control.*;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -32,25 +27,15 @@ public class OptionsDialog{
     private String optEditorFont;
     private double optEditorFontSize;
     private String optEditorToolbarView;
-
-    @FXML private Hyperlink optionGeneral;
-    @FXML private Hyperlink optionEditor;
-    @FXML private Hyperlink optionDisplay;
-    @FXML private Hyperlink optionShortcut;
-    @FXML private Hyperlink optionAuthentification;
-    @FXML private Hyperlink optionAdvanced;
-
-    @FXML private AnchorPane optionGeneralPane;
-    @FXML private AnchorPane optionEditorPane;
-    @FXML private AnchorPane optionDisplayPane;
-    @FXML private AnchorPane optionShortcutPane;
-    @FXML private AnchorPane optionAuthentificationPane;
-    @FXML private AnchorPane optionAdvancedPane;
+    private boolean optSmartEditor;
 
     @FXML private RadioButton optEditorToolbarViewYes;
     @FXML private RadioButton optEditorToolbarViewNo;
+    @FXML private RadioButton optSmartEditorYes;
+    @FXML private RadioButton optSmartEditorNo;
     @FXML private Button optEditorFontButton;
-    @FXML private ComboBox<String> optDisplayTheme;
+    @FXML private ComboBox<Theme> optDisplayTheme;
+    @FXML private ComboBox<Lang> optDisplayLang;
     @FXML private RadioButton optDisplayWindowMaximizeYes;
     @FXML private RadioButton optDisplayWindowMaximizeNo;
     @FXML private RadioButton optDisplayWindowDimensionYes;
@@ -62,11 +47,12 @@ public class OptionsDialog{
     @FXML private ComboBox<String> optAdvancedProtocol;
     @FXML private TextField optAdvancedHost;
     @FXML private TextField optAdvancedPort;
+    @FXML private Label workspacepath;
 
 
     public void setMainApp(MainApp mainApp){
         this.mainApp = mainApp;
-        this.config = this.mainApp.getConfig();
+        this.config = MainApp.getConfig();
 
         setGeneralOptions();
         setEditorOptions();
@@ -74,23 +60,22 @@ public class OptionsDialog{
         setShortcutOptions();
         setAuthentificationOptions();
         setAdvancedOptions();
+
+        workspacepath.setText(config.getWorkspacePath());
     }
 
     public void setWindow(Stage window){
         this.optionsWindow = window;
     }
 
-    @FXML private void initialize(){
-        hideAllPane();
-        optionGeneralPane.setVisible(true);
-    }
-
     @FXML private void HandleSaveButtonAction(){
         config.setEditorFont(optEditorFont);
         config.setEditorFontSize(String.valueOf(optEditorFontSize));
         config.setEditorToolbarView(optEditorToolbarView);
+        config.setEditorSmart(""+optSmartEditor);
 
-        config.setDisplayTheme(optDisplayTheme.getValue());
+        config.setDisplayTheme(optDisplayTheme.getValue().getFilename());
+        config.setDisplayLang(optDisplayLang.getValue().getLocale().toString());
 
         if(optDisplayWindowMaximizeYes.isSelected())
             config.setDisplayWindowMaximize("true");
@@ -120,11 +105,10 @@ public class OptionsDialog{
     }
 
     @FXML private void HandleCancelButtonAction(){
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmer l'annulation");
-        alert.setHeaderText(null);
-        alert.setContentText("Voulez-vous vraiment annuler ? Les modifications apportés ne seront pas enregistré.");
-        IconFactory.addAlertLogo(alert);
+        Alert alert = new CustomAlert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(Configuration.bundle.getString("ui.options.cancel.title"));
+        alert.setHeaderText(Configuration.bundle.getString("ui.options.cancel.header"));
+        alert.setContentText(Configuration.bundle.getString("ui.options.cancel.text"));
 
         Optional<ButtonType> result = alert.showAndWait();
 
@@ -136,12 +120,11 @@ public class OptionsDialog{
     }
 
     @FXML private void HandleResetButtonAction(){
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmer la réinitialisation");
-        alert.setHeaderText("Réinitialisation");
-        alert.setContentText("Attention, une réinitialisation est irréversible, souhaitez-vous vraiment réinitialiser vos options ?");
-        alert.getButtonTypes().setAll(new ButtonType("Oui", ButtonBar.ButtonData.YES), new ButtonType("Non", ButtonBar.ButtonData.NO));
-        IconFactory.addAlertLogo(alert);
+        Alert alert = new CustomAlert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(Configuration.bundle.getString("ui.options.reset.title"));
+        alert.setHeaderText(Configuration.bundle.getString("ui.options.reset.header"));
+        alert.setContentText(Configuration.bundle.getString("ui.options.reset.text"));
+        alert.getButtonTypes().setAll(new ButtonType(Configuration.bundle.getString("ui.yes"), ButtonBar.ButtonData.YES), new ButtonType(Configuration.bundle.getString("ui.no"), ButtonBar.ButtonData.NO));
 
         Optional<ButtonType> result = alert.showAndWait();
 
@@ -152,73 +135,16 @@ public class OptionsDialog{
         }
     }
 
-    @FXML private void HandleHyperlinkGeneralLabel(){
-        hideAllPane();
-        optionGeneralPane.setVisible(true);
-
-        resetHyperlinkColor();
-        optionGeneral.setTextFill(Color.BLACK);
-    }
-
-    @FXML private void HandleHyperlinkEditorLabel(){
-        hideAllPane();
-        optionEditorPane.setVisible(true);
-
-        resetHyperlinkColor();
-        optionEditor.setTextFill(Color.BLACK);
-    }
-
-    @FXML private void HandleHyperlinkDisplayLabel(){
-        hideAllPane();
-        optionDisplayPane.setVisible(true);
-
-        resetHyperlinkColor();
-        optionDisplay.setTextFill(Color.BLACK);
-    }
-
-    @FXML private void HandleHyperlinkShortcutLabel(){
-        hideAllPane();
-        optionShortcutPane.setVisible(true);
-
-        resetHyperlinkColor();
-        optionShortcut.setTextFill(Color.BLACK);
-    }
-
-    @FXML private void HandleHyperlinkAuthentificationLabel(){
-        hideAllPane();
-        optionAuthentificationPane.setVisible(true);
-
-        resetHyperlinkColor();
-        optionAuthentification.setTextFill(Color.BLACK);
-    }
-
-    @FXML private void HandleHyperlinkAdvancedLabel(){
-        hideAllPane();
-        optionAdvancedPane.setVisible(true);
-
-        resetHyperlinkColor();
-        optionAdvanced.setTextFill(Color.BLACK);
-    }
-
     @FXML private void HandleGeneralBrowseAction(){
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Espace de travail");
-        directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        directoryChooser.setTitle(Configuration.bundle.getString("ui.options.workspace"));
+        directoryChooser.setInitialDirectory(MainApp.defaultHome);
 
         File directory = directoryChooser.showDialog(null);
 
         if(directory != null && directory.exists()){
             config.setWorkspacePath(directory.getAbsolutePath());
         }
-    }
-
-    @FXML private void HandleGeneralShowAction(){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        IconFactory.addAlertLogo(alert);
-        alert.setTitle("Chemin de votre espace de travail");
-        alert.setHeaderText("Chemin de votre espace de travail");
-        alert.setContentText(config.getWorkspacePath());
-        alert.showAndWait();
     }
 
     @FXML private void HandleEditorFontChoice(){
@@ -256,6 +182,14 @@ public class OptionsDialog{
         optEditorToolbarView = "no";
     }
 
+    @FXML private void HandleSmartEditorYes(){
+        optSmartEditor = true;
+    }
+
+    @FXML private void HandleSmartEditorNo(){
+        optSmartEditor = false;
+    }
+
     private void setGeneralOptions(){
     }
 
@@ -265,16 +199,48 @@ public class OptionsDialog{
         optEditorFont = config.getEditorFont();
         optEditorFontSize = config.getEditorFontsize();
         optEditorToolbarView = config.getEditorToolbarView();
+        optSmartEditor = config.getEditorSmart();
 
-        if(optEditorToolbarView.toLowerCase().equals("no"))
+        if(optEditorToolbarView.equalsIgnoreCase("no"))
             optEditorToolbarViewNo.setSelected(true);
         else
             optEditorToolbarViewYes.setSelected(true);
+
+        if(optSmartEditor)
+            optSmartEditorYes.setSelected(true);
+        else
+            optSmartEditorNo.setSelected(true);
     }
 
     private void setDisplayOptions(){
-        optDisplayTheme.getItems().add("Standard");
-        optDisplayTheme.setValue(config.getDisplayTheme());
+        optDisplayTheme.getItems().addAll(Theme.themeAvailable);
+        optDisplayTheme.setValue(Theme.getThemeFromFileName(config.getDisplayTheme()));
+
+        optDisplayTheme.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Theme>() {
+            @Override
+            public void changed(ObservableValue<? extends Theme> observable, Theme oldValue, Theme newValue) {
+                Alert alert = new CustomAlert(Alert.AlertType.WARNING);
+                alert.setTitle(Configuration.bundle.getString("ui.dialog.change_theme.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_theme.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.change_theme.text"));
+
+                alert.showAndWait();
+            }
+        });
+
+        optDisplayLang.getItems().addAll(Lang.langAvailable);
+        optDisplayLang.setValue(Lang.getLangFromCode(config.getDisplayLang()));
+        optDisplayLang.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Lang>() {
+            @Override
+            public void changed(ObservableValue<? extends Lang> observable, Lang oldValue, Lang newValue) {
+                Alert alert = new CustomAlert(Alert.AlertType.WARNING);
+                alert.setTitle(Configuration.bundle.getString("ui.dialog.change_lang.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_lang.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.change_lang.text"));
+
+                alert.showAndWait();
+            }
+        });
 
         if(config.isDisplayWindowMaximize())
             optDisplayWindowMaximizeYes.setSelected(true);
@@ -314,24 +280,6 @@ public class OptionsDialog{
         optAdvancedProtocol.setValue(config.getAdvancedServerProtocol());
         optAdvancedHost.setText(config.getAdvancedServerHost());
         optAdvancedPort.setText(config.getAdvancedServerPort());
-    }
-
-    private void resetHyperlinkColor(){
-        optionGeneral.setTextFill(Color.web("#656565"));
-        optionEditor.setTextFill(Color.web("#656565"));
-        optionDisplay.setTextFill(Color.web("#656565"));
-        optionShortcut.setTextFill(Color.web("#656565"));
-        optionAuthentification.setTextFill(Color.web("#656565"));
-        optionAdvanced.setTextFill(Color.web("#656565"));
-    }
-
-    private void hideAllPane(){
-        optionGeneralPane.setVisible(false);
-        optionEditorPane.setVisible(false);
-        optionDisplayPane.setVisible(false);
-        optionShortcutPane.setVisible(false);
-        optionAuthentificationPane.setVisible(false);
-        optionAdvancedPane.setVisible(false);
     }
 
     private void resetOptions(){

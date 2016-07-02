@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-@JsonIgnoreProperties({"basePath", "filePath", "editable", "countChildrenExtract", "countDescendantContainer" ,"rootContent"})
+@JsonIgnoreProperties({"basePath", "filePath", "editable", "countChildrenExtract", "countDescendantContainer" ,"rootContent", "depth"})
 public class Content extends Container implements ContentNode{
     private int _version;
     private String _licence;
@@ -86,6 +86,10 @@ public class Content extends Container implements ContentNode{
         return false;
     }
 
+    public int getDepth() {
+        return getCountDescendantContainer()+1;
+    }
+
     public String exportContentToMarkdown(int level, int levelDepth) {
         DateFormat dateFormat = new SimpleDateFormat("dd MMMMM yyyy");
         StringBuilder sb = new StringBuilder();
@@ -105,7 +109,7 @@ public class Content extends Container implements ContentNode{
         BufferedWriter writer = null;
         try {
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
-            writer.append(exportContentToMarkdown(0, 2));
+            writer.append(exportContentToMarkdown(0, getDepth()));
             writer.flush();
         } catch (Exception e) {
             e.printStackTrace();

@@ -40,13 +40,15 @@ public class TestApiZds {
      */
     public void testLogin() {
         assertEquals(config.getWorkspacePath(), TEST_DIR.getAbsolutePath()+File.separator+"workspace");
-        if(login != null) {
+        if(login != null && !login.equals("") && password != null && !password.equals("")) {
             ZdsHttp api = new ZdsHttp(config);
             try {
                 assertTrue("Tentative d'authentification au site", api.login(login, password));
                 assertTrue("Vérification de l'authentification réussi", api.isAuthenticated());
                 api.initInfoOnlineContent("tutorial");
                 api.initInfoOnlineContent("article");
+                api.initGalleryId("1312", "tutoriel-test");
+                assertEquals(api.getGalleryId(), "3243");
                 api.downloaDraft("1312", "tutorial");
                 api.downloaDraft("1313", "article");
                 File offlineDir = new File(config.getWorkspaceFactory().getOfflineSaver().getBaseDirectory());
@@ -58,12 +60,12 @@ public class TestApiZds {
 
                 for(File on:onlineDir.listFiles()) api.unzipOnlineContent(on.getAbsolutePath());
                 assertTrue(offlineDir.list().length > 0);
-                
+
                 // import
                 File zipfile = new File(offlineDir, "tutoriel-test.zip");
                 ZipUtil.pack(new File(offlineDir, "tutoriel-test"), zipfile);
-                assertTrue(api.importContent(zipfile.getAbsolutePath(), "1312", "tutoriel-test"));
-                
+                assertTrue(api.importContent(zipfile.getAbsolutePath(), "1312", "tutoriel-test", "Message d'import"));
+
                 api.logout();
                 assertFalse(api.isAuthenticated());
             } catch (IOException e) {

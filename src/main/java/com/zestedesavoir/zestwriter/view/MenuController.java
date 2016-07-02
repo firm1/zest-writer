@@ -1,41 +1,21 @@
 package com.zestedesavoir.zestwriter.view;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.function.Function;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.python.core.PyString;
-import org.python.util.PythonInterpreter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kenai.jffi.Main;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.model.Textual;
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
-import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
-import com.zestedesavoir.zestwriter.view.com.IconFactory;
+import com.zestedesavoir.zestwriter.view.com.*;
 import com.zestedesavoir.zestwriter.view.dialogs.AboutDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.GoogleLoginDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.LoginDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.OptionsDialog;
-import com.zestedesavoir.zestwriter.view.task.CorrectionService;
-import com.zestedesavoir.zestwriter.view.task.DownloadContentService;
-import com.zestedesavoir.zestwriter.view.task.ExportPdfService;
-import com.zestedesavoir.zestwriter.view.task.LoginService;
-import com.zestedesavoir.zestwriter.view.task.UploadContentService;
-
-import javafx.application.Platform;
+import com.zestedesavoir.zestwriter.view.task.*;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -46,32 +26,35 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.python.core.PyString;
+import org.python.util.PythonInterpreter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.function.Function;
 
 public class MenuController{
     private MainApp mainApp;
@@ -82,20 +65,16 @@ public class MenuController{
 
     @FXML private MenuItem menuDownload;
     @FXML private MenuItem menuUpload;
-    @FXML private MenuItem menuLogin;
-    @FXML private MenuItem menuLogout;
     @FXML private MenuItem menuReport;
     @FXML private MenuItem menuLisibility;
-    @FXML private MenuItem menuAbout;
-    @FXML private MenuItem menuGoogle;
-    @FXML private HBox hBottomBox;
+    @FXML public GridPane hBottomBox;
     @FXML private Menu menuExport;
     @FXML private MenuItem menuQuit;
 
 
     public MenuController(){
         super();
-        logger = LoggerFactory.getLogger(MenuController.class);
+        logger = LoggerFactory.getLogger(getClass());
     }
 
     public void setMainApp(MainApp mainApp){
@@ -106,6 +85,7 @@ public class MenuController{
         if(FunctionTreeFactory.isMacOs()) {
             menuQuit.setAccelerator(new KeyCodeCombination(KeyCode.A, KeyCombination.SHORTCUT_DOWN));
         }
+        labelField.getStyleClass().addAll("label-bottom");
     }
 
     @FXML private void HandleQuitButtonAction(ActionEvent event){
@@ -137,17 +117,17 @@ public class MenuController{
         for(Entry<Textual, Double> entry : fleshResult.entrySet()){
             String easy;
             if(entry.getValue() < 30){
-                easy = "très difficile";
+                easy = Configuration.bundle.getString("ui.level.very_difficult");
             }else if(entry.getValue() < 50){
-                easy = "difficile";
+                easy = Configuration.bundle.getString("ui.level.difficult");
             }else if(entry.getValue() < 60){
-                easy = "assez difficile";
+                easy = Configuration.bundle.getString("ui.level.quite_difficult");
             }else if(entry.getValue() < 70){
-                easy = "standard";
+                easy = Configuration.bundle.getString("ui.level.normal");
             }else if(entry.getValue() < 80){
-                easy = "assez facile";
+                easy = Configuration.bundle.getString("ui.level.easy");
             }else{
-                easy = "très facile";
+                easy = Configuration.bundle.getString("ui.level.very_easy");
             }
 
             String v1 = entry.getKey().getTitle();
@@ -156,9 +136,9 @@ public class MenuController{
         }
 
         // Create the custom dialog.
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Indice de Flesch");
-        dialog.setHeaderText("Indice de Rudolph Flesch");
+        CustomDialog<Pair<String, String>> dialog = new CustomDialog<>();
+        dialog.setTitle(Configuration.bundle.getString("ui.menu.edit.readable.flesch_index"));
+        dialog.setHeaderText(Configuration.bundle.getString("ui.menu.edit.readable.flesch_index.header"));
 
         // Set the button types.
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
@@ -197,17 +177,17 @@ public class MenuController{
         for(Entry<Textual, Double> entry : gunningResult.entrySet()){
             String easy;
             if(entry.getValue() >= 15){
-                easy = "très difficile";
+                easy = Configuration.bundle.getString("ui.level.very_difficult");
             }else if(entry.getValue() >= 12){
-                easy = "difficile";
+                easy = Configuration.bundle.getString("ui.level.difficult");
             }else if(entry.getValue() >= 10){
-                easy = "assez difficile";
+                easy = Configuration.bundle.getString("ui.level.quite_difficult");
             }else if(entry.getValue() >= 8){
-                easy = "standard";
+                easy = Configuration.bundle.getString("ui.level.normal");
             }else if(entry.getValue() >= 6){
-                easy = "assez facile";
+                easy = Configuration.bundle.getString("ui.level.easy");
             }else{
-                easy = "très facile";
+                easy = Configuration.bundle.getString("ui.level.very_easy");
             }
 
             String v1 = entry.getKey().getTitle();
@@ -216,9 +196,9 @@ public class MenuController{
         }
 
         // Create the custom dialog.
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Indice de Gunning");
-        dialog.setHeaderText("Indice de Gunning");
+        CustomDialog<Pair<String, String>> dialog = new CustomDialog<>();
+        dialog.setTitle(Configuration.bundle.getString("ui.menu.edit.readable.gunning_index"));
+        dialog.setHeaderText(Configuration.bundle.getString("ui.menu.edit.readable.gunning_index.header"));
 
         // Set the button types.
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
@@ -252,7 +232,7 @@ public class MenuController{
 
         GridPane expContent = new GridPane();
         expContent.setMaxWidth(Double.MAX_VALUE);
-        expContent.add(new Label("Rapport de correction"), 0, 0);
+        expContent.add(new Label(Configuration.bundle.getString("ui.menu.edit.correction")), 0, 0);
         expContent.add(textArea, 0, 1);
 
         hBottomBox.getChildren().addAll(labelField);
@@ -260,23 +240,22 @@ public class MenuController{
         labelField.textProperty().bind(correctTask.messageProperty());
         textArea.textProperty().bind(correctTask.valueProperty());
         correctTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
-            Alert alert = new Alert(AlertType.NONE);
-            IconFactory.addAlertLogo(alert);
+            Alert alert = new CustomAlert(AlertType.NONE);
 
             switch(newValue){
                 case FAILED:
                     alert.setAlertType(AlertType.ERROR);
-                    alert.setTitle("Validation du contenu");
-                    alert.setHeaderText("Erreur de validation");
-                    alert.setContentText("Désolé une erreur nous empêche de trouver les erreurs dans votre contenu");
+                    alert.setTitle(Configuration.bundle.getString("ui.alert.correction.failed.title"));
+                    alert.setHeaderText(Configuration.bundle.getString("ui.alert.correction.failed.header"));
+                    alert.setContentText(Configuration.bundle.getString("ui.alert.correction.failed.text"));
 
                     alert.showAndWait();
                     break;
                 case CANCELLED:
                 case SUCCEEDED:
                     alert.setAlertType(AlertType.INFORMATION);
-                    alert.setTitle("Validation du contenu");
-                    alert.setHeaderText("Rapport de validation du contenu prêt à être copié sur ZdS");
+                    alert.setTitle(Configuration.bundle.getString("ui.alert.correction.success.title"));
+                    alert.setHeaderText(Configuration.bundle.getString("ui.alert.correction.success.header"));
 
                     // Set expandable Exception into the dialog pane.
                     alert.getDialogPane().setExpandableContent(expContent);
@@ -291,26 +270,19 @@ public class MenuController{
     @FXML private void HandleNewButtonAction(ActionEvent event){
         File defaultDirectory;
 
-        if(mainApp.getConfig().getWorkspaceFactory() == null){
-            mainApp.getConfig().loadWorkspace();
+        if(MainApp.getConfig().getWorkspaceFactory() == null){
+            MainApp.getConfig().loadWorkspace();
         }
 
-        defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
+        defaultDirectory = new File(MainApp.getZdsutils().getOfflineContentPathDir());
 
         Map<String, Object> paramContent = FunctionTreeFactory.initContentDialog(null);
 
         if(paramContent != null){
             // find inexistant directory
             String localPath = defaultDirectory.getAbsolutePath() + File.separator + ZdsHttp.toSlug((String)paramContent.get("title"));
-            String realLocalPath = localPath;
+            String realLocalPath = FunctionTreeFactory.getUniqueDirPath(localPath);
             File folder = new File(realLocalPath);
-            int i = 1;
-            while(folder.exists()){
-                realLocalPath = localPath + "-" + i;
-                folder = new File(realLocalPath);
-                i++;
-            }
-            // create directory
             folder.mkdir();
 
             // create manifest.json
@@ -332,32 +304,25 @@ public class MenuController{
                 conclu.createNewFile();
                 Content content = mapper.readValue(manifest, Content.class);
                 content.setRootContent(content, realLocalPath);
-                mainApp.getContents().clear();
-                FunctionTreeFactory.clearContent(mainApp.getExtracts(), mainApp.getIndex().getEditorList());
-                mainApp.getContents().add(content);
+                FunctionTreeFactory.switchContent(content, mainApp.getContents());
 
             }catch(IOException e){
                 logger.error(e.getMessage(), e);
             }
-
-            menuUpload.setDisable(false);
-            menuLisibility.setDisable(false);
-            menuReport.setDisable(false);
-            menuExport.setDisable(false);
         }
     }
 
     @FXML private void HandleOpenButtonAction(ActionEvent event){
         DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle("Contenus Zestueux");
+        chooser.setTitle(Configuration.bundle.getString("ui.menu.dialog.open.title"));
         File defaultDirectory;
 
-        if(mainApp.getConfig().getWorkspaceFactory() == null){
-            mainApp.getConfig().loadWorkspace();
+        if(MainApp.getConfig().getWorkspaceFactory() == null){
+            MainApp.getConfig().loadWorkspace();
         }
-        defaultDirectory = new File(mainApp.getZdsutils().getOfflineContentPathDir());
+        defaultDirectory = new File(MainApp.getZdsutils().getOfflineContentPathDir());
         chooser.setInitialDirectory(defaultDirectory);
-        File selectedDirectory = chooser.showDialog(mainApp.getPrimaryStage());
+        File selectedDirectory = chooser.showDialog(MainApp.getPrimaryStage());
 
         if(selectedDirectory != null){
             File manifest = new File(selectedDirectory.getAbsolutePath() + File.separator + "manifest.json");
@@ -366,31 +331,32 @@ public class MenuController{
             try{
                 content = mapper.readValue(manifest, Content.class);
                 content.setRootContent(content, selectedDirectory.getAbsolutePath());
-                mainApp.getContents().clear();
-                FunctionTreeFactory.clearContent(mainApp.getExtracts(), mainApp.getIndex().getEditorList());
-                mainApp.getContents().add(content);
-                menuUpload.setDisable(false);
-                menuLisibility.setDisable(false);
-                menuReport.setDisable(false);
-                menuExport.setDisable(false);
+                FunctionTreeFactory.switchContent(content, mainApp.getContents());
             }catch(IOException e){
                 logger.error(e.getMessage(), e);
             }
         }
     }
 
-    @FXML private Service<Void> HandleLoginButtonAction(ActionEvent event){
+    public void activateButtonForOpenContent() {
+        menuUpload.setDisable(false);
+        menuLisibility.setDisable(false);
+        menuReport.setDisable(false);
+        menuExport.setDisable(false);
+    }
+
+    @FXML public Service<Void> HandleLoginButtonAction(ActionEvent event){
         // Button for google
-        Button googleAuth = new Button("Connexion via Google", IconFactory.createGoogleIcon());
-        LoginDialog dialog = new LoginDialog(googleAuth, mainApp);
+        Button googleAuth = new Button(Configuration.bundle.getString("ui.dialog.auth.google.title"), IconFactory.createGoogleIcon());
+        LoginDialog dialog = new LoginDialog(googleAuth);
         googleAuth.setOnAction(t -> {
-            GoogleLoginDialog googleDialog = new GoogleLoginDialog(dialog, mainApp.getZdsutils());
+            GoogleLoginDialog googleDialog = new GoogleLoginDialog(dialog);
             googleDialog.show();
         });
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
-        hBottomBox.getChildren().addAll(labelField);
-        LoginService loginTask = new LoginService(mainApp.getZdsutils(), mainApp.getConfig());
+        hBottomBox.add(labelField, 0, 0);
+        LoginService loginTask = new LoginService();
         result.ifPresent(usernamePassword -> {
             loginTask.setUsername(usernamePassword.getKey());
             loginTask.setPassword(usernamePassword.getValue());
@@ -403,8 +369,9 @@ public class MenuController{
         prerequisitesForData();
 
         hBottomBox.getChildren().clear();
-        hBottomBox.getChildren().addAll(pb, labelField);
-        DownloadContentService downloadContentTask = new DownloadContentService(mainApp.getZdsutils());
+        hBottomBox.add(pb, 0, 0);
+        hBottomBox.add(labelField, 1, 0);
+        DownloadContentService downloadContentTask = new DownloadContentService();
         labelField.textProperty().bind(downloadContentTask.messageProperty());
         pb.progressProperty().bind(downloadContentTask.progressProperty());
         downloadContentTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
@@ -412,12 +379,10 @@ public class MenuController{
                 case FAILED:
                 case CANCELLED:
                 case SUCCEEDED:
-                    Alert alert = new Alert(AlertType.INFORMATION);
-                    IconFactory.addAlertLogo(alert);
-                    alert.setTitle("Téléchargement des contenus");
-                    alert.setHeaderText("Confirmation du téléchargement");
-                    alert.setContentText("Vos contenus (tutoriels et articles) de ZdS ont été téléchargés en local. \n" +
-                            "Vous pouvez maintenant travailler en mode Hors ligne !");
+                    Alert alert = new CustomAlert(AlertType.INFORMATION);
+                    alert.setTitle(Configuration.bundle.getString("ui.alert.download.success.title"));
+                    alert.setHeaderText(Configuration.bundle.getString("ui.alert.download.success.header"));
+                    alert.setContentText(Configuration.bundle.getString("ui.alert.download.success.text"));
                     alert.showAndWait();
                     hBottomBox.getChildren().clear();
                     break;
@@ -428,7 +393,7 @@ public class MenuController{
     }
 
     @FXML private void HandleDownloadButtonAction(ActionEvent event){
-        if(! mainApp.getZdsutils().isAuthenticated()){
+        if(! MainApp.getZdsutils().isAuthenticated()){
             Service<Void> loginTask = HandleLoginButtonAction(event);
 
             loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
@@ -437,11 +402,10 @@ public class MenuController{
                     case FAILED:
                     case CANCELLED:
                         hBottomBox.getChildren().clear();
-                        alert = new Alert(AlertType.ERROR);
-                        IconFactory.addAlertLogo(alert);
-                        alert.setTitle("Connexion");
-                        alert.setHeaderText("Erreur de connexion");
-                        alert.setContentText("Désolé mais vous n'avez pas été authentifié sur le serveur de Zeste de Savoir.");
+                        alert = new CustomAlert(AlertType.ERROR);
+                        alert.setTitle(Configuration.bundle.getString("ui.dialog.auth.failed.title"));
+                        alert.setHeaderText(Configuration.bundle.getString("ui.dialog.auth.failed.header"));
+                        alert.setContentText(Configuration.bundle.getString("ui.dialog.auth.failed.text"));
 
                         alert.showAndWait();
                         break;
@@ -461,8 +425,8 @@ public class MenuController{
     }
 
     private void prerequisitesForData(){
-        if(mainApp.getConfig().getWorkspaceFactory() == null){
-            mainApp.getConfig().loadWorkspace();
+        if(MainApp.getConfig().getWorkspaceFactory() == null){
+            MainApp.getConfig().loadWorkspace();
         }
     }
 
@@ -470,40 +434,63 @@ public class MenuController{
         prerequisitesForData();
 
         hBottomBox.getChildren().clear();
-        hBottomBox.getChildren().addAll(labelField);
+        hBottomBox.add(labelField, 0, 0);
 
 
         List<MetadataContent> contents = new ArrayList<>();
-        contents.add(new MetadataContent(null, "*** Nouveau Contenu ***", null));
-        contents.addAll(mainApp.getZdsutils().getContentListOnline());
+        contents.add(new MetadataContent(null, "---"+Configuration.bundle.getString("ui.content.new.title")+"---", null));
+        contents.addAll(MainApp.getZdsutils().getContentListOnline());
 
-        ChoiceDialog<MetadataContent> dialog = new ChoiceDialog<>(null, contents);
-        dialog.setTitle("Choix du tutoriel");
-        dialog.setHeaderText("Choisissez le tutoriel vers lequel importer");
-        dialog.setContentText("Tutoriel: ");
+        Dialog<Pair<String, MetadataContent>> dialog = new CustomDialog<>();
+        dialog.setTitle(Configuration.bundle.getString("ui.content.select.title"));
+        dialog.setHeaderText(Configuration.bundle.getString("ui.content.select.header"));
+        ButtonType loginButtonType = new ButtonType(Configuration.bundle.getString("ui.content.select.button.send"), ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
-        Optional<MetadataContent> result = dialog.showAndWait();
-        UploadContentService uploadContentTask = new UploadContentService(mainApp.getZdsutils(), result);
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextArea msg = new TextArea();
+        msg.setText(Configuration.bundle.getString("ui.content.select.placeholder.commit_msg"));
+        ChoiceBox<MetadataContent> contenus = new ChoiceBox<>();
+        contenus.setItems(FXCollections.observableArrayList(contents));
+
+        grid.add(new Label(Configuration.bundle.getString("ui.content.select.field.slug")+" : "), 0, 0);
+        grid.add(contenus, 1, 0);
+        grid.add(new Label(Configuration.bundle.getString("ui.content.select.field.commit_msg")+" : "), 0, 1);
+        grid.add(msg, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == loginButtonType) {
+                return new Pair<>(msg.getText(), contenus.getValue());
+            }
+            return null;
+        });
+        Optional<Pair<String, MetadataContent>> result = dialog.showAndWait();
+        UploadContentService uploadContentTask = new UploadContentService(result);
         labelField.textProperty().bind(uploadContentTask.messageProperty());
         uploadContentTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
-            Alert alert = new Alert(AlertType.NONE);
-            IconFactory.addAlertLogo(alert);
+            Alert alert = new CustomAlert(AlertType.NONE);
 
             switch(newValue){
                 case FAILED:
                     alert.setAlertType(AlertType.ERROR);
-                    alert.setTitle("Import de contenu");
-                    alert.setHeaderText("Erreur d'import");
-                    alert.setContentText("Désolé mais un problème vous empêche d'importer votre contenu sur ZdS");
+                    alert.setTitle(Configuration.bundle.getString("ui.dialog.upload.content.failed.title"));
+                    alert.setHeaderText(Configuration.bundle.getString("ui.dialog.upload.content.failed.header"));
+                    alert.setContentText(Configuration.bundle.getString("ui.dialog.upload.content.failed.text"));
                     alert.showAndWait();
                     break;
                 case CANCELLED:
                     break;
                 case SUCCEEDED:
                     alert.setAlertType(AlertType.INFORMATION);
-                    alert.setTitle("Import de contenu");
-                    alert.setHeaderText("Confirmation de l'import");
-                    alert.setContentText("Votre contenu à été importé sur ZdS avec succès !");
+                    alert.setTitle(Configuration.bundle.getString("ui.dialog.upload.content.success.title"));
+                    alert.setHeaderText(Configuration.bundle.getString("ui.dialog.upload.content.success.header"));
+                    alert.setContentText(Configuration.bundle.getString("ui.dialog.upload.content.success.text"));
                     alert.showAndWait();
                     hBottomBox.getChildren().clear();
                     break;
@@ -527,17 +514,17 @@ public class MenuController{
                 uploadContentTask.start();
             }
             else {
-                Alert alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Import de contenu");
-                alert.setHeaderText("Erreur d'import");
-                alert.setContentText("Désolé certains fichiers sont absent de votre disque, l'import ne peut pas avoir lieu");
+                Alert alert = new CustomAlert(AlertType.ERROR);
+                alert.setTitle(Configuration.bundle.getString("ui.dialog.upload.content.failed.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.upload.content.failed.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.upload.content.failed.text.nofile"));
                 alert.showAndWait();
             }
         }
     }
 
     @FXML private void HandleUploadButtonAction(ActionEvent event){
-        if(! mainApp.getZdsutils().isAuthenticated()){
+        if(! MainApp.getZdsutils().isAuthenticated()){
             Service<Void> loginTask = HandleLoginButtonAction(event);
 
             loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
@@ -547,11 +534,10 @@ public class MenuController{
                         break;
                     case CANCELLED:
                         hBottomBox.getChildren().clear();
-                        alert = new Alert(AlertType.ERROR);
-                        IconFactory.addAlertLogo(alert);
-                        alert.setTitle("Connexion");
-                        alert.setHeaderText("Erreur de connexion");
-                        alert.setContentText("Désolé mais vous n'avez pas été authentifié sur le serveur de Zeste de Savoir.");
+                        alert = new CustomAlert(AlertType.ERROR);
+                        alert.setTitle(Configuration.bundle.getString("ui.dialog.upload.content.failed.title"));
+                        alert.setHeaderText(Configuration.bundle.getString("ui.dialog.upload.content.failed.header"));
+                        alert.setContentText(Configuration.bundle.getString("ui.dialog.upload.content.failed.text"));
 
                         alert.showAndWait();
                         break;
@@ -567,31 +553,33 @@ public class MenuController{
         }else{
             uploadContents();
         }
-
     }
 
     @FXML private void HandleSwitchWorkspaceAction(ActionEvent event) throws IOException{
         DirectoryChooser fileChooser = new DirectoryChooser();
+        fileChooser.setInitialDirectory(MainApp.defaultHome);
         fileChooser.setTitle("Sélectionnez un dossier");
-        File selectedDirectory = fileChooser.showDialog(mainApp.getPrimaryStage());
-        mainApp.getConfig().setWorkspacePath(selectedDirectory.getAbsolutePath());
-        mainApp.getConfig().loadWorkspace();
+        File selectedDirectory = fileChooser.showDialog(MainApp.getPrimaryStage());
+        if(selectedDirectory!=null) {
+            MainApp.getConfig().setWorkspacePath(selectedDirectory.getAbsolutePath());
+            MainApp.getConfig().loadWorkspace();
 
-        Alert alert = new Alert(AlertType.INFORMATION);
-        IconFactory.addAlertLogo(alert);
-        alert.setTitle("Dossier de travail");
-        alert.setHeaderText("Changement de dossier de travail");
-        alert.setContentText("Votre dossier de travail est maintenant dans " + mainApp.getConfig().getWorkspacePath());
-        alert.setResizable(true);
+            Alert alert = new CustomAlert(AlertType.INFORMATION);
+            alert.setTitle(Configuration.bundle.getString("ui.options.workspace"));
+            alert.setHeaderText(Configuration.bundle.getString("ui.dialog.workspace.header"));
+            alert.setContentText(Configuration.bundle.getString("ui.dialog.workspace.text") + " " + MainApp.getConfig().getWorkspacePath());
+            alert.setResizable(true);
 
-        alert.showAndWait();
+            alert.showAndWait();
+        }
     }
 
     @FXML private void HandleExportMarkdownButtonAction(ActionEvent event){
         Content content = mainApp.getContents().get(0);
         DirectoryChooser fileChooser = new DirectoryChooser();
-        fileChooser.setTitle("Dossier d'export");
-        File selectedDirectory = fileChooser.showDialog(mainApp.getPrimaryStage());
+        fileChooser.setInitialDirectory(MainApp.defaultHome);
+        fileChooser.setTitle(Configuration.bundle.getString("ui.dialog.export.dir.title"));
+        File selectedDirectory = fileChooser.showDialog(MainApp.getPrimaryStage());
         File selectedFile = new File(selectedDirectory, ZdsHttp.toSlug(content.getTitle()) + ".md");
         logger.debug("Tentative d'export vers le fichier " + selectedFile.getAbsolutePath());
 
@@ -600,11 +588,10 @@ public class MenuController{
             content.saveToMarkdown(selectedFile);
             logger.debug("Export réussi vers " + selectedFile.getAbsolutePath());
 
-            Alert alert = new Alert(AlertType.INFORMATION);
-            IconFactory.addAlertLogo(alert);
-            alert.setTitle("Confirmation");
-            alert.setHeaderText("Confirmation de l'export");
-            alert.setContentText("Le contenu \"" + content.getTitle() + "\" a été exporté dans \"" + selectedFile.getAbsolutePath() + "\"");
+            Alert alert = new CustomAlert(AlertType.INFORMATION);
+            alert.setTitle(Configuration.bundle.getString("ui.dialog.export.success.title"));
+            alert.setHeaderText(Configuration.bundle.getString("ui.dialog.export.success.header"));
+            alert.setContentText(Configuration.bundle.getString("ui.dialog.export.success.text")+" \"" + selectedFile.getAbsolutePath() + "\"");
             alert.setResizable(true);
 
             alert.showAndWait();
@@ -614,33 +601,34 @@ public class MenuController{
     @FXML private void HandleExportPdfButtonAction(ActionEvent event){
         Content content = mainApp.getContents().get(0);
         DirectoryChooser fileChooser = new DirectoryChooser();
-        fileChooser.setTitle("Dossier d'export");
-        File selectedDirectory = fileChooser.showDialog(mainApp.getPrimaryStage());
+        fileChooser.setInitialDirectory(MainApp.defaultHome);
+        fileChooser.setTitle(Configuration.bundle.getString("ui.dialog.export.dir.title"));
+        File selectedDirectory = fileChooser.showDialog(MainApp.getPrimaryStage());
         File selectedFile = new File(selectedDirectory, ZdsHttp.toSlug(content.getTitle()) + ".pdf");
         logger.debug("Tentative d'export vers le fichier " + selectedFile.getAbsolutePath());
 
         if(selectedDirectory != null){
             hBottomBox.getChildren().clear();
-            hBottomBox.getChildren().addAll(pb, labelField);
-            ExportPdfService exportPdfTask = new ExportPdfService(mainApp.getConfig().getPandocProvider(), content, selectedFile);
+            hBottomBox.add(pb, 0, 0);
+            hBottomBox.add(labelField, 1, 0);
+            ExportPdfService exportPdfTask = new ExportPdfService(MainApp.getConfig().getPandocProvider(), content, selectedFile);
             labelField.textProperty().bind(exportPdfTask.messageProperty());
             pb.progressProperty().bind(exportPdfTask.progressProperty());
-            Alert alert = new Alert(AlertType.NONE);
-            IconFactory.addAlertLogo(alert);
+            Alert alert = new CustomAlert(AlertType.NONE);
             exportPdfTask.setOnFailed((WorkerStateEvent ev) -> {
                 alert.setAlertType(AlertType.ERROR);
-                alert.setTitle("Echec");
-                alert.setHeaderText("Echec de l'export");
-                alert.setContentText("Le contenu \"" + content.getTitle() + "\" n'a pas pu être exporté, vérifiez l'état de votre connexion Internet");
+                alert.setTitle(Configuration.bundle.getString("ui.dialog.export.failed.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.export.failed.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.export.failed.text"));
                 alert.showAndWait();
                 hBottomBox.getChildren().clear();
             });
 
             exportPdfTask.setOnSucceeded((WorkerStateEvent ev) -> {
                 alert.setAlertType(AlertType.INFORMATION);
-                alert.setTitle("Confirmation");
-                alert.setHeaderText("Confirmation de l'export");
-                alert.setContentText("Le contenu \"" + content.getTitle() + "\" a été exporté");
+                alert.setTitle(Configuration.bundle.getString("ui.dialog.export.success.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.export.success.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.export.success.text")+" \"" + selectedFile.getAbsolutePath() + "\"");
                 alert.showAndWait();
                 hBottomBox.getChildren().clear();
             });
@@ -649,52 +637,29 @@ public class MenuController{
     }
 
     @FXML private void HandleAboutButtonAction(ActionEvent event){
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("fxml/AboutDialog.fxml"));
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/AboutDialog.fxml"));
 
-        try{
-            AnchorPane aboutDialog = loader.load();
-            AboutDialog aboutController = loader.getController();
-            aboutController.setMainApp(mainApp);
+        Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.help.about"));
+        dialogStage.setResizable(false);
 
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle("A propos");
+        AboutDialog aboutController = loader.getController();
+        aboutController.setMainApp(mainApp);
 
-            Scene scene = new Scene(aboutDialog);
-            dialogStage.setScene(scene);
-            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
-
-            dialogStage.show();
-        }catch(IOException e){
-            logger.error(e.getMessage(), e);
-        }
+        dialogStage.show();
     }
 
     @FXML private void HandleOptionsButtonAction(ActionEvent evnet){
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MainApp.class.getResource("fxml/OptionsDialog.fxml"));
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/OptionsDialog.fxml"));
 
-        try{
-            AnchorPane optionsDialog = loader.load();
+        Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.options"));
+        dialogStage.setResizable(false);
 
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle("Préférences");
 
-            Scene scene = new Scene(optionsDialog);
-            dialogStage.setScene(scene);
-            dialogStage.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
-            dialogStage.setResizable(false);
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
+        OptionsDialog optionsController = loader.getController();
+        optionsController.setMainApp(mainApp);
+        optionsController.setWindow(dialogStage);
 
-            OptionsDialog optionsController = loader.getController();
-            optionsController.setMainApp(mainApp);
-            optionsController.setWindow(dialogStage);
-
-            dialogStage.show();
-        }catch(IOException e){
-            logger.error(e.getMessage(), e);
-        }
+        dialogStage.show();
     }
 
     @FXML private void HandleCheckUpdateButtonAction(ActionEvent event){
@@ -704,8 +669,8 @@ public class MenuController{
                 return new Task<Boolean>() {
                     @Override
                     protected Boolean call() throws Exception {
-                        String current = mainApp.getConfig().getProps().getProperty("version", "Inconnue");
-                        String versionOnline = mainApp.getConfig().getLastRelease();
+                        String current = MainApp.getConfig().getProps().getProperty("version", Configuration.bundle.getString("ui.version.label.unknown"));
+                        String versionOnline = Configuration.getLastRelease();
                         if(versionOnline == null) {
                             throw new IOException();
                         } else {
@@ -717,41 +682,38 @@ public class MenuController{
         };
 
         checkService.setOnFailed(t -> {
-            Alert alert = new Alert(AlertType.ERROR);
-            IconFactory.addAlertLogo(alert);
-            alert.setTitle("Erreur");
-            alert.setHeaderText("Erreur lors du contact du serveur");
-            alert.setContentText("Une erreur est survenue lors de la tentative de vérification des mises à jours. Vérifiez votre connexion à internet !");
+            Alert alert = new CustomAlert(AlertType.ERROR);
+            alert.setTitle(Configuration.bundle.getString("ui.dialog.check_update.failed.title"));
+            alert.setHeaderText(Configuration.bundle.getString("ui.dialog.check_update.failed.header"));
+            alert.setContentText(Configuration.bundle.getString("ui.dialog.check_update.failed.text"));
             alert.showAndWait();
         });
 
         checkService.setOnSucceeded(t -> {
-            Alert alert = new Alert(AlertType.NONE);
-            IconFactory.addAlertLogo(alert);
-            if(!checkService.getValue()) {
-                alert = new Alert(AlertType.WARNING);
-                alert.setTitle("Mise à jour");
-                alert.setHeaderText("Version obsolète");
-                alert.setContentText("La version de Zest Writer que vous utilisez n'est pas à jour. Pensez à faire la mise à jour vers pour profiter des dernières nouveautés");
-            } else {
-                alert = new Alert(AlertType.INFORMATION);
-                IconFactory.addAlertLogo(alert);
-                alert.setTitle("Mise à jour");
-                alert.setHeaderText("Version à jour");
-                alert.setContentText("Vous utilisez actuellement la dernière version publiée de Zest Writer");
+            Alert alert = new CustomAlert(AlertType.NONE);
+            alert.setTitle(Configuration.bundle.getString("ui.dialog.check_update.success.title"));
+
+            if(!checkService.getValue()){
+                alert.setAlertType(AlertType.WARNING);
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.check_update.warn.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.check_update.warn.text"));
+            }else{
+                alert.setAlertType(AlertType.INFORMATION);
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.check_update.success.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.check_update.success.text"));
             }
+
             alert.showAndWait();
         });
 
         checkService.start();
-
     }
 
     public Text getLabelField(){
         return labelField;
     }
 
-    public HBox gethBottomBox(){
+    public GridPane gethBottomBox(){
         return hBottomBox;
     }
 

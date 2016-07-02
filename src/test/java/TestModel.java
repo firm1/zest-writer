@@ -96,6 +96,8 @@ public class TestModel {
         assertEquals(chapter16.getChildren().size(), 0);
         assertEquals(chapter17.getChildren().size(), 3);
 
+        assertEquals(content.getDepth(), 3);
+
     }
 
     @Test

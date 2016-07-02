@@ -1,22 +1,22 @@
 package com.zestedesavoir.zestwriter.view.com;
 
-import com.zestedesavoir.zestwriter.model.Container;
-import com.zestedesavoir.zestwriter.model.Content;
-import com.zestedesavoir.zestwriter.model.ContentNode;
-import com.zestedesavoir.zestwriter.model.Extract;
-import com.zestedesavoir.zestwriter.model.MetaAttribute;
-import com.zestedesavoir.zestwriter.model.MetaContent;
-import com.zestedesavoir.zestwriter.model.Textual;
+import com.zestedesavoir.zestwriter.MainApp;
+import com.zestedesavoir.zestwriter.model.*;
+import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.Event;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
+import javafx.scene.layout.Pane;
 import javafx.util.Pair;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -55,9 +55,7 @@ public class FunctionTreeFactory {
 
     public static boolean clearContent(ObservableMap<Textual, Tab> extracts, TabPane editorList) {
         for(Entry<Textual, Tab> entry:extracts.entrySet()) {
-            Platform.runLater(() -> {
-                Event.fireEvent(entry.getValue(), new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
-            });
+            Event.fireEvent(entry.getValue(), new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
         }
         if(editorList.getTabs().size() <= 1) {
             extracts.clear();
@@ -110,17 +108,17 @@ public class FunctionTreeFactory {
         }
     }
 
-    public static String padding(int number, char car) {
+    public static String padding(int number) {
         StringBuilder sb = new StringBuilder();
         for(int i=0;i<number;i++) {
-            sb.append(car);
+            sb.append('#');
         }
         return sb.toString();
     }
 
     public static String offsetHeaderMarkdown(String text, int level) {
         String regex = "^(#+)(.{0,}?)(#*)$";
-        return Pattern.compile(regex, Pattern.MULTILINE).matcher(text).replaceAll(padding(level,'#')+"$1$2");
+        return Pattern.compile(regex, Pattern.MULTILINE).matcher(text).replaceAll(padding(level)+"$1$2");
     }
 
     public static String changeLocationImages(String text) {
@@ -145,5 +143,42 @@ public class FunctionTreeFactory {
             }
             return null;
         }
+    }
+
+    public static void addTheming(Pane pane) {
+        pane.getStylesheets().add(MainApp.class.getResource("css/"+ MainApp.config.getDisplayTheme()).toExternalForm());
+    }
+
+    public static String getUniqueFilePath(String path, String ext) {
+        String realLocalPath = path + "." + ext;
+        File file = new File(realLocalPath);
+        int i = 1;
+        while(file.exists()){
+            realLocalPath = path + "-" + i + "." + ext;
+            file = new File(realLocalPath);
+            i++;
+        }
+        return file.getAbsolutePath();
+    }
+
+    public static String getUniqueDirPath(String path) {
+        String realLocalPath = path;
+        File file = new File(realLocalPath);
+        int i = 1;
+        while(file.exists()){
+            realLocalPath = path + "-" + i;
+            file = new File(realLocalPath);
+            i++;
+        }
+        return file.getAbsolutePath();
+    }
+
+    public static void switchContent(Content content, ObservableList<Content> contents) {
+        if(contents.size() > 0) {
+            contents.set(0, content);
+        } else {
+            contents.add(content);
+        }
+
     }
 }

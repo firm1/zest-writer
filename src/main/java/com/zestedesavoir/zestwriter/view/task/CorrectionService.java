@@ -2,6 +2,7 @@ package com.zestedesavoir.zestwriter.view.task;
 
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
@@ -29,11 +30,20 @@ public class CorrectionService extends Service<String>{
         return new Task<String>() {
             @Override
             protected String call(){
-                updateMessage("Préparation du rapport de validation ...");
+                updateMessage(Configuration.bundle.getString("ui.task.correction.prepare.label")+" ...");
 
                 Function<Textual, String> prepareValidationReport = (Textual ext) -> {
-                    updateMessage("Préparation du rapport de validation de "+ext.getTitle());
+                    updateMessage(ext.getTitle());
                     String markdown = ext.readMarkdown();
+                    int i=0;
+                    while(!MdTextController.pythonStarted) {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+
+                        }
+                    }
+
                     String htmlText = StringEscapeUtils.unescapeHtml(MenuController.markdownToHtml(mdText, markdown));
                     return corrector.checkHtmlContentToText(htmlText, ext.getTitle());
                 };

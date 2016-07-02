@@ -7,8 +7,8 @@
    <center>
       <TableView fx:id="tableView" editable="true" prefHeight="300.0" prefWidth="400.0" BorderPane.alignment="CENTER">
          <columns>
-            <TableColumn prefWidth="500.0" text="Extrait" />
-            <TableColumn prefWidth="75.0" text="Note" />
+            <TableColumn prefWidth="500.0" text="%ui.content.extract" />
+            <TableColumn prefWidth="75.0" text="%ui.content.mark" />
          </columns></TableView>
    </center>
 </BorderPane>
