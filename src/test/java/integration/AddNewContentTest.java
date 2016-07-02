@@ -3,14 +3,17 @@ package integration;
 import annotation.MediumTest;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testfx.api.FxRobot;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import static org.testfx.api.FxToolkit.*;
 
@@ -21,10 +24,11 @@ public class AddNewContentTest extends FxRobot {
     public static final String NEW_CONTENT_SUBTITLE = "Sous titre du nouveau contenu";
 
     private MainApp mainApp;
+    private static Stage primaryStage;
 
     @BeforeClass
     public static void setupSpec() throws Exception {
-        Stage primaryStage = registerPrimaryStage();
+        primaryStage = registerPrimaryStage();
         setupStage(stage -> stage.show());
     }
 
@@ -61,6 +65,9 @@ public class AddNewContentTest extends FxRobot {
      * This method is created for sharing code between createNewTutorialTest and createNewTutorialArticle
      */
     private void assertContentHaveBeenCreated (String typeContent) {
+
+        sleep(2, TimeUnit.SECONDS);
+
         clickOn("Fichier");
         clickOn("Nouveau");
 
