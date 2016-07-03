@@ -48,7 +48,7 @@
                                                 </ImageView>
                                                 <HBox alignment="CENTER_RIGHT" prefWidth="1000.0">
                                                    <children>
-                                                      <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                                                      <ImageView styleClass="logo-clem" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
                                                             <Image url="@../assets/static/icons/clem.png" />
                                                          </image>

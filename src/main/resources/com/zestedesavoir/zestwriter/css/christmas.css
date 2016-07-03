@@ -1,0 +1,90 @@
+.root {
+    -fx-text-inner-color: #008000;
+    -fx-base: #FFF;
+    -fx-background: #FFF;
+}
+
+
+.menu-bar {
+    -fx-border-color: #DDD #DDD #FF0000 #DDD;
+    -fx-border-width: 0 0 3px 0;
+}
+
+.tab, .menu, .menu-item{
+    -fx-padding: 10 20 10 20;
+}
+
+
+.table-row-cell {
+    -fx-cell-size: 80px;
+    -fx-padding: 20 5 20 5;
+}
+
+.hyperlink{
+    -fx-border-width:0;
+    -fx-underline:false;
+    -fx-text-fill: derive(-fx-text-inner-color, 90%);
+}
+
+.hyperlink:hover{
+    -fx-underline:true;
+}
+
+.box-content {
+    -fx-border-color: #DDD #DDD #FF0000 #DDD;
+    -fx-background-color: #EEE;
+}
+
+.box-content .label {
+    -fx-background-color: #EEE;
+}
+
+.box-content .hyperlink {
+    -fx-font-size: 1.6em;
+}
+
+.title-content-home {
+    -fx-font-size: 1.8em;
+    -fx-text-fill: -fx-text-inner-color;
+    -fx-padding: 20 10 0 10;
+}
+
+.home-header-box {
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: #FFF;
+    -fx-background-color: -fx-text-inner-color;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab:selected > .tab-container > .tab-label {
+    -fx-text-fill: -fx-text-inner-color;
+    -fx-font-weight: bold;
+}
+
+.glyph-icon {
+    -fx-fill: -fx-text-inner-color;
+}
+
+
+.styled-text-area {
+    -fx-background-color: -fx-background;
+}
+
+.styled-text-area .text {
+    -fx-fill: #000;
+}
+
+.lineno {
+    -fx-background-color: derive(-fx-base,20%);
+    -fx-text-fill: #999;
+}
+
+.subtitle {
+    -fx-font-weight: bold;
+    -fx-font-size: 13pt;
+    -fx-text-fill: #FF0000;
+    -fx-label-padding: 20;
+}
+
+.logo-clem {
+    -fx-image: url('../assets/static/icons/home-clem-christmas.png');
+}

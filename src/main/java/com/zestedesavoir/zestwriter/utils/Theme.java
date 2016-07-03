@@ -9,8 +9,9 @@ public class Theme {
     private String label;
 
     public static List<Theme> themeAvailable = Arrays.asList(
-            new Theme("dark.css", "Dark"),
-            new Theme("light.css", "Standard"));
+            new Theme("dark.css", Configuration.bundle.getString("ui.options.display.theme.dark")),
+            new Theme("light.css", Configuration.bundle.getString("ui.options.display.theme.light")),
+            new Theme("christmas.css", Configuration.bundle.getString("ui.options.display.theme.christmas")));
 
     public Theme(String filename, String label) {
         this.filename = filename;
