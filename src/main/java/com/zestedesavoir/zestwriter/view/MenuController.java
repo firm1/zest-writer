@@ -385,6 +385,9 @@ public class MenuController{
                     alert.setContentText(Configuration.bundle.getString("ui.alert.download.success.text"));
                     alert.showAndWait();
                     hBottomBox.getChildren().clear();
+
+                    mainApp.getIndex().refreshRecentProject();
+
                     break;
             }
         });
