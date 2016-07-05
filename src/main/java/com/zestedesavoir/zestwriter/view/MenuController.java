@@ -7,6 +7,7 @@ import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
+import com.zestedesavoir.zestwriter.utils.GithubHttp;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.com.*;
@@ -666,6 +667,25 @@ public class MenuController{
         optionsController.setWindow(dialogStage);
 
         dialogStage.show();
+    }
+
+    @FXML private void HandleImportGithubButtonAction() {
+        TextInputDialog dialog = new TextInputDialog("https://github.com/");
+        dialog.setTitle(Configuration.bundle.getString("ui.dialog.import.github.title"));
+        dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.import.github.header"));
+        dialog.setContentText(Configuration.bundle.getString("ui.dialog.import.github.text")+" :");
+        dialog.getEditor().setPrefWidth(500);
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(url -> {
+            Content c = null;
+            try {
+                c = GithubHttp.importGithub(url, MainApp.getZdsutils().getOfflineContentPathDir(), MainApp.getZdsutils().getOnlineContentPathDir());
+                if(c != null) FunctionTreeFactory.switchContent (c, mainApp.getContents ());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @FXML private void HandleCheckUpdateButtonAction(ActionEvent event){

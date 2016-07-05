@@ -1,8 +1,11 @@
-
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zestedesavoir.zestwriter.model.*;
+import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.utils.GithubHttp;
+import com.zestedesavoir.zestwriter.utils.ZdsHttp;
+import com.zestedesavoir.zestwriter.utils.readability.Readability;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,16 +13,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.zestedesavoir.zestwriter.model.*;
-import com.zestedesavoir.zestwriter.utils.Configuration;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zestedesavoir.zestwriter.utils.ZdsHttp;
-import com.zestedesavoir.zestwriter.utils.readability.Readability;
-import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
-import org.python.bouncycastle.asn1.cms.MetaData;
+import static org.junit.Assert.*;
 
 public class TestModel {
 
@@ -348,5 +342,23 @@ public class TestModel {
         assertFalse(tc1.equals(tc3));
         assertEquals(tc3.toString(), "Tutoriel");
         assertFalse(tc1.equals("TUTORIAL"));
+    }
+
+    @Test
+    public void testImport() {
+
+
+        File workspace = new File(new File(TEST_DIR), "zworkspace");
+        if(!workspace.exists()) {
+            workspace.mkdirs();
+        }
+        try {
+            GithubHttp.importGithub("https://github.com/steeve/france.code-civil", workspace.getAbsolutePath(), workspace.getAbsolutePath());
+            File off = new File(workspace, "france.code-civil");
+            assertTrue(off.exists());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ;
     }
 }
