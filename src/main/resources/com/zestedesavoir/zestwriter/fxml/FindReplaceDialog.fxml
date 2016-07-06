@@ -62,7 +62,7 @@
                   </VBox>
                   <VBox alignment="CENTER_LEFT" prefHeight="10.0" prefWidth="300.0">
                      <children>
-                        <Button fx:id="searchButton" mnemonicParsing="false" onAction="#HandleSearchButtonAction" prefHeight="25.0" prefWidth="284.0" text="%ui.dialog.fin.label">
+                        <Button fx:id="searchButton" mnemonicParsing="false" onAction="#HandleSearchButtonAction" prefHeight="25.0" prefWidth="284.0" text="%ui.dialog.find.label">
                            <VBox.margin>
                               <Insets bottom="5.0" top="5.0" />
                            </VBox.margin>
