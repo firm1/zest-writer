@@ -70,8 +70,10 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         Menu menuStats = new Menu(Configuration.bundle.getString("ui.actions.stats.label"));
         MenuItem menuStatCountHisto = new MenuItem(Configuration.bundle.getString("ui.actions.stats.count.histo"));
         MenuItem menuStatCountPie = new MenuItem(Configuration.bundle.getString("ui.actions.stats.count.pie"));
+        MenuItem menuStatReadability = new MenuItem(Configuration.bundle.getString("ui.actions.stats.readability"));
         menuStats.getItems().add(menuStatCountHisto);
         menuStats.getItems().add(menuStatCountPie);
+        menuStats.getItems().add(menuStatReadability);
         addMenuItem1.setGraphic(IconFactory.createFileIcon());
         addMenuItem2.setGraphic(IconFactory.createAddFolderIcon());
         addMenuItem3.setGraphic(IconFactory.createEditIcon());
@@ -80,6 +82,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         menuStats.setGraphic(IconFactory.createStatsIcon());
         menuStatCountHisto.setGraphic(IconFactory.createStatsHistoIcon());
         menuStatCountPie.setGraphic(IconFactory.createStatsPieIcon());
+        menuStatReadability.setGraphic(IconFactory.createStatsHistoIcon());
         addMenu.getItems().clear();
 
         if(item instanceof Container) {
@@ -329,6 +332,62 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             chart.setLegendVisible(false);
 
             dialog.getDialogPane().setContent(chart);
+            dialog.setResizable(true);
+            dialog.showAndWait();
+        });
+
+        menuStatReadability.setOnAction(t -> {
+            logger.debug("Tentative de calcul des statistiques de lisiblité");
+            BaseDialog dialog = new BaseDialog(Configuration.bundle.getString("ui.actions.stats.label"), Configuration.bundle.getString("ui.actions.stats.header")+" "+getItem().getTitle());
+            dialog.getDialogPane().setPrefSize(800, 600);
+            dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.bundle.getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
+
+            // draw
+            final CategoryAxis xAxis = new CategoryAxis();
+            final NumberAxis yAxis = new NumberAxis();
+            final LineChart<String,Number> lineChart = new LineChart<>(xAxis, yAxis);
+            lineChart.setTitle(Configuration.bundle.getString("ui.actions.stats.readability"));
+
+            xAxis.setLabel(Configuration.bundle.getString("ui.actions.stats.xaxis"));
+            yAxis.setLabel(Configuration.bundle.getString("ui.actions.readable.yaxis"));
+
+            XYChart.Series series1 = new XYChart.Series();
+            XYChart.Series series2 = new XYChart.Series();
+            series1.setName(Configuration.bundle.getString("ui.menu.edit.readable.gunning_index"));
+            series2.setName(Configuration.bundle.getString("ui.menu.edit.readable.flesch_index"));
+            Container container = (Container) getItem();
+            Function<Textual, Double> performGuning = (Textual ch) -> {
+                String md = ch.readMarkdown();
+                try {
+                    Readability readText = new Readability(md);
+                    return readText.getGunningFog();
+                } catch(Exception e) {
+                    return 0.0;
+                }
+            };
+            Function<Textual, Double> performFlesch = (Textual ch) -> {
+                String md = ch.readMarkdown();
+                try {
+                    Readability readText = new Readability(md);
+                    return readText.getFleschReadingEase();
+                } catch(Exception e) {
+                    return 0.0;
+                }
+            };
+            Map<Textual, Double> statG = container.doOnTextual(performGuning);
+            Map<Textual, Double> statF = container.doOnTextual(performFlesch);
+            for(Map.Entry<Textual, Double> st:statG.entrySet()) {
+                if(!(st.getKey() instanceof MetaAttribute)) {
+                    series1.getData().add(new XYChart.Data(st.getKey().getTitle(), st.getValue()));
+                }
+            }
+            for(Map.Entry<Textual, Double> st:statF.entrySet()) {
+                if(!(st.getKey() instanceof MetaAttribute)) {
+                    series2.getData().add(new XYChart.Data(st.getKey().getTitle(), st.getValue()));
+                }
+            }
+            lineChart.getData().addAll(series1, series2);
+            dialog.getDialogPane().setContent(lineChart);
             dialog.setResizable(true);
             dialog.showAndWait();
         });
