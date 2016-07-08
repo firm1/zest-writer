@@ -2,6 +2,7 @@ package com.zestedesavoir.zestwriter;
 
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
+import com.zestedesavoir.zestwriter.plugins.PluginsManager;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
@@ -53,6 +54,7 @@ public class MainApp extends Application {
     private StringBuilder key = new StringBuilder();
     private Logger logger;
     private MenuController menuController;
+    private PluginsManager pm;
     public static String[] args;
     public static File defaultHome;
 
@@ -112,6 +114,10 @@ public class MainApp extends Application {
         return extracts;
     }
 
+    public PluginsManager getPluginsManager(){
+        return pm;
+    }
+
     @Override
     public void start(Stage primaryStage) {
 
@@ -138,8 +144,12 @@ public class MainApp extends Application {
             }
         }
 
-
         MainApp.primaryStage.setOnCloseRequest(t -> {
+            pm.disablePlugins();
+
+            if(MainApp.primaryStage.isMaximized() && config.isDisplayWindowPersonnalDimension())
+                config.setDisplayWindowMaximize("true");
+
             quitApp();
             t.consume();
         });
@@ -156,6 +166,7 @@ public class MainApp extends Application {
             config.setDisplayWindowPositionY(String.valueOf(newValue));
         });
 
+        initPlugins();
         initRootLayout();
         showWriter();
         initConnection();
@@ -250,6 +261,11 @@ public class MainApp extends Application {
 
             loginTask.start();
         }
+    }
+
+    public void initPlugins(){
+        pm = new PluginsManager(this);
+        pm.enablePlugins();
     }
 
     private void loadCombinason() {

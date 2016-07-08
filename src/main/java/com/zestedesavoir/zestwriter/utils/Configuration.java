@@ -232,8 +232,19 @@ public class Configuration {
             return Configuration.getDefaultWorkspace();
     }
 
-    public void setWorkspacePath(String font){
-        conf.setProperty(ConfigData.WorkspacePath.getKey(), font);
+    public void setWorkspacePath(String path){
+        conf.setProperty(ConfigData.WorkspacePath.getKey(), path);
+    }
+
+    public String getPluginsPath(){
+        if(conf.containsKey(ConfigData.PluginPath.getKey()))
+            return conf.getProperty(ConfigData.PluginPath.getKey());
+        else
+            return getWorkspacePath() + "/plugins";
+    }
+
+    public void setPluginPath(String path){
+        conf.setProperty(ConfigData.PluginPath.getKey(), path);
     }
 
     public Boolean getEditorSmart(){
@@ -461,6 +472,7 @@ public class Configuration {
         DisplayWindowPositionY("data.display.window.position.y", "0"),
 
         WorkspacePath("options.workspace.path", ""),
+        PluginPath("options.workspace.plugins.path", ""),
         EditorSmart("options.editor.smart", "true"),
         EditorFont("options.editor.font", "Fira Mono"),
         EditorFontSize("options.editor.fontSize", "14"),

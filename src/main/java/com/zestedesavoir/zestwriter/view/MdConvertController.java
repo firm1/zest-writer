@@ -102,11 +102,17 @@ public class MdConvertController {
         return mdBox;
     }
 
+    public StyleClassedTextArea getSourceText(){
+        return SourceText;
+    }
+
     public void setMdBox(MdTextController mdBox, Textual extract, Tab tab) throws IOException {
         this.mainApp = mdBox.getMainApp();
         this.mdBox = mdBox;
         this.tab = tab;
         this.extract = extract;
+
+        mainApp.getPluginsManager().setPluginEditor(this);
 
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Editor.fxml"));
         loader.load();
@@ -712,11 +718,6 @@ public class MdConvertController {
         findReplaceDialog.setMdConvertController(this);
 
         dialogStage.show();
-    }
-
-
-    public StyleClassedTextArea getSourceText(){
-        return SourceText;
     }
 
     /**
