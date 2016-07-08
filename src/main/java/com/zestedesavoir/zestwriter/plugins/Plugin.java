@@ -1,18 +1,13 @@
 package com.zestedesavoir.zestwriter.plugins;
 
 
-import com.kenai.jffi.Main;
 import com.zestedesavoir.zestwriter.MainApp;
-import com.zestedesavoir.zestwriter.plugins.events.WindowEvents;
-import com.zestedesavoir.zestwriter.view.MdConvertController;
-import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Plugin{
     private MainApp mainApp;
@@ -91,7 +86,7 @@ public class Plugin{
 
     public Object method(String method, Object... value){
         /**
-         * Cette méthode ne fonctionne pas, voir pourquoi car elle serait nettement plus pratique !
+         * TODO : this method failed
          */
 
         if(!enabled || pluginError)
