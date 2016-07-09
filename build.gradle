@@ -145,6 +145,7 @@ jacocoTestReport {
         classDirectories = files(classDirectories.files.collect {
             fileTree(dir: it,
                     exclude: ['**/view/**',
+                              '**/plugins/**',
                               '**/MainApp**',
                               '**/task/**'])
         })
