@@ -13,6 +13,8 @@ processResources {
     }
 }
 
+compileJava.options.encoding = 'UTF-8'
+
 // Configures plugin
 javafx {
     // Application name and ID presented by target OS
@@ -131,6 +133,7 @@ test {
 
     systemProperty "zw.username", System.getProperty("zw.username")
     systemProperty "zw.password", System.getProperty("zw.password")
+    systemProperty "file.encoding", "UTF-8"
 }
 
 jacocoTestReport {

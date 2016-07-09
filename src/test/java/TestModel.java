@@ -186,10 +186,10 @@ public class TestModel {
         System.out.println("workspace = "+workspace.getAbsolutePath());
         String title = "Tutoriel de test";
         String description = "Description d'un tutoriel de test";
-        String part_1_title = "Première partie";
-        String part_2_title = "Deuxième partie";
+        String part_1_title = "Premiere partie";
+        String part_2_title = "Deuxieme partie";
         String chapter_11_title = "Premier chapitre";
-        String chapter_12_title = "Deuxième chapitre";
+        String chapter_12_title = "Deuxieme chapitre";
         String extract_111_title = "Premier Extrait";
         String extract_21_title = "Autre Extrait";
 

@@ -5,15 +5,20 @@ import org.junit.Test;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.FlipTable;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+
 public class TestUtils {
 
     @Test
     public void testCorrectorTextToHtml() {
-        String text = "Bonjour, je suis persuade que tu n'aime pas les frites.\nCest normal je ne suis pas belge";
-        String expected = "Bonjour, je suis <span class=\"error-french\" title=\"Note : Auxiliaire suivi d’un verbe conjugué\">persuade</span>  que <span class=\"error-french\" title=\"Note : tu + 2 tokens + verbe\">tu n'aime</span>  pas les frites.\n<span class=\"error-french\" title=\"Note : Faute d'orthographe possible (sans suggestions)\">Cest</span>  normal je ne suis pas belge";
+        String text = "Bonjour, je suis persuade que tu n'aime pas les frites. Cest normal je ne suis pas belge";
+
         Corrector corrector = new Corrector();
         String res = corrector.checkHtmlContent(text);
-        assertEquals(res, expected);
+        assertTrue (res.contains ("Note : Auxiliaire suivi"));
+        assertTrue (res.contains ("Note : tu + 2 tokens + verbe"));
+        assertTrue (res.contains ("Note : Faute d'orthographe possible (sans suggestions)"));
     }
 
     @Test
