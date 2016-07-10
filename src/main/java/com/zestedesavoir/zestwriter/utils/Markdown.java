@@ -21,7 +21,7 @@ public class Markdown {
 
     private String getHTMLTemplate() {
         if(htmlTemplate == null) {
-            final String HTML_TEMPLATE_LOCATION = "html/template.html";
+            final String HTML_TEMPLATE_LOCATION = "assets/static/html/template.html";
 
             InputStream cheatSheetStream = MainApp.class.getResourceAsStream(HTML_TEMPLATE_LOCATION);
 
@@ -36,7 +36,7 @@ public class Markdown {
 
             StringBuffer sbCheatSheet = new StringBuffer();
             while (m.find()) {
-                String path = MainApp.class.getResource("static" + m.group(1)).toExternalForm();
+                String path = MainApp.class.getResource("assets" + m.group(1)).toExternalForm();
                 m.appendReplacement(sbCheatSheet, path);
             }
             m.appendTail(sbCheatSheet);
@@ -45,7 +45,7 @@ public class Markdown {
         return htmlTemplate;
     }
 
-    public String addHeadAndFooter(String content) {
+    public String addHeaderAndFooter(String content) {
         return getHTMLTemplate().replaceFirst(CONTENT_KEYWORD, content);
     }
 }

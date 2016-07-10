@@ -79,7 +79,7 @@ public class MainApp extends Application {
             config = new Configuration(defaultHome.getAbsolutePath());
         }
         zdsutils = new ZdsHttp(config);
-
+        mdUtils = new Markdown();
     }
 
     public static void main(String[] args) {

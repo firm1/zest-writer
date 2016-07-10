@@ -82,16 +82,16 @@ public class MdTextController {
 
     public void loadFonts() {
         new Thread(() -> {
-            Font.loadFont(MainApp.class.getResource("static/fonts/Merriweather-Regular.ttf").toExternalForm(), 10);
-            Font.loadFont(MainApp.class.getResource("static/fonts/Merriweather-Black.ttf").toExternalForm(), 10);
-            Font.loadFont(MainApp.class.getResource("static/fonts/Merriweather-Bold.ttf").toExternalForm(), 10);
-            Font.loadFont(MainApp.class.getResource("static/fonts/Merriweather-BoldItalic.ttf").toExternalForm(), 10);
-            Font.loadFont(MainApp.class.getResource("static/fonts/Merriweather-HeavyItalic.ttf").toExternalForm(), 10);
-            Font.loadFont(MainApp.class.getResource("static/fonts/Merriweather-Italic.ttf").toExternalForm(), 10);
-            Font.loadFont(MainApp.class.getResource("static/fonts/Merriweather-Light.ttf").toExternalForm(), 10);
-            Font.loadFont(MainApp.class.getResource("static/fonts/Merriweather-LightItalic.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Regular.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Black.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Bold.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-BoldItalic.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-HeavyItalic.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Italic.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Light.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-LightItalic.ttf").toExternalForm(), 10);
 
-            Font.loadFont(MainApp.class.getResource("static/fonts/FiraMono-Regular.ttf").toExternalForm(), 10);
+            Font.loadFont(MainApp.class.getResource("assets/static/fonts/FiraMono-Regular.ttf").toExternalForm(), 10);
         }).start();
     }
 
