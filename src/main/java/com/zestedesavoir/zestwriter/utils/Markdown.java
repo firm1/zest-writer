@@ -36,7 +36,7 @@ public class Markdown {
 
             StringBuffer sbCheatSheet = new StringBuffer();
             while (m.find()) {
-                String path = MainApp.class.getResource("assets/static" + m.group(1)).toExternalForm();
+                String path = MainApp.class.getResource("static" + m.group(1)).toExternalForm();
                 m.appendReplacement(sbCheatSheet, path);
             }
             m.appendTail(sbCheatSheet);

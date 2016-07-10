@@ -91,6 +91,6 @@ public class IconFactory {
     public static void addAlertLogo(Alert alert){
         Stage alertDialog = (Stage)alert.getDialogPane().getScene().getWindow();
         alert.getDialogPane().getChildren().stream().filter(node -> node instanceof Label).forEach(node -> ((Label)node).setMinHeight(Region.USE_PREF_SIZE));
-        alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
+        alertDialog.getIcons().add(new Image(MainApp.class.getResourceAsStream("images/logo.png")));
     }
 }

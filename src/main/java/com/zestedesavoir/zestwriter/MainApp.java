@@ -4,6 +4,7 @@ import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.plugins.PluginsManager;
 import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.utils.Markdown;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
@@ -55,6 +56,7 @@ public class MainApp extends Application {
     private Logger logger;
     private MenuController menuController;
     private PluginsManager pm;
+    private Markdown mdUtils;
     public static String[] args;
     public static File defaultHome;
 
@@ -118,12 +120,14 @@ public class MainApp extends Application {
         return pm;
     }
 
+    public Markdown getMdUtils() { return mdUtils; }
+
     @Override
     public void start(Stage primaryStage) {
 
         MainApp.primaryStage = primaryStage;
         MainApp.primaryStage.setTitle("Zest Writer");
-        MainApp.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("assets/static/icons/logo.png")));
+        MainApp.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("images/logo.png")));
         MainApp.primaryStage.setMinWidth(800);
         MainApp.primaryStage.setMinHeight(500);
 
@@ -286,7 +290,7 @@ public class MainApp extends Application {
                         dialog.setHeaderText(null);
                         dialog.setContentText(null);
 
-                        dialog.setGraphic(new ImageView(this.getClass().getResource("assets/static/goal.gif").toString()));
+                        dialog.setGraphic(new ImageView(this.getClass().getResource("images/goal.gif").toString()));
                         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK);
 
                         dialog.showAndWait();

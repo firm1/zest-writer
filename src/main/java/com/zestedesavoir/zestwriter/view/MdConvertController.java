@@ -539,7 +539,7 @@ public class MdConvertController {
         before.append(MainApp.class.getResource("assets").toExternalForm());
         before.append("/' />");
         before.append("<link rel=\"stylesheet\" href=\"");
-        before.append(MainApp.class.getResource("css/content.css").toExternalForm());
+        before.append(MainApp.class.getResource("assets/static/css/content.css").toExternalForm());
         before.append("\" />");
         before.append("<link rel=\"stylesheet\" href=\"");
         before.append(MainApp.class.getResource("assets/static").toExternalForm());
@@ -620,7 +620,7 @@ public class MdConvertController {
             WebEngine webEngine = renderView.getEngine();
             webEngine.loadContent("<!doctype html><html lang='fr'><head><meta charset='utf-8'><base href='"
                     + MainApp.class.getResource("assets").toExternalForm() + "' /></head><body>" + result + "</body></html>");
-            webEngine.setUserStyleSheetLocation(MainApp.class.getResource("css/content.css").toExternalForm());
+            webEngine.setUserStyleSheetLocation(MainApp.class.getResource("static/css/content.css").toExternalForm());
         } catch (DOMException e) {
             logger.error(e.getMessage(), e);
         }
