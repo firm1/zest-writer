@@ -11,10 +11,7 @@ import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.com.*;
-import com.zestedesavoir.zestwriter.view.dialogs.AboutDialog;
-import com.zestedesavoir.zestwriter.view.dialogs.GoogleLoginDialog;
-import com.zestedesavoir.zestwriter.view.dialogs.LoginDialog;
-import com.zestedesavoir.zestwriter.view.dialogs.OptionsDialog;
+import com.zestedesavoir.zestwriter.view.dialogs.*;
 import com.zestedesavoir.zestwriter.view.task.*;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -637,6 +634,18 @@ public class MenuController{
             });
             exportPdfTask.start();
         }
+    }
+
+    @FXML private void HandleMdCheatSheetButtonAction(ActionEvent event){
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/MdCheatSheetDialog.fxml"));
+
+        Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.help.md_cheat_sheet"));
+        dialogStage.setResizable(false);
+
+        MdCheatSheetDialog mdCheatSheetController = loader.getController();
+        mdCheatSheetController.setMainApp(mainApp);
+
+        dialogStage.show();
     }
 
     @FXML private void HandleAboutButtonAction(ActionEvent event){

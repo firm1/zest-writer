@@ -23,29 +23,29 @@ public class Markdown {
         if(htmlTemplate == null) {
             final String HTML_TEMPLATE_LOCATION = "assets/static/html/template.html";
 
-            InputStream cheatSheetStream = MainApp.class.getResourceAsStream(HTML_TEMPLATE_LOCATION);
+            InputStream is = MainApp.class.getResourceAsStream(HTML_TEMPLATE_LOCATION);
 
-            String csStr = "";
+            String template = "";
             try {
-                csStr = IOUtils.toString(cheatSheetStream, "UTF-8");
+                template= IOUtils.toString(is, "UTF-8");
             } catch (IOException e) {
-                logger.error("Error when reading the cheatSheet stream.", e);
+                logger.error("Error when reading the template stream.", e);
             }
 
-            Matcher m = Pattern.compile("%%(.*)%%").matcher(csStr);
+            Matcher pathMatcher = Pattern.compile("%%(.*)%%").matcher(template);
 
             StringBuffer sbCheatSheet = new StringBuffer();
-            while (m.find()) {
-                String path = MainApp.class.getResource("assets" + m.group(1)).toExternalForm();
-                m.appendReplacement(sbCheatSheet, path);
+            while (pathMatcher.find()) {
+                String path = MainApp.class.getResource("assets" + pathMatcher.group(1)).toExternalForm();
+                pathMatcher.appendReplacement(sbCheatSheet, path);
             }
-            m.appendTail(sbCheatSheet);
+            pathMatcher.appendTail(sbCheatSheet);
             htmlTemplate = new String(sbCheatSheet);
         }
         return htmlTemplate;
     }
 
     public String addHeaderAndFooter(String content) {
-        return getHTMLTemplate().replaceFirst(CONTENT_KEYWORD, content);
+        return getHTMLTemplate().replaceFirst(CONTENT_KEYWORD, Matcher.quoteReplacement(content));
     }
 }
