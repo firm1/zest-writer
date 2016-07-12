@@ -11,10 +11,7 @@ import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.com.*;
-import com.zestedesavoir.zestwriter.view.dialogs.AboutDialog;
-import com.zestedesavoir.zestwriter.view.dialogs.GoogleLoginDialog;
-import com.zestedesavoir.zestwriter.view.dialogs.LoginDialog;
-import com.zestedesavoir.zestwriter.view.dialogs.OptionsDialog;
+import com.zestedesavoir.zestwriter.view.dialogs.*;
 import com.zestedesavoir.zestwriter.view.task.*;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -710,6 +707,28 @@ public class MenuController{
         });
 
         checkService.start();
+    }
+
+    @FXML private void HandlePluginsButtonAction(ActionEvent event){
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/PluginsDialog.fxml"));
+
+        Stage dialogStage = new CustomStage(loader, "Plugins");
+        dialogStage.setResizable(false);
+
+        PluginsDialog pluginsController = loader.getController();
+
+        dialogStage.show();
+    }
+
+    @FXML private void HandleThemesButtonAction(ActionEvent event){
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/ThemesDialog.fxml"));
+
+        Stage dialogStage = new CustomStage(loader, "Thèmes");
+        dialogStage.setResizable(false);
+
+        PluginsDialog pluginsController = loader.getController();
+
+        dialogStage.show();
     }
 
     public Text getLabelField(){
