@@ -1,5 +1,6 @@
 package com.zestedesavoir.zestwriter.view;
 
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -96,7 +97,8 @@ public class TableController {
         tc.setPrefWidth(150);
         TextField txf = new TextField();
         txf.setPrefWidth(150);
-        txf.setPromptText("Colonne "+(tableView.getColumns().size()+1));
+        txf.setPromptText(Configuration.bundle.getString("ui.dialog.table_editor.colon") +
+                (tableView.getColumns().size()+1));
         tc.setGraphic(txf);
         tableView.getColumns().addAll(tc);
         postAddColumn();

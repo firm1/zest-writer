@@ -93,15 +93,15 @@ public class PluginsLoader{
                     }
                 }else{
                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Plugin error");
+                    alert.setTitle(Configuration.bundle.getString("ui.plugin.error"));
                     alert.setHeaderText("Plugin");
-                    alert.setContentText("Unable to load <" + pluginFile.getName() + ">, the Main-Class has not ben founded in Manifest file");
+                    alert.setContentText(Configuration.bundle.getString("ui.plugin.error.cantload.pre") + pluginFile.getName() + Configuration.bundle.getString("ui.plugin.error.cantload.post"));
                 }
             }
 
             return plugins;
         }else{
-            logger.debug("[PLUGINS] No plugin founded in " + pluginFolder.getPath());
+            logger.debug("[PLUGINS] No plugin found in " + pluginFolder.getPath());
         }
 
         return new ArrayList<>();

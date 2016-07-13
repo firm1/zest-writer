@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.deser.impl.FieldProperty;
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
@@ -32,8 +33,8 @@ public class Container extends MetaContent implements ContentNode {
     public Container(@JsonProperty("object") String object, @JsonProperty("slug") String slug, @JsonProperty("title") String title, @JsonProperty("introduction") String introduction, @JsonProperty("conclusion") String conclusion,
             @JsonProperty("children") List<MetaContent> children) {
         super(object, slug, title);
-        this._introduction = new MetaAttribute(introduction, "Introduction");
-        this._conclusion = new MetaAttribute(conclusion, "Conclusion");
+        this._introduction = new MetaAttribute(introduction, Configuration.bundle.getString("ui.model.intro"));
+        this._conclusion = new MetaAttribute(conclusion, Configuration.bundle.getString("ui.model.conclusion"));
         this._children = children;
     }
 

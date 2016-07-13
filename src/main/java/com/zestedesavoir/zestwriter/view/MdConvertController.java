@@ -281,7 +281,7 @@ public class MdConvertController {
     @FXML private void HandleImgButtonAction(ActionEvent event) {
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/ImageInput.fxml"));
 
-        Stage dialogStage = new CustomStage(loader, "Ajouter une image");
+        Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.dialog.upload.img.title"));
 
         ImageInputDialog imageController = loader.getController();
         if(mainApp.getContents().size() > 0) {
@@ -633,8 +633,8 @@ public class MdConvertController {
 
     public void performStats() {
         Readability readText = new Readability(SourceText.getText());
-        countChars.setValue("Cararactères : "+readText.getCharacters());
-        countWords.setValue("Mots : "+readText.getWords());
+        countChars.setValue(Configuration.bundle.getString("ui.statusbar.stats.chars") + readText.getCharacters());
+        countWords.setValue(Configuration.bundle.getString("ui.statusbar.stats.words") + readText.getWords());
     }
 
     public void initStats() {

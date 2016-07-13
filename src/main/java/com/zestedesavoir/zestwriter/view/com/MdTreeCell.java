@@ -126,7 +126,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
         addMenuItem1.setOnAction(t -> {
             logger.debug("Tentative d'ajout d'un nouvel extrait");
-            TextInputDialog dialog = new TextInputDialog("Extrait");
+            TextInputDialog dialog = new TextInputDialog(Configuration.bundle.getString("ui.dialog.add_extract"));
             Extract extract;
             dialog.setTitle(Configuration.bundle.getString("ui.dialog.add_extract.title"));
             dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.add_extract.header"));

@@ -150,9 +150,10 @@ public class Corrector {
         }
         int offset = 0;
         for (RuleMatch match : matches) {
-            String desc = "Note : " + match.getRule().getDescription();
+            String desc = match.getMessage();
             if (match.getSuggestedReplacements().size() > 0) {
-                desc += "; Suggestion(s) : " + match.getSuggestedReplacements();
+                desc += Configuration.bundle.getString("ui.alert.correction.tooltip.suggestion")
+                        + match.getSuggestedReplacements();
             }
             String before = "<span class=\"error-french\" title=\"" + desc + "\">";
             bf.insert(match.getFromPos() + offset, before);
@@ -183,7 +184,7 @@ public class Corrector {
             bf.append("> ");
             bf.append(markup.getPlainText().split("[\n|\r]")[match.getLine()].replace(txt, "**" + txt + "**"));
             bf.append("\n");
-            bf.append("Source : ").append(source);
+            bf.append(Configuration.bundle.getString("ui.alert.correction.source")).append(source);
             bf.append("\n\n");
             bf.append(match.getRule().getDescription());
             bf.append("\n\n");

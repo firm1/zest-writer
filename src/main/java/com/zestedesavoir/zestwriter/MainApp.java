@@ -60,7 +60,7 @@ public class MainApp extends Application {
 
     public MainApp() {
         super();
-        logger = LoggerFactory.getLogger(MenuController.class);
+        logger = LoggerFactory.getLogger(MainApp.class);
 
         if(args.length > 0) {
             config = new Configuration(args[0]);
@@ -122,7 +122,7 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
 
         MainApp.primaryStage = primaryStage;
-        MainApp.primaryStage.setTitle("Zest Writer");
+        MainApp.primaryStage.setTitle(Configuration.bundle.getString("ui.app_name.text"));
         MainApp.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("assets/static/icons/logo.png")));
         MainApp.primaryStage.setMinWidth(800);
         MainApp.primaryStage.setMinHeight(500);
@@ -282,7 +282,7 @@ public class MainApp extends Application {
                     if(key.toString().equals("_CONTROL_C_L_E_M")){
                      // Create the custom dialog.
                         Dialog<Void> dialog = new Dialog<>();
-                        dialog.setTitle("Easter Egg");
+                        dialog.setTitle(Configuration.bundle.getString("ui.menu.easteregg"));
                         dialog.setHeaderText(null);
                         dialog.setContentText(null);
 
