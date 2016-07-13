@@ -1,6 +1,5 @@
 package com.zestedesavoir.zestwriter.view;
 
-import com.kenai.jffi.Main;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
@@ -23,17 +22,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import netscape.javascript.JSException;
@@ -96,6 +91,7 @@ public class MdConvertController {
         super();
         logger = LoggerFactory.getLogger(MdConvertController.class);
         SourceText = new CustomStyledClassedTextArea();
+        SourceText.setId("editor");
     }
 
     public MdTextController getMdBox() {

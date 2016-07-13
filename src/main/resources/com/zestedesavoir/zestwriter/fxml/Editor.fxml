@@ -23,7 +23,7 @@
                         <MaterialDesignIconView fill="#084561" glyphName="CONTENT_SAVE" size="1.8em" />
                      </graphic></Button>
                   <Separator orientation="VERTICAL" />
-                <Button mnemonicParsing="false" onAction="#HandleBoldButtonAction">
+                <Button fx:id="bold" mnemonicParsing="false" onAction="#HandleBoldButtonAction">
                 	<tooltip>
 				        <Tooltip text="%ui.editor.button.bold" />
 				    </tooltip>
@@ -31,7 +31,7 @@
                         <MaterialDesignIconView fill="#084561" glyphName="FORMAT_BOLD" size="1.8em" />
                      </graphic>
                 </Button>
-                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleItalicButtonAction">
+                <Button fx:id="italic" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleItalicButtonAction">
                 	<tooltip>
 				        <Tooltip text="%ui.editor.button.italic" />
 				    </tooltip>
@@ -39,14 +39,14 @@
                         <MaterialDesignIconView fill="#084561" glyphName="FORMAT_ITALIC" size="1.8em" />
                      </graphic></Button>
                   <Separator orientation="VERTICAL" />
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBarredButtonAction">
+                  <Button fx:id="strikethrough" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBarredButtonAction">
                   	<tooltip>
 				        <Tooltip text="%ui.editor.button.barred" />
 				    </tooltip>
                      <graphic>
                         <MaterialDesignIconView fill="#084561" glyphName="FORMAT_STRIKETHROUGH" size="1.8em" />
                      </graphic></Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleTouchButtonAction">
+                  <Button fx:id="keyboard" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleTouchButtonAction">
                   	<tooltip>
 				        <Tooltip text="%ui.editor.button.keyboard" />
 				    </tooltip>
@@ -74,14 +74,14 @@
                      <graphic>
                         <MaterialDesignIconView fill="#084561" glyphName="IMAGE" size="1.8em" />
                      </graphic></Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleExpButtonAction">
+                  <Button fx:id="superscript" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleExpButtonAction">
                   	<tooltip>
 				        <Tooltip text="%ui.editor.button.exp" />
 				    </tooltip>
                      <graphic>
                         <MaterialDesignIconView fill="#084561" glyphName="FORMAT_SUPERSCRIPT" size="1.8em" />
                      </graphic></Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleIndButtonAction">
+                  <Button fx:id="subscript" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleIndButtonAction">
                   	<tooltip>
 				        <Tooltip text="%ui.editor.button.ind" />
 				    </tooltip>
@@ -89,14 +89,14 @@
                         <MaterialDesignIconView fill="#084561" glyphName="FORMAT_SUBSCRIPT" size="1.8em" />
                      </graphic></Button>
                   <Separator orientation="VERTICAL" />
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleCenterButtonAction">
+                  <Button fx:id="center" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleCenterButtonAction">
                   	<tooltip>
 				        <Tooltip text="%ui.editor.button.center" />
 				    </tooltip>
                      <graphic>
                         <MaterialDesignIconView fill="#084561" glyphName="FORMAT_ALIGN_CENTER" size="1.8em" />
                      </graphic></Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleRightButtonAction">
+                  <Button fx:id="right" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleRightButtonAction">
                   	<tooltip>
 				        <Tooltip text="%ui.editor.button.right" />
 				    </tooltip>
@@ -104,14 +104,14 @@
                         <MaterialDesignIconView fill="#084561" glyphName="FORMAT_ALIGN_RIGHT" size="1.8em" />
                      </graphic></Button>
                   <Separator orientation="VERTICAL" />
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBulletButtonAction">
+                  <Button fx:id="bullet" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBulletButtonAction">
                   	<tooltip>
 				        <Tooltip text="%ui.editor.button.bullet" />
 				    </tooltip>
                      <graphic>
                         <MaterialDesignIconView fill="#084561" glyphName="FORMAT_LIST_BULLETED" size="1.8em" />
                      </graphic></Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleNumberedButtonAction">
+                  <Button fx:id="numbered" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleNumberedButtonAction">
                   	<tooltip>
 				        <Tooltip text="%ui.editor.button.numbered" />
 				    </tooltip>
@@ -119,14 +119,14 @@
                         <MaterialDesignIconView fill="#084561" glyphName="FORMAT_LIST_NUMBERS" size="1.8em" />
                      </graphic></Button>
                   <Separator orientation="VERTICAL" />
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleHeaderButtonAction">
+                  <Button fx:id="header" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleHeaderButtonAction">
                   	<tooltip>
 				        <Tooltip text="%ui.editor.button.header" />
 				    </tooltip>
                      <graphic>
                         <MaterialDesignIconView fill="#084561" glyphName="FORMAT_HEADER_INCREASE" size="1.8em" />
                      </graphic></Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleQuoteButtonAction">
+                  <Button fx:id="quote" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleQuoteButtonAction">
                   	<tooltip>
 				        <Tooltip text="%ui.editor.button.quote" />
 				    </tooltip>
