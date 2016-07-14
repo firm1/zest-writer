@@ -1,8 +1,10 @@
-package com.zestedesavoir.zestwriter.plugins;
+package com.zestedesavoir.zestwriter.utils.api;
 
 
+import com.zestedesavoir.zestwriter.utils.api.ApiMapper;
 import com.zestedesavoir.zestwriter.view.MenuController;
-import org.apache.log4j.LogManager;
+import com.zestedesavoir.zestwriter.view.com.CustomAlert;
+import javafx.scene.control.Alert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +16,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 
-public class PluginApi{
+public class ApiRequester{
     private static Logger logger = LoggerFactory.getLogger(MenuController.class);
     private static String apiUrl = "http://zw.winxaito.com/api/";
+
+    private boolean apiOk;
 
     public enum RequestMethod{
         GET("GET"),
@@ -31,15 +35,21 @@ public class PluginApi{
         }
     }
 
-    public PluginApi(){
-        try{
-            request(new URL(apiUrl + "plugins"), RequestMethod.GET);
-        }catch(MalformedURLException e){
-            e.printStackTrace();
+    public ApiRequester(){
+        if(apiTest() != 200){
+            apiAlert();
+            apiOk = false;
+        }else{
+            apiOk = true;
         }
     }
 
     public StringBuilder request(URL url, RequestMethod method){
+        if(!apiOk){
+            apiAlert();
+            return null;
+        }
+
         StringBuilder response = new StringBuilder();
 
         try{
@@ -72,5 +82,43 @@ public class PluginApi{
         }
 
         return response;
+    }
+
+    public boolean isApiOk(){
+        return apiOk;
+    }
+
+    public void setApiOk(boolean apiOk){
+        this.apiOk = apiOk;
+    }
+
+    private void apiAlert(){
+        Alert alert = new CustomAlert(Alert.AlertType.NONE);
+        alert.setAlertType(Alert.AlertType.ERROR);
+        alert.setTitle("Connexion à l'API");
+        alert.setContentText("Une erreur est survenu lors de la connexion à l'API de zest-writer. Merci de signaler ce problème.");
+        alert.showAndWait();
+    }
+
+    private int apiTest(){
+        int code = 0;
+        logger.debug("Try to connect to API: " + apiUrl);
+
+        try{
+            HttpURLConnection connection = (HttpURLConnection)new URL(apiUrl).openConnection();
+            connection.setRequestMethod("GET");
+            connection.connect();
+
+            code = connection.getResponseCode();
+
+            if(code == 200)
+                logger.debug("Connexion to API : OK (Status -> 200)");
+            else
+                logger.error("Error for connect to API (" + apiUrl + ") (Status -> " + code + ")");
+        }catch(IOException e){
+            logger.error(e.getMessage(), e);
+        }
+
+        return code;
     }
 }
