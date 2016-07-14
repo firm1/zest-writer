@@ -15,8 +15,8 @@ public class ApiDownloader extends Observable implements Runnable{
 
     private static final int MAX_BUFFER_SIZE = 1024;
     private URL url;
-    private int size;
-    private int downloaded;
+    private int size = -1;
+    private int downloaded = 0;
     private Status status;
 
     public enum Status{
@@ -34,6 +34,7 @@ public class ApiDownloader extends Observable implements Runnable{
     }
 
     private void download(){
+        status = Status.DOWNLOAD;
         Thread t = new Thread(this);
         t.start();
     }
@@ -99,11 +100,13 @@ public class ApiDownloader extends Observable implements Runnable{
             if(contentLength < 1)
                 error();
 
+            if(size == -1)
+                size = contentLength;
+
             file = new RandomAccessFile(getFileName(url), "rw");
             file.seek(downloaded);
 
             stream = connection.getInputStream();
-
             while (status == Status.DOWNLOAD) {
                 byte buffer[];
                 if (size - downloaded > MAX_BUFFER_SIZE) {

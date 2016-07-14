@@ -14,13 +14,13 @@ import java.util.List;
  *  ]
  */
 public class ApiContentsResponse{
-    private List<ApiContentResponse> plugins;
+    private List<ApiContentResponse> contents;
 
-    public List<ApiContentResponse> getPlugins(){
-        return plugins;
+    public List<ApiContentResponse> getContents(){
+        return contents;
     }
 
-    public void setPlugins(List<ApiContentResponse> plugins){
-        this.plugins = plugins;
+    public void setContents(List<ApiContentResponse> contents){
+        this.contents = contents;
     }
 }

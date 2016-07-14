@@ -15,8 +15,8 @@ public class ApiMapper{
         try{
             contents = mapper.readValue(json, ApiContentsResponse.class);
 
-            for(ApiContentResponse plugin : contents.getPlugins()){
-                logger.debug("  " + plugin.toString());
+            for(ApiContentResponse content : contents.getContents()){
+                logger.debug("  " + content.toString());
             }
         }catch(IOException e){
             logger.error(e.getMessage(), e);

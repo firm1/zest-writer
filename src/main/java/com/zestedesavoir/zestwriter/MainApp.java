@@ -42,7 +42,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class MainApp extends Application {
+public class MainApp extends Application{
     public static Configuration config;
     private static Stage primaryStage;
     private static ZdsHttp zdsutils;
@@ -52,7 +52,7 @@ public class MainApp extends Application {
     private ObservableList<Content> contents = FXCollections.observableArrayList();
     private MdTextController Index;
     private StringBuilder key = new StringBuilder();
-    private Logger logger;
+    private static Logger logger = LoggerFactory.getLogger(MenuController.class);
     private MenuController menuController;
     private PluginsManager pm;
     public static String[] args;
@@ -60,7 +60,6 @@ public class MainApp extends Application {
 
     public MainApp() {
         super();
-        logger = LoggerFactory.getLogger(MenuController.class);
 
         if(args.length > 0) {
             config = new Configuration(args[0]);
