@@ -29,33 +29,6 @@ import static com.zestedesavoir.zestwriter.utils.ZdsHttp.toSlug;
 public class GithubHttp {
     static Logger logger = LoggerFactory.getLogger(GithubHttp.class);
 
-    public static Content importGithub(String url, String offlineFolder, String onlineFolder) throws IOException {
-        String[] elts = url.split("/");
-        if(elts.length>4) {
-            String owner = elts[3];
-            String repo = elts[4];
-            String filePath = GithubHttp.getGithubZipball(owner, repo, onlineFolder);
-            File folder = unzipOnlineContent(filePath, offlineFolder);
-            logger.info ("Répertoire à analyser : "+folder.getAbsolutePath ());
-            // get folder in unzip folder
-            File[] listFolder = folder.listFiles();
-            if(listFolder.length > 0 ) {
-                if(listFolder[0].isDirectory()) {
-                    File target = listFolder[0];
-                    logger.info ("Répertoire cilbe : "+target.getAbsolutePath ());
-                    Content c = loadManifest(target.getAbsolutePath(), owner, repo);
-
-                    ObjectMapper mapper = new ObjectMapper();
-                    File manifest = new File(target, "manifest.json");
-                    logger.info ("Tentative de création du fichier : "+manifest.getAbsolutePath ());
-                    mapper.writerWithDefaultPrettyPrinter().writeValue(manifest, c);
-                    return c;
-                }
-            }
-        }
-        return null;
-    }
-
     public static String getGithubZipball(String owner, String repo, String destFolder) throws IOException {
         CloseableHttpClient httpclient = HttpClients.custom()
                 .setRedirectStrategy(new LaxRedirectStrategy())
@@ -87,11 +60,11 @@ public class GithubHttp {
         logger.debug("Tentative de dezippage de " + zipFilePath + " dans " + folder.getAbsolutePath());
         if (!folder.exists()) {
             folder.mkdir();
-            ZipUtil.unpack(new File(zipFilePath), folder);
             logger.info("Dézippage dans " + folder.getAbsolutePath() + " réalisé avec succès");
         } else {
             logger.debug("Le répertoire dans lequel vous souhaitez dezipper existe déjà ");
         }
+        ZipUtil.unpack(new File(zipFilePath), folder);
         return folder;
     }
 
@@ -107,13 +80,25 @@ public class GithubHttp {
         }
         Content current = new Content("container", toSlug(title), title, "introduction.md", "conclusion.md", new ArrayList<MetaContent>(), 2, "CC-BY", title, "TUTORIAL");
         // read all directory
-        current.getChildren ().addAll (loadDirecotry (folder.length () + File.separator.length (), new File(folder)));
+        current.getChildren ().addAll (loadDirectory (folder.length () + File.separator.length (), new File(folder)));
         current.setBasePath (folder);
+        File fileIntro = new File (current.getFilePath (), "introduction.md");
+        File fileConclu = new File (current.getFilePath (), "conclusion.md");
+        try {
+            if(!fileIntro.exists ()) {
+                fileIntro.createNewFile ();
+            }
+            if(!fileConclu.exists ()) {
+                fileConclu.createNewFile ();
+            }
+        } catch (IOException e) {
+            e.printStackTrace ();
+        }
 
         return current;
     }
 
-    private static List<MetaContent> loadDirecotry(int countBase, File folder) {
+    private static List<MetaContent> loadDirectory(int countBase, File folder) {
         List<MetaContent> metas = new ArrayList<> ();
         File[] listF = folder.listFiles();
         for(File file : listF) {
@@ -124,18 +109,32 @@ public class GithubHttp {
                 intro = intro.replace (File.separator, "/");
                 conclu = conclu.replace (File.separator, "/");
                 MetaContent container = new Container ("container", ZdsHttp.toSlug (name), name, intro ,conclu, new ArrayList<MetaContent> ());
-                ((Container)container).getChildren().addAll (loadDirecotry (countBase, file));
+                ((Container)container).getChildren().addAll (loadDirectory (countBase, file));
                 metas.add(container);
+                File fileIntro = new File (file, "introduction.md");
+                File fileConclu = new File (file, "conclusion.md");
+                try {
+                    if(!fileIntro.exists ()) {
+                        fileIntro.createNewFile ();
+                    }
+                    if(!fileConclu.exists ()) {
+                        fileConclu.createNewFile ();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace ();
+                }
             } else if(file.isFile ()) {
                 int pos = name.lastIndexOf(".");
                 if (name.endsWith ("md")) {
-                    if (pos > 0) {
-                        name = name.substring(0, pos);
+                    if((! name.equals ("introduction.md")) && (! name.equals ("conclusion.md")) ) {
+                        if (pos > 0) {
+                            name = name.substring (0, pos);
+                        }
+                        String text = file.getAbsolutePath ().substring (countBase);
+                        text = text.replace (File.separator, "/");
+                        MetaContent extract = new Extract ("extract", ZdsHttp.toSlug (name), name, text);
+                        metas.add (extract);
                     }
-                    String text = file.getAbsolutePath ().substring (countBase);
-                    text = text.replace (File.separator, "/");
-                    MetaContent extract = new Extract ("extract", ZdsHttp.toSlug (name), name, text);
-                    metas.add (extract);
                 }
             }
         }

@@ -407,7 +407,7 @@ public class ZdsHttp {
                 logger.debug("Your are not authorize to do this task. Please check if your are login");
         }
 
-        return statusCode == 200;
+        return statusCode == 200 && (! resultPost.getValue ().contains ("alert-box alert"));
     }
     public boolean importNewContent(String filePath, String msg) throws IOException {
 
