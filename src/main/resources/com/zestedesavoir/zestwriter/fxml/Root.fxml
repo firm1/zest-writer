@@ -114,6 +114,7 @@
             </Menu>
           <Menu mnemonicParsing="false" text="%ui.menu.help">
             <items>
+              <MenuItem fx:id="menuMdCheatSheet" mnemonicParsing="false" onAction="#HandleMdCheatSheetButtonAction" text="%ui.menu.help.md_cheat_sheet" />
               <MenuItem fx:id="menuAbout" mnemonicParsing="false" onAction="#HandleAboutButtonAction" text="%ui.menu.help.about" />
               <MenuItem mnemonicParsing="false" onAction="#HandleCheckUpdateButtonAction" text="%ui.menu.help.check_update" />
             </items>

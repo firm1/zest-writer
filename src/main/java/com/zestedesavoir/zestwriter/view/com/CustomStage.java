@@ -22,7 +22,7 @@ public class CustomStage extends Stage{
             e.printStackTrace();
         }
         setScene(scene);
-        getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
+        getIcons().add(new Image(MainApp.class.getResourceAsStream("images/logo.png")));
         initModality(Modality.APPLICATION_MODAL);
     }
 }

@@ -99,8 +99,8 @@ task fatJar(type: Jar) {
 }
 
 minifyCss {
-    source = "${sourceSets.main.resources.srcDirs.first()}/com/zestedesavoir/zestwriter/css/content.css"
-    dest = "${sourceSets.main.output.resourcesDir}/com/zestedesavoir/zestwriter/css/content.css"
+    source = "${sourceSets.main.resources.srcDirs.first()}/com/zestedesavoir/zestwriter/assets/static/css/content.css"
+    dest = "${sourceSets.main.output.resourcesDir}/com/zestedesavoir/zestwriter/assets/static/css/content.css"
     yuicompressor { // Optional
         lineBreakPos = -1
     }
