@@ -640,10 +640,8 @@ public class MenuController{
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/MdCheatSheetDialog.fxml"));
 
         Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.help.md_cheat_sheet"));
-        dialogStage.setResizable(false);
 
         MdCheatSheetDialog mdCheatSheetController = loader.getController();
-        mdCheatSheetController.setMainApp(mainApp);
 
         dialogStage.show();
     }
