@@ -237,14 +237,25 @@ public class Configuration {
     }
 
     public String getPluginsPath(){
-        if(conf.containsKey(ConfigData.PluginPath.getKey()))
-            return conf.getProperty(ConfigData.PluginPath.getKey());
+        if(conf.containsKey(ConfigData.PluginsPath.getKey()))
+            return conf.getProperty(ConfigData.PluginsPath.getKey());
         else
             return getWorkspacePath() + "/plugins";
     }
 
-    public void setPluginPath(String path){
-        conf.setProperty(ConfigData.PluginPath.getKey(), path);
+    public void setPluginsPath(String path){
+        conf.setProperty(ConfigData.PluginsPath.getKey(), path);
+    }
+
+    public String getThemesPath(){
+        if(conf.containsKey(ConfigData.ThemesPath.getKey()))
+            return conf.getProperty(ConfigData.ThemesPath.getKey());
+        else
+            return getWorkspacePath() + "/themes";
+    }
+
+    public void setThemesPath(String path){
+        conf.setProperty(ConfigData.ThemesPath.getKey(), path);
     }
 
     public Boolean getEditorSmart(){
@@ -362,6 +373,39 @@ public class Configuration {
         conf.setProperty(ConfigData.AuthentificationPassword.getKey(), password);
     }
 
+    public String getAdvancedApiServerProtocol(){
+        if(conf.containsKey(ConfigData.AdvancedApiServerProtocol.getKey()))
+            return conf.getProperty(ConfigData.AdvancedApiServerProtocol.getKey());
+        else
+            return ConfigData.AdvancedApiServerProtocol.getDefaultValue();
+    }
+
+    public void setAdvancedApiServerProtocol(String protocol){
+        conf.setProperty(ConfigData.AdvancedApiServerProtocol.getKey(), protocol);
+    }
+
+    public String getAdvancedApiServerHost(){
+        if(conf.containsKey(ConfigData.AdvancedApiServerHost.getKey()))
+            return conf.getProperty(ConfigData.AdvancedApiServerHost.getKey());
+        else
+            return ConfigData.AdvancedApiServerHost.getDefaultValue();
+    }
+
+    public void setAdvancedApiServerHost(String host){
+        conf.setProperty(ConfigData.AdvancedApiServerHost.getKey(), host);
+    }
+
+    public String getAdvancedApiServerPort(){
+        if(conf.containsKey(ConfigData.AdvancedApiServerPort.getKey()))
+            return conf.getProperty(ConfigData.AdvancedApiServerPort.getKey());
+        else
+            return ConfigData.AdvancedApiServerPort.getDefaultValue();
+    }
+
+    public void setAdvancedApiServerPort(String port){
+        conf.setProperty(ConfigData.AdvancedApiServerPort.getKey(), port);
+    }
+
     public String getAdvancedServerProtocol(){
         if(conf.containsKey(ConfigData.AdvancedServerProtocol.getKey()))
             return conf.getProperty(ConfigData.AdvancedServerProtocol.getKey());
@@ -418,7 +462,7 @@ public class Configuration {
         if(value != null ) {
             return Arrays.asList(value.split(","));
         } else {
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
     }
 
@@ -432,7 +476,6 @@ public class Configuration {
 
         actions.put(ActionData.LastProjects.getKey(), recents.stream().limit(5).map(Object::toString).collect(Collectors.joining(",")));
         saveActionFile();
-        return ;
     }
 
     public void delActionProject(String projectFileName) {
@@ -443,7 +486,6 @@ public class Configuration {
         }
         actions.put(ActionData.LastProjects.getKey(), recents.stream().limit(5).map(Object::toString).collect(Collectors.joining(",")));
         saveActionFile();
-        return ;
     }
 
     public enum ActionData{
@@ -472,7 +514,8 @@ public class Configuration {
         DisplayWindowPositionY("data.display.window.position.y", "0"),
 
         WorkspacePath("options.workspace.path", ""),
-        PluginPath("options.workspace.plugins.path", ""),
+        PluginsPath("options.workspace.plugins.path", ""),
+        ThemesPath("options.workspace.themes.path", ""),
         EditorSmart("options.editor.smart", "true"),
         EditorFont("options.editor.font", "Fira Mono"),
         EditorFontSize("options.editor.fontSize", "14"),
@@ -484,6 +527,10 @@ public class Configuration {
         DisplayWindowMaximize("options.display.window.maximize", "false"),
         AuthentificationUsername("options.authentification.username", ""),
         AuthentificationPassword("options.authentification.password", ""),
+        AdvancedApiServerProtocol("options.advanced.protocol", "http"),
+        AdvancedApiServerHost("options.advanced.host", "winxaito.com"),
+        AdvancedApiServerUri("options.advanced.host", "api"),
+        AdvancedApiServerPort("options.advanced.port", "80"),
         AdvancedServerProtocol("options.advanced.protocol", "https"),
         AdvancedServerHost("options.advanced.host", "zestedesavoir.com"),
         AdvancedServerPort("options.advanced.port", "80");
