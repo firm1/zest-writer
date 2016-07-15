@@ -1,8 +1,8 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
+import com.kenai.jffi.Main;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.utils.Markdown;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -13,42 +13,39 @@ import org.zeroturnaround.zip.commons.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MdCheatSheetDialog {
     private final String CHEAT_SHEET_LOCATION = "assets/static/html/zMdCheatSheet.html";
-    private final String TITLE_REGEX = "<!--(.*)-->\n";
+    private final String TITLE_REGEX = "<!--(.*)-->";
 
-    private MainApp mainApp;
     @FXML private TabPane cheatSheetTabPane;
     private Logger logger;
-    private List<String> chaptersTitles;
-    private String[] chaptersContents;
 
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
+    public MdCheatSheetDialog() {
+        logger = LoggerFactory.getLogger(getClass ());
+    }
 
-        chaptersTitles = new ArrayList<>();
 
-        InputStream is = MainApp.class.getResourceAsStream(CHEAT_SHEET_LOCATION);
+    @FXML private void initialize() {
+        List<String> chaptersTitles = new ArrayList<>();
+
         String cheatSheet = "";
         try {
-            cheatSheet = IOUtils.toString(is, "UTF-8");
+            cheatSheet = IOUtils.toString(MainApp.class.getResourceAsStream(CHEAT_SHEET_LOCATION), "UTF-8");
         } catch (IOException e) {
             logger.error("Error when reading the cheatSheet stream.", e);
         }
 
         Matcher titleMatcher = Pattern.compile(TITLE_REGEX).matcher(cheatSheet);
         while (titleMatcher.find()) {
-            String lang = "ui.md_cheat_sheet." + titleMatcher.group(1);
-            System.out.println(lang);
             chaptersTitles.add(Configuration.bundle.getString("ui.md_cheat_sheet." + titleMatcher.group(1)));
         }
 
-        chaptersContents = cheatSheet.split(TITLE_REGEX);
+        String[] chaptersContents = cheatSheet.split(TITLE_REGEX);
 
         List<Tab> tabs = cheatSheetTabPane.getTabs();
 
@@ -58,7 +55,7 @@ public class MdCheatSheetDialog {
             tab.setText(chaptersTitles.get(i-1));
 
             WebView webView = new WebView();
-            String chapterContent = mainApp.getMdUtils().addHeaderAndFooter(chaptersContents[i]);
+            String chapterContent = MainApp.getMdUtils ().addHeaderAndFooter(chaptersContents[i]);
             webView.getEngine().loadContent(chapterContent);
 
             tab.setContent(webView);

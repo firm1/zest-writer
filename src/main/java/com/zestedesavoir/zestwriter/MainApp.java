@@ -47,6 +47,7 @@ public class MainApp extends Application {
     public static Configuration config;
     private static Stage primaryStage;
     private static ZdsHttp zdsutils;
+    private static Markdown mdUtils;
     private Scene scene;
     private BorderPane rootLayout;
     private ObservableMap<Textual, Tab> extracts = FXCollections.observableMap(new HashMap<>());
@@ -56,7 +57,6 @@ public class MainApp extends Application {
     private Logger logger;
     private MenuController menuController;
     private PluginsManager pm;
-    private Markdown mdUtils;
     public static String[] args;
     public static File defaultHome;
 
@@ -120,7 +120,7 @@ public class MainApp extends Application {
         return pm;
     }
 
-    public Markdown getMdUtils() { return mdUtils; }
+    public static Markdown getMdUtils() { return mdUtils; }
 
     @Override
     public void start(Stage primaryStage) {
