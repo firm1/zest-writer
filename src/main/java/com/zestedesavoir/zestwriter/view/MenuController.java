@@ -1,7 +1,6 @@
 package com.zestedesavoir.zestwriter.view;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kenai.jffi.Main;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.MetadataContent;
@@ -24,18 +23,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -709,24 +705,14 @@ public class MenuController{
         checkService.start();
     }
 
-    @FXML private void HandlePluginsButtonAction(ActionEvent event){
-        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/PluginsDialog.fxml"));
+    @FXML private void HandleContentsButtonAction(ActionEvent event){
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/ContentsDialog.fxml"));
 
-        Stage dialogStage = new CustomStage(loader, "Plugins");
+        Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.tools.external_contents"));
         dialogStage.setResizable(false);
 
-        PluginsDialog pluginsController = loader.getController();
-
-        dialogStage.show();
-    }
-
-    @FXML private void HandleThemesButtonAction(ActionEvent event){
-        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/ThemesDialog.fxml"));
-
-        Stage dialogStage = new CustomStage(loader, "Thèmes");
-        dialogStage.setResizable(false);
-
-        PluginsDialog pluginsController = loader.getController();
+        ContentsDialog pluginsController = loader.getController();
+        pluginsController.setWindow(dialogStage);
 
         dialogStage.show();
     }
