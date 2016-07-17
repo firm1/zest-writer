@@ -1,13 +1,11 @@
-package com.zestedesavoir.zestwriter.plugins;
+package com.zestedesavoir.zestwriter.contents.plugins;
 
 
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.view.com.CustomAlert;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

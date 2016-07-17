@@ -1,4 +1,4 @@
-package com.zestedesavoir.zestwriter.plugins;
+package com.zestedesavoir.zestwriter.contents.plugins;
 
 
 public class ZwPluginVersion{

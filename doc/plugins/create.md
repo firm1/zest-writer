@@ -8,8 +8,8 @@ Nous vous conseillons de télécharger les fichiers modèles, disponible pour [I
 package com.winxaito.main;
 
 import com.zestedesavoir.zestwriter.MainApp;
-import com.zestedesavoir.zestwriter.plugins.ZwPlugin;
-import com.zestedesavoir.zestwriter.plugins.ZwPluginVersion;
+import com.zestedesavoir.zestwriter.contents.plugins.ZwPlugin;
+import com.zestedesavoir.zestwriter.contents.plugins.ZwPluginVersion;
 
 import java.util.ArrayList;
 

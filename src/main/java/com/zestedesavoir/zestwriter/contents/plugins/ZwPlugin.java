@@ -1,11 +1,9 @@
-package com.zestedesavoir.zestwriter.plugins;
+package com.zestedesavoir.zestwriter.contents.plugins;
 
 
 import com.zestedesavoir.zestwriter.MainApp;
-import com.zestedesavoir.zestwriter.view.MdConvertController;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public interface ZwPlugin{
     void onEnable(MainApp mainApp);

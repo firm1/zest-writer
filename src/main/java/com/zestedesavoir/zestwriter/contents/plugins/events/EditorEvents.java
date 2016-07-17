@@ -1,4 +1,4 @@
-package com.zestedesavoir.zestwriter.plugins.events;
+package com.zestedesavoir.zestwriter.contents.plugins.events;
 
 
 public interface EditorEvents{

@@ -1,4 +1,4 @@
-package com.zestedesavoir.zestwriter.plugins.menus;
+package com.zestedesavoir.zestwriter.contents.plugins.menus;
 
 
 import com.zestedesavoir.zestwriter.MainApp;
