@@ -2,6 +2,7 @@ package com.zestedesavoir.zestwriter.contents.plugins;
 
 
 import com.zestedesavoir.zestwriter.MainApp;
+import com.zestedesavoir.zestwriter.contents.internal.ContentsConfig;
 import com.zestedesavoir.zestwriter.contents.plugins.app.AppEditorEvents;
 import com.zestedesavoir.zestwriter.contents.plugins.app.AppWindowEvents;
 import com.zestedesavoir.zestwriter.view.MdConvertController;
@@ -20,6 +21,7 @@ public class PluginsManager{
     public PluginsManager(MainApp mainApp){
         logger = LoggerFactory.getLogger(PluginsManager.class);
         this.mainApp = mainApp;
+
         pluginsLoader = new PluginsLoader(mainApp);
         plugins = pluginsLoader.getPlugins();
 

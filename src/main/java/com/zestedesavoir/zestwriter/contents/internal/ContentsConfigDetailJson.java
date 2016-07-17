@@ -12,6 +12,7 @@ public class ContentsConfigDetailJson{
     private String url_id;
     private String plugin_url;
     private String download_url;
+    private boolean enabled;
 
     public ContentsConfigDetailJson(){
     }
@@ -86,5 +87,13 @@ public class ContentsConfigDetailJson{
 
     public void setDownload_url(String download_url){
         this.download_url = download_url;
+    }
+
+    public boolean isEnabled(){
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled){
+        this.enabled = enabled;
     }
 }

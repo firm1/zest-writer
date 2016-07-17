@@ -1,6 +1,9 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
 import com.zestedesavoir.zestwriter.MainApp;
+import com.zestedesavoir.zestwriter.contents.internal.ContentsConfig;
+import com.zestedesavoir.zestwriter.contents.internal.ContentsConfigDetailJson;
+import com.zestedesavoir.zestwriter.contents.internal.ContentsConfigJson;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.api.*;
 import com.zestedesavoir.zestwriter.view.com.CustomAlert;
@@ -86,80 +89,84 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
             if(!themesDir.mkdirs())
                 logger.error("Error for create themes directory");
 
-        listOfficialInstalledThemes.getItems().add("Aucun thème n'est installé");
-        listUnofficialInstalledThemes.getItems().add("Aucun thème n'est installé");
-        listOfficialInstalledPlugins.getItems().add("Aucun thème n'est installé");
-        listUnofficialInstalledPlugins.getItems().add("Aucun thème n'est installé");
+        loadInstalledContents();
 
         ApiRequester requester = new ApiRequester();
         ApiMapper mapper;
 
         if(!requester.isApiOk()){
             alert(Alert.AlertType.ERROR, "API: Erreur", "Une errer est survenu lors du contact de l'API", "http://zw.winxaito.com/api/");
-            return;
-        }
+            listPlugins.getItems().add("Erreur lors du contact de l'API");
+            listThemes.getItems().add("Erreur lors du contact de l'API");
+        }else{
+            //Get plugins
+            try{
+                StringBuilder json = requester.request(new URL("http://zw.winxaito.com/api/plugins"), ApiRequester.RequestMethod.GET);
+                mapper = new ApiMapper(json.toString());
+                ApiContentsResponse pluginsContents = mapper.getContents();
+                String validate = "";
 
-        //Get plugins
-        try{
-            StringBuilder json = requester.request(new URL("http://zw.winxaito.com/api/plugins"), ApiRequester.RequestMethod.GET);
-            mapper = new ApiMapper(json.toString());
-            ApiContentsResponse pluginsContents = mapper.getContents();
-            String validate = "";
+                if(pluginsContents == null){
+                    listPlugins.getItems().add("Aucun plugin n'a été trouvé");
+                }else{
+                    int i = 0;
+                    for(ApiContentResponse plugin : pluginsContents.getContents()){
+                        if(plugin.isOfficial())
+                            continue;
 
-            if(pluginsContents == null){
-                listPlugins.getItems().add("Aucun plugin n'a été trouvé");
-            }else{
-                int i = 0;
-                for(ApiContentResponse plugin : pluginsContents.getContents()){
-                    plugins.put(i, plugin);
+                        plugins.put(i, plugin);
 
-                    if(plugin.isValidate())
-                        validate = "[VALIDE] ";
-                    else
-                        validate = "";
+                        if(plugin.isValidate())
+                            validate = "[VALIDE] ";
+                        else
+                            validate = "";
 
-                    listPlugins.getItems().add("[" + plugin.getVersion() + "] " + validate + plugin.getName());
-                    i++;
+                        listPlugins.getItems().add("[" + plugin.getVersion() + "] " + validate + plugin.getName());
+                        i++;
+                    }
                 }
+            }catch(MalformedURLException e){
+                logger.error(e.getMessage(), e);
             }
-        }catch(MalformedURLException e){
-            logger.error(e.getMessage(), e);
-        }
 
-        //Get themes
-        try{
-            StringBuilder json = requester.request(new URL("http://zw.winxaito.com/api/themes"), ApiRequester.RequestMethod.GET);
-            mapper = new ApiMapper(json.toString());
-            ApiContentsResponse themesContents = mapper.getContents();
-            String validate = "";
+            //Get themes
+            try{
+                StringBuilder json = requester.request(new URL("http://zw.winxaito.com/api/themes"), ApiRequester.RequestMethod.GET);
+                mapper = new ApiMapper(json.toString());
+                ApiContentsResponse themesContents = mapper.getContents();
+                String validate = "";
 
-            if(themesContents == null){
-                listThemes.getItems().add("Aucun thème n'a été trouvé");
-            }else{
-                int i = 0;
-                for(ApiContentResponse theme : themesContents.getContents()){
-                    themes.put(i, theme);
+                if(themesContents == null){
+                    listThemes.getItems().add("Aucun thème n'a été trouvé");
+                }else{
+                    int i = 0;
+                    for(ApiContentResponse theme : themesContents.getContents()){
+                        if(theme.isOfficial())
+                            continue;
 
-                    if(theme.isValidate())
-                        validate = "[VALIDE] ";
-                    else
-                        validate = "";
+                        themes.put(i, theme);
 
-                    listThemes.getItems().add("[" + theme.getVersion() + "] " + validate + theme.getName());
-                    i++;
+                        if(theme.isValidate())
+                            validate = "[VALIDE] ";
+                        else
+                            validate = "";
+
+                        listThemes.getItems().add("[" + theme.getVersion() + "] " + validate + theme.getName());
+                        i++;
+                    }
                 }
+            }catch(MalformedURLException e){
+                logger.error(e.getMessage(), e);
             }
-        }catch(MalformedURLException e){
-            logger.error(e.getMessage(), e);
+
+            listPlugins.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                currentPlugin = (String)newValue;
+            });
+
+            listThemes.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                currentTheme = (String)newValue;
+            });
         }
-
-        listPlugins.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            currentPlugin = (String)newValue;
-        });
-
-        listThemes.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            currentTheme = (String)newValue;
-        });
     }
 
     @FXML private void handleListPluginInfos(){
@@ -349,6 +356,27 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
         );
     }
 
+    private void loadInstalledContents(){
+        ContentsConfig contentsConfig = MainApp.getContentsConfig();
+        ContentsConfigJson configJson = contentsConfig.getConfigJson();
+
+        for(ContentsConfigDetailJson detailJson : configJson.getContents()){
+            if(detailJson.getContentsType() == ContentType.PLUGIN)
+                listUnofficialInstalledPlugins.getItems().add("[" + detailJson.getVersion() + "] " + detailJson.getName());
+            else if(detailJson.getContentsType() == ContentType.THEME)
+                listUnofficialInstalledThemes.getItems().add("[" + detailJson.getVersion() + "] " + detailJson.getName());
+        }
+
+        if(listOfficialInstalledPlugins.getItems().size() == 0)
+            listOfficialInstalledPlugins.getItems().add("Aucun plugin officiel n'est installé");
+        if(listOfficialInstalledThemes.getItems().size() == 0)
+            listOfficialInstalledThemes.getItems().add("Aucun thème officiel n'est installé");
+        if(listUnofficialInstalledPlugins.getItems().size() == 0)
+            listUnofficialInstalledPlugins.getItems().add("Aucun plugin non officiel n'est installé");
+        if(listUnofficialInstalledThemes.getItems().size() == 0)
+            listUnofficialInstalledThemes.getItems().add("Aucun thème non officiel n'est installé");
+    }
+
     @Override
     public void onDownloadError(){
         Platform.runLater(this::errorAlert);
@@ -368,8 +396,7 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
 
     @Override
     public void onInstallSuccess(){
-        MainApp.getContentsConfig().addContents(apiDownloader.getContentType(), apiDownloader.getContent());
-
+        MainApp.getContentsConfig().addContents(ContentsConfig.ConfigType.UNOFFICIAL, apiDownloader.getContentType(), apiDownloader.getContent());
         Platform.runLater(this::successAlert);
     }
 }

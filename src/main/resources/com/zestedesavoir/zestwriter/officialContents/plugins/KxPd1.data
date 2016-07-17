@@ -1,0 +1,16 @@
+{
+  "id": 1,
+  "name": "Un plugin d'exemple",
+  "user": {
+    "id": 1,
+    "name": "Unknown"
+  },
+  "official": true,
+  "validate": true,
+  "description": "Une superbe description du plugin",
+  "version": "0.0.0",
+  "downloads": 20,
+  "url_id": "KxPd1",
+  "plugin_url": "https://zw.winxaito.com/api/plugin/KxPd1",
+  "download_url": "https://zw.winxaito.com/api/plugin/download/KxPd1"
+}
