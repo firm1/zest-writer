@@ -1,3 +1,4 @@
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.junit.Before;
@@ -18,6 +19,7 @@ public class TestCorrect {
 
     @Before
     public void setUp() {
+        Configuration config = new Configuration (System.getProperty("java.io.tmpdir"));
         corrector = new Corrector();
     }
 

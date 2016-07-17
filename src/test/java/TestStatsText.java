@@ -1,5 +1,6 @@
 import static org.junit.Assert.assertEquals;
 
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,10 +9,12 @@ import com.zestedesavoir.zestwriter.utils.readability.Readability;
 public class TestStatsText {
 
     String text = "Bonjour mon nom est toto, et toi ?\n\nBah moi je suis un jeune ami\ntrès important.";
+
     @Before
     public void setUp() throws Exception {
-
+        Configuration config = new Configuration (System.getProperty("java.io.tmpdir"));
     }
+
     @Test
     public void testBasicStatistics() {
         Readability readText = new Readability(this.text);
