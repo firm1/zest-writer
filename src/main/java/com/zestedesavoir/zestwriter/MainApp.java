@@ -1,10 +1,13 @@
 package com.zestedesavoir.zestwriter;
 
+import com.kenai.jffi.Main;
+import com.sun.javafx.application.LauncherImpl;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.plugins.PluginsManager;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
+import com.zestedesavoir.zestwriter.utils.ZwPreloader;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
 import com.zestedesavoir.zestwriter.view.com.CustomAlert;
@@ -13,6 +16,7 @@ import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.task.LoginService;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.application.Preloader;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,17 +26,18 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Tab;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,11 +57,12 @@ public class MainApp extends Application {
     private ObservableList<Content> contents = FXCollections.observableArrayList();
     private MdTextController Index;
     private StringBuilder key = new StringBuilder();
-    private Logger logger;
+    private static Logger logger;
     private MenuController menuController;
     private PluginsManager pm;
     public static String[] args;
     public static File defaultHome;
+    private ZwPreloader preloader = new ZwPreloader();
 
     public MainApp() {
         super();
@@ -82,7 +88,7 @@ public class MainApp extends Application {
 
     public static void main(String[] args) {
         MainApp.args  = args;
-        launch(args);
+        LauncherImpl.launchApplication(MainApp.class, ZwPreloader.class, args);
     }
 
 
@@ -120,7 +126,6 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
         MainApp.primaryStage = primaryStage;
         MainApp.primaryStage.setTitle("Zest Writer");
         MainApp.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("assets/static/icons/logo.png")));
@@ -170,6 +175,8 @@ public class MainApp extends Application {
         initRootLayout();
         showWriter();
         initConnection();
+
+        ZwPreloader.closePreloader();
     }
 
     @FXML public void exitApplication(ActionEvent event) {
@@ -197,8 +204,8 @@ public class MainApp extends Application {
 
             scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
-            primaryStage.show();
             loadCombinason();
+            Platform.runLater(() -> primaryStage.show());
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
@@ -210,7 +217,6 @@ public class MainApp extends Application {
             AnchorPane writerLayout = loader.load();
 
             rootLayout.setCenter(writerLayout);
-
 
             MdTextController controller = loader.getController();
             controller.setMainApp(this);
