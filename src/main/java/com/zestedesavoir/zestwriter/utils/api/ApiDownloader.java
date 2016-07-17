@@ -157,7 +157,7 @@ public class ApiDownloader implements Runnable{
         InputStream streamData = null;
 
         try{
-            Thread.sleep(2000);
+            Thread.sleep(1500);
         }catch(InterruptedException e){
             e.printStackTrace();
         }

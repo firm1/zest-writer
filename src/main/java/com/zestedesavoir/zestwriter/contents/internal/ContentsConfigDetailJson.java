@@ -1,6 +1,9 @@
 package com.zestedesavoir.zestwriter.contents.internal;
 
-public class PluginConfigDetailJson{
+import com.zestedesavoir.zestwriter.view.dialogs.ContentsDialog;
+
+public class ContentsConfigDetailJson{
+    private ContentsDialog.ContentType contentsType;
     private int id;
     private String name;
     private String user_name;
@@ -10,15 +13,15 @@ public class PluginConfigDetailJson{
     private String plugin_url;
     private String download_url;
 
-    public PluginConfigDetailJson(){
-        id = 1;
-        name = "Un plugin d'example";
-        user_name = "Test";
-        description = "Description";
-        version = "0.0.0";
-        url_id = "KxPd1";
-        plugin_url = "http://zw.winxaito.com/api/plugin/KxPd1";
-        download_url = "http://zw.winxaito.com/api/plugin/download/KxPd1";
+    public ContentsConfigDetailJson(){
+    }
+
+    public ContentsDialog.ContentType getContentsType(){
+        return contentsType;
+    }
+
+    public void setContentsType(ContentsDialog.ContentType contentsType){
+        this.contentsType = contentsType;
     }
 
     public int getId(){

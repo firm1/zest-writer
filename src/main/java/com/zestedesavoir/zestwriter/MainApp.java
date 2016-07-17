@@ -3,7 +3,7 @@ package com.zestedesavoir.zestwriter;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.contents.plugins.PluginsManager;
-import com.zestedesavoir.zestwriter.contents.internal.PluginConfig;
+import com.zestedesavoir.zestwriter.contents.internal.ContentsConfig;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
@@ -56,7 +56,7 @@ public class MainApp extends Application{
     private static Logger logger = LoggerFactory.getLogger(MenuController.class);
     private MenuController menuController;
     private PluginsManager pm;
-    private PluginConfig pluginConfig;
+    private static ContentsConfig contentsConfig;
     public static String[] args;
     public static File defaultHome;
 
@@ -222,7 +222,9 @@ public class MainApp extends Application{
         }
     }
 
-
+    public static ContentsConfig getContentsConfig(){
+        return contentsConfig;
+    }
 
     public MenuController getMenuController() {
         return menuController;
@@ -265,7 +267,7 @@ public class MainApp extends Application{
     }
 
     public void initPlugins(){
-        PluginConfig pluginConfig = new PluginConfig();
+        contentsConfig = new ContentsConfig();
 
         pm = new PluginsManager(this);
         pm.enablePlugins();

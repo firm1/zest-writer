@@ -5,6 +5,8 @@ import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.api.*;
 import com.zestedesavoir.zestwriter.view.com.CustomAlert;
 import com.zestedesavoir.zestwriter.view.com.CustomStage;
+import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
+import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -58,6 +60,17 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
     }
 
     @FXML private void initialize(){
+        if(MainApp.getContentsConfig().isCorrupted()){
+            Alert alert = new CustomAlert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Une erreur dans le fichier de configuration des contenus externes à été détecté");
+            alert.setContentText("Il se peut que le fichier aie été corrompu ou modifier par un programme externe, " +
+                    "afin de résoudre ce problème, veuillez soumettre le fichier suivant au développeur " +
+                    "<" + MainApp.getContentsConfig().getConfigFile().getPath() + ">");
+            alert.showAndWait();
+
+            return;
+        }
+
         logger.debug("Contents path: " + config.getContentsPath());
         tempDir = new File(config.getContentsPath() + "/temp/");
         pluginsDir = new File(config.getContentsPath() + "/plugins/");
@@ -179,7 +192,6 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
         ) == ButtonType.YES){
             waitStage();
 
-            logger.debug("## " + tempDir.getPath() + " -- " + tempDir.getAbsolutePath());
             apiDownloader = new ApiDownloader(ContentType.PLUGIN, tempDir.getPath() + "/", plugin.getDownload_url() + ".content", plugin.getDownload_url() + ".data");
             apiDownloader.addListener(this);
             apiDownloader.setContent(plugin);
@@ -356,6 +368,8 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
 
     @Override
     public void onInstallSuccess(){
+        MainApp.getContentsConfig().addContents(apiDownloader.getContentType(), apiDownloader.getContent());
+
         Platform.runLater(this::successAlert);
     }
 }

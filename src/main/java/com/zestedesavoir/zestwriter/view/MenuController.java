@@ -712,10 +712,11 @@ public class MenuController{
         dialogStage.setResizable(false);
         dialogStage.initOwner(MainApp.getPrimaryStage());
 
-        ContentsDialog pluginsController = loader.getController();
-        pluginsController.setWindow(dialogStage);
+        ContentsDialog contentsController = loader.getController();
+        contentsController.setWindow(dialogStage);
 
-        dialogStage.show();
+        if(!MainApp.getContentsConfig().isCorrupted())
+            dialogStage.show();
     }
 
     public Text getLabelField(){
