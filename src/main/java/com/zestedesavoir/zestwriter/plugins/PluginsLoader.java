@@ -3,22 +3,21 @@ package com.zestedesavoir.zestwriter.plugins;
 
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.view.com.CustomAlert;
+import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
+import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Objects;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
@@ -41,14 +40,15 @@ public class PluginsLoader{
         logger.debug("[PLUGINS] Starting loading plugins");
         File pluginsFile[];
 
-        File pluginFolder = new File(config.getPluginsPath());
+        File pluginFolder = new File(config.getContentsPath() + "/plugins");
         pluginsFile = pluginFolder.listFiles();
 
 
         if(pluginsFile != null){
             logger.debug("[PLUGINS] Start list of plugins");
             for(File pluginFile : pluginsFile){
-                logger.debug("[PLUGINS]   " + pluginFile.getName() + " <" + pluginFile.getPath() + ">");
+                if(FilenameUtils.getExtension(pluginFile.getPath()).equalsIgnoreCase("jar"))
+                    logger.debug("[PLUGINS]   " + pluginFile.getName() + " <" + pluginFile.getPath() + ">");
             }
             logger.debug("[PLUGINS] End list of plugins");
 
@@ -56,6 +56,9 @@ public class PluginsLoader{
             URL[] url = new URL[1];
 
             for(File pluginFile : pluginsFile){
+                if(!FilenameUtils.getExtension(pluginFile.getPath()).equalsIgnoreCase("jar"))
+                    continue;
+
                 try{
                     url[0] = new URL("file:///" + pluginFile.getPath());
                 }catch(MalformedURLException e){
@@ -77,7 +80,13 @@ public class PluginsLoader{
                             mainClass = attrValue;
                     }
                 }catch(IOException e){
-                    logger.error(e.getMessage(), e);
+                    logger.error("Error for opening jar file: " + pluginFile.getPath() + " -- " + e.getMessage(), e);
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setHeaderText("Une erreur est survenu lors de l'ouverture du plugin <" + pluginFile.getName() + ">");
+                    alert.setContentText("Pour plus de détail, veuillez consulter le fichier de log");
+                    IconFactory.addAlertLogo(alert);
+                    FunctionTreeFactory.addTheming(alert.getDialogPane());
+                    alert.showAndWait();
                 }
 
 

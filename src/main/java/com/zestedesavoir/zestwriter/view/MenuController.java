@@ -710,6 +710,7 @@ public class MenuController{
 
         Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.tools.external_contents"));
         dialogStage.setResizable(false);
+        dialogStage.initOwner(MainApp.getPrimaryStage());
 
         ContentsDialog pluginsController = loader.getController();
         pluginsController.setWindow(dialogStage);

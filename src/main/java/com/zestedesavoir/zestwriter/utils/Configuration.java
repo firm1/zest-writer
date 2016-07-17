@@ -236,26 +236,15 @@ public class Configuration {
         conf.setProperty(ConfigData.WorkspacePath.getKey(), path);
     }
 
-    public String getPluginsPath(){
-        if(conf.containsKey(ConfigData.PluginsPath.getKey()))
-            return conf.getProperty(ConfigData.PluginsPath.getKey());
+    public String getContentsPath(){
+        if(conf.containsKey(ConfigData.ContentsPath.getKey()))
+            return conf.getProperty(ConfigData.ContentsPath.getKey());
         else
-            return getWorkspacePath() + "/plugins";
+            return getWorkspacePath() + "/contents";
     }
 
-    public void setPluginsPath(String path){
-        conf.setProperty(ConfigData.PluginsPath.getKey(), path);
-    }
-
-    public String getThemesPath(){
-        if(conf.containsKey(ConfigData.ThemesPath.getKey()))
-            return conf.getProperty(ConfigData.ThemesPath.getKey());
-        else
-            return getWorkspacePath() + "/themes";
-    }
-
-    public void setThemesPath(String path){
-        conf.setProperty(ConfigData.ThemesPath.getKey(), path);
+    public void setContentsPath(String path){
+        conf.setProperty(ConfigData.ContentsPath.getKey(), path);
     }
 
     public Boolean getEditorSmart(){
@@ -514,8 +503,7 @@ public class Configuration {
         DisplayWindowPositionY("data.display.window.position.y", "0"),
 
         WorkspacePath("options.workspace.path", ""),
-        PluginsPath("options.workspace.plugins.path", ""),
-        ThemesPath("options.workspace.themes.path", ""),
+        ContentsPath("options.workspace.contents.path", ""),
         EditorSmart("options.editor.smart", "true"),
         EditorFont("options.editor.font", "Fira Mono"),
         EditorFontSize("options.editor.fontSize", "14"),

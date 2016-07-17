@@ -1,26 +1,40 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
-import com.zestedesavoir.zestwriter.utils.api.ApiContentResponse;
-import com.zestedesavoir.zestwriter.utils.api.ApiContentsResponse;
-import com.zestedesavoir.zestwriter.utils.api.ApiMapper;
-import com.zestedesavoir.zestwriter.utils.api.ApiRequester;
+import com.zestedesavoir.zestwriter.MainApp;
+import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.utils.api.*;
 import com.zestedesavoir.zestwriter.view.com.CustomAlert;
+import com.zestedesavoir.zestwriter.view.com.CustomStage;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ListView;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ContentsDialog{
+public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListener{
     private Logger logger = LogManager.getLogger(ContentsDialog.class);
+    private Configuration config = MainApp.getConfig();
     private Stage window;
+    private Stage waitStage;
+    private File tempDir;
+    private File pluginsDir;
+    private File themesDir;
 
+    private ApiDownloader apiDownloader;
+    private ApiInstaller apiInstaller;
     private Map<Integer, ApiContentResponse> plugins = new HashMap<>();
     private Map<Integer, ApiContentResponse> themes = new HashMap<>();
     private String currentPlugin;
@@ -33,11 +47,32 @@ public class ContentsDialog{
     @FXML private ListView listOfficialInstalledPlugins;
     @FXML private ListView listUnofficialInstalledPlugins;
 
+
+    public enum ContentType{
+        PLUGIN,
+        THEME
+    }
+
     public void setWindow(Stage window){
         this.window = window;
     }
 
     @FXML private void initialize(){
+        logger.debug("Contents path: " + config.getContentsPath());
+        tempDir = new File(config.getContentsPath() + "/temp/");
+        pluginsDir = new File(config.getContentsPath() + "/plugins/");
+        themesDir = new File(config.getContentsPath() + "/themes/");
+
+        if(!tempDir.exists())
+            if(!tempDir.mkdirs())
+                logger.error("Error for create plugins directory");
+        if(!pluginsDir.exists())
+            if(!pluginsDir.mkdirs())
+                logger.error("Error for create plugins directory");
+        if(!themesDir.exists())
+            if(!themesDir.mkdirs())
+                logger.error("Error for create themes directory");
+
         listOfficialInstalledThemes.getItems().add("Aucun thème n'est installé");
         listUnofficialInstalledThemes.getItems().add("Aucun thème n'est installé");
         listOfficialInstalledPlugins.getItems().add("Aucun thème n'est installé");
@@ -90,7 +125,7 @@ public class ContentsDialog{
             }else{
                 int i = 0;
                 for(ApiContentResponse theme : themesContents.getContents()){
-                    plugins.put(i, theme);
+                    themes.put(i, theme);
 
                     if(theme.isValidate())
                         validate = "[VALIDE] ";
@@ -135,12 +170,20 @@ public class ContentsDialog{
         ApiContentResponse plugin = getPlugin();
         assert plugin != null;
 
-        alert(
+        if (alert(
                 Alert.AlertType.CONFIRMATION,
                 "Installation",
                 "Voulez-vous vraiment installé ce plugin ?",
-                "Le plugin sera télécharger depuis ces adresses:\n  " + plugin.getDownload_url() + ".content\n  " + plugin.getDownload_url() + ".data"
-        );
+                "Le plugin sera télécharger depuis ces adresses:\n  " + plugin.getDownload_url() + ".content\n  " + plugin.getDownload_url() + ".data",
+                ButtonType.YES, ButtonType.NO
+        ) == ButtonType.YES){
+            waitStage();
+
+            logger.debug("## " + tempDir.getPath() + " -- " + tempDir.getAbsolutePath());
+            apiDownloader = new ApiDownloader(ContentType.PLUGIN, tempDir.getPath() + "/", plugin.getDownload_url() + ".content", plugin.getDownload_url() + ".data");
+            apiDownloader.addListener(this);
+            apiDownloader.setContent(plugin);
+        }
     }
 
     @FXML private void handleOfficialPluginState(){
@@ -156,7 +199,7 @@ public class ContentsDialog{
     }
 
     @FXML private void handleListThemeInfos(){
-        ApiContentResponse theme = getPlugin();
+        ApiContentResponse theme = getTheme();
 
         if(theme == null){
             logger.error("Error for found theme in list");
@@ -173,7 +216,7 @@ public class ContentsDialog{
     }
 
     @FXML private void handleListThemeInstall(){
-        ApiContentResponse theme = getPlugin();
+        ApiContentResponse theme = getTheme();
         assert theme != null;
 
         alert(
@@ -228,12 +271,91 @@ public class ContentsDialog{
         return null;
     }
 
-    private void alert(Alert.AlertType type, String title, String header, String content){
+    private ButtonType alert(Alert.AlertType type, String title, String header, String content, ButtonType... buttonType){
         Alert a = new CustomAlert(type);
         a.setTitle(title);
         a.setHeaderText(header);
         a.setContentText(content);
+        a.getButtonTypes().setAll(buttonType);
         a.initOwner(window);
         a.showAndWait();
+
+        return a.getResult();
+    }
+
+    private ButtonType alert(Alert.AlertType type, String title, String header, String content){
+        return (alert(type, title, header, content, ButtonType.OK, ButtonType.CANCEL));
+    }
+
+    private void waitStage(){
+        waitStage = new CustomStage("Téléchargement");
+        Group root = new Group();
+        Scene scene = new Scene(root, 200, 150);
+        waitStage.setScene(scene);
+        waitStage.setResizable(false);
+        waitStage.initOwner(window);
+        waitStage.initModality(Modality.APPLICATION_MODAL);
+        waitStage.setOnCloseRequest(event -> {
+            if(alert(Alert.AlertType.CONFIRMATION, "Téléchargement", "Arrêt du téléchargement", "Souhaitez-vous vraiment arrêter le téléchargement ?") != ButtonType.OK){
+                event.consume();
+            }
+        });
+
+        Label lb = new Label("Téléchargement en cours");
+        lb.setFont(new Font(lb.getFont().getName(), 18));
+
+        ProgressIndicator pin = new ProgressIndicator();
+        pin.setProgress(- 1);
+
+        VBox vb = new VBox();
+        vb.setAlignment(Pos.CENTER);
+        vb.setSpacing(15);
+        vb.getChildren().addAll(lb, pin);
+
+        scene.setRoot(vb);
+        waitStage.show();
+    }
+
+    private void errorAlert(){
+        waitStage.hide();
+        waitStage.close();
+
+        alert(Alert.AlertType.ERROR,
+                "Erreur",
+                "Une erreur est survenu lors du téléchargement",
+                "Détail supplémentaire"
+        );
+    }
+
+    private void successAlert(){
+        waitStage.close();
+
+        alert(Alert.AlertType.INFORMATION,
+                "Succès",
+                "Le plugin a été télécharger et installer avec succès",
+                "Le Plugin sera fonctionnel au prochain démarrage de l'application"
+        );
+    }
+
+    @Override
+    public void onDownloadError(){
+        Platform.runLater(this::errorAlert);
+    }
+
+    @Override
+    public void onDownloadSuccess(){
+        apiInstaller = new ApiInstaller(apiDownloader.getContentType(), apiDownloader.getContent(),
+                apiDownloader.getOutputContentFile(), apiDownloader.getOutputDataFile());
+        apiInstaller.addListener(this);
+    }
+
+    @Override
+    public void onInstallError(){
+        Platform.runLater(this::errorAlert);
+    }
+
+    @Override
+    public void onInstallSuccess(){
+        Platform.runLater(this::successAlert);
     }
 }

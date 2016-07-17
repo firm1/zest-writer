@@ -25,4 +25,12 @@ public class CustomStage extends Stage{
         getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
         initModality(Modality.APPLICATION_MODAL);
     }
+
+    public CustomStage(String title){
+        super();
+        setTitle(title);
+
+        getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
+        initModality(Modality.APPLICATION_MODAL);
+    }
 }

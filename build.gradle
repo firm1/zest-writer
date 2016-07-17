@@ -125,6 +125,7 @@ dependencies {
     compile group: 'org.fxmisc.richtext', name: 'richtextfx', version: '0.6.10'
     compile group: 'com.zestedesavoir.zmarkdown', name: 'java-zmarkdown', version: '2.6.1'
     compile group: 'com.fasterxml', name: 'jackson-module-json-org', version: '0.9.1'
+    compile group: 'commons-io', name: 'commons-io', version: '2.5'
 }
 
 test {
