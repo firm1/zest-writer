@@ -1,4 +1,4 @@
-package com.zestedesavoir.zestwriter.contents.plugins.internal;
+package com.zestedesavoir.zestwriter.contents.internal;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;

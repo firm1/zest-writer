@@ -1,4 +1,4 @@
-package com.zestedesavoir.zestwriter.contents.plugins.internal;
+package com.zestedesavoir.zestwriter.contents.internal;
 
 public class PluginConfigDetailJson{
     private int id;

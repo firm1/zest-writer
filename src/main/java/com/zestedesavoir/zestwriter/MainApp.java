@@ -3,7 +3,7 @@ package com.zestedesavoir.zestwriter;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.contents.plugins.PluginsManager;
-import com.zestedesavoir.zestwriter.contents.plugins.internal.PluginConfig;
+import com.zestedesavoir.zestwriter.contents.internal.PluginConfig;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
