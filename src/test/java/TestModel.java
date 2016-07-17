@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,6 +47,7 @@ public class TestModel {
 
     @Before
     public void setUp() throws Exception {
+        Configuration config = new Configuration (TEST_DIR);
         ObjectMapper mapper = new ObjectMapper();
         File manifest = new File(getClass().getResource("fixtures").getFile()+File.separator+"le-guide-du-contributeur"+File.separator+"manifest.json");
         content = mapper.readValue(manifest, Content.class);

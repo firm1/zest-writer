@@ -1,5 +1,7 @@
 import static org.junit.Assert.*;
 
+import com.zestedesavoir.zestwriter.utils.Configuration;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.zestedesavoir.zestwriter.utils.Corrector;
@@ -10,15 +12,18 @@ import java.nio.charset.Charset;
 
 public class TestUtils {
 
-    @Test
+    @Before
+    public void setUp() throws Exception {
+        Configuration config = new Configuration (System.getProperty("java.io.tmpdir"));
+    }
+
     public void testCorrectorTextToHtml() {
         String text = "Bonjour, je suis persuade que tu n'aime pas les frites. Cest normal je ne suis pas belge";
+        int expectedError = 3;
 
         Corrector corrector = new Corrector();
         String res = corrector.checkHtmlContent(text);
-        assertTrue (res.contains ("Note : Auxiliaire suivi"));
-        assertTrue (res.contains ("Note : tu + 2 tokens + verbe"));
-        assertTrue (res.contains ("Note : Faute d'orthographe possible (sans suggestions)"));
+        assertEquals(res.split("error-french").length, expectedError+1);
     }
 
     @Test
