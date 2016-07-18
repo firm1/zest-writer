@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 public class MdCheatSheetDialog {
     private final String CHEAT_SHEET_LOCATION = "assets/static/html/zMdCheatSheet.html";
-    private final String TITLE_REGEX = "<!--(.*)-->";
+    private final String TITLE_REGEX = "(?m)^<!--(.*)-->$";
 
     @FXML private TabPane cheatSheetTabPane;
     private Logger logger;
@@ -46,7 +46,6 @@ public class MdCheatSheetDialog {
         }
 
         String[] chaptersContents = cheatSheet.split(TITLE_REGEX);
-
         List<Tab> tabs = cheatSheetTabPane.getTabs();
 
         for (int i=1 ; i<chaptersContents.length; i++) {
@@ -55,7 +54,8 @@ public class MdCheatSheetDialog {
             tab.setText(chaptersTitles.get(i-1));
 
             WebView webView = new WebView();
-            String chapterContent = MainApp.getMdUtils ().addHeaderAndFooter(chaptersContents[i]);
+            String chapterContent = MainApp.getMdUtils().addHeaderAndFooter(chaptersContents[i]);
+
             webView.getEngine().loadContent(chapterContent);
 
             tab.setContent(webView);

@@ -35,6 +35,7 @@ public class Markdown {
             Matcher pathMatcher = Pattern.compile("%%(.*)%%").matcher(template);
 
             StringBuffer sbCheatSheet = new StringBuffer();
+
             while (pathMatcher.find()) {
                 String path = MainApp.class.getResource("assets" + pathMatcher.group(1)).toExternalForm();
                 pathMatcher.appendReplacement(sbCheatSheet, path);
