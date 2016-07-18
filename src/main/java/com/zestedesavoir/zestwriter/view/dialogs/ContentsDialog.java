@@ -8,8 +8,6 @@ import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.api.*;
 import com.zestedesavoir.zestwriter.view.com.CustomAlert;
 import com.zestedesavoir.zestwriter.view.com.CustomStage;
-import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
-import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -63,12 +61,12 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
     }
 
     @FXML private void initialize(){
-        if(MainApp.getContentsConfig().isCorrupted()){
+        if(MainApp.getContentsConfigPlugins().isCorrupted() || MainApp.getContentsConfigThemes().isCorrupted()){
             Alert alert = new CustomAlert(Alert.AlertType.WARNING);
             alert.setHeaderText("Une erreur dans le fichier de configuration des contenus externes à été détecté");
             alert.setContentText("Il se peut que le fichier aie été corrompu ou modifier par un programme externe, " +
                     "afin de résoudre ce problème, veuillez soumettre le fichier suivant au développeur " +
-                    "<" + MainApp.getContentsConfig().getConfigFile().getPath() + ">");
+                    "<" + MainApp.getContentsConfigPlugins().getConfigFile().getPath() + ">");
             alert.showAndWait();
 
             return;
@@ -357,7 +355,7 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
     }
 
     private void loadInstalledContents(){
-        ContentsConfig contentsConfig = MainApp.getContentsConfig();
+        ContentsConfig contentsConfig = MainApp.getContentsConfigPlugins();
         ContentsConfigJson configJson = contentsConfig.getConfigJson();
 
         for(ContentsConfigDetailJson detailJson : configJson.getContents()){
@@ -396,7 +394,7 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
 
     @Override
     public void onInstallSuccess(){
-        MainApp.getContentsConfig().addContents(ContentsConfig.ConfigType.UNOFFICIAL, apiDownloader.getContentType(), apiDownloader.getContent());
+        MainApp.getContentsConfigPlugins().addContents(ContentsConfig.ConfigType.UNOFFICIAL, apiDownloader.getContentType(), apiDownloader.getContent());
         Platform.runLater(this::successAlert);
     }
 }

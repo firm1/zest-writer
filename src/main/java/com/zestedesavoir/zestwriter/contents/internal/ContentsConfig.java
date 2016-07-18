@@ -2,6 +2,7 @@ package com.zestedesavoir.zestwriter.contents.internal;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
+import com.zestedesavoir.zestwriter.contents.plugins.Plugin;
 import com.zestedesavoir.zestwriter.utils.api.ApiContentResponse;
 import com.zestedesavoir.zestwriter.utils.api.ApiMapper;
 import com.zestedesavoir.zestwriter.view.com.CustomAlert;
@@ -19,6 +20,7 @@ public class ContentsConfig{
     private Logger logger = LoggerFactory.getLogger(ContentsConfig.class);
     private ObjectMapper mapper = new ObjectMapper();
 
+    private ContentsDialog.ContentType contentType;
     private File configFileOfficial;
     private File configFile;
     private ContentsConfigJson configJsonOfficial;
@@ -26,27 +28,38 @@ public class ContentsConfig{
     private boolean isCorrupted = false;
 
     public enum ConfigType{
-        OFFICIAL(MainApp.getConfig().getContentsPath() + "/config.official.data"),
-        UNOFFICIAL(MainApp.getConfig().getContentsPath() + "/config.data");
+        OFFICIAL(MainApp.getConfig().getContentsPath() + "/plugins.config.official.data", MainApp.getConfig().getContentsPath() + "/themes.config.official.data"),
+        UNOFFICIAL(MainApp.getConfig().getContentsPath() + "/plugins.config.data", MainApp.getConfig().getContentsPath() + "/themes.config.data");
 
-        public String path;
+        private String pluginsPath;
+        private String themesPath;
 
-        ConfigType(String path){
-            this.path = path;
+        ConfigType(String pluginsPath, String themesPath){
+            this.pluginsPath = pluginsPath;
+            this.themesPath = themesPath;
+        }
+
+        public String getPath(ContentsDialog.ContentType contentType){
+            if(contentType == ContentsDialog.ContentType.PLUGIN)
+                return pluginsPath;
+            else
+                return themesPath;
         }
     }
 
-    public ContentsConfig(){
-        configFileOfficial = new File(ConfigType.OFFICIAL.path);
-        configFile = new File(ConfigType.UNOFFICIAL.path);
+    public ContentsConfig(ContentsDialog.ContentType contentType){
+        this.contentType = contentType;
+
+        configFileOfficial = new File(ConfigType.OFFICIAL.getPath(contentType));
+        configFile = new File(ConfigType.UNOFFICIAL.getPath(contentType));
 
         if(!configFileOfficial.exists())
-            setConfig(ConfigType.OFFICIAL);
+            generateIndex(ConfigType.OFFICIAL);
         else
             loadConfig(ConfigType.OFFICIAL);
 
         if(!configFile.exists())
-            setConfig(ConfigType.UNOFFICIAL);
+            generateIndex(ConfigType.UNOFFICIAL);
         else
             loadConfig(ConfigType.UNOFFICIAL);
     }
@@ -103,11 +116,24 @@ public class ContentsConfig{
     public void generateIndex(ConfigType configType){
         setConfig(configType);
 
-        String path;
-        if(configType == ConfigType.OFFICIAL)
-            path = MainApp.class.getResource("officialContents/plugins").toString();
-        else
-            path = MainApp.getConfig().getContentsPath() + "/plugins";
+        String path = null;
+        if(configType == ConfigType.OFFICIAL){
+            if(contentType == ContentsDialog.ContentType.PLUGIN){
+                if(MainApp.class.getResource("officialContents/plugins") != null)
+                    path = MainApp.class.getResource("officialContents/plugins").toString();
+            }else{
+                if(MainApp.class.getResource("officialContents/themes") != null)
+                    path = MainApp.class.getResource("officialContents/themes").toString();
+            }
+        }else{
+            if(contentType == ContentsDialog.ContentType.PLUGIN)
+                path = MainApp.getConfig().getContentsPath() + "/plugins";
+            else
+                path = MainApp.getConfig().getContentsPath() + "/themes";
+        }
+
+        if(path == null)
+            return;
 
         File dataFiles[] = new File(path).listFiles();
 

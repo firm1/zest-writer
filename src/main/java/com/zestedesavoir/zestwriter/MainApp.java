@@ -11,6 +11,7 @@ import com.zestedesavoir.zestwriter.view.MenuController;
 import com.zestedesavoir.zestwriter.view.com.CustomAlert;
 import com.zestedesavoir.zestwriter.view.com.CustomFXMLLoader;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
+import com.zestedesavoir.zestwriter.view.dialogs.ContentsDialog;
 import com.zestedesavoir.zestwriter.view.task.LoginService;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -56,7 +57,8 @@ public class MainApp extends Application{
     private static Logger logger = LoggerFactory.getLogger(MenuController.class);
     private MenuController menuController;
     private PluginsManager pm;
-    private static ContentsConfig contentsConfig;
+    private static ContentsConfig contentsConfigPlugins;
+    private static ContentsConfig contentsConfigThemes;
     public static String[] args;
     public static File defaultHome;
 
@@ -222,8 +224,12 @@ public class MainApp extends Application{
         }
     }
 
-    public static ContentsConfig getContentsConfig(){
-        return contentsConfig;
+    public static ContentsConfig getContentsConfigPlugins(){
+        return contentsConfigPlugins;
+    }
+
+    public static ContentsConfig getContentsConfigThemes(){
+        return contentsConfigThemes;
     }
 
     public MenuController getMenuController() {
@@ -267,7 +273,8 @@ public class MainApp extends Application{
     }
 
     public void initPlugins(){
-        contentsConfig = new ContentsConfig();
+        contentsConfigPlugins = new ContentsConfig(ContentsDialog.ContentType.PLUGIN);
+        contentsConfigThemes = new ContentsConfig(ContentsDialog.ContentType.THEME);
 
         pm = new PluginsManager(this);
         pm.enablePlugins();

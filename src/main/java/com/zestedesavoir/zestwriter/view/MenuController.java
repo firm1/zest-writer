@@ -715,7 +715,7 @@ public class MenuController{
         ContentsDialog contentsController = loader.getController();
         contentsController.setWindow(dialogStage);
 
-        if(!MainApp.getContentsConfig().isCorrupted())
+        if(!MainApp.getContentsConfigPlugins().isCorrupted() && !MainApp.getContentsConfigThemes().isCorrupted())
             dialogStage.show();
     }
 
