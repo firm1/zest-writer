@@ -632,6 +632,16 @@ public class MenuController{
         }
     }
 
+    @FXML private void HandleMdCheatSheetButtonAction(ActionEvent event){
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/MdCheatSheetDialog.fxml"));
+
+        Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.help.md_cheat_sheet"));
+
+        MdCheatSheetDialog mdCheatSheetController = loader.getController();
+
+        dialogStage.show();
+    }
+
     @FXML private void HandleAboutButtonAction(ActionEvent event){
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/AboutDialog.fxml"));
 

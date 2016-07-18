@@ -1,6 +1,5 @@
 package com.zestedesavoir.zestwriter.view;
 
-import com.kenai.jffi.Main;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
@@ -23,17 +22,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import netscape.javascript.JSException;
@@ -532,36 +527,7 @@ public class MdConvertController {
     }
 
     private void initRenderTask() {
-        StringBuilder before = new StringBuilder();
-        StringBuilder after = new StringBuilder();
 
-        before.append("<!doctype html><html><head><meta charset='utf-8'><base href='");
-        before.append(MainApp.class.getResource("assets").toExternalForm());
-        before.append("/' />");
-        before.append("<link rel=\"stylesheet\" href=\"");
-        before.append(MainApp.class.getResource("css/content.css").toExternalForm());
-        before.append("\" />");
-        before.append("<link rel=\"stylesheet\" href=\"");
-        before.append(MainApp.class.getResource("assets/static").toExternalForm());
-        before.append("/js/katex/katex.min.css\" />");
-        before.append("<script src=\"").append(MainApp.class.getResource("assets/static").toExternalForm());
-        before.append("/js/katex/katex.min.js\"></script>");
-        before.append("<script src=\"").append(MainApp.class.getResource("assets/static").toExternalForm());
-        before.append("/js/katex/contrib/auto-render.min.js\"></script>");
-        before.append("<style type='text/css'>.baseline-fix {font-size: 0px;} .fontsize-ensurer span {display:none;}</style></head><body>");
-
-        after.append("<script>"+
-                "renderMathInElement("+
-                "document.body,"+
-                "{"+
-                "delimiters: ["+
-                "{left: \"$$\", right: \"$$\", display: true},"+
-                "{left: \"$\", right: \"$\", display: false},"+
-                "]"+
-                "}"+
-                ");"+
-                "</script>");
-        after.append("</body></html>");
 
         renderTask = new Service<String>() {
             @Override
@@ -571,7 +537,7 @@ public class MdConvertController {
                     protected String call() throws Exception {
                         String html = markdownToHtml(SourceText.getText());
                         if(html != null) {
-                            return before.toString()+html+after.toString();
+                            return mainApp.getMdUtils().addHeaderAndFooter(html);
                         } else {
                             Thread.sleep(5000);
                             throw new IOException();
@@ -620,7 +586,7 @@ public class MdConvertController {
             WebEngine webEngine = renderView.getEngine();
             webEngine.loadContent("<!doctype html><html lang='fr'><head><meta charset='utf-8'><base href='"
                     + MainApp.class.getResource("assets").toExternalForm() + "' /></head><body>" + result + "</body></html>");
-            webEngine.setUserStyleSheetLocation(MainApp.class.getResource("css/content.css").toExternalForm());
+            webEngine.setUserStyleSheetLocation(MainApp.class.getResource("assets/static/css/content.css").toExternalForm());
         } catch (DOMException e) {
             logger.error(e.getMessage(), e);
         }

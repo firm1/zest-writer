@@ -4,6 +4,7 @@ import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.plugins.PluginsManager;
 import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.utils.Markdown;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
@@ -46,6 +47,7 @@ public class MainApp extends Application {
     public static Configuration config;
     private static Stage primaryStage;
     private static ZdsHttp zdsutils;
+    private static Markdown mdUtils;
     private Scene scene;
     private BorderPane rootLayout;
     private ObservableMap<Textual, Tab> extracts = FXCollections.observableMap(new HashMap<>());
@@ -77,7 +79,7 @@ public class MainApp extends Application {
             config = new Configuration(defaultHome.getAbsolutePath());
         }
         zdsutils = new ZdsHttp(config);
-
+        mdUtils = new Markdown();
     }
 
     public static void main(String[] args) {
@@ -118,12 +120,14 @@ public class MainApp extends Application {
         return pm;
     }
 
+    public static Markdown getMdUtils() { return mdUtils; }
+
     @Override
     public void start(Stage primaryStage) {
 
         MainApp.primaryStage = primaryStage;
         MainApp.primaryStage.setTitle("Zest Writer");
-        MainApp.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("assets/static/icons/logo.png")));
+        MainApp.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("images/logo.png")));
         MainApp.primaryStage.setMinWidth(800);
         MainApp.primaryStage.setMinHeight(500);
 
@@ -286,7 +290,7 @@ public class MainApp extends Application {
                         dialog.setHeaderText(null);
                         dialog.setContentText(null);
 
-                        dialog.setGraphic(new ImageView(this.getClass().getResource("assets/static/goal.gif").toString()));
+                        dialog.setGraphic(new ImageView(this.getClass().getResource("images/goal.gif").toString()));
                         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK);
 
                         dialog.showAndWait();
