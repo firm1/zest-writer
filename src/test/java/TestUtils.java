@@ -17,8 +17,8 @@ public class TestUtils {
 
         Markdown mdUtil = new Markdown();
         String fullContent = mdUtil.addHeaderAndFooter(content);
-        assertTrue (fullContent.contains ("<base href='file:/home/nathanael/dev/zest-writer/build/resources/main/com/zestedesavoir/zestwriter/assets/' />"));
-        assertTrue (fullContent.contains ("<link rel=\"stylesheet\" href=\"file:/home/nathanael/dev/zest-writer/build/resources/main/com/zestedesavoir/zestwriter/assets/static/css/content.css\" />"));
+        assertTrue (fullContent.contains ("resources/main/com/zestedesavoir/zestwriter/assets/' />"));
+        assertTrue (fullContent.contains ("resources/main/com/zestedesavoir/zestwriter/assets/static/css/content.css\" />"));
         assertTrue (fullContent.contains ("<p>Hello</p>"));
     }
 
