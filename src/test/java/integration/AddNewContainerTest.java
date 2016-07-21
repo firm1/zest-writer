@@ -18,7 +18,7 @@ import static org.testfx.api.FxToolkit.registerPrimaryStage;
 import static org.testfx.api.FxToolkit.setupApplication;
 import static org.testfx.api.FxToolkit.setupStage;
 
-public class AddNewContainerAndExtractTest extends FxRobot {
+public class AddNewContainerTest extends FxRobot {
 
     private MainApp mainApp;
 
@@ -35,7 +35,7 @@ public class AddNewContainerAndExtractTest extends FxRobot {
 
     @Test
     @MediumTest
-    public void createNewContainerAndExtractTest() throws IOException, InterruptedException, URISyntaxException {
+    public void createNewContainerTest() throws IOException, InterruptedException, URISyntaxException {
         UtilFixtureLeGuideDuContributeur.loadFixtureLeGuideDuContributeur(mainApp);
 
         sleep(2, TimeUnit.SECONDS);
@@ -44,14 +44,7 @@ public class AddNewContainerAndExtractTest extends FxRobot {
         clickOn("OK");
 
         doubleClickOn("Contribuer au contenu");
-        clickOn("Conteneur", MouseButton.SECONDARY);
-
-        clickOn("Ajouter un extrait");
-        clickOn("OK");
-
-        doubleClickOn("Contribuer au contenu");
         doubleClickOn("Conteneur");
-        doubleClickOn("Extrait");
     }
 
 
