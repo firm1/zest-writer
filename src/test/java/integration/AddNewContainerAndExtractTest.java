@@ -35,7 +35,7 @@ public class AddNewContainerAndExtractTest extends FxRobot {
 
     @Test
     @MediumTest
-    public void createNewContainerAndExtract() throws IOException, InterruptedException, URISyntaxException {
+    public void createNewContainerAndExtractTest() throws IOException, InterruptedException, URISyntaxException {
         UtilFixtureLeGuideDuContributeur.loadFixtureLeGuideDuContributeur(mainApp);
 
         sleep(2, TimeUnit.SECONDS);
