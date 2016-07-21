@@ -14,7 +14,6 @@ addons:
   apt:
     packages:
       - rpm
-      - oracle-java8-installer
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
@@ -23,12 +22,9 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew cask install java ; fi
   - set JAVA_OPTS=-XX:MaxPermSize=1024m -Xmx1512m -Dfile.encoding=UTF-8 -Dprism.verbose=true -Djavafx.verbose=true -Dquantum.verbose=true
   - set JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export DISPLAY=:99.0 ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sleep 3  ; fi
 
 script:
-  - ./gradlew check -Dzw.username=$ZDS_USERNAME -Dzw.password=$ZDS_PASSWORD --info
+  - ./gradlew -Pheadless=True check -Dzw.username=$ZDS_USERNAME -Dzw.password=$ZDS_PASSWORD --info
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew fatJar ; fi
 
 after_success:
