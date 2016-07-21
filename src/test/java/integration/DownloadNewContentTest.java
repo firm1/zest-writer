@@ -36,7 +36,7 @@ public class DownloadNewContentTest extends FxRobot {
 
     @Test
     @LargeTest
-    public void downloadNewContent() throws IOException, InterruptedException, URISyntaxException {
+    public void downloadNewContentTest() throws IOException, InterruptedException, URISyntaxException {
         UtilFixtureLeGuideDuContributeur.loadFixtureLeGuideDuContributeur(mainApp);
 
         sleep(2, TimeUnit.SECONDS);
