@@ -78,11 +78,6 @@ public class Content extends Container implements ContentNode{
         return false;
     }
 
-    @Override
-    public boolean isMoveableIn(ContentNode receiver, Content root) {
-        return false;
-    }
-
     public int getDepth() {
         return getCountDescendantContainer()+1;
     }

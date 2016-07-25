@@ -272,24 +272,55 @@ public class TestModel {
 
     @Test
     public void testMetaDataContent() {
-        MetadataContent c1 = new MetadataContent("1", "Contenu 1", "TUTORIAL");
-        MetadataContent c2 = new MetadataContent("2", "Contenu 1", "TUTORIAL");
-        MetadataContent c3 = new MetadataContent("1", "Contenu 1", "ARTICLE");
-        MetadataContent c4 = new MetadataContent("1", "", "TUTORIAL");
-        MetadataContent c5 = new MetadataContent(null, null, null);
-        MetadataContent c6 = new MetadataContent("1", null, null);
-        MetadataContent c7 = new MetadataContent(null, "Contenu 1", "TUTORIAL");
-        MetadataContent c8 = new MetadataContent("1", "Contenu 1", null);
-        MetadataContent c9 = new MetadataContent("1", "Contenu 1", "TUTORIAL");
+        MetadataContent c1 = new MetadataContent("1", "contenu-1", "TUTORIAL");
+        MetadataContent c2 = new MetadataContent("2", "contenu-1", "TUTORIAL");
+        MetadataContent c3 = new MetadataContent("1", "contenu-2", "TUTORIAL");
+        MetadataContent c4 = new MetadataContent("1", "contenu-1", "ARTICLE");
+        MetadataContent c5 = new MetadataContent(null, "", null);
+        MetadataContent c5b = new MetadataContent(null, "contenu-1", null);
+        MetadataContent c6 = new MetadataContent("1", "Contenu 1", null);
+        MetadataContent c6b = new MetadataContent("1", "contenu-1", null);
+        MetadataContent c7 = new MetadataContent(null, "contenu-1", "TUTORIAL");
+        MetadataContent c7b = new MetadataContent(null, "contenu-1", "ARTICLE");
+        MetadataContent c8 = new MetadataContent("1", "contenu-1", null);
+        MetadataContent c9 = new MetadataContent("1", "contenu-1", "TUTORIAL");
 
+        assertFalse(c1.equals(null));
+        assertFalse(c2.equals(c1));
         assertFalse(c1.equals(c2));
+        assertFalse(c3.equals(c1));
         assertFalse(c1.equals(c3));
+        assertFalse(c4.equals(c1));
         assertFalse(c1.equals(c4));
+        assertFalse(c5.equals(c1));
         assertFalse(c1.equals(c5));
+        assertFalse(c5b.equals(c1));
+        assertFalse(c1.equals(c5b));
+        assertFalse(c6.equals(c1));
         assertFalse(c1.equals(c6));
+        assertFalse(c6b.equals(c1));
+        assertFalse(c1.equals(c6b));
+        assertFalse(c7.equals(c1));
         assertFalse(c1.equals(c7));
+        assertFalse(c7b.equals(c1));
+        assertFalse(c1.equals(c7b));
+        assertFalse(c8.equals(c1));
         assertFalse(c1.equals(c8));
+        assertTrue(c9.equals(c1));
         assertTrue(c1.equals(c9));
+        assertFalse(new String("FAILED").equals(c1));
+        assertTrue(c1.equals(c1));
+        assertTrue(c2.equals(c2));
+        assertTrue(c3.equals(c3));
+        assertTrue(c4.equals(c4));
+        assertTrue(c5.equals(c5));
+        assertTrue(c5b.equals(c5b));
+        assertTrue(c6.equals(c6));
+        assertTrue(c6b.equals(c6b));
+        assertTrue(c7.equals(c7));
+        assertTrue(c7b.equals(c7b));
+        assertTrue(c8.equals(c8));
+        assertTrue(c9.equals(c9));
 
     }
 }
