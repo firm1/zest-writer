@@ -3,6 +3,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 
+import com.zestedesavoir.zestwriter.utils.StorageSaver;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,8 +18,8 @@ public class TestConfig {
 
     @Before
     public void setUp() {
+        StorageSaver.deleteFile(new File(TEST_DIR, ".zestwriter"));
         config = new Configuration(TEST_DIR.getAbsolutePath());
-        MetaContent.deleteFile(new File(TEST_DIR, ".zestwriter"));
     }
 
     @Test
@@ -73,7 +74,7 @@ public class TestConfig {
 
     @After
     public void tearDown() {
-        MetaContent.deleteFile(new File(TEST_DIR, ".zestwriter"));
+        StorageSaver.deleteFile(new File(TEST_DIR, ".zestwriter"));
     }
 
     @Test

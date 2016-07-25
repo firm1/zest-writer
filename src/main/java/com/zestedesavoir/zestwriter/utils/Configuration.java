@@ -126,7 +126,7 @@ public class Configuration {
     public void saveConfFile() {
         try {
             conf.store(new FileOutputStream(confFile), "");
-            logger.info("Fichier de configuration enregistré");
+            logger.info("Fichier de configuration enregistré dans "+confFile.getAbsolutePath());
         } catch (IOException e) {
             logger.error("Impossible de sauvegarder le fichier de configuration", e);
         }

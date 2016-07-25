@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Function;
 
+import static com.zestedesavoir.zestwriter.utils.StorageSaver.deleteFile;
+
 @JsonIgnoreProperties({"basePath", "filePath", "editable", "object", "countChildrenExtract", "countDescendantContainer", "rootContent"})
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="object", visible=true)
 @JsonSubTypes({@Type(value = Extract.class, name = "extract"), @Type(value = Container.class, name = "container") })
@@ -95,26 +97,6 @@ public abstract class MetaContent{
 
     public boolean canDelete() {
         return true;
-    }
-
-    public static void deleteFile(File file) {
-        if(file.isDirectory()) {
-            if(file.list().length==0) {
-                file.delete();
-            }
-            else {
-                String files[] = file.list();
-                for(String temp:files) {
-                    File fileDelete = new File(file, temp);
-                    deleteFile(fileDelete);
-                }
-                if(file.list().length==0) {
-                    file.delete();
-                }
-            }
-        } else {
-            file.delete();
-        }
     }
 
     public void delete() {
