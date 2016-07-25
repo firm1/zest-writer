@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 
+import com.zestedesavoir.zestwriter.utils.StorageSaver;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,8 +25,8 @@ public class TestApiZds {
 
     @Before
     public void setUp() {
-        MetaContent.deleteFile(new File(TEST_DIR, ".zestwriter"));
-        MetaContent.deleteFile(new File(TEST_DIR.getAbsolutePath(), "workspace"));
+        StorageSaver.deleteFile(new File(TEST_DIR, ".zestwriter"));
+        StorageSaver.deleteFile(new File(TEST_DIR.getAbsolutePath(), "workspace"));
         config = new Configuration(TEST_DIR.getAbsolutePath());
         config.setWorkspacePath(TEST_DIR.getAbsolutePath()+File.separator+"workspace");
         config.loadWorkspace();
@@ -76,8 +77,8 @@ public class TestApiZds {
 
     @After
     public void tearDown() {
-        MetaContent.deleteFile(new File(TEST_DIR, ".zestwriter"));
-        MetaContent.deleteFile(new File(TEST_DIR.getAbsolutePath(), "workspace"));
+        StorageSaver.deleteFile(new File(TEST_DIR, ".zestwriter"));
+        StorageSaver.deleteFile(new File(TEST_DIR.getAbsolutePath(), "workspace"));
     }
 
 }

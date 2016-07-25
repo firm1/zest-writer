@@ -1,3 +1,4 @@
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.junit.Before;
@@ -18,15 +19,18 @@ public class TestCorrect {
 
     @Before
     public void setUp() {
+        Configuration config = new Configuration (System.getProperty("java.io.tmpdir"));
         corrector = new Corrector();
     }
 
     @Test
     public void testOrtho() {
         String txt="<p>Ce text et plin 2 fotes lol.</p>";
+        int expectedError = 3;
+
         String s = StringEscapeUtils.unescapeHtml(txt);
         String result = corrector.checkHtmlContent(s);
-        assertEquals(result, "<p>Ce <span class=\"error-french\" title=\"Note : Faute d'orthographe possible (sans suggestions)\">text</span>  et <span class=\"error-french\" title=\"Note : Faute d'orthographe possible (sans suggestions)\">plin</span>  2 <span class=\"error-french\" title=\"Note : Faute d'orthographe possible (sans suggestions)\">fotes</span>  lol.</p>");
+        assertEquals(result.split("error-french").length, expectedError+1);
     }
 
     @Test

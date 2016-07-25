@@ -554,7 +554,7 @@ public class MenuController{
     @FXML private void HandleSwitchWorkspaceAction(ActionEvent event) throws IOException{
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setInitialDirectory(MainApp.defaultHome);
-        fileChooser.setTitle("Sélectionnez un dossier");
+        fileChooser.setTitle(Configuration.bundle.getString("ui.dialog.switchworkspace"));
         File selectedDirectory = fileChooser.showDialog(MainApp.getPrimaryStage());
         if(selectedDirectory!=null) {
             MainApp.getConfig().setWorkspacePath(selectedDirectory.getAbsolutePath());

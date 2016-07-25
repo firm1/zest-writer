@@ -3,6 +3,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 
+import com.zestedesavoir.zestwriter.utils.StorageSaver;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,18 +12,18 @@ import com.zestedesavoir.zestwriter.model.MetaContent;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 
 public class TestConfig {
+    Configuration config;
 
     public final static File TEST_DIR = new File(System.getProperty("java.io.tmpdir"));
 
     @Before
     public void setUp() {
-        MetaContent.deleteFile(new File(TEST_DIR, ".zestwriter"));
+        StorageSaver.deleteFile(new File(TEST_DIR, ".zestwriter"));
+        config = new Configuration(TEST_DIR.getAbsolutePath());
     }
 
     @Test
     public void testConfiguration() {
-        Configuration config = new Configuration(TEST_DIR.getAbsolutePath());
-
         assertEquals(new File(TEST_DIR, ".zestwriter").exists(), true);
         assertEquals(new File(TEST_DIR, ".zestwriter"+File.separator+"conf.properties").exists(), true);
         assertEquals(config.getAdvancedServerHost(), "zestedesavoir.com");
@@ -73,7 +74,7 @@ public class TestConfig {
 
     @After
     public void tearDown() {
-        MetaContent.deleteFile(new File(TEST_DIR, ".zestwriter"));
+        StorageSaver.deleteFile(new File(TEST_DIR, ".zestwriter"));
     }
 
     @Test
