@@ -121,7 +121,7 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.21'
     compile group: 'de.jensd', name: 'fontawesomefx', version: '8.9'
     compile group: 'org.zeroturnaround', name: 'zt-zip', version: '1.9'
-    compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.10'
+    compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.11'
     compile group: 'org.fxmisc.richtext', name: 'richtextfx', version: '0.6.10'
     compile group: 'com.zestedesavoir.zmarkdown', name: 'java-zmarkdown', version: '2.6.1'
 }

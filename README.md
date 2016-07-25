@@ -12,6 +12,8 @@ Linux | Windows
 
 [![Dependency Status](https://www.versioneye.com/user/projects/5719ed6bfcd19a0039f17b07/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5719ed6bfcd19a0039f17b07)
 
+[![Statis](https://www.openhub.net/p/zest-writer/widgets/project_thin_badge.gif)](https://www.openhub.net/p/zest-writer?ref=sample)
+
 ## Installation (version stable)
 
 ### Tous les systèmes d'exploitation (Jar executable)
