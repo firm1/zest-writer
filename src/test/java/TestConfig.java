@@ -1,4 +1,6 @@
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +39,10 @@ public class TestConfig {
         assertEquals(config.getDisplayWindowWidth() > 0, true);
         assertEquals(config.getDisplayWindowPositionX() == 0, true);
         assertEquals(config.getDisplayWindowPositionY() == 0, true);
+        assertTrue(config.getEditorSmart());
+        assertFalse(config.isDisplayWindowMaximize());
+        assertTrue(config.isDisplayWindowPersonnalDimension());
+        assertTrue(config.isDisplayWindowPersonnalPosition());
 
         config.setAdvancedServerHost("localhost");
         assertEquals(config.getAdvancedServerHost(), "localhost");
@@ -56,6 +62,10 @@ public class TestConfig {
         config.setAuthentificationPassword("admin");
         config.setDisplayLang("en");
         config.setDisplayTheme("dark.css");
+        config.setEditorSmart("false");
+        config.setDisplayWindowMaximize("true");
+        config.setDisplayWindowPersonnalPosition("false");
+        config.setDisplayWindowStandardDimension("false");
         config.saveConfFile();
 
         assertEquals(config.getAdvancedServerHost(), "localhost");
@@ -69,6 +79,10 @@ public class TestConfig {
         assertEquals(config.getDisplayWindowWidth(), 800, 0);
         assertEquals(config.getDisplayWindowPositionX(), 10, 0);
         assertEquals(config.getDisplayWindowPositionY(), 20, 0);
+        assertFalse(config.getEditorSmart());
+        assertTrue(config.isDisplayWindowMaximize());
+        assertFalse(config.isDisplayWindowPersonnalDimension());
+        assertFalse(config.isDisplayWindowPersonnalPosition());
 
         config.resetAllOptions();
         assertEquals(config.getAdvancedServerHost(), "zestedesavoir.com");
@@ -82,6 +96,10 @@ public class TestConfig {
         assertEquals(config.getDisplayWindowWidth() > 0, true);
         assertEquals(config.getDisplayWindowPositionX() == 0, true);
         assertEquals(config.getDisplayWindowPositionY() == 0, true);
+        assertTrue(config.getEditorSmart());
+        assertFalse(config.isDisplayWindowMaximize());
+        assertTrue(config.isDisplayWindowPersonnalDimension());
+        assertTrue(config.isDisplayWindowPersonnalPosition());
     }
 
     @Test
