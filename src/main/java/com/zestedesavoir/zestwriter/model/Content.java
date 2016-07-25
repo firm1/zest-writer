@@ -74,11 +74,6 @@ public class Content extends Container implements ContentNode{
     }
 
     @Override
-    public String toString() {
-        return getTitle();
-    }
-
-    @Override
     public boolean isEditable() {
         return false;
     }

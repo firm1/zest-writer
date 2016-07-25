@@ -1,6 +1,7 @@
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -9,19 +10,16 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.zestedesavoir.zestwriter.model.*;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zestedesavoir.zestwriter.model.Container;
-import com.zestedesavoir.zestwriter.model.Content;
-import com.zestedesavoir.zestwriter.model.Extract;
-import com.zestedesavoir.zestwriter.model.MetaAttribute;
-import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
+import org.python.bouncycastle.asn1.cms.MetaData;
 
 public class TestModel {
 
@@ -270,5 +268,28 @@ public class TestModel {
         } finally {
             workspace.delete();
         }
+    }
+
+    @Test
+    public void testMetaDataContent() {
+        MetadataContent c1 = new MetadataContent("1", "Contenu 1", "TUTORIAL");
+        MetadataContent c2 = new MetadataContent("2", "Contenu 1", "TUTORIAL");
+        MetadataContent c3 = new MetadataContent("1", "Contenu 1", "ARTICLE");
+        MetadataContent c4 = new MetadataContent("1", "", "TUTORIAL");
+        MetadataContent c5 = new MetadataContent(null, null, null);
+        MetadataContent c6 = new MetadataContent("1", null, null);
+        MetadataContent c7 = new MetadataContent(null, "Contenu 1", "TUTORIAL");
+        MetadataContent c8 = new MetadataContent("1", "Contenu 1", null);
+        MetadataContent c9 = new MetadataContent("1", "Contenu 1", "TUTORIAL");
+
+        assertFalse(c1.equals(c2));
+        assertFalse(c1.equals(c3));
+        assertFalse(c1.equals(c4));
+        assertFalse(c1.equals(c5));
+        assertFalse(c1.equals(c6));
+        assertFalse(c1.equals(c7));
+        assertFalse(c1.equals(c8));
+        assertTrue(c1.equals(c9));
+
     }
 }
