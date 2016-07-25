@@ -58,7 +58,6 @@ public class TestConfig {
         config.setDisplayTheme("dark.css");
         config.saveConfFile();
 
-        config = new Configuration(TEST_DIR.getAbsolutePath());
         assertEquals(config.getAdvancedServerHost(), "localhost");
         assertEquals(config.getAdvancedServerPort(), "8080");
         assertEquals(config.getAdvancedServerProtocol(), "http");
@@ -70,6 +69,36 @@ public class TestConfig {
         assertEquals(config.getDisplayWindowWidth(), 800, 0);
         assertEquals(config.getDisplayWindowPositionX(), 10, 0);
         assertEquals(config.getDisplayWindowPositionY(), 20, 0);
+
+        config.resetAllOptions();
+        assertEquals(config.getAdvancedServerHost(), "zestedesavoir.com");
+        assertEquals(config.getAdvancedServerPort(), "80");
+        assertEquals(config.getAdvancedServerProtocol(), "https");
+        assertEquals(config.getAuthentificationPassword(), "");
+        assertEquals(config.getAuthentificationUsername(), "");
+        assertEquals(config.getDisplayTheme(), "light.css");
+        assertEquals(config.getDisplayLang(), "fr_FR");
+        assertEquals(config.getDisplayWindowHeight() > 0, true);
+        assertEquals(config.getDisplayWindowWidth() > 0, true);
+        assertEquals(config.getDisplayWindowPositionX() == 0, true);
+        assertEquals(config.getDisplayWindowPositionY() == 0, true);
+    }
+
+    @Test
+    public void testActions() {
+        assertEquals(new File(TEST_DIR, ".zestwriter").exists(), true);
+        assertEquals(new File(TEST_DIR, ".zestwriter"+File.separator+"action.properties").exists(), true);
+        assertEquals(config.getActions().size(), 0);
+        config.addActionProject(new File(TEST_DIR, "tutorial-one").getAbsolutePath());
+        assertEquals(config.getActions().size(), 1);
+        config.addActionProject(new File(TEST_DIR, "tutorial-two").getAbsolutePath());
+        assertEquals(config.getActions().size(), 2);
+        config.delActionProject(new File(TEST_DIR, "tutorial-non-exist").getAbsolutePath());
+        assertEquals(config.getActions().size(), 2);
+        config.delActionProject(new File(TEST_DIR, "tutorial-one").getAbsolutePath());
+        assertEquals(config.getActions().size(), 1);
+        config.delActionProject(new File(TEST_DIR, "tutorial-two").getAbsolutePath());
+        assertEquals(config.getActions().size(), 0);
     }
 
     @After
