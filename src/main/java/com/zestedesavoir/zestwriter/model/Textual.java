@@ -2,10 +2,7 @@ package com.zestedesavoir.zestwriter.model;
 
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;

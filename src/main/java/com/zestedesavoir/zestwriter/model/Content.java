@@ -123,9 +123,9 @@ public class Content extends Container implements ContentNode{
         String newSlug = (new File(newPath)).getName();
         setTitle(newTitle);
         setSlug(newSlug);
-        setBasePath(newPath);
         File oldDir = new File(oldPath);
         File newDir = new File(newPath);
         oldDir.renameTo(newDir);
+        setBasePath(newPath);
     }
 }

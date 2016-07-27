@@ -183,7 +183,6 @@ public class TestModel {
         if(!workspace.exists()) {
             workspace.mkdirs();
         }
-        System.out.println("workspace = "+workspace.getAbsolutePath());
         String title = "Tutoriel de test";
         String description = "Description d'un tutoriel de test";
         String part_1_title = "Premiere partie";
@@ -195,6 +194,7 @@ public class TestModel {
 
         Content bigtuto = new Content("container", ZdsHttp.toSlug(title), title, "introduction.md", "conclusion.md", new ArrayList<>(), 2, "CC-BY", description, "TUTORIAL");
         assertEquals(bigtuto.getSlug(), "tutoriel-de-test");
+
         Container part_1 = new Container("container", ZdsHttp.toSlug(part_1_title), part_1_title, ZdsHttp.toSlug(part_1_title)+"/introduction.md", ZdsHttp.toSlug(part_1_title)+"/conclusion.md", new ArrayList<>());
         bigtuto.getChildren().add(part_1);
         assertEquals(part_1.getSlug(), "premiere-partie");
@@ -202,72 +202,61 @@ public class TestModel {
         bigtuto.getChildren().add(part_2);
         assertEquals(part_2.getSlug(), "deuxieme-partie");
 
+
         Container chapter_11 = new Container("container", ZdsHttp.toSlug(chapter_11_title), chapter_11_title, ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_11_title)+"/introduction.md", ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_11_title)+"/conclusion.md", new ArrayList<>());
+
         part_1.getChildren().add(chapter_11);
         assertEquals(chapter_11.getSlug(), "premier-chapitre");
         Container chapter_12 = new Container("container", ZdsHttp.toSlug(chapter_12_title), chapter_12_title, ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_12_title)+"/introduction.md", ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_12_title)+"/conclusion.md", new ArrayList<>());
+
         part_1.getChildren().add(chapter_12);
         assertEquals(chapter_12.getSlug(), "deuxieme-chapitre");
 
         Extract extract111 = new Extract("extract", ZdsHttp.toSlug(extract_111_title), extract_111_title, ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_11_title)+"/"+ZdsHttp.toSlug(extract_111_title)+".md");
+
         chapter_11.getChildren().add(extract111);
         assertEquals(extract111.getSlug(), "premier-extrait");
+        assertFalse(extract111.canTakeContainer(bigtuto));
+        assertFalse(extract111.canTakeExtract());
         Extract extract_21 = new Extract("extract", ZdsHttp.toSlug(extract_21_title), extract_21_title, ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(extract_21_title)+".md");
+
         part_2.getChildren().add(extract_21);
         assertEquals(extract_21.getSlug(), "autre-extrait");
 
         bigtuto.setRootContent(bigtuto, new File(workspace, bigtuto.getSlug()).getAbsolutePath());
+        assertFalse(bigtuto.canTakeExtract());
+        assertFalse(part_2.canTakeContainer(bigtuto));
+
+        assertTrue(new File(part_1.getIntroduction().getFilePath()).exists());
+        assertFalse(((ContentNode) part_1.getIntroduction()).canDelete());
+        ((ContentNode) part_1.getIntroduction()).delete();
+        assertTrue(new File(part_1.getIntroduction().getFilePath()).exists());
+
         // create file
-        try {
-            (new File(bigtuto.getFilePath())).mkdir();
-            (new File(bigtuto.getIntroduction().getFilePath())).createNewFile();
-            (new File(bigtuto.getConclusion().getFilePath())).createNewFile();
-            (new File(bigtuto.getFilePath(), "manifest.json")).createNewFile();
-            (new File(part_1.getFilePath())).mkdir();
-            (new File(part_1.getIntroduction().getFilePath())).createNewFile();
-            (new File(part_1.getConclusion().getFilePath())).createNewFile();
-            (new File(part_2.getFilePath())).mkdir();
-            (new File(part_2.getIntroduction().getFilePath())).createNewFile();
-            (new File(part_2.getConclusion().getFilePath())).createNewFile();
-            (new File(chapter_11.getFilePath())).mkdir();
-            (new File(chapter_11.getIntroduction().getFilePath())).createNewFile();
-            (new File(chapter_11.getConclusion().getFilePath())).createNewFile();
-            (new File(chapter_12.getFilePath())).mkdir();
-            (new File(chapter_12.getIntroduction().getFilePath())).createNewFile();
-            (new File(chapter_12.getConclusion().getFilePath())).createNewFile();
-            (new File(extract111.getFilePath())).createNewFile();
-            (new File(extract_21.getFilePath())).createNewFile();
+        bigtuto.getIntroduction().setMarkdown("Introduction du tutoriel");
+        bigtuto.getIntroduction().save();
+        bigtuto.getIntroduction().loadMarkdown();
+        assertEquals(bigtuto.getIntroduction().getMarkdown().trim(), "Introduction du tutoriel");
+        extract_21.setMarkdown("My new content");
+        extract_21.save();
+        extract_21.loadMarkdown();
+        assertEquals(extract_21.getMarkdown().trim(), "My new content");
 
-            bigtuto.getIntroduction().setMarkdown("Introduction du tutoriel");
-            bigtuto.getIntroduction().save();
-            bigtuto.getIntroduction().loadMarkdown();
-            assertEquals(bigtuto.getIntroduction().getMarkdown().trim(), "Introduction du tutoriel");
-            extract_21.setMarkdown("My new content");
-            extract_21.save();
-            extract_21.loadMarkdown();
-            assertEquals(extract_21.getMarkdown().trim(), "My new content");
+        // rename content
+        bigtuto.renameTitle("Nouveau Contenu");
+        assertEquals(bigtuto.getSlug(), "nouveau-contenu");
+        assertEquals(bigtuto.getTitle(), "Nouveau Contenu");
+        assertEquals(bigtuto.getFilePath(), workspace.getAbsolutePath()+File.separator+"nouveau-contenu");
+        assertTrue((new File(bigtuto.getFilePath())).exists());
 
-            // rename content
-            bigtuto.renameTitle("Nouveau Contenu");
-            assertEquals(bigtuto.getSlug(), "nouveau-contenu");
-            assertEquals(bigtuto.getTitle(), "Nouveau Contenu");
-            assertEquals(bigtuto.getFilePath(), workspace.getAbsolutePath()+File.separator+"nouveau-contenu");
-            assertTrue((new File(bigtuto.getFilePath())).exists());
-
-            part_2.delete();
-            assertEquals((new File(part_2.getFilePath())).exists(), false);
-            extract111.delete();
-            assertEquals((new File(extract111.getFilePath())).exists(), false);
-            chapter_12.delete();
-            assertEquals((new File(chapter_12.getFilePath())).exists(), false);
-            bigtuto.delete();
-            assertEquals((new File(bigtuto.getFilePath())).exists(), false);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            workspace.delete();
-        }
+        part_2.delete();
+        assertEquals((new File(part_2.getFilePath())).exists(), false);
+        extract111.delete();
+        assertEquals((new File(extract111.getFilePath())).exists(), false);
+        chapter_12.delete();
+        assertEquals((new File(chapter_12.getFilePath())).exists(), false);
+        bigtuto.delete();
+        assertEquals((new File(bigtuto.getFilePath())).exists(), false);
     }
 
     @Test

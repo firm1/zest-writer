@@ -7,11 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.function.Function;
 
 import static com.zestedesavoir.zestwriter.utils.StorageSaver.deleteFile;
@@ -81,12 +77,24 @@ public abstract class MetaContent{
 
     public void setBasePath(String basePath) {
         this.basePath = basePath;
+        File base = new File(getFilePath());
         if(this instanceof Container) {
+            if(! base.exists()) {
+                base.mkdirs();
+            }
             Container c = ((Container) this);
             c.getIntroduction().setBasePath(basePath);
             c.getConclusion().setBasePath(basePath);
             for(MetaContent meta: c.getChildren()) {
                 meta.setBasePath(basePath);
+            }
+        } else {
+            if(! base.exists()) {
+                try {
+                    base.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

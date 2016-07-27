@@ -13,9 +13,7 @@ public interface ContentNode {
     default boolean isMoveableIn(ContentNode receiver, Content root) {
         return false;
     }
-    default boolean canTakeContainer(Content c) {
-        return false;
-    }
+    default boolean canTakeContainer(Content c) { return false; }
     default boolean canTakeExtract() {
         return false;
     }
