@@ -22,7 +22,7 @@ public class TypeContent {
     }
     @Override
     public String toString() {
-        return label;
+        return getLabel();
     }
 
     @Override

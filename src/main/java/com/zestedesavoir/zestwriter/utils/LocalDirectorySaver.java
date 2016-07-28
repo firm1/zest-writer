@@ -6,7 +6,6 @@
 package com.zestedesavoir.zestwriter.utils;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  *
@@ -26,40 +25,10 @@ public class LocalDirectorySaver implements StorageSaver{
         return this.baseDirectory;
     }
 
-    public void setBaseDirectory(String baseDirectory){
-        this.baseDirectory = baseDirectory;
-
-    }
     private void openDirCreateIfNecessary(){
         this.baseDirectoryDescriptor = new File(baseDirectory);
         if(!this.baseDirectoryDescriptor.exists() && !this.baseDirectoryDescriptor.mkdirs()){
             throw new RuntimeException("Could not create " + baseDirectory);
-        }
-    }
-
-    @Override
-    public boolean isStorageCurrentlyWritable() {
-        return this.baseDirectoryDescriptor.canWrite();
-    }
-
-    @Override
-    public boolean isStorageCurrentlyReadable() {
-        return this.baseDirectoryDescriptor.canRead();
-    }
-
-    @Override
-    public void saveDirectory(String subdirectory) throws SecurityException {
-        File subdir = new File(getBaseDirectory() + File.separator + subdirectory);
-        subdir.mkdir();
-    }
-
-    @Override
-    public void saveFile(String fpath, String content) throws SecurityException,IOException {
-        File subfile = new File(getBaseDirectory() + File.separator + fpath);
-        if(subfile.createNewFile()){
-            try(java.io.FileWriter writer = new java.io.FileWriter(subfile)){
-                writer.write(content);
-            }
         }
     }
 

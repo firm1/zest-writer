@@ -34,7 +34,7 @@ public class License {
 
     @Override
     public String toString() {
-        return label;
+        return getLabel();
     }
 
 

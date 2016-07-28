@@ -310,6 +310,43 @@ public class TestModel {
         assertTrue(c7b.equals(c7b));
         assertTrue(c8.equals(c8));
         assertTrue(c9.equals(c9));
+    }
 
+    @Test
+    public void testLicense() {
+        License l1 = new License("CC-BY", "CC-BY");
+        License l2 = new License("CC-BY-SA", "CC-BY-SA");
+        License l3 = new License("CC-BY", "CC-BY-ND");
+        assertTrue(l1.equals(l3));
+        assertTrue(l3.equals(l1));
+        assertFalse(l1.equals(l2));
+        assertFalse(l2.equals(l1));
+        l3.setCode("CC-BY-ND");
+        assertFalse(l3.equals(l1));
+        assertFalse(l1.equals(l3));
+        l3.setLabel("CC-BY");
+        assertFalse(l3.equals(l1));
+        assertFalse(l1.equals(l3));
+        assertEquals(l3.toString(), "CC-BY");
+        assertFalse(l1.equals("CC-BY"));
+    }
+
+    @Test
+    public void testTypeContent() {
+        TypeContent tc1 = new TypeContent("TUTORIAL", "Tutoriel");
+        TypeContent tc2 = new TypeContent("ARTICLE", "Article");
+        TypeContent tc3 = new TypeContent("TUTORIAL", "Tribune");
+        assertTrue(tc1.equals(tc3));
+        assertTrue(tc3.equals(tc1));
+        assertFalse(tc1.equals(tc2));
+        assertFalse(tc2.equals(tc1));
+        tc3.setCode("TL");
+        assertFalse(tc3.equals(tc1));
+        assertFalse(tc1.equals(tc3));
+        tc3.setLabel("Tutoriel");
+        assertFalse(tc3.equals(tc1));
+        assertFalse(tc1.equals(tc3));
+        assertEquals(tc3.toString(), "Tutoriel");
+        assertFalse(tc1.equals("TUTORIAL"));
     }
 }

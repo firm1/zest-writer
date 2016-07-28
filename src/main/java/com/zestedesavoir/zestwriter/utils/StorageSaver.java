@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 
 
 /**
@@ -18,10 +17,6 @@ import java.io.IOException;
  */
 public interface StorageSaver {
     String getBaseDirectory();
-    boolean isStorageCurrentlyWritable();
-    boolean isStorageCurrentlyReadable();
-    void saveDirectory(String subdirectory) throws SecurityException;
-    void saveFile(String fpath, String content) throws SecurityException, IOException;
 
     public static void deleteFile(File file) {
         Logger logger = LoggerFactory.getLogger(StorageSaver.class);
