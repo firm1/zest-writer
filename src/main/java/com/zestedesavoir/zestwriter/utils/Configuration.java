@@ -255,10 +255,6 @@ public class Configuration {
         conf.setProperty(ConfigData.EditorSmart.getKey(), smart);
     }
 
-    public void isEditorSmart(String editorSmart){
-        conf.setProperty(ConfigData.EditorSmart.getKey(), editorSmart);
-    }
-
     public String getEditorFont(){
         if(conf.containsKey(ConfigData.EditorFont.getKey()))
             return conf.getProperty(ConfigData.EditorFont.getKey());

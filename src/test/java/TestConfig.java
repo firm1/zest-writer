@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 
 import com.zestedesavoir.zestwriter.utils.StorageSaver;
+import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +27,7 @@ public class TestConfig {
 
     @Test
     public void testConfiguration() {
+        ZdsHttp api = new ZdsHttp(config);
         assertEquals(new File(TEST_DIR, ".zestwriter").exists(), true);
         assertEquals(new File(TEST_DIR, ".zestwriter"+File.separator+"conf.properties").exists(), true);
         assertEquals(config.getAdvancedServerHost(), "zestedesavoir.com");
@@ -43,6 +45,9 @@ public class TestConfig {
         assertFalse(config.isDisplayWindowMaximize());
         assertTrue(config.isDisplayWindowPersonnalDimension());
         assertTrue(config.isDisplayWindowPersonnalPosition());
+        assertEquals(config.getEditorToolbarView(), "yes");
+        assertEquals(config.getEditorFontsize(), 14);
+        assertEquals(config.getEditorFont(), "Fira Mono");
 
         config.setAdvancedServerHost("localhost");
         assertEquals(config.getAdvancedServerHost(), "localhost");
@@ -66,6 +71,9 @@ public class TestConfig {
         config.setDisplayWindowMaximize("true");
         config.setDisplayWindowPersonnalPosition("false");
         config.setDisplayWindowStandardDimension("false");
+        config.setEditorToolbarView("no");
+        config.setEditorFont("Arial");
+        config.setEditorFontSize("13");
         config.saveConfFile();
 
         assertEquals(config.getAdvancedServerHost(), "localhost");
@@ -83,6 +91,9 @@ public class TestConfig {
         assertTrue(config.isDisplayWindowMaximize());
         assertFalse(config.isDisplayWindowPersonnalDimension());
         assertFalse(config.isDisplayWindowPersonnalPosition());
+        assertEquals(config.getEditorToolbarView(), "no");
+        assertEquals(config.getEditorFontsize(), 13);
+        assertEquals(config.getEditorFont(), "Arial");
 
         config.resetAllOptions();
         assertEquals(config.getAdvancedServerHost(), "zestedesavoir.com");
@@ -100,6 +111,9 @@ public class TestConfig {
         assertFalse(config.isDisplayWindowMaximize());
         assertTrue(config.isDisplayWindowPersonnalDimension());
         assertTrue(config.isDisplayWindowPersonnalPosition());
+        assertEquals(config.getEditorToolbarView(), "yes");
+        assertEquals(config.getEditorFontsize(), 14);
+        assertEquals(config.getEditorFont(), "Fira Mono");
     }
 
     @Test
