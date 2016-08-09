@@ -1,6 +1,7 @@
 package com.zestedesavoir.zestwriter.utils.api;
 
 import com.zestedesavoir.zestwriter.MainApp;
+import com.zestedesavoir.zestwriter.contents.internal.ContentsConfig;
 import com.zestedesavoir.zestwriter.view.dialogs.ContentsDialog;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -73,21 +74,39 @@ public class ApiInstaller implements Runnable{
         listeners.forEach(ApiInstallerListener::onInstallEnding);
     }
 
+    public static boolean uninstall(ContentsDialog.ContentType contentType, File fileContent, File fileData){
+        logger.info("---STARTING UNINSTALL CONTENT : " + fileContent.getName() + "---");
+        if(!fileContent.exists() || !fileData.exists())
+            return false;
+
+        if(!fileContent.delete())
+            logger.error("Failed for delete file -> " + fileContent.getPath());
+        if(!fileData.delete())
+            logger.error("Failed for delete file -> " + fileData.getPath());
+
+        logger.info("---ENDING UNINSTALL CONTENT : " + fileContent.getName() + "---");
+        return ! (fileContent.exists() || fileData.exists());
+    }
+
     @Override
     public void run(){
         logger.info("---STARTING INSTALL CONTENT : " + content.getName() + "---");
         onStarting();
 
         String dir = null;
-        if(contentType == ContentsDialog.ContentType.PLUGIN)
+        String ext = null;
+        if(contentType == ContentsDialog.ContentType.PLUGIN){
             dir = "/plugins/";
-        else if(contentType == ContentsDialog.ContentType.THEME)
+            ext = "jar";
+        }else if(contentType == ContentsDialog.ContentType.THEME){
             dir = "/themes/";
+            ext = "css";
+        }
         else
             logger.error("Error in content type");
 
         File sourceContent = new File(fileContent.getPath());
-        File destinationContent = new File(MainApp.getConfig().getContentsPath() + dir + content.getUrl_id() + ".jar");
+        File destinationContent = new File(MainApp.getConfig().getContentsPath() + dir + content.getUrl_id() + "." + ext);
         File sourceData = new File(fileData.getPath());
         File destinationData = new File(MainApp.getConfig().getContentsPath() + dir + content.getUrl_id() + ".data");
 

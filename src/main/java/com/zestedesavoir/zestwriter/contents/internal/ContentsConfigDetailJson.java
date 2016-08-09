@@ -3,7 +3,6 @@ package com.zestedesavoir.zestwriter.contents.internal;
 import com.zestedesavoir.zestwriter.view.dialogs.ContentsDialog;
 
 public class ContentsConfigDetailJson{
-    private ContentsDialog.ContentType contentsType;
     private int id;
     private String name;
     private String user_name;
@@ -15,14 +14,6 @@ public class ContentsConfigDetailJson{
     private boolean enabled;
 
     public ContentsConfigDetailJson(){
-    }
-
-    public ContentsDialog.ContentType getContentsType(){
-        return contentsType;
-    }
-
-    public void setContentsType(ContentsDialog.ContentType contentsType){
-        this.contentsType = contentsType;
     }
 
     public int getId(){

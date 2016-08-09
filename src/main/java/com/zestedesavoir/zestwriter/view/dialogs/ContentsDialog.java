@@ -8,12 +8,16 @@ import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.api.*;
 import com.zestedesavoir.zestwriter.view.com.CustomAlert;
 import com.zestedesavoir.zestwriter.view.com.CustomStage;
+import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import javafx.application.Platform;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
@@ -40,6 +44,8 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
     private ApiInstaller apiInstaller;
     private Map<Integer, ApiContentResponse> plugins = new HashMap<>();
     private Map<Integer, ApiContentResponse> themes = new HashMap<>();
+    private Map<Integer, ContentsConfigDetailJson> pluginsInstalled = new HashMap<>();
+    private Map<Integer, ContentsConfigDetailJson> themesInstalled = new HashMap<>();
     private String currentPlugin;
     private String currentTheme;
 
@@ -93,7 +99,6 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
         ApiMapper mapper;
 
         if(!requester.isApiOk()){
-            alert(Alert.AlertType.ERROR, "API: Erreur", "Une errer est survenu lors du contact de l'API", "http://zw.winxaito.com/api/");
             listPlugins.getItems().add("Erreur lors du contact de l'API");
             listThemes.getItems().add("Erreur lors du contact de l'API");
         }else{
@@ -157,13 +162,13 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
                 logger.error(e.getMessage(), e);
             }
 
-            listPlugins.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                currentPlugin = (String)newValue;
-            });
+            listPlugins.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> currentPlugin = (String)newValue);
+            listOfficialInstalledPlugins.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> currentPlugin = (String)newValue);
+            listUnofficialInstalledPlugins.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> currentPlugin = (String)newValue);
 
-            listThemes.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                currentTheme = (String)newValue;
-            });
+            listThemes.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> currentTheme = (String)newValue);
+            listOfficialInstalledThemes.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> currentTheme = (String)newValue);
+            listUnofficialInstalledThemes.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> currentTheme = (String)newValue);
         }
     }
 
@@ -188,14 +193,14 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
         ApiContentResponse plugin = getPlugin();
         assert plugin != null;
 
-        if (alert(
+        if(alert(
                 Alert.AlertType.CONFIRMATION,
                 "Installation",
                 "Voulez-vous vraiment installé ce plugin ?",
                 "Le plugin sera télécharger depuis ces adresses:\n  " + plugin.getDownload_url() + ".content\n  " + plugin.getDownload_url() + ".data",
                 ButtonType.YES, ButtonType.NO
         ) == ButtonType.YES){
-            waitStage();
+            waitStage("Téléchargement", "Téléchargement et installation en cours");
 
             apiDownloader = new ApiDownloader(ContentType.PLUGIN, tempDir.getPath() + "/", plugin.getDownload_url() + ".content", plugin.getDownload_url() + ".data");
             apiDownloader.addListener(this);
@@ -212,7 +217,29 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
     }
 
     @FXML private void handleUnofficialPluginUninstall(){
-        alert(Alert.AlertType.CONFIRMATION, "Désinstallation", null, "Voulez-vous désinstaller ce plugin ?");
+        ContentsConfigDetailJson plugin = getInstalledPlugin();
+        assert plugin != null;
+
+        if(alert(
+                Alert.AlertType.CONFIRMATION,
+                "Désinstallation",
+                "Souhaitez-vous vraiment désinstaller ce plugin ?",
+                null,
+                ButtonType.YES, ButtonType.NO
+        ) == ButtonType.YES){
+            if(ApiInstaller.uninstall(ContentType.PLUGIN,
+                    new File(MainApp.getConfig().getContentsPath() + "/plugins/" + plugin.getUrl_id() + ".jar"),
+                    new File(MainApp.getConfig().getContentsPath() + "/plugins/" + plugin.getUrl_id() + ".data")
+            )){
+                alert(Alert.AlertType.INFORMATION, "Désinstallation", "Le plugin a bien été désinstaller", null);
+                MainApp.getContentsConfigPlugins().generateIndex(ContentsConfig.ConfigType.UNOFFICIAL);
+                listUnofficialInstalledPlugins.getItems().clear();
+                loadInstalledContents();
+                listUnofficialInstalledPlugins.refresh();
+            }else{
+                alert(Alert.AlertType.ERROR, "Désinstallation", "Une erreur est survenu durant la désinstallation du plugin", null);
+            }
+        }
     }
 
     @FXML private void handleListThemeInfos(){
@@ -236,12 +263,19 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
         ApiContentResponse theme = getTheme();
         assert theme != null;
 
-        alert(
+        if(alert(
                 Alert.AlertType.CONFIRMATION,
                 "Installation",
                 "Voulez-vous vraiment installé ce thème ?",
-                "Le thème sera télécharger depuis ces adresses:\n  " + theme.getDownload_url() + ".content\n  " + theme.getDownload_url() + ".data"
-        );
+                "Le thème sera télécharger depuis ces adresses:\n  " + theme.getDownload_url() + ".content\n  " + theme.getDownload_url() + ".data",
+                ButtonType.YES, ButtonType.NO
+        ) == ButtonType.YES){
+            waitStage("Installation", "Téléchargement et installation en cours");
+
+            apiDownloader = new ApiDownloader(ContentType.THEME, tempDir.getPath() + "/", theme.getDownload_url() + ".content", theme.getDownload_url() + ".data");
+            apiDownloader.addListener(this);
+            apiDownloader.setContent(theme);
+        }
     }
 
     @FXML private void handleOfficialThemeState(){
@@ -253,7 +287,33 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
     }
 
     @FXML private void handleUnofficialThemeUninstall(){
+        ContentsConfigDetailJson theme = getInstalledTheme();
+        assert theme != null;
 
+        if(alert(
+                Alert.AlertType.CONFIRMATION,
+                "Désinstallation",
+                "Souhaitez-vous vraiment désinstaller ce thème ?",
+                null,
+                ButtonType.YES, ButtonType.NO
+        ) == ButtonType.YES){
+            File contentFile = new File(MainApp.getConfig().getContentsPath() + "/themes/" + theme.getUrl_id() + ".css");
+            File dataFile = new File(MainApp.getConfig().getContentsPath() + "/themes/" + theme.getUrl_id() + ".data");
+
+
+            if(ApiInstaller.uninstall(ContentType.THEME,
+                    contentFile,
+                    dataFile
+            )){
+                alert(Alert.AlertType.INFORMATION, "Désinstallation", "Le thème a bien été désinstaller", null);
+                MainApp.getContentsConfigThemes().generateIndex(ContentsConfig.ConfigType.UNOFFICIAL);
+                listUnofficialInstalledThemes.getItems().clear();
+                loadInstalledContents();
+                listUnofficialInstalledThemes.refresh();
+            }else{
+                alert(Alert.AlertType.ERROR, "Désinstallation", "Une erreur est survenu durant la désinstallation du thème", null);
+            }
+        }
     }
 
     private ApiContentResponse getPlugin(){
@@ -266,6 +326,17 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
                 validate = "[VALIDE] ";
 
             if(currentPlugin.equals("[" + plugin.getVersion() + "] " + validate + plugin.getName()))
+                return plugin;
+        }
+
+        return null;
+    }
+
+    private ContentsConfigDetailJson getInstalledPlugin(){
+        for(Map.Entry<Integer, ContentsConfigDetailJson> map : pluginsInstalled.entrySet()){
+            ContentsConfigDetailJson plugin = map.getValue();
+
+            if(currentPlugin.equals("[" + plugin.getVersion() + "] " + plugin.getName()))
                 return plugin;
         }
 
@@ -288,6 +359,18 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
         return null;
     }
 
+    private ContentsConfigDetailJson getInstalledTheme(){
+        logger.debug(currentTheme + " -- " + themesInstalled.size());
+        for(Map.Entry<Integer, ContentsConfigDetailJson> map : themesInstalled.entrySet()){
+            ContentsConfigDetailJson theme = map.getValue();
+
+            if(currentTheme.equals("[" + theme.getVersion() + "] " + theme.getName()))
+                return theme;
+        }
+
+        return null;
+    }
+
     private ButtonType alert(Alert.AlertType type, String title, String header, String content, ButtonType... buttonType){
         Alert a = new CustomAlert(type);
         a.setTitle(title);
@@ -304,21 +387,18 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
         return (alert(type, title, header, content, ButtonType.OK, ButtonType.CANCEL));
     }
 
-    private void waitStage(){
-        waitStage = new CustomStage("Téléchargement");
-        Group root = new Group();
-        Scene scene = new Scene(root, 200, 150);
+    private void waitStage(String title, String label){
+        waitStage = new CustomStage(title);
+        AnchorPane root = new AnchorPane();
+        Scene scene = new Scene(root, 350, 150);
+        FunctionTreeFactory.addTheming(root);
         waitStage.setScene(scene);
         waitStage.setResizable(false);
         waitStage.initOwner(window);
         waitStage.initModality(Modality.APPLICATION_MODAL);
-        waitStage.setOnCloseRequest(event -> {
-            if(alert(Alert.AlertType.CONFIRMATION, "Téléchargement", "Arrêt du téléchargement", "Souhaitez-vous vraiment arrêter le téléchargement ?") != ButtonType.OK){
-                event.consume();
-            }
-        });
+        waitStage.setOnCloseRequest(Event::consume);
 
-        Label lb = new Label("Téléchargement en cours");
+        Label lb = new Label(label);
         lb.setFont(new Font(lb.getFont().getName(), 18));
 
         ProgressIndicator pin = new ProgressIndicator();
@@ -355,24 +435,40 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
     }
 
     private void loadInstalledContents(){
-        ContentsConfig contentsConfig = MainApp.getContentsConfigPlugins();
-        ContentsConfigJson configJson = contentsConfig.getConfigJson();
+        int i = 0;
+        pluginsInstalled.clear();
+        themesInstalled.clear();
 
-        for(ContentsConfigDetailJson detailJson : configJson.getContents()){
-            if(detailJson.getContentsType() == ContentType.PLUGIN)
-                listUnofficialInstalledPlugins.getItems().add("[" + detailJson.getVersion() + "] " + detailJson.getName());
-            else if(detailJson.getContentsType() == ContentType.THEME)
-                listUnofficialInstalledThemes.getItems().add("[" + detailJson.getVersion() + "] " + detailJson.getName());
+        //Load installed plugins
+        ContentsConfigJson pluginsJson = MainApp.getContentsConfigPlugins().getConfigJson();
+
+        for(ContentsConfigDetailJson detailJson : pluginsJson.getContents()){
+            //listUnofficialInstalledPlugins.getItems().add("[" + detailJson.getVersion() + "] " + detailJson.getName());
+            pluginsInstalled.put(i, detailJson);
+            i++;
         }
 
-        if(listOfficialInstalledPlugins.getItems().size() == 0)
-            listOfficialInstalledPlugins.getItems().add("Aucun plugin officiel n'est installé");
-        if(listOfficialInstalledThemes.getItems().size() == 0)
-            listOfficialInstalledThemes.getItems().add("Aucun thème officiel n'est installé");
-        if(listUnofficialInstalledPlugins.getItems().size() == 0)
-            listUnofficialInstalledPlugins.getItems().add("Aucun plugin non officiel n'est installé");
-        if(listUnofficialInstalledThemes.getItems().size() == 0)
-            listUnofficialInstalledThemes.getItems().add("Aucun thème non officiel n'est installé");
+        //Load installed themes
+        ContentsConfigJson themesJson = MainApp.getContentsConfigThemes().getConfigJson();
+
+        i = 0;
+        for(ContentsConfigDetailJson detailJson : themesJson.getContents()){
+            Platform.runLater(() -> listUnofficialInstalledThemes.getItems().add("[" + detailJson.getVersion() + "] " + detailJson.getName()));
+            logger.debug("PUT In themesInstalled : " + i + " -- [" + detailJson.getVersion() + "] " + detailJson.getName());
+            themesInstalled.put(i, detailJson);
+            i++;
+        }
+
+        Platform.runLater(() -> {
+            if(listOfficialInstalledPlugins.getItems().size() == 0)
+                listOfficialInstalledPlugins.getItems().add("Aucun plugin officiel n'est installé");
+            if(listOfficialInstalledThemes.getItems().size() == 0)
+                listOfficialInstalledThemes.getItems().add("Aucun thème officiel n'est installé");
+            if(listUnofficialInstalledPlugins.getItems().size() == 0)
+                listUnofficialInstalledPlugins.getItems().add("Aucun plugin non officiel n'est installé");
+            if(listUnofficialInstalledThemes.getItems().size() == 0)
+                listUnofficialInstalledThemes.getItems().add("Aucun thème non officiel n'est installé");
+        });
     }
 
     @Override
@@ -394,7 +490,18 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
 
     @Override
     public void onInstallSuccess(){
-        MainApp.getContentsConfigPlugins().addContents(ContentsConfig.ConfigType.UNOFFICIAL, apiDownloader.getContentType(), apiDownloader.getContent());
+        if(apiDownloader.getContentType() == ContentType.PLUGIN)
+            MainApp.getContentsConfigPlugins().addContents(ContentsConfig.ConfigType.UNOFFICIAL, apiDownloader.getContent());
+        else
+            MainApp.getContentsConfigThemes().addContents(ContentsConfig.ConfigType.UNOFFICIAL, apiDownloader.getContent());
+
+        //listUnofficialInstalledPlugins.getItems().clear();
+        //listUnofficialInstalledThemes.getItems().clear();
+        loadInstalledContents();
+
+        listUnofficialInstalledPlugins.refresh();
+        listUnofficialInstalledThemes.refresh();
+
         Platform.runLater(this::successAlert);
     }
 }

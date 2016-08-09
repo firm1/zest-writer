@@ -14,10 +14,6 @@ public class ApiMapper{
         ObjectMapper mapper = new ObjectMapper();
         try{
             contents = mapper.readValue(json, ApiContentsResponse.class);
-
-            for(ApiContentResponse content : contents.getContents()){
-                logger.debug("  " + content.toString());
-            }
         }catch(IOException e){
             logger.error(e.getMessage(), e);
         }

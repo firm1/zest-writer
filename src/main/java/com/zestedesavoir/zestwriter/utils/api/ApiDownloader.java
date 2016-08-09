@@ -88,6 +88,11 @@ public class ApiDownloader implements Runnable{
         t.start();
     }
 
+    public void stop(){
+        status = Status.CANCELLED;
+        listeners.forEach(ApiDownloaderListener::onDownloadCancelled);
+    }
+
     public void pause(){
         status = Status.PAUSE;
         listeners.forEach(ApiDownloaderListener::onDownloadPaused);

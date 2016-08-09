@@ -53,6 +53,7 @@ public class ApiRequester{
         StringBuilder response = new StringBuilder();
 
         try{
+            logger.debug("Request to : " + url.toString());
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.setRequestMethod(method.str);
             connection.connect();
@@ -70,8 +71,6 @@ public class ApiRequester{
                 while((line = reader.readLine()) != null){
                     response.append(line);
                 }
-
-                logger.debug("Content: " + response);
             }else{
                 logger.error("Response error, code: " + code);
             }

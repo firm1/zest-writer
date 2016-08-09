@@ -11,6 +11,7 @@ import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import com.zestedesavoir.zestwriter.view.dialogs.ContentsDialog;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,9 +73,8 @@ public class ContentsConfig{
 
     }
 
-    public void addContents(ConfigType configType, ContentsDialog.ContentType contentsType, ApiContentResponse contentResponse){
+    public void addContents(ConfigType configType, ApiContentResponse contentResponse){
         ContentsConfigDetailJson detailJson = new ContentsConfigDetailJson();
-        detailJson.setContentsType(contentsType);
         detailJson.setId(contentResponse.getId());
         detailJson.setName(contentResponse.getName());
         detailJson.setUser_name(contentResponse.getUser().getName());
@@ -83,6 +83,7 @@ public class ContentsConfig{
         detailJson.setUrl_id(contentResponse.getUrl_id());
         detailJson.setPlugin_url(contentResponse.getPlugin_url());
         detailJson.setDownload_url(contentResponse.getDownload_url());
+        detailJson.setEnabled(true);
 
         if(configType == ConfigType.OFFICIAL){
             configJsonOfficial.addContent(detailJson);
@@ -114,6 +115,7 @@ public class ContentsConfig{
     }
 
     public void generateIndex(ConfigType configType){
+        logger.info("Generate INDEX: ContentType -> " + contentType + " / configType -> " + configType);
         setConfig(configType);
 
         String path = null;
@@ -136,14 +138,17 @@ public class ContentsConfig{
             return;
 
         File dataFiles[] = new File(path).listFiles();
+        logger.debug("Generate index of files -> " + path);
 
         if(dataFiles == null){
             setConfig(configType);
             return;
         }
 
-        logger.debug("Generate index for : " + configType);
         for(File dataFile : dataFiles){
+            if(!FilenameUtils.getExtension(dataFile.getPath()).equalsIgnoreCase("data"))
+                continue;
+
             logger.debug("  Add -> " + dataFile.getPath());
             String line;
             StringBuilder json = new StringBuilder();
@@ -158,7 +163,7 @@ public class ContentsConfig{
 
             InternalMapper mapper = new InternalMapper(json.toString());
             ApiContentResponse content = mapper.getContent();
-            addContents(configType, ContentsDialog.ContentType.PLUGIN, content);
+            addContents(configType, content);
         }
     }
 
