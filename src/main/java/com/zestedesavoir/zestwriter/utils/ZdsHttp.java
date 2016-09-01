@@ -10,6 +10,11 @@ import java.io.InputStreamReader;
 import java.net.HttpCookie;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
@@ -29,18 +34,25 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.LaxRedirectStrategy;
+import org.apache.http.impl.client.*;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.http.ssl.SSLContexts;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -51,6 +63,8 @@ import org.slf4j.LoggerFactory;
 import com.zestedesavoir.zestwriter.model.MetadataContent;
 
 import javafx.util.Pair;
+
+import javax.net.ssl.SSLContext;
 
 
 public class ZdsHttp {
@@ -162,12 +176,38 @@ public class ZdsHttp {
         cookieStore = new BasicCookieStore();
         context.setCookieStore(cookieStore);
 
-        PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
-        // Increase max total connection to 200
-        cm.setMaxTotal(500);
-        // Increase default max connection per route to 20
-        cm.setDefaultMaxPerRoute(20);
-        client = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).setConnectionManager(cm).build();
+        try {
+            SSLContextBuilder builder = new SSLContextBuilder();
+            builder.loadTrustMaterial(null, new TrustStrategy() {
+                @Override
+                public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                    return true;
+                }
+            });
+
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build());
+
+            Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory> create().register("https", sslsf).register("http", new PlainConnectionSocketFactory()).build();
+            PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+            // Increase max total connection to 200
+            cm.setMaxTotal(500);
+            // Increase default max connection per route to 20
+            cm.setDefaultMaxPerRoute(20);
+
+            client = HttpClients.custom()
+                    .setRedirectStrategy(new LaxRedirectStrategy())
+                    .setConnectionManager(cm)
+                    .setSSLSocketFactory(sslsf)
+                    .build();
+
+        } catch (NoSuchAlgorithmException e) {
+            logger.error(e.getMessage(), e);
+        } catch (KeyManagementException e) {
+            logger.error(e.getMessage(), e);
+        } catch (KeyStoreException e) {
+            logger.error(e.getMessage(), e);
+        }
+        
         contentListOnline = new ArrayList<>();
 
     }
