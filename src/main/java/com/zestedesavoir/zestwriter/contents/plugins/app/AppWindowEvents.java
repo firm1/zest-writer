@@ -1,8 +1,8 @@
-package com.zestedesavoir.zestwriter.plugins.app;
+package com.zestedesavoir.zestwriter.contents.plugins.app;
 
 
 import com.zestedesavoir.zestwriter.MainApp;
-import com.zestedesavoir.zestwriter.plugins.Plugin;
+import com.zestedesavoir.zestwriter.contents.plugins.Plugin;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;

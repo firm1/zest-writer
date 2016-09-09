@@ -1,4 +1,4 @@
-package com.zestedesavoir.zestwriter.plugins;
+package com.zestedesavoir.zestwriter.contents.plugins;
 
 
 import com.zestedesavoir.zestwriter.MainApp;

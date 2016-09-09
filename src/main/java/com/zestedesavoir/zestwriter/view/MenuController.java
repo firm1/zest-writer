@@ -720,11 +720,13 @@ public class MenuController{
 
         Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.tools.external_contents"));
         dialogStage.setResizable(false);
+        dialogStage.initOwner(MainApp.getPrimaryStage());
 
-        ContentsDialog pluginsController = loader.getController();
-        pluginsController.setWindow(dialogStage);
+        ContentsDialog contentsController = loader.getController();
+        contentsController.setWindow(dialogStage);
 
-        dialogStage.show();
+        if(!MainApp.getContentsConfigPlugins().isCorrupted() && !MainApp.getContentsConfigThemes().isCorrupted())
+            dialogStage.show();
     }
 
     public Text getLabelField(){

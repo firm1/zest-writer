@@ -2,7 +2,8 @@ package com.zestedesavoir.zestwriter;
 
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
-import com.zestedesavoir.zestwriter.plugins.PluginsManager;
+import com.zestedesavoir.zestwriter.contents.plugins.PluginsManager;
+import com.zestedesavoir.zestwriter.contents.internal.ContentsConfig;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Markdown;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
@@ -11,6 +12,7 @@ import com.zestedesavoir.zestwriter.view.MenuController;
 import com.zestedesavoir.zestwriter.view.com.CustomAlert;
 import com.zestedesavoir.zestwriter.view.com.CustomFXMLLoader;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
+import com.zestedesavoir.zestwriter.view.dialogs.ContentsDialog;
 import com.zestedesavoir.zestwriter.view.task.LoginService;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -43,7 +45,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class MainApp extends Application {
+public class MainApp extends Application{
     public static Configuration config;
     private static Stage primaryStage;
     private static ZdsHttp zdsutils;
@@ -54,9 +56,11 @@ public class MainApp extends Application {
     private ObservableList<Content> contents = FXCollections.observableArrayList();
     private MdTextController Index;
     private StringBuilder key = new StringBuilder();
-    private Logger logger;
+    private static Logger logger;
     private MenuController menuController;
     private PluginsManager pm;
+    private static ContentsConfig contentsConfigPlugins;
+    private static ContentsConfig contentsConfigThemes;
     public static String[] args;
     public static File defaultHome;
 
@@ -225,7 +229,13 @@ public class MainApp extends Application {
         }
     }
 
+    public static ContentsConfig getContentsConfigPlugins(){
+        return contentsConfigPlugins;
+    }
 
+    public static ContentsConfig getContentsConfigThemes(){
+        return contentsConfigThemes;
+    }
 
     public MenuController getMenuController() {
         return menuController;
@@ -268,6 +278,9 @@ public class MainApp extends Application {
     }
 
     public void initPlugins(){
+        contentsConfigPlugins = new ContentsConfig(ContentsDialog.ContentType.PLUGIN);
+        contentsConfigThemes = new ContentsConfig(ContentsDialog.ContentType.THEME);
+
         pm = new PluginsManager(this);
         pm.enablePlugins();
     }

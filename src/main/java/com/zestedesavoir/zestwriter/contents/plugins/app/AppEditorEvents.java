@@ -1,11 +1,8 @@
-package com.zestedesavoir.zestwriter.plugins.app;
+package com.zestedesavoir.zestwriter.contents.plugins.app;
 
 
-import com.zestedesavoir.zestwriter.MainApp;
-import com.zestedesavoir.zestwriter.plugins.Plugin;
+import com.zestedesavoir.zestwriter.contents.plugins.Plugin;
 import com.zestedesavoir.zestwriter.view.MdConvertController;
-import com.zestedesavoir.zestwriter.view.MdTextController;
-import javafx.stage.Stage;
 import org.fxmisc.richtext.StyleClassedTextArea;
 
 import java.util.ArrayList;
