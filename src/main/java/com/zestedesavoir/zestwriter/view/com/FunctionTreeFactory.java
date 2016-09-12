@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.concurrent.FutureTask;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 public class FunctionTreeFactory {
@@ -53,15 +56,21 @@ public class FunctionTreeFactory {
 
      }
 
-    public static boolean clearContent(ObservableMap<Textual, Tab> extracts, TabPane editorList) {
-        for(Entry<Textual, Tab> entry:extracts.entrySet()) {
-            Event.fireEvent(entry.getValue(), new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
+    public static void clearContent(ObservableMap<Textual, Tab> extracts, TabPane editorList, Supplier<Void> doAfter) {
+
+        if(extracts.size() == 0) {
+            doAfter.get();
         }
-        if(editorList.getTabs().size() <= 1) {
-            extracts.clear();
-            return true;
-        } else {
-            return false;
+
+        for(Entry<Textual, Tab> entry:extracts.entrySet()) {
+            Platform.runLater(() -> {
+                Event.fireEvent(entry.getValue(), new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
+
+                if(editorList.getTabs().size() <= 1) {
+                    extracts.clear();
+                    doAfter.get();
+                }
+            });
         }
     }
 

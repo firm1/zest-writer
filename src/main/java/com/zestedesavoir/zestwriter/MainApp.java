@@ -188,10 +188,11 @@ public class MainApp extends Application{
         if(primaryStage.isMaximized() && config.isDisplayWindowPersonnalDimension())
             config.setDisplayWindowMaximize("true");
         config.saveConfFile();
-        if(FunctionTreeFactory.clearContent(getExtracts(), getIndex().getEditorList())) {
+        FunctionTreeFactory.clearContent(getExtracts(), getIndex().getEditorList(), () -> {
             Platform.exit();
             System.exit(0);
-        }
+            return null;
+        });
     }
 
     public void initRootLayout() {

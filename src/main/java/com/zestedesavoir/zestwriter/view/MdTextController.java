@@ -119,13 +119,12 @@ public class MdTextController {
         this.mainApp = mainApp;
 
         mainApp.getContents().addListener((ListChangeListener<Content>) change -> {
-            Platform.runLater(() -> {
-                if (FunctionTreeFactory.clearContent(mainApp.getExtracts(), EditorList)) {
-                    Summary.setRoot(null);
-                    for (Content content : mainApp.getContents()) {
-                        openContent(content);
-                    }
+            FunctionTreeFactory.clearContent(mainApp.getExtracts(), EditorList, () -> {
+                Summary.setRoot(null);
+                for (Content content : mainApp.getContents()) {
+                    openContent(content);
                 }
+                return null;
             });
         });
 
@@ -235,7 +234,7 @@ public class MdTextController {
             if(!controllerConvert.isSaved()) {
                 Alert alert = new CustomAlert(AlertType.CONFIRMATION);
                 alert.setTitle(Configuration.bundle.getString("ui.alert.tab.close.title"));
-                alert.setHeaderText(Configuration.bundle.getString("ui.alert.tab.close.header"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.alert.tab.close.header")+" : "+tab.getText().substring(1));
                 alert.setContentText(Configuration.bundle.getString("ui.alert.tab.close.text"));
 
                 ButtonType buttonTypeYes = new ButtonType(Configuration.bundle.getString("ui.yes"));
