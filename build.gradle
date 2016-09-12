@@ -148,8 +148,9 @@ jacocoTestReport {
             fileTree(dir: it,
                     exclude: ['**/view/**',
                               '**/contents/**',
-                              '**/api/**',
+                              '**/utils/api/**',
                               '**/MainApp**',
+                              '**/officialContents/**',
                               '**/task/**'])
         })
     }
@@ -158,6 +159,6 @@ jacocoTestReport {
 tasks.check.dependsOn jacocoTestReport
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.8'
+    gradleVersion = '2.9'
 }
 apply plugin: 'java'
