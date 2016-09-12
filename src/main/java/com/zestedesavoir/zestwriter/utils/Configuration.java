@@ -444,7 +444,7 @@ public class Configuration {
 
     public List<String> getActions() {
         String value = actions.getProperty(ActionData.LastProjects.getKey());
-        if(value != null ) {
+        if(value != null && ! value.trim().equals("")) {
             return Arrays.asList(value.split(","));
         } else {
             return new ArrayList<>();
