@@ -15,7 +15,7 @@ public class BaseDialog<T> extends CustomDialog<T> {
 		this.setTitle(title);
 		this.setHeaderText(null);
 		Stage stage= (Stage)this.getDialogPane().getScene().getWindow();
-		stage.getIcons().add(new Image(MainApp.class.getResourceAsStream("assets/static/icons/logo.png")));
+		stage.getIcons().add(new Image(MainApp.class.getResourceAsStream("images/logo.png")));
 
 		gridPane.setHgap(20);
 		gridPane.setVgap(20);

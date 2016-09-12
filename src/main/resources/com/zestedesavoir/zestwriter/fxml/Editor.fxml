@@ -170,14 +170,6 @@
                     </graphic>
                   </Button>
 
-                  <Button fx:id="RefreshButton" mnemonicParsing="false" onAction="#updateRender">
-                  <tooltip>
-                        <Tooltip text="%ui.editor.button.resfresh" />
-                  </tooltip>
-                  	<graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="REFRESH" size="1.8em" />
-                     </graphic>
-                  </Button>
                   <Button fx:id="CorrectButton" mnemonicParsing="false" onAction="#HandleValidateButtonAction">
                   <tooltip>
                         <Tooltip text="%ui.editor.button.correct" />
