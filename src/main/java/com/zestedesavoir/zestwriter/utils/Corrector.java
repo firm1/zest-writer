@@ -1,5 +1,7 @@
 package com.zestedesavoir.zestwriter.utils;
 
+import org.jsoup.Jsoup;
+import org.jsoup.examples.HtmlToPlainText;
 import org.languagetool.JLanguageTool;
 import org.languagetool.language.French;
 import org.languagetool.markup.AnnotatedText;
@@ -151,6 +153,8 @@ public class Corrector {
         int offset = 0;
         for (RuleMatch match : matches) {
             String desc = match.getMessage();
+            desc = new HtmlToPlainText().getPlainText(Jsoup.parse(desc));
+
             if (match.getSuggestedReplacements().size() > 0) {
                 desc += Configuration.bundle.getString("ui.alert.correction.tooltip.suggestion")
                         + match.getSuggestedReplacements();
