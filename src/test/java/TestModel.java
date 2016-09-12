@@ -4,6 +4,8 @@ import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.GithubHttp;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
+import com.zestedesavoir.zestwriter.view.task.DownloadGithubService;
+import javafx.concurrent.Service;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -345,20 +347,15 @@ public class TestModel {
     }
 
     @Test
-    public void testImport() {
-
-
+    public void testImport() throws IOException {
         File workspace = new File(new File(TEST_DIR), "zworkspace");
         if(!workspace.exists()) {
             workspace.mkdirs();
         }
-        try {
-            GithubHttp.importGithub("https://github.com/steeve/france.code-civil", workspace.getAbsolutePath(), workspace.getAbsolutePath());
-            File off = new File(workspace, "france.code-civil");
-            assertTrue(off.exists());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ;
+        //GithubHttp.importGithub("https://github.com/steeve/france.code-civil", workspace.getAbsolutePath(), workspace.getAbsolutePath());
+        String filePath = GithubHttp.getGithubZipball ("steeve", "france.code-civil", workspace.getAbsolutePath());
+        File folder = GithubHttp.unzipOnlineContent (filePath, workspace.getAbsolutePath());
+        File off = new File(workspace, "france.code-civil");
+        assertTrue(off.exists());
     }
 }

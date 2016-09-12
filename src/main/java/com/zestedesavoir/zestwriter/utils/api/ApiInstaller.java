@@ -1,7 +1,6 @@
 package com.zestedesavoir.zestwriter.utils.api;
 
 import com.zestedesavoir.zestwriter.MainApp;
-import com.zestedesavoir.zestwriter.contents.internal.ContentsConfig;
 import com.zestedesavoir.zestwriter.view.dialogs.ContentsDialog;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
