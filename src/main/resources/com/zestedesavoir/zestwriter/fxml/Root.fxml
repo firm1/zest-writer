@@ -92,29 +92,29 @@
                   </MenuItem>
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="%ui.menu.syncho">
-              <items>
-                  <MenuItem fx:id="menuDownload" mnemonicParsing="false" onAction="#HandleDownloadButtonAction" text="%ui.menu.syncho.download">
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="CLOUD_DOWNLOAD" size="1.8em" />
-                     </graphic>
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="D" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator>
-                  </MenuItem>
-                  <MenuItem fx:id="menuUpload" disable="true" mnemonicParsing="false" onAction="#HandleUploadButtonAction" text="%ui.menu.syncho.upload">
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="CLOUD_UPLOAD" size="1.8em" />
-                     </graphic>
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="U" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator>
-                  </MenuItem>
-              </items>
-            </Menu>
             <Menu mnemonicParsing="false" text="%ui.menu.tools">
                 <items>
                     <MenuItem mnemonicParsing="false" onAction="#HandleContentsButtonAction" text="%ui.menu.tools.external_contents" />
+                    <Menu mnemonicParsing="false" text="%ui.menu.syncho">
+                        <items>
+                            <MenuItem fx:id="menuDownload" mnemonicParsing="false" onAction="#HandleDownloadButtonAction" text="%ui.menu.syncho.download">
+                                <graphic>
+                                    <MaterialDesignIconView fill="#084561" glyphName="CLOUD_DOWNLOAD" size="1.8em" />
+                                </graphic>
+                                <accelerator>
+                                    <KeyCodeCombination alt="UP" code="D" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                </accelerator>
+                            </MenuItem>
+                            <MenuItem fx:id="menuUpload" disable="true" mnemonicParsing="false" onAction="#HandleUploadButtonAction" text="%ui.menu.syncho.upload">
+                                <graphic>
+                                    <MaterialDesignIconView fill="#084561" glyphName="CLOUD_UPLOAD" size="1.8em" />
+                                </graphic>
+                                <accelerator>
+                                    <KeyCodeCombination alt="UP" code="U" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                </accelerator>
+                            </MenuItem>
+                        </items>
+                    </Menu>
                 </items>
             </Menu>
           <Menu mnemonicParsing="false" text="%ui.menu.help">

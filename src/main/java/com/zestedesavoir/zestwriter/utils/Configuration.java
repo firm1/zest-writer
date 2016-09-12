@@ -445,17 +445,10 @@ public class Configuration {
     public List<String> getActions() {
         String value = actions.getProperty(ActionData.LastProjects.getKey());
         if(value != null ) {
-<<<<<<< HEAD
-            if(! value.trim().equals("")) {
-                return Arrays.asList(value.split(","));
-            }
-=======
             return Arrays.asList(value.split(","));
         } else {
             return new ArrayList<>();
->>>>>>> plugins_api
         }
-        return new ArrayList<String>();
     }
 
     public void addActionProject(String projectFileName) {

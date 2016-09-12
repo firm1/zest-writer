@@ -2,10 +2,7 @@ package com.zestedesavoir.zestwriter.contents.internal;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
-import com.zestedesavoir.zestwriter.contents.plugins.Plugin;
 import com.zestedesavoir.zestwriter.utils.api.ApiContentResponse;
-import com.zestedesavoir.zestwriter.utils.api.ApiMapper;
-import com.zestedesavoir.zestwriter.view.com.CustomAlert;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import com.zestedesavoir.zestwriter.view.dialogs.ContentsDialog;
@@ -29,8 +26,10 @@ public class ContentsConfig{
     private boolean isCorrupted = false;
 
     public enum ConfigType{
-        OFFICIAL(MainApp.getConfig().getContentsPath() + "/plugins.config.official.data", MainApp.getConfig().getContentsPath() + "/themes.config.official.data"),
-        UNOFFICIAL(MainApp.getConfig().getContentsPath() + "/plugins.config.data", MainApp.getConfig().getContentsPath() + "/themes.config.data");
+        OFFICIAL(MainApp.getConfig().getContentsPath() + File.separator + "plugins.config.official.data",
+                MainApp.getConfig().getContentsPath() + File.separator +"themes.config.official.data"),
+        UNOFFICIAL(MainApp.getConfig().getContentsPath()+ File.separator+ "plugins.config.data",
+                MainApp.getConfig().getContentsPath() + File.separator +"themes.config.data");
 
         private String pluginsPath;
         private String themesPath;
@@ -129,9 +128,9 @@ public class ContentsConfig{
             }
         }else{
             if(contentType == ContentsDialog.ContentType.PLUGIN)
-                path = MainApp.getConfig().getContentsPath() + "/plugins";
+                path = MainApp.getConfig().getContentsPath() + File.separator+ "plugins";
             else
-                path = MainApp.getConfig().getContentsPath() + "/themes";
+                path = MainApp.getConfig().getContentsPath() + File.separator + "themes";
         }
 
         if(path == null)
