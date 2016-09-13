@@ -70,16 +70,18 @@ public class GithubHttp {
     }
 
     public static Content loadManifest(String folder, String owner, String repo) throws IOException {
-        String projecUrl = "http://api.github.com/repos/"+owner+"/"+repo;
+        String projecUrl = "https://api.github.com/repos/"+owner+"/"+repo;
         String title = null;
         logger.debug("Tentative de connexion à l'url : "+projecUrl);
         String github_user = System.getProperty("zw.github_user");
         String github_token = System.getProperty("zw.github_token");
 
-        Executor executor = Executor.newInstance();
+        Executor executor = null;
         if(github_user != null && !github_user.equals("") && github_token != null && !github_token.equals("")) {
-            executor = executor.auth(github_user, github_token);
-            logger.debug("Authentification avec  "+github_user);
+            executor = Executor.newInstance().auth(github_user, github_token);
+            logger.debug("Authentification avec  "+github_user+":"+github_token);
+        } else {
+            executor = Executor.newInstance();
         }
 
         String json = executor.execute(Request.Get(projecUrl)).returnContent().asString();
