@@ -82,7 +82,6 @@ public class GithubHttp {
             executor = Executor
                     .newInstance()
                     .auth(new HttpHost("api.github.com"), github_user, github_token);
-            logger.debug("Authentification avec  "+github_user+":"+github_token);
         } else {
             executor = Executor.newInstance();
         }
