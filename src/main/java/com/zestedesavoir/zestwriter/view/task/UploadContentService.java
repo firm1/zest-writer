@@ -1,6 +1,7 @@
 package com.zestedesavoir.zestwriter.view.task;
 
 import com.zestedesavoir.zestwriter.MainApp;
+import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import javafx.concurrent.Service;
@@ -16,10 +17,12 @@ import java.util.Optional;
 
 public class UploadContentService extends Service<Void>{
 	private final Logger logger;
+    private Content content;
 	private Optional<Pair<String, MetadataContent>> result;
 
-	public UploadContentService(Optional<Pair<String, MetadataContent>> result) {
+	public UploadContentService(Optional<Pair<String, MetadataContent>> result, Content content) {
 		this.result = result;
+        this.content = content;
 		logger = LoggerFactory.getLogger(getClass());
 	}
 
@@ -30,10 +33,9 @@ public class UploadContentService extends Service<Void>{
             protected Void call() throws Exception {
                 if (MainApp.getZdsutils().isAuthenticated() && result.isPresent()) {
                     String targetId = result.get().getValue().getId();
-                    String localSlug = MainApp.getZdsutils().getLocalSlug();
                     String targetSlug = result.get().getValue().getSlug();
 
-                    String pathDir = MainApp.getZdsutils().getOfflineContentPathDir() + File.separator + localSlug;
+                    String pathDir = content.getFilePath ();
                     updateMessage(Configuration.bundle.getString("ui.task.zip.label")+" : "+targetSlug+" "+Configuration.bundle.getString("ui.task.pending.label")+" ...");
                     ZipUtil.pack(new File(pathDir), new File(pathDir + ".zip"));
                     updateMessage(Configuration.bundle.getString("ui.task.import.label")+" : "+targetSlug+" "+Configuration.bundle.getString("ui.task.pending.label")+" ...");

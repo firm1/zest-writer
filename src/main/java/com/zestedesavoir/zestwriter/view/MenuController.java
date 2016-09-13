@@ -7,6 +7,7 @@ import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
+import com.zestedesavoir.zestwriter.utils.GithubHttp;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.com.*;
@@ -467,7 +468,7 @@ public class MenuController{
             return null;
         });
         Optional<Pair<String, MetadataContent>> result = dialog.showAndWait();
-        UploadContentService uploadContentTask = new UploadContentService(result);
+        UploadContentService uploadContentTask = new UploadContentService(result, mainApp.getContents ().get (0));
         labelField.textProperty().bind(uploadContentTask.messageProperty());
         uploadContentTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
             Alert alert = new CustomAlert(AlertType.NONE);
@@ -666,6 +667,45 @@ public class MenuController{
         optionsController.setWindow(dialogStage);
 
         dialogStage.show();
+    }
+
+    @FXML private void HandleImportGithubButtonAction() {
+        TextInputDialog dialog = new TextInputDialog("https://github.com/");
+        dialog.setTitle(Configuration.bundle.getString("ui.dialog.import.github.title"));
+        dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.import.github.header"));
+        dialog.setContentText(Configuration.bundle.getString("ui.dialog.import.github.text")+" :");
+        dialog.getEditor().setPrefWidth(500);
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(url -> {
+            hBottomBox.getChildren().clear();
+            hBottomBox.add(pb, 0, 0);
+            hBottomBox.add(labelField, 1, 0);
+            DownloadGithubService downloadGithubTask = new DownloadGithubService(url, MainApp.getZdsutils().getOfflineContentPathDir(), MainApp.getZdsutils().getOnlineContentPathDir());
+            labelField.textProperty().bind(downloadGithubTask.messageProperty());
+            pb.progressProperty().bind(downloadGithubTask.progressProperty());
+            Alert alert = new CustomAlert(AlertType.NONE);
+            downloadGithubTask.setOnFailed (t -> {
+                alert.setAlertType(AlertType.ERROR);
+                alert.setTitle(Configuration.bundle.getString("ui.dialog.download.github.failed.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.download.github.failed.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.download.github.failed.text"));
+                alert.showAndWait();
+            });
+            downloadGithubTask.setOnSucceeded (t -> {
+                FunctionTreeFactory.switchContent (downloadGithubTask.getValue (), mainApp.getContents ());
+                alert.setAlertType(AlertType.INFORMATION);
+                alert.setTitle(Configuration.bundle.getString("ui.dialog.download.github.success.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.download.github.success.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.download.github.success.text"));
+                alert.showAndWait();
+                hBottomBox.getChildren().clear();
+            });
+
+            if(result.isPresent()){
+                downloadGithubTask.start();
+            }
+        });
     }
 
     @FXML private void HandleCheckUpdateButtonAction(ActionEvent event){
