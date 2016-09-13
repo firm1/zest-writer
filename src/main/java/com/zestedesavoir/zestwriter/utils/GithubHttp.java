@@ -5,6 +5,7 @@ import com.zestedesavoir.zestwriter.model.Container;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Extract;
 import com.zestedesavoir.zestwriter.model.MetaContent;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Executor;
@@ -78,14 +79,15 @@ public class GithubHttp {
 
         Executor executor = null;
         if(github_user != null && !github_user.equals("") && github_token != null && !github_token.equals("")) {
-            executor = Executor.newInstance().auth(github_user, github_token);
+            executor = Executor
+                    .newInstance()
+                    .auth(new HttpHost("api.github.com"), github_user, github_token);
             logger.debug("Authentification avec  "+github_user+":"+github_token);
         } else {
             executor = Executor.newInstance();
         }
 
         String json = executor.execute(Request.Get(projecUrl)).returnContent().asString();
-        //String json = Request.Get(projecUrl).execute().returnContent().asString();
         ObjectMapper mapper = new ObjectMapper();
         Map map = mapper.readValue(json, Map.class);
         if(map.containsKey("description")) {
