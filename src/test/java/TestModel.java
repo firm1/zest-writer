@@ -352,10 +352,16 @@ public class TestModel {
         if(!workspace.exists()) {
             workspace.mkdirs();
         }
-        //GithubHttp.importGithub("https://github.com/steeve/france.code-civil", workspace.getAbsolutePath(), workspace.getAbsolutePath());
         String filePath = GithubHttp.getGithubZipball ("steeve", "france.code-civil", workspace.getAbsolutePath());
         File folder = GithubHttp.unzipOnlineContent (filePath, workspace.getAbsolutePath());
         File off = new File(workspace, "france.code-civil");
         assertTrue(off.exists());
+        Content loadContent = GithubHttp.loadManifest(folder.getAbsolutePath(), "steeve", "france.code-civil");
+        assertNotNull(loadContent);
+        assertNotNull(loadContent.getTitle());
+        assertNotNull(loadContent.getFilePath());
+        assertNotNull(loadContent.getType());
+        assertNotNull(loadContent.getLicence());
+        assertTrue(loadContent.getChildren().size() > 0);
     }
 }
