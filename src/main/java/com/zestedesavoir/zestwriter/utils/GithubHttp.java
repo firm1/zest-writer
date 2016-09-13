@@ -69,8 +69,9 @@ public class GithubHttp {
     }
 
     public static Content loadManifest(String folder, String owner, String repo) throws IOException {
-        String projecUrl = "https://api.github.com/repos/"+owner+"/"+repo;
+        String projecUrl = "http://api.github.com/repos/"+owner+"/"+repo;
         String title = null;
+        logger.debug("Tentative de connexion à l'url : "+projecUrl);
 
         String json = Request.Get(projecUrl).execute().returnContent().asString();
         ObjectMapper mapper = new ObjectMapper();
