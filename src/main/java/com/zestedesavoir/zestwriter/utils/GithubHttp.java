@@ -29,8 +29,6 @@ import static com.zestedesavoir.zestwriter.utils.ZdsHttp.toSlug;
 
 public class GithubHttp {
     static Logger logger = LoggerFactory.getLogger(GithubHttp.class);
-    private String github_user = System.getProperty("zw.github_user");
-    private String github_token = System.getProperty("zw.github_token");
 
     public static String getGithubZipball(String owner, String repo, String destFolder) throws IOException {
         CloseableHttpClient httpclient = HttpClients.custom()
@@ -75,6 +73,8 @@ public class GithubHttp {
         String projecUrl = "http://api.github.com/repos/"+owner+"/"+repo;
         String title = null;
         logger.debug("Tentative de connexion à l'url : "+projecUrl);
+        String github_user = System.getProperty("zw.github_user");
+        String github_token = System.getProperty("zw.github_token");
 
         Executor executor = Executor.newInstance();
         if(github_user != null && !github_user.equals("") && github_token != null && !github_token.equals("")) {
@@ -83,8 +83,7 @@ public class GithubHttp {
         }
 
         String json = executor.execute(Request.Get(projecUrl)).returnContent().asString();
-
-        String json = Request.Get(projecUrl).execute().returnContent().asString();
+        //String json = Request.Get(projecUrl).execute().returnContent().asString();
         ObjectMapper mapper = new ObjectMapper();
         Map map = mapper.readValue(json, Map.class);
         if(map.containsKey("description")) {
