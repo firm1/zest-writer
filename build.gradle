@@ -135,6 +135,8 @@ test {
 
     systemProperty "zw.username", System.getProperty("zw.username")
     systemProperty "zw.password", System.getProperty("zw.password")
+    systemProperty "zw.github_user", System.getProperty("zw.github_user")
+    systemProperty "zw.github_token", System.getProperty("zw.github_token")
     systemProperty "file.encoding", "UTF-8"
 }
 
