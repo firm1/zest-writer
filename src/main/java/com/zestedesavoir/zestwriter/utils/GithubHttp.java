@@ -78,7 +78,7 @@ public class GithubHttp {
 
         Executor executor = Executor.newInstance();
         if(github_user != null && !github_user.equals("") && github_token != null && !github_token.equals("")) {
-            executor.auth(github_user, github_token);
+            executor = executor.auth(github_user, github_token);
             logger.debug("Authentification avec  "+github_user);
         }
 
