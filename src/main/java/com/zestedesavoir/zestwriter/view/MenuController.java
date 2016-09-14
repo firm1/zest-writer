@@ -691,6 +691,7 @@ public class MenuController{
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.download.github.failed.header"));
                 alert.setContentText(Configuration.bundle.getString("ui.dialog.download.github.failed.text"));
                 alert.showAndWait();
+                hBottomBox.getChildren().clear();
             });
             downloadGithubTask.setOnSucceeded (t -> {
                 FunctionTreeFactory.switchContent (downloadGithubTask.getValue (), mainApp.getContents ());
