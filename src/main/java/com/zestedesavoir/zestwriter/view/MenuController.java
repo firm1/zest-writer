@@ -675,6 +675,7 @@ public class MenuController{
         dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.import.github.header"));
         dialog.setContentText(Configuration.bundle.getString("ui.dialog.import.github.text")+" :");
         dialog.getEditor().setPrefWidth(500);
+        dialog.initOwner(MainApp.getPrimaryStage());
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(url -> {
