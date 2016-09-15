@@ -1,7 +1,6 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
 
-import com.kenai.jffi.Main;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Lang;
@@ -109,6 +108,7 @@ public class OptionsDialog{
         alert.setTitle(Configuration.bundle.getString("ui.options.cancel.title"));
         alert.setHeaderText(Configuration.bundle.getString("ui.options.cancel.header"));
         alert.setContentText(Configuration.bundle.getString("ui.options.cancel.text"));
+        alert.initOwner(optionsWindow);
 
         Optional<ButtonType> result = alert.showAndWait();
 
@@ -125,6 +125,7 @@ public class OptionsDialog{
         alert.setHeaderText(Configuration.bundle.getString("ui.options.reset.header"));
         alert.setContentText(Configuration.bundle.getString("ui.options.reset.text"));
         alert.getButtonTypes().setAll(new ButtonType(Configuration.bundle.getString("ui.yes"), ButtonBar.ButtonData.YES), new ButtonType(Configuration.bundle.getString("ui.no"), ButtonBar.ButtonData.NO));
+        alert.initOwner(optionsWindow);
 
         Optional<ButtonType> result = alert.showAndWait();
 
@@ -223,6 +224,7 @@ public class OptionsDialog{
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.change_theme.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_theme.header"));
                 alert.setContentText(Configuration.bundle.getString("ui.dialog.change_theme.text"));
+                alert.initOwner(optionsWindow);
 
                 alert.showAndWait();
             }
@@ -237,6 +239,7 @@ public class OptionsDialog{
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.change_lang.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_lang.header"));
                 alert.setContentText(Configuration.bundle.getString("ui.dialog.change_lang.text"));
+                alert.initOwner(optionsWindow);
 
                 alert.showAndWait();
             }

@@ -24,6 +24,7 @@ public class CustomStage extends Stage{
         setScene(scene);
         getIcons().add(new Image(MainApp.class.getResourceAsStream("images/logo.png")));
         initModality(Modality.APPLICATION_MODAL);
+        initOwner(MainApp.getPrimaryStage());
     }
 
     public CustomStage(String title){
