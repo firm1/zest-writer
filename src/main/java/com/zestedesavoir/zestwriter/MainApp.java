@@ -153,7 +153,8 @@ public class MainApp extends Application{
         }
 
         MainApp.primaryStage.setOnCloseRequest(t -> {
-            pm.disablePlugins();
+            // TODO : for plugins
+            // pm.disablePlugins();
 
             if(MainApp.primaryStage.isMaximized() && config.isDisplayWindowPersonnalDimension())
                 config.setDisplayWindowMaximize("true");
@@ -174,7 +175,8 @@ public class MainApp extends Application{
             config.setDisplayWindowPositionY(String.valueOf(newValue));
         });
 
-        initPlugins();
+        // TODO : for plugins
+        //initPlugins();
         initRootLayout();
         showWriter();
         initConnection();
