@@ -12,3 +12,4 @@ bin
 /.nb-gradle/
 *.log
 classes/
+out/
