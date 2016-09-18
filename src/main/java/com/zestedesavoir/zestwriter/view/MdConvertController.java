@@ -29,6 +29,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import netscape.javascript.JSException;
@@ -107,7 +108,8 @@ public class MdConvertController {
         this.tab = tab;
         this.extract = extract;
 
-        mainApp.getPluginsManager().setPluginEditor(this);
+        // TODO: Plugin
+        //mainApp.getPluginsManager().setPluginEditor(this);
 
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Editor.fxml"));
         loader.load();
@@ -345,6 +347,9 @@ public class MdConvertController {
         choices.add("erreur");
 
         ChoiceDialog<String> dialog = new ChoiceDialog<>("information", choices);
+        FunctionTreeFactory.addTheming(dialog.getDialogPane());
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(MainApp.getPrimaryStage());
         dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.bloc.title"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.bloc.header"));
         dialog.setContentText(Configuration.bundle.getString("ui.editor.dialog.bloc.text"));
@@ -360,7 +365,7 @@ public class MdConvertController {
 
     @FXML private void HandleTableButtonAction(ActionEvent event) throws IOException {
         // Create the custom dialog.
-        Dialog<Pair<ObservableList, ObservableList<ZRow>>> dialog = new Dialog<>();
+        Dialog<Pair<ObservableList, ObservableList<ZRow>>> dialog = new CustomDialog<>();
         dialog.setTitle(Configuration.bundle.getString("ui.editor.button.table"));
         dialog.setHeaderText("");
 
@@ -409,7 +414,7 @@ public class MdConvertController {
         String link = SourceText.getSelectedText();
 
         // Create the custom dialog.
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        Dialog<Pair<String, String>> dialog = new CustomDialog<>();
         dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.link.title"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.link.header"));
 
@@ -422,7 +427,7 @@ public class MdConvertController {
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+        grid.setPadding(new Insets(20, 15, 10, 10));
 
         TextField tLink = new TextField();
         tLink.setText(link);
@@ -465,7 +470,7 @@ public class MdConvertController {
         }
 
         // Create the custom dialog.
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        Dialog<Pair<String, String>> dialog = new CustomDialog<>();
         dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.code.title"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.code.header"));
 
@@ -479,7 +484,7 @@ public class MdConvertController {
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+        grid.setPadding(new Insets(20, 15, 10, 10));
 
         TextField tLangage = new TextField();
         TextArea tCode = new TextArea();
@@ -631,6 +636,7 @@ public class MdConvertController {
         dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.goto.title"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.goto.header"));
         dialog.setContentText(Configuration.bundle.getString("ui.editor.dialog.goto.text"));
+        dialog.initOwner(MainApp.getPrimaryStage());
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(line -> SourceText.positionCaret(SourceText.position(Integer.parseInt(line)-1, 0).toOffset()));
