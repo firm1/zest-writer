@@ -23,7 +23,7 @@
          <items>
             <AnchorPane fx:id="treePane" SplitPane.resizableWithParent="false">
                <children>
-                  <TreeView fx:id="Summary" editable="true" prefHeight="400.0" prefWidth="380.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                  <TreeView fx:id="Summary" editable="true" prefHeight="400.0" prefWidth="380.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
                </children>
             </AnchorPane>
             <AnchorPane>

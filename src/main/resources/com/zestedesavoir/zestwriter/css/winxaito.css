@@ -4,10 +4,6 @@
         -fx-focus-color: transparent;
         -fx-faint-focus-color:transparent;
     }
-    .split-pane{
-        /* TODO */
-        -fx-padding: 0;
-    }
 
 /* Menu */
     .menu-bar {
@@ -69,19 +65,47 @@
     .hyperlink:hover{
         -fx-underline:true;
     }
+    .box-content {
+        -fx-border-color: #DDD #DDD -fx-text-inner-color #DDD;
+        -fx-background-color: #FFF;
+    }
+    .box-content .label {
+        -fx-background-color: #FFF;
+    }
+    .box-content .hyperlink {
+        -fx-font-size: 1.6em;
+    }
+    .title-content-home {
+        -fx-font-size: 1.8em;
+        -fx-text-fill: -fx-text-inner-color;
+        -fx-padding: 20 10 0 10;
+    }
+    .home-header-box {
+        -fx-border-width: 0 0 2 0;
+        -fx-border-color: #FFF;
+        -fx-background-color: -fx-text-inner-color;
+    }
+    .subtitle {
+        -fx-font-weight: bold;
+        -fx-font-size: 13pt;
+        -fx-text-fill: #ea9408;
+        -fx-label-padding: 20;
+    }
 
 /* Editor */
-    .tool-bar, .render-bar{
-        -fx-padding: 0 15 0 0;
+    .tool-bar{
+        -fx-padding: 0 15 0.5 0;
         -fx-spacing: 0;
-        -fx-margin:0;
+        -fx-background-color: #ececec;
+        -fx-border-color: -fx-text-inner-color;
+        -fx-border-width: 0 0 3 0;
     }
     .button{
         -fx-padding: 4 7;
-        -fx-border-width: 1;
+        -fx-border-width: 1 1 1 1;
         -fx-border-color: #d4d4d4;
         -fx-border-radius: 0;
-        -fx-background-color: #ececec;
+        -fx-background-color: transparent;
     }
     .button:hover{
         -fx-background-color: #dcdcdc;
@@ -113,9 +137,6 @@
     }
 
 /* TreeView */
-    .tree-view{
-        -fx-padding: 0;
-    }
     .tree-cell{
         -fx-border-width: 2;
         -fx-border-color: #ececec;
@@ -130,37 +151,3 @@
         -fx-border-color: #ececec;
         -fx-background-color: #ececec;
     }
-
-
-
-
-
-.box-content {
-    -fx-border-color: #DDD #DDD -fx-text-inner-color #DDD;
-    -fx-background-color: #FFF;
-}
-.box-content .label {
-    -fx-background-color: #FFF;
-}
-.box-content .hyperlink {
-    -fx-font-size: 1.6em;
-}
-.title-content-home {
-    -fx-font-size: 1.8em;
-    -fx-text-fill: -fx-text-inner-color;
-    -fx-padding: 20 10 0 10;
-}
-.home-header-box {
-    -fx-border-width: 0 0 2 0;
-    -fx-border-color: #FFF;
-    -fx-background-color: -fx-text-inner-color;
-}
-
-
-
-.subtitle {
-    -fx-font-weight: bold;
-    -fx-font-size: 13pt;
-    -fx-text-fill: #ea9408;
-    -fx-label-padding: 20;
-}
