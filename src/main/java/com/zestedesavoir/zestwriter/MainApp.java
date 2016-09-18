@@ -25,6 +25,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -35,6 +36,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -137,6 +139,8 @@ public class MainApp extends Application{
 
 
         if(config.isDisplayWindowMaximize()){
+            MainApp.primaryStage.setX(config.getDisplayWindowPositionX());
+            MainApp.primaryStage.setY(config.getDisplayWindowPositionY());
             MainApp.primaryStage.setMaximized(true);
         }else{
             if(config.isDisplayWindowPersonnalDimension()){
@@ -153,7 +157,8 @@ public class MainApp extends Application{
         }
 
         MainApp.primaryStage.setOnCloseRequest(t -> {
-            pm.disablePlugins();
+            // TODO: Plugin
+            //pm.disablePlugins();
 
             if(MainApp.primaryStage.isMaximized() && config.isDisplayWindowPersonnalDimension())
                 config.setDisplayWindowMaximize("true");
@@ -174,7 +179,8 @@ public class MainApp extends Application{
             config.setDisplayWindowPositionY(String.valueOf(newValue));
         });
 
-        initPlugins();
+        // TODO: Plugin
+        //initPlugins();
         initRootLayout();
         showWriter();
         initConnection();
@@ -185,9 +191,8 @@ public class MainApp extends Application{
     }
 
     public void quitApp() {
-        if(primaryStage.isMaximized() && config.isDisplayWindowPersonnalDimension())
-            config.setDisplayWindowMaximize("true");
         config.saveConfFile();
+
         FunctionTreeFactory.clearContent(getExtracts(), getIndex().getEditorList(), () -> {
             Platform.exit();
             System.exit(0);
