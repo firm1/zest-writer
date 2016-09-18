@@ -22,11 +22,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Box;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
@@ -79,9 +83,11 @@ public class MdConvertController {
             return null;
         }
     };
+    private boolean isRenderExternalWindow = false;
 
     @FXML private WebView renderView;
     @FXML private Button SaveButton;
+    @FXML private SplitPane splitPane;
     @FXML private BorderPane BoxEditor;
     @FXML private BorderPane BoxRender;
     private CustomStyledClassedTextArea SourceText;
@@ -595,6 +601,29 @@ public class MdConvertController {
         } catch (DOMException e) {
             logger.error(e.getMessage(), e);
         }
+    }
+
+    @FXML private void HandleExternalButtonAction(ActionEvent event){
+        splitPane.getItems().remove(1);
+
+        Stage stage = new CustomStage(Configuration.bundle.getString("ui.window.externalrender.title"));
+        AnchorPane pane = new AnchorPane(renderView);
+        AnchorPane.setTopAnchor(renderView, 0.0);
+        AnchorPane.setLeftAnchor(renderView, 0.0);
+        AnchorPane.setBottomAnchor(renderView, 0.0);
+        AnchorPane.setRightAnchor(renderView, 0.0);
+        pane.setPrefWidth(600);
+        pane.setPrefHeight(500);
+        Scene scene = new Scene(pane);
+        stage.setScene(scene);
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.show();
+
+        stage.setOnCloseRequest(e -> {
+            BoxRender.setCenter(renderView);
+            splitPane.getItems().add(1, BoxRender);
+            splitPane.setDividerPositions(0.5);
+        });
     }
 
     @FXML private void HandleUnbreakableAction(ActionEvent event) {
