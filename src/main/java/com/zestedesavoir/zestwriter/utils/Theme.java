@@ -11,7 +11,8 @@ public class Theme {
     public static List<Theme> themeAvailable = Arrays.asList(
             new Theme("dark.css", Configuration.bundle.getString("ui.options.display.theme.dark")),
             new Theme("light.css", Configuration.bundle.getString("ui.options.display.theme.light")),
-            new Theme("winxaito.css", "WinXaito's Style"),
+            new Theme("winxaito_light.css", "WinXaito's Light"),
+            new Theme("winxaito_dark.css", "WinXaito's Dark"),
             new Theme("christmas.css", Configuration.bundle.getString("ui.options.display.theme.christmas")));
 
     public Theme(String filename, String label) {

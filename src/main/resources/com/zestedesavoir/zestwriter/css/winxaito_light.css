@@ -35,7 +35,6 @@
 /* Tab */
     .tab-header-area{
         -fx-padding: 0;
-        -fx-background-color: red;
         -fx-border-radius: 0;
     }
     .tab{

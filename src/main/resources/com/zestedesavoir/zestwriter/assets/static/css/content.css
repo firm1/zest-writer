@@ -10,6 +10,10 @@ body {
     line-height: 1.9em;
     background-color: #F7F7F7;
     word-wrap: break-word;
+
+    /* WinXaito's Dark */
+        /*background-color: #3C3F41;
+        color: #b6b6b6;*/
 }
 
 h3{
