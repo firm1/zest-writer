@@ -1,6 +1,5 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
-import com.kenai.jffi.Main;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import javafx.fxml.FXML;
@@ -12,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.zeroturnaround.zip.commons.IOUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;

@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.web.WebView?>
 
-<SplitPane dividerPositions="0.5" prefHeight="633.0" prefWidth="773.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MdConvertController">
+<SplitPane fx:id="splitPane" dividerPositions="0.5" prefHeight="633.0" prefWidth="773.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MdConvertController">
    <items>
       <BorderPane fx:id="BoxEditor">
          <top>
@@ -178,6 +178,15 @@
                         <MaterialDesignIconView fill="#084561" glyphName="SPELLCHECK" size="1.8em" />
                      </graphic>
                   </Button>
+
+                   <Button fx:id="ExternalWindow" mnemonicParsing="false" onAction="#HandleExternalButtonAction">
+                       <tooltip>
+                           <Tooltip text="%ui.editor.button.externalrender" />
+                       </tooltip>
+                       <graphic>
+                           <MaterialDesignIconView fill="#084561" glyphName="EXPORT" size="1.8em" />
+                       </graphic>
+                   </Button>
                </items>
             </ToolBar>
          </top>

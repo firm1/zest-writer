@@ -22,13 +22,18 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Box;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import netscape.javascript.JSException;
@@ -78,9 +83,11 @@ public class MdConvertController {
             return null;
         }
     };
+    private boolean isRenderExternalWindow = false;
 
     @FXML private WebView renderView;
     @FXML private Button SaveButton;
+    @FXML private SplitPane splitPane;
     @FXML private BorderPane BoxEditor;
     @FXML private BorderPane BoxRender;
     private CustomStyledClassedTextArea SourceText;
@@ -107,7 +114,8 @@ public class MdConvertController {
         this.tab = tab;
         this.extract = extract;
 
-        mainApp.getPluginsManager().setPluginEditor(this);
+        // TODO: Plugin
+        //mainApp.getPluginsManager().setPluginEditor(this);
 
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Editor.fxml"));
         loader.load();
@@ -345,6 +353,9 @@ public class MdConvertController {
         choices.add("erreur");
 
         ChoiceDialog<String> dialog = new ChoiceDialog<>("information", choices);
+        FunctionTreeFactory.addTheming(dialog.getDialogPane());
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(MainApp.getPrimaryStage());
         dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.bloc.title"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.bloc.header"));
         dialog.setContentText(Configuration.bundle.getString("ui.editor.dialog.bloc.text"));
@@ -360,7 +371,7 @@ public class MdConvertController {
 
     @FXML private void HandleTableButtonAction(ActionEvent event) throws IOException {
         // Create the custom dialog.
-        Dialog<Pair<ObservableList, ObservableList<ZRow>>> dialog = new Dialog<>();
+        Dialog<Pair<ObservableList, ObservableList<ZRow>>> dialog = new CustomDialog<>();
         dialog.setTitle(Configuration.bundle.getString("ui.editor.button.table"));
         dialog.setHeaderText("");
 
@@ -409,7 +420,7 @@ public class MdConvertController {
         String link = SourceText.getSelectedText();
 
         // Create the custom dialog.
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        Dialog<Pair<String, String>> dialog = new CustomDialog<>();
         dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.link.title"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.link.header"));
 
@@ -422,7 +433,7 @@ public class MdConvertController {
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+        grid.setPadding(new Insets(20, 15, 10, 10));
 
         TextField tLink = new TextField();
         tLink.setText(link);
@@ -465,7 +476,7 @@ public class MdConvertController {
         }
 
         // Create the custom dialog.
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        Dialog<Pair<String, String>> dialog = new CustomDialog<>();
         dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.code.title"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.code.header"));
 
@@ -479,7 +490,7 @@ public class MdConvertController {
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+        grid.setPadding(new Insets(20, 15, 10, 10));
 
         TextField tLangage = new TextField();
         TextArea tCode = new TextArea();
@@ -592,6 +603,29 @@ public class MdConvertController {
         }
     }
 
+    @FXML private void HandleExternalButtonAction(ActionEvent event){
+        splitPane.getItems().remove(1);
+
+        Stage stage = new CustomStage(Configuration.bundle.getString("ui.window.externalrender.title"));
+        AnchorPane pane = new AnchorPane(renderView);
+        AnchorPane.setTopAnchor(renderView, 0.0);
+        AnchorPane.setLeftAnchor(renderView, 0.0);
+        AnchorPane.setBottomAnchor(renderView, 0.0);
+        AnchorPane.setRightAnchor(renderView, 0.0);
+        pane.setPrefWidth(600);
+        pane.setPrefHeight(500);
+        Scene scene = new Scene(pane);
+        stage.setScene(scene);
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.show();
+
+        stage.setOnCloseRequest(e -> {
+            BoxRender.setCenter(renderView);
+            splitPane.getItems().add(1, BoxRender);
+            splitPane.setDividerPositions(0.5);
+        });
+    }
+
     @FXML private void HandleUnbreakableAction(ActionEvent event) {
         SourceText.replaceText(SourceText.getSelection(), SourceText.getSelectedText() + "\u00a0");
         SourceText.requestFocus();
@@ -631,6 +665,7 @@ public class MdConvertController {
         dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.goto.title"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.goto.header"));
         dialog.setContentText(Configuration.bundle.getString("ui.editor.dialog.goto.text"));
+        dialog.initOwner(MainApp.getPrimaryStage());
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(line -> SourceText.positionCaret(SourceText.position(Integer.parseInt(line)-1, 0).toOffset()));
