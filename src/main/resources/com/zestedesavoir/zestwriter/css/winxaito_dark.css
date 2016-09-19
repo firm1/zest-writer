@@ -96,12 +96,6 @@
         -fx-text-fill: #5d9beb;
         -fx-label-padding: 20;
     }
-    .glyph-icon {
-        -fx-fill: -fx-text-inner-color;
-    }
-    .graphics-icon{
-        -fx-fill: -fx-text-inner-color;
-    }
 
 /* Editor */
     .tool-bar{
@@ -171,4 +165,24 @@
     }
     .split-pane{
         -fx-background-color: #3C3F41;
+    }
+
+/* Icons */
+    .glyph-icon {
+       -fx-fill: -fx-text-inner-color;
+    }
+    .icon-account-key, .icon-folder-multiple, .icon-folder-plus, .icon-border-color{
+        -fx-fill: #acacac;
+    }
+    .icon-close{
+        -fx-fill: #acacac;
+    }
+    .icon-file, .icon-file-outline, .icon-book-open{
+        -fx-fill: #acacac;
+    }
+    .icon-google-plus{
+        -fx-fill: #acacac;
+    }
+    .icon-arrow-down, .icon-chart-areaspline, .icon-chart-bar, .icon-chart-pie, .icon-link, .icon-code-tags, .icon-library-books{
+        -fx-fill: #acacac;
     }

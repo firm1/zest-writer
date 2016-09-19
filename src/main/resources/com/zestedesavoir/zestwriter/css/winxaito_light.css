@@ -150,3 +150,23 @@
         -fx-border-color: #ececec;
         -fx-background-color: #ececec;
     }
+
+/* Icons */
+    .glyph-icon {
+        -fx-fill: -fx-text-inner-color;
+    }
+    .icon-account-key, .icon-folder-multiple, .icon-folder-plus, .icon-border-color{
+        -fx-fill: #084561;
+    }
+    .icon-close{
+        -fx-fill: #f44336;
+    }
+    .icon-file, .icon-file-outline, .icon-book-open{
+        -fx-fill: #ef9708;
+    }
+    .icon-google-plus{
+        -fx-fill: #dd4b39;
+    }
+    .icon-arrow-down, .icon-chart-areaspline, .icon-chart-bar, .icon-chart-pie, .icon-link, .icon-code-tags, .icon-library-books{
+        -fx-fill: #48a200;
+    }
