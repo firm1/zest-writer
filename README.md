@@ -32,9 +32,12 @@ Les instructions se trouvent sur [ce post](https://zestedesavoir.com/forums/suje
 
 #### Ubuntu, Debian, etc.
 
-1. Ouvrez un terminal et lancez la commande : `echo "deb https://dl.bintray.com/firm1/deb wheezy main" | sudo tee -a /etc/apt/sources.list.d/zestwriter.list`.
-2. mettez à jour vos dépôts via la commande : `sudo apt-get update`.
-3. installez Zest Writer via la commande : `sudo apt-get install zestwriter`.
+*Pour une mise à jour passez directement à l'étape 3*.
+
+1. Importez la clé GPG bintray de  via la commande : `sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 379CE192D401AB61`
+2. Ajouter une nouvelle source via la commande : `echo "deb https://dl.bintray.com/firm1/deb wheezy main" | sudo tee -a /etc/apt/sources.list.d/zestwriter.list`.
+3. mettez à jour vos dépôts via la commande : `sudo apt-get update`.
+4. installez Zest Writer via la commande : `sudo apt-get install zestwriter`.
 
 #### Fedora, ArchLinux, CentOs, etc.
 
