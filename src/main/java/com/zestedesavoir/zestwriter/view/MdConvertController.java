@@ -98,6 +98,10 @@ public class MdConvertController {
         super();
         logger = LoggerFactory.getLogger(MdConvertController.class);
         SourceText = new CustomStyledClassedTextArea();
+
+        if(MainApp.config.getEditorLinenoView().equalsIgnoreCase("no")){
+
+        }
     }
 
     public MdTextController getMdBox() {
@@ -232,7 +236,10 @@ public class MdConvertController {
     @FXML private void initialize() {
         SourceText.getStyleClass().add("markdown-editor");
         SourceText.getStylesheets().add(MainApp.class.getResource("css/editor.css").toExternalForm());
-        SourceText.setParagraphGraphicFactory(LineNumberFactory.get(SourceText));
+
+        if(MainApp.config.getEditorLinenoView().equalsIgnoreCase("yes"))
+            SourceText.setParagraphGraphicFactory(LineNumberFactory.get(SourceText));
+        
         SaveButton.disableProperty().bind(isSaved);
     }
 
