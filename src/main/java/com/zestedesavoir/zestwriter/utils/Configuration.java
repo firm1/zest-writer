@@ -288,6 +288,34 @@ public class Configuration {
         conf.setProperty(ConfigData.EditorToolbarView.getKey(), view);
     }
 
+    public String getEditorLinenoView(){
+        if(conf.containsKey(ConfigData.EditorLinenoView.getKey()))
+            return conf.getProperty(ConfigData.EditorLinenoView.getKey());
+        else
+            return ConfigData.EditorLinenoView.getDefaultValue();
+    }
+
+    public void setEditorLinenoView(String view){
+        if(!view.toLowerCase().equals("yes") && !view.toLowerCase().equals("no"))
+            view = ConfigData.EditorLinenoView.getDefaultValue();
+
+        conf.setProperty(ConfigData.EditorLinenoView.getKey(), view);
+    }
+
+    public String getEditorRenderView(){
+        if(conf.containsKey(ConfigData.EditorRenderView.getKey()))
+            return conf.getProperty(ConfigData.EditorRenderView.getKey());
+        else
+            return ConfigData.EditorRenderView.getDefaultValue();
+    }
+
+    public void setEditorRenderView(String view){
+        if(!view.toLowerCase().equals("yes") && !view.toLowerCase().equals("no"))
+            view = ConfigData.EditorRenderView.getDefaultValue();
+
+        conf.setProperty(ConfigData.EditorRenderView.getKey(), view);
+    }
+
     public String getDisplayTheme(){
         if(conf.containsKey(ConfigData.DisplayTheme.getKey())) {
             if (Theme.getThemeFromFileName(conf.getProperty(ConfigData.DisplayTheme.getKey())) != null) {
@@ -504,6 +532,8 @@ public class Configuration {
         EditorFont("options.editor.font", "Fira Mono"),
         EditorFontSize("options.editor.fontSize", "14"),
         EditorToolbarView("options.editor.toolbar.view", "yes"),
+        EditorLinenoView("options.editor.lineno.view", "yes"),
+        EditorRenderView("options.editor.render.view", "yes"),
         DisplayTheme("options.display.theme", "light.css"),
         DisplayLang("options.display.lang", Locale.FRANCE.toString()),
         DisplayWindowPersonnalDimension("options.display.window.standardDimension", "true"),

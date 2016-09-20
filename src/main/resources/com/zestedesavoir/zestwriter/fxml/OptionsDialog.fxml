@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.jensd.fx.glyphs.materialdesignicons.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<!--<?import de.jensd.fx.glyphs.materialdesignicons.*?>-->
 
-<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.dialogs.OptionsDialog">
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<!--<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>-->
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.dialogs.OptionsDialog">
    <center>
            <TabPane tabClosingPolicy="UNAVAILABLE">
                <tabs>
@@ -15,14 +30,14 @@
                        <content>
                            <AnchorPane minHeight="0.0" minWidth="0.0">
                                <children>
-                                   <VBox prefHeight="360.0" prefWidth="591.0" spacing="10.0">
+                                   <VBox prefHeight="360.0" prefWidth="591.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
                                            <Label styleClass="subtitle" text="%ui.options.workspace">
                                                <VBox.margin>
                                                    <Insets />
                                                </VBox.margin>
                                            </Label>
-                                           <GridPane hgap="20.0">
+                                           <GridPane hgap="20.0" styleClass="options-grid">
                                                <columnConstraints>
                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="364.0" minWidth="10.0" prefWidth="364.0" />
                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="206.0" minWidth="10.0" prefWidth="147.0" />
@@ -33,19 +48,16 @@
                                                <children>
                                                    <Button mnemonicParsing="false" onAction="#HandleGeneralBrowseAction" text="%ui.options.workspace.update" GridPane.columnIndex="1">
                                                        <graphic>
-                                                           <MaterialDesignIconView fill="#084561" glyphName="CAMERA_SWITCH" size="1.8em" />
+                                                           <!--<MaterialDesignIconView fill="#084561" glyphName="CAMERA_SWITCH" size="1.8em" />-->
                                                        </graphic>
                                                    </Button>
                                                    <Label fx:id="workspacepath" text="%ui.options.workspace.path" wrapText="true" />
                                                </children>
-                                               <padding>
-                                                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                               </padding>
+                                 <padding>
+                                    <Insets left="20.0" />
+                                 </padding>
                                            </GridPane>
                                        </children>
-                                       <padding>
-                                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                       </padding>
                                    </VBox>
                                </children>
                            </AnchorPane>
@@ -55,10 +67,10 @@
                        <content>
                            <AnchorPane minHeight="0.0" minWidth="0.0">
                                <children>
-                                   <VBox layoutX="14.0" prefHeight="359.0" prefWidth="579.0">
+                                   <VBox layoutX="14.0" prefHeight="359.0" prefWidth="579.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
                                            <Label styleClass="subtitle" text="%ui.options.editor.display" />
-                                           <GridPane hgap="20.0">
+                                           <GridPane hgap="20.0" styleClass="options-grid">
                                                <columnConstraints>
                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -67,6 +79,8 @@
                                                <rowConstraints>
                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                </rowConstraints>
                                                <children>
                                                    <Label text="%ui.options.editor.font" />
@@ -77,16 +91,30 @@
                                                            <ToggleGroup fx:id="toolbar" />
                                                        </toggleGroup></RadioButton>
                                                    <RadioButton fx:id="optEditorToolbarViewNo" mnemonicParsing="false" onAction="#HandleEditorToolbarViewNo" text="%ui.no" toggleGroup="$toolbar" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <Label text="%ui.options.editor.display_lineno" GridPane.rowIndex="2" />
+                                    <RadioButton fx:id="optEditorLinenoViewYes" mnemonicParsing="false" onAction="#HandleEditorLinenoViewYes" text="%ui.yes" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="lineno" />
+                                       </toggleGroup>
+                                    </RadioButton>
+                                    <RadioButton fx:id="optEditorLinenoViewNo" mnemonicParsing="false" onAction="#HandleEditorLinenoViewNo" text="%ui.no" toggleGroup="$lineno" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                    <Label text="%ui.options.editor.rendering" GridPane.rowIndex="3" />
+                                    <RadioButton fx:id="optEditorRenderViewYes" mnemonicParsing="false" onAction="#HandleEditorRenderViewYes" text="%ui.yes" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="render" />
+                                       </toggleGroup>
+                                    </RadioButton>
+                                    <RadioButton fx:id="optEditorRenderViewNo" mnemonicParsing="false" onAction="#HandleEditorRenderViewNo" text="%ui.no" toggleGroup="$render" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                                </children>
-                                               <padding>
-                                                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                               </padding>
+                                 <padding>
+                                    <Insets left="20.0" />
+                                 </padding>
                                            </GridPane>
-                                           <Label styleClass="subtitle" text="Rédaction" />
-                                           <GridPane hgap="20.0">
+                                           <Label styleClass="subtitle" text="%ui.options.editor.redaction" />
+                                           <GridPane hgap="20.0" styleClass="options-grid">
                                                <columnConstraints>
                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="166.0" minWidth="10.0" prefWidth="166.0" />
                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                </columnConstraints>
                                                <rowConstraints>
@@ -100,9 +128,9 @@
                                                        </toggleGroup></RadioButton>
                                                    <RadioButton fx:id="optSmartEditorNo" mnemonicParsing="false" onAction="#HandleSmartEditorNo" text="%ui.no" toggleGroup="$smartEditor" GridPane.columnIndex="2" />
                                                </children>
-                                               <padding>
-                                                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                               </padding>
+                                 <padding>
+                                    <Insets left="20.0" />
+                                 </padding>
                                            </GridPane>
                                        </children>
                                    </VBox>
@@ -117,7 +145,7 @@
                                    <VBox prefHeight="357.0" prefWidth="593.0">
                                        <children>
                                            <Label styleClass="subtitle" text="%ui.options.display.theme" />
-                                           <GridPane hgap="20.0">
+                                           <GridPane hgap="20.0" styleClass="options-grid">
                                                <columnConstraints>
                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -132,12 +160,12 @@
                                                    <ComboBox fx:id="optDisplayTheme" prefWidth="200.0" GridPane.columnIndex="1" />
                                                    <ComboBox fx:id="optDisplayLang" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                </children>
-                                               <padding>
-                                                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                               </padding>
+                                 <padding>
+                                    <Insets left="20.0" />
+                                 </padding>
                                            </GridPane>
                                            <Label styleClass="subtitle" text="%ui.options.display.window" />
-                                           <GridPane hgap="20.0">
+                                           <GridPane hgap="20.0" styleClass="options-grid">
                                                <columnConstraints>
                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -169,9 +197,9 @@
                                                    <RadioButton fx:id="optDisplayWindowDimensionNo" mnemonicParsing="false" text="%ui.no" toggleGroup="$displayDimension" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                                    <RadioButton fx:id="optDisplayWindowPositionNo" mnemonicParsing="false" text="%ui.no" toggleGroup="$displayPosition" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                                </children>
-                                               <padding>
-                                                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                               </padding>
+                                 <padding>
+                                    <Insets left="20.0" />
+                                 </padding>
                                            </GridPane>
                                        </children>
                                    </VBox>
@@ -188,7 +216,7 @@
                                            <VBox>
                                                <children>
                                                    <Label styleClass="subtitle" text="%ui.options.authentication.connection" />
-                                                   <GridPane hgap="20.0">
+                                                   <GridPane hgap="20.0" styleClass="options-grid">
                                                        <columnConstraints>
                                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -203,13 +231,16 @@
                                                            <TextField fx:id="optAuthentificationUsername" maxWidth="150.0" GridPane.columnIndex="1" />
                                                            <PasswordField fx:id="optAuthentificationPassword" maxWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                        </children>
-                                                       <padding>
-                                                           <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                                       </padding>
+                                       <padding>
+                                          <Insets left="20.0" />
+                                       </padding>
                                                    </GridPane>
                                                </children>
                                            </VBox>
-                                           <Label prefHeight="83.0" prefWidth="594.0" style="-fx-text-fill: RED;" text="%ui.dialog.auth.warning" textAlignment="CENTER" wrapText="true" />
+                                           <Label prefHeight="0.0" prefWidth="594.0" styleClass="option-auth-warning" text="%ui.dialog.auth.warning" textAlignment="CENTER" wrapText="true">
+                                 <padding>
+                                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                 </padding></Label>
                                        </children>
                                    </VBox>
                                </children>
@@ -223,7 +254,7 @@
                                    <VBox prefHeight="361.0" prefWidth="592.0">
                                        <children>
                                            <Label styleClass="subtitle" text="%ui.options.advanced.server" />
-                                           <GridPane hgap="20.0">
+                                           <GridPane hgap="20.0" styleClass="options-grid">
                                                <columnConstraints>
                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -241,9 +272,9 @@
                                                    <TextField fx:id="optAdvancedPort" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                    <ComboBox fx:id="optAdvancedProtocol" GridPane.columnIndex="1" />
                                                </children>
-                                               <padding>
-                                                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                               </padding>
+                                 <padding>
+                                    <Insets left="20.0" />
+                                 </padding>
                                            </GridPane>
                                        </children>
                                    </VBox>

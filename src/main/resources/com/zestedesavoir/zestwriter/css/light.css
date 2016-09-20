@@ -82,3 +82,9 @@
     -fx-text-fill: #ea9408;
     -fx-label-padding: 20;
 }
+.options-grid{
+    -fx-padding:0 0 0 40;
+}
+.option-auth-warning{
+    -fx-padding:0 0 0 40;
+}

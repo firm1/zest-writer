@@ -26,10 +26,16 @@ public class OptionsDialog{
     private String optEditorFont;
     private double optEditorFontSize;
     private String optEditorToolbarView;
+    private String optEditorLinenoView;
+    private String optEditorRenderView;
     private boolean optSmartEditor;
 
     @FXML private RadioButton optEditorToolbarViewYes;
     @FXML private RadioButton optEditorToolbarViewNo;
+    @FXML private RadioButton optEditorLinenoViewYes;
+    @FXML private RadioButton optEditorLinenoViewNo;
+    @FXML private RadioButton optEditorRenderViewYes;
+    @FXML private RadioButton optEditorRenderViewNo;
     @FXML private RadioButton optSmartEditorYes;
     @FXML private RadioButton optSmartEditorNo;
     @FXML private Button optEditorFontButton;
@@ -71,6 +77,8 @@ public class OptionsDialog{
         config.setEditorFont(optEditorFont);
         config.setEditorFontSize(String.valueOf(optEditorFontSize));
         config.setEditorToolbarView(optEditorToolbarView);
+        config.setEditorLinenoView(optEditorLinenoView);
+        config.setEditorRenderView(optEditorRenderView);
         config.setEditorSmart(""+optSmartEditor);
 
         config.setDisplayTheme(optDisplayTheme.getValue().getFilename());
@@ -183,6 +191,22 @@ public class OptionsDialog{
         optEditorToolbarView = "no";
     }
 
+    @FXML private void HandleEditorRenderViewYes(){
+        optEditorRenderView = "yes";
+    }
+
+    @FXML private void HandleEditorRenderViewNo(){
+        optEditorRenderView = "no";
+    }
+
+    @FXML private void HandleEditorLinenoViewYes(){
+        optEditorLinenoView = "yes";
+    }
+
+    @FXML private void HandleEditorLinenoViewNo(){
+        optEditorLinenoView = "no";
+    }
+
     @FXML private void HandleSmartEditorYes(){
         optSmartEditor = true;
     }
@@ -200,12 +224,24 @@ public class OptionsDialog{
         optEditorFont = config.getEditorFont();
         optEditorFontSize = config.getEditorFontsize();
         optEditorToolbarView = config.getEditorToolbarView();
+        optEditorLinenoView = config.getEditorLinenoView();
+        optEditorRenderView = config.getEditorRenderView();
         optSmartEditor = config.getEditorSmart();
 
         if(optEditorToolbarView.equalsIgnoreCase("no"))
             optEditorToolbarViewNo.setSelected(true);
         else
             optEditorToolbarViewYes.setSelected(true);
+
+        if(optEditorLinenoView.equalsIgnoreCase("no"))
+            optEditorLinenoViewNo.setSelected(true);
+        else
+            optEditorLinenoViewYes.setSelected(true);
+
+        if(optEditorRenderView.equalsIgnoreCase("no"))
+            optEditorRenderViewNo.setSelected(true);
+        else
+            optEditorRenderViewYes.setSelected(true);
 
         if(optSmartEditor)
             optSmartEditorYes.setSelected(true);
@@ -217,32 +253,26 @@ public class OptionsDialog{
         optDisplayTheme.getItems().addAll(Theme.themeAvailable);
         optDisplayTheme.setValue(Theme.getThemeFromFileName(config.getDisplayTheme()));
 
-        optDisplayTheme.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Theme>() {
-            @Override
-            public void changed(ObservableValue<? extends Theme> observable, Theme oldValue, Theme newValue) {
-                Alert alert = new CustomAlert(Alert.AlertType.WARNING);
-                alert.setTitle(Configuration.bundle.getString("ui.dialog.change_theme.title"));
-                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_theme.header"));
-                alert.setContentText(Configuration.bundle.getString("ui.dialog.change_theme.text"));
-                alert.initOwner(optionsWindow);
+        optDisplayTheme.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            Alert alert = new CustomAlert(Alert.AlertType.WARNING);
+            alert.setTitle(Configuration.bundle.getString("ui.dialog.change_theme.title"));
+            alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_theme.header"));
+            alert.setContentText(Configuration.bundle.getString("ui.dialog.change_theme.text"));
+            alert.initOwner(optionsWindow);
 
-                alert.showAndWait();
-            }
+            alert.showAndWait();
         });
 
         optDisplayLang.getItems().addAll(Lang.langAvailable);
         optDisplayLang.setValue(Lang.getLangFromCode(config.getDisplayLang()));
-        optDisplayLang.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Lang>() {
-            @Override
-            public void changed(ObservableValue<? extends Lang> observable, Lang oldValue, Lang newValue) {
-                Alert alert = new CustomAlert(Alert.AlertType.WARNING);
-                alert.setTitle(Configuration.bundle.getString("ui.dialog.change_lang.title"));
-                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_lang.header"));
-                alert.setContentText(Configuration.bundle.getString("ui.dialog.change_lang.text"));
-                alert.initOwner(optionsWindow);
+        optDisplayLang.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            Alert alert = new CustomAlert(Alert.AlertType.WARNING);
+            alert.setTitle(Configuration.bundle.getString("ui.dialog.change_lang.title"));
+            alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_lang.header"));
+            alert.setContentText(Configuration.bundle.getString("ui.dialog.change_lang.text"));
+            alert.initOwner(optionsWindow);
 
-                alert.showAndWait();
-            }
+            alert.showAndWait();
         });
 
         if(config.isDisplayWindowMaximize())

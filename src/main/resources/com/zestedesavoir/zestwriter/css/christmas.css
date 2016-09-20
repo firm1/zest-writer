@@ -84,7 +84,12 @@
     -fx-text-fill: #FF0000;
     -fx-label-padding: 20;
 }
-
+.options-grid{
+    -fx-padding:0 0 0 40;
+}
+.option-auth-warning{
+    -fx-padding:0 0 0 40;
+}
 .logo-clem {
     -fx-image: url('../assets/static/icons/home-clem-christmas.png');
 }
