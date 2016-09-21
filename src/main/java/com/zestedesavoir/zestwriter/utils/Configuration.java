@@ -274,46 +274,28 @@ public class Configuration {
         conf.setProperty(ConfigData.EditorFontSize.getKey(), fontSize);
     }
 
-    public String getEditorToolbarView(){
-        if(conf.containsKey(ConfigData.EditorToolbarView.getKey()))
-            return conf.getProperty(ConfigData.EditorToolbarView.getKey());
-        else
-            return ConfigData.EditorToolbarView.getDefaultValue();
+    public boolean isEditorToolbarView(){
+        return getGenericBooleanDisplay(ConfigData.EditorToolbarView);
     }
 
-    public void setEditorToolbarView(String view){
-        if(!view.toLowerCase().equals("yes") && !view.toLowerCase().equals("no"))
-            view = ConfigData.EditorToolbarView.getDefaultValue();
-
-        conf.setProperty(ConfigData.EditorToolbarView.getKey(), view);
+    public void setEditorToolbarView(boolean view){
+        conf.setProperty(ConfigData.EditorToolbarView.getKey(), String.valueOf(view));
     }
 
-    public String getEditorLinenoView(){
-        if(conf.containsKey(ConfigData.EditorLinenoView.getKey()))
-            return conf.getProperty(ConfigData.EditorLinenoView.getKey());
-        else
-            return ConfigData.EditorLinenoView.getDefaultValue();
+    public boolean isEditorLinenoView(){
+        return getGenericBooleanDisplay(ConfigData.EditorLinenoView);
     }
 
-    public void setEditorLinenoView(String view){
-        if(!view.toLowerCase().equals("yes") && !view.toLowerCase().equals("no"))
-            view = ConfigData.EditorLinenoView.getDefaultValue();
-
-        conf.setProperty(ConfigData.EditorLinenoView.getKey(), view);
+    public void setEditorLinenoView(boolean view){
+        conf.setProperty(ConfigData.EditorLinenoView.getKey(), String.valueOf(view));
     }
 
-    public String getEditorRenderView(){
-        if(conf.containsKey(ConfigData.EditorRenderView.getKey()))
-            return conf.getProperty(ConfigData.EditorRenderView.getKey());
-        else
-            return ConfigData.EditorRenderView.getDefaultValue();
+    public boolean isEditorRenderView(){
+        return getGenericBooleanDisplay(ConfigData.EditorRenderView);
     }
 
-    public void setEditorRenderView(String view){
-        if(!view.toLowerCase().equals("yes") && !view.toLowerCase().equals("no"))
-            view = ConfigData.EditorRenderView.getDefaultValue();
-
-        conf.setProperty(ConfigData.EditorRenderView.getKey(), view);
+    public void setEditorRenderView(boolean view){
+        conf.setProperty(ConfigData.EditorRenderView.getKey(), String.valueOf(view));
     }
 
     public String getDisplayTheme(){

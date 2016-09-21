@@ -11,7 +11,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.zestedesavoir.zestwriter.model.MetaContent;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 
 public class TestConfig {
@@ -45,7 +44,7 @@ public class TestConfig {
         assertFalse(config.isDisplayWindowMaximize());
         assertTrue(config.isDisplayWindowPersonnalDimension());
         assertTrue(config.isDisplayWindowPersonnalPosition());
-        assertEquals(config.getEditorToolbarView(), "yes");
+        assertEquals(config.isEditorToolbarView(), "yes");
         assertEquals(config.getEditorFontsize(), 14);
         assertEquals(config.getEditorFont(), "Fira Mono");
 
@@ -91,7 +90,7 @@ public class TestConfig {
         assertTrue(config.isDisplayWindowMaximize());
         assertFalse(config.isDisplayWindowPersonnalDimension());
         assertFalse(config.isDisplayWindowPersonnalPosition());
-        assertEquals(config.getEditorToolbarView(), "no");
+        assertEquals(config.isEditorToolbarView(), "no");
         assertEquals(config.getEditorFontsize(), 13);
         assertEquals(config.getEditorFont(), "Arial");
 
@@ -111,7 +110,7 @@ public class TestConfig {
         assertFalse(config.isDisplayWindowMaximize());
         assertTrue(config.isDisplayWindowPersonnalDimension());
         assertTrue(config.isDisplayWindowPersonnalPosition());
-        assertEquals(config.getEditorToolbarView(), "yes");
+        assertEquals(config.isEditorToolbarView(), "yes");
         assertEquals(config.getEditorFontsize(), 14);
         assertEquals(config.getEditorFont(), "Fira Mono");
     }

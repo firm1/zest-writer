@@ -6,8 +6,6 @@ import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Lang;
 import com.zestedesavoir.zestwriter.utils.Theme;
 import com.zestedesavoir.zestwriter.view.com.CustomAlert;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.Font;
@@ -25,9 +23,9 @@ public class OptionsDialog{
 
     private String optEditorFont;
     private double optEditorFontSize;
-    private String optEditorToolbarView;
-    private String optEditorLinenoView;
-    private String optEditorRenderView;
+    private boolean optEditorToolbarView;
+    private boolean optEditorLinenoView;
+    private boolean optEditorRenderView;
     private boolean optSmartEditor;
 
     @FXML private RadioButton optEditorToolbarViewYes;
@@ -184,27 +182,27 @@ public class OptionsDialog{
     }
 
     @FXML private void HandleEditorToolbarViewYes(){
-        optEditorToolbarView = "yes";
+        optEditorToolbarView = true;
     }
 
     @FXML private void HandleEditorToolbarViewNo(){
-        optEditorToolbarView = "no";
+        optEditorToolbarView = false;
     }
 
     @FXML private void HandleEditorRenderViewYes(){
-        optEditorRenderView = "yes";
+        optEditorRenderView = true;
     }
 
     @FXML private void HandleEditorRenderViewNo(){
-        optEditorRenderView = "no";
+        optEditorRenderView = false;
     }
 
     @FXML private void HandleEditorLinenoViewYes(){
-        optEditorLinenoView = "yes";
+        optEditorLinenoView = true;
     }
 
     @FXML private void HandleEditorLinenoViewNo(){
-        optEditorLinenoView = "no";
+        optEditorLinenoView = false;
     }
 
     @FXML private void HandleSmartEditorYes(){
@@ -223,30 +221,36 @@ public class OptionsDialog{
 
         optEditorFont = config.getEditorFont();
         optEditorFontSize = config.getEditorFontsize();
-        optEditorToolbarView = config.getEditorToolbarView();
-        optEditorLinenoView = config.getEditorLinenoView();
-        optEditorRenderView = config.getEditorRenderView();
+        optEditorToolbarView = config.isEditorToolbarView();
+        optEditorLinenoView = config.isEditorLinenoView();
+        optEditorRenderView = config.isEditorRenderView();
         optSmartEditor = config.getEditorSmart();
 
-        if(optEditorToolbarView.equalsIgnoreCase("no"))
-            optEditorToolbarViewNo.setSelected(true);
-        else
-            optEditorToolbarViewYes.setSelected(true);
+        optEditorToolbarViewYes.setSelected(optEditorToolbarView);
+        optEditorToolbarViewNo.setSelected(!optEditorToolbarView);
 
-        if(optEditorLinenoView.equalsIgnoreCase("no"))
-            optEditorLinenoViewNo.setSelected(true);
-        else
-            optEditorLinenoViewYes.setSelected(true);
+        optEditorLinenoViewYes.setSelected(optEditorLinenoView);
+        optEditorLinenoViewNo.setSelected(!optEditorLinenoView);
 
-        if(optEditorRenderView.equalsIgnoreCase("no"))
-            optEditorRenderViewNo.setSelected(true);
-        else
-            optEditorRenderViewYes.setSelected(true);
+        optEditorRenderViewYes.setSelected(optEditorRenderView);
+        optEditorRenderViewNo.setSelected(!optEditorRenderView);
 
         if(optSmartEditor)
             optSmartEditorYes.setSelected(true);
         else
             optSmartEditorNo.setSelected(true);
+
+        optEditorRenderViewYes.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if(optEditorRenderViewYes.isSelected()){
+                Alert alert = new CustomAlert(Alert.AlertType.WARNING);
+                alert.setTitle(Configuration.bundle.getString("ui.dialog.change_render.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_render.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.change_render.text"));
+                alert.initOwner(optionsWindow);
+
+                alert.showAndWait();
+            }
+        });
     }
 
     private void setDisplayOptions(){
