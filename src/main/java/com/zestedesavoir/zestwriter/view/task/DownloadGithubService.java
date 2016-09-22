@@ -36,9 +36,9 @@ public class DownloadGithubService extends Service<Content>{
                 if (elts.length > 4) {
                     String owner = elts[3];
                     String repo = elts[4];
-                    updateMessage ("Téléchargement du contenu sur Github ...");
+                    updateMessage (Configuration.bundle.getString("ui.dialog.download.github.message.downloading"));
                     String filePath = GithubHttp.getGithubZipball (owner, repo, onlineFolder);
-                    updateMessage ("Décompression de l'archive téléchargée");
+                    updateMessage (Configuration.bundle.getString("ui.dialog.download.github.message.unpacking"));
                     File folder = GithubHttp.unzipOnlineContent (filePath, offlineFolder);
                     logger.info ("Répertoire à analyser : " + folder.getAbsolutePath ());
                     // get folder in unzip folder
@@ -46,15 +46,15 @@ public class DownloadGithubService extends Service<Content>{
                     if (listFolder.length > 0) {
                         if (listFolder[0].isDirectory ()) {
                             File target = listFolder[0];
-                            logger.info ("Répertoire cible : " + target.getAbsolutePath ());
-                            updateMessage ("Création du fichier manifest ...");
+                            logger.info ("(GitHub import) Répertoire cible : " + target.getAbsolutePath ());
+                            updateMessage (Configuration.bundle.getString("ui.dialog.download.github.message.manifesting"));
                             Content c = GithubHttp.loadManifest (target.getAbsolutePath (), owner, repo);
 
                             ObjectMapper mapper = new ObjectMapper ();
                             File manifest = new File (target, "manifest.json");
-                            logger.info ("Tentative de création du fichier : " + manifest.getAbsolutePath ());
+                            logger.info ("(GitHub import) Tentative de création du fichier : " + manifest.getAbsolutePath ());
                             mapper.writerWithDefaultPrettyPrinter ().writeValue (manifest, c);
-                            updateMessage ("Fin du téléchargement !");
+                            updateMessage (Configuration.bundle.getString("ui.dialog.download.github.message.done"));
                             return c;
                         }
                     }
