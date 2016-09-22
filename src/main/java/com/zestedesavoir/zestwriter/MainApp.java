@@ -139,8 +139,8 @@ public class MainApp extends Application{
         MainApp.primaryStage = primaryStage;
         MainApp.primaryStage.setTitle(Configuration.bundle.getString("ui.app_name.text"));
         MainApp.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("images/logo.png")));
-        MainApp.primaryStage.setMinWidth(800);
-        MainApp.primaryStage.setMinHeight(500);
+        MainApp.primaryStage.setMinWidth(400);
+        MainApp.primaryStage.setMinHeight(400);
 
 
         if(config.isDisplayWindowMaximize()){
