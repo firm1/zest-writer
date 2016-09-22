@@ -70,6 +70,11 @@ public class MainApp extends Application{
         super();
         logger = LoggerFactory.getLogger(MainApp.class);
 
+        logger.info("Version Java de l'utilisateur: " + System.getProperty("java.version"));
+        logger.info("Architecture du système utilisateur: " + System.getProperty("os.arch"));
+        logger.info("Nom du système utilisateur: " + System.getProperty("os.name"));
+        logger.info("Version du système utilisateur: " + System.getProperty("os.version"));
+
         if(args.length > 0) {
             config = new Configuration(args[0]);
         } else {
