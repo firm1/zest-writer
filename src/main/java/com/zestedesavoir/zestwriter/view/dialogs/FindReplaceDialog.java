@@ -179,23 +179,21 @@ public class FindReplaceDialog{
                         break;
                     }
                 }else if(action == FindReplaceAction.REPLACE){
-                    if(!replaceField.getText().isEmpty()){
-                        if(selectionOnly.isSelected()){
-                            if(!sourceText.getSelectedText().isEmpty()){
-                                textFill(i, i + searchText.length(), FindReplaceAction.FIND);
-                            }
-                        }else{
+                    if(selectionOnly.isSelected()){
+                        if(!sourceText.getSelectedText().isEmpty()){
                             textFill(i, i + searchText.length(), FindReplaceAction.FIND);
                         }
+                    }else{
+                        textFill(i, i + searchText.length(), FindReplaceAction.FIND);
+                    }
 
-                        if(replaceIndex == numberIterationTotal){
-                            sourceText.replaceText(i, i + searchField.getText().length(), replaceField.getText());
-                            findReplace(FindReplaceAction.FIND);
-                            textFill(i, i + replaceField.getText().length(), FindReplaceAction.REPLACE);
+                    if(replaceIndex == numberIterationTotal){
+                        sourceText.replaceText(i, i + searchField.getText().length(), replaceField.getText());
+                        findReplace(FindReplaceAction.FIND);
+                        textFill(i, i + replaceField.getText().length(), FindReplaceAction.REPLACE);
 
-                            sourceText.moveTo(i);
-                            break;
-                        }
+                        sourceText.moveTo(i);
+                        break;
                     }
                 }else if(action == FindReplaceAction.REPLACE_ALL){
                     for(int j = - 1; (j = text.indexOf(searchText, j + 1)) != - 1; ){
