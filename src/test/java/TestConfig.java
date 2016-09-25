@@ -36,15 +36,17 @@ public class TestConfig {
         assertEquals(config.getAuthentificationUsername(), "");
         assertEquals(config.getDisplayTheme(), "light.css");
         assertEquals(config.getDisplayLang(), "fr_FR");
-        assertEquals(config.getDisplayWindowHeight() > 0, true);
-        assertEquals(config.getDisplayWindowWidth() > 0, true);
-        assertEquals(config.getDisplayWindowPositionX() == 0, true);
-        assertEquals(config.getDisplayWindowPositionY() == 0, true);
-        assertTrue(config.getEditorSmart());
+        assertTrue(config.getDisplayWindowHeight() > 0);
+        assertTrue(config.getDisplayWindowWidth() > 0);
+        assertTrue(config.getDisplayWindowPositionX() == 0);
+        assertTrue(config.getDisplayWindowPositionY() == 0);
+        assertTrue(config.isEditorSmart());
         assertFalse(config.isDisplayWindowMaximize());
         assertTrue(config.isDisplayWindowPersonnalDimension());
         assertTrue(config.isDisplayWindowPersonnalPosition());
-        assertEquals(config.isEditorToolbarView(), "yes");
+        assertTrue(config.isEditorToolbarView());
+        assertTrue(config.isEditorLinenoView());
+        assertTrue(config.isEditorRenderView());
         assertEquals(config.getEditorFontsize(), 14);
         assertEquals(config.getEditorFont(), "Fira Mono");
 
@@ -70,7 +72,9 @@ public class TestConfig {
         config.setDisplayWindowMaximize("true");
         config.setDisplayWindowPersonnalPosition("false");
         config.setDisplayWindowStandardDimension("false");
-        config.setEditorToolbarView("no");
+        config.setEditorToolbarView(false);
+        config.setEditorLinenoView(false);
+        config.setEditorRenderView(false);
         config.setEditorFont("Arial");
         config.setEditorFontSize("13");
         config.saveConfFile();
@@ -86,11 +90,13 @@ public class TestConfig {
         assertEquals(config.getDisplayWindowWidth(), 800, 0);
         assertEquals(config.getDisplayWindowPositionX(), 10, 0);
         assertEquals(config.getDisplayWindowPositionY(), 20, 0);
-        assertFalse(config.getEditorSmart());
+        assertFalse(config.isEditorSmart());
         assertTrue(config.isDisplayWindowMaximize());
         assertFalse(config.isDisplayWindowPersonnalDimension());
         assertFalse(config.isDisplayWindowPersonnalPosition());
-        assertEquals(config.isEditorToolbarView(), "no");
+        assertFalse(config.isEditorToolbarView());
+        assertFalse(config.isEditorLinenoView());
+        assertFalse(config.isEditorRenderView());
         assertEquals(config.getEditorFontsize(), 13);
         assertEquals(config.getEditorFont(), "Arial");
 
@@ -102,15 +108,17 @@ public class TestConfig {
         assertEquals(config.getAuthentificationUsername(), "");
         assertEquals(config.getDisplayTheme(), "light.css");
         assertEquals(config.getDisplayLang(), "fr_FR");
-        assertEquals(config.getDisplayWindowHeight() > 0, true);
-        assertEquals(config.getDisplayWindowWidth() > 0, true);
-        assertEquals(config.getDisplayWindowPositionX() == 0, true);
-        assertEquals(config.getDisplayWindowPositionY() == 0, true);
-        assertTrue(config.getEditorSmart());
+        assertTrue(config.getDisplayWindowHeight() > 0);
+        assertTrue(config.getDisplayWindowWidth() > 0);
+        assertTrue(config.getDisplayWindowPositionX() == 0);
+        assertTrue(config.getDisplayWindowPositionY() == 0);
+        assertTrue(config.isEditorSmart());
         assertFalse(config.isDisplayWindowMaximize());
         assertTrue(config.isDisplayWindowPersonnalDimension());
         assertTrue(config.isDisplayWindowPersonnalPosition());
-        assertEquals(config.isEditorToolbarView(), "yes");
+        assertTrue(config.isEditorToolbarView());
+        assertTrue(config.isEditorLinenoView());
+        assertTrue(config.isEditorRenderView());
         assertEquals(config.getEditorFontsize(), 14);
         assertEquals(config.getEditorFont(), "Fira Mono");
     }

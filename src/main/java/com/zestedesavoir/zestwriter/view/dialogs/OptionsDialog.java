@@ -224,7 +224,7 @@ public class OptionsDialog{
         optEditorToolbarView = config.isEditorToolbarView();
         optEditorLinenoView = config.isEditorLinenoView();
         optEditorRenderView = config.isEditorRenderView();
-        optSmartEditor = config.getEditorSmart();
+        optSmartEditor = config.isEditorSmart();
 
         optEditorToolbarViewYes.setSelected(optEditorToolbarView);
         optEditorToolbarViewNo.setSelected(!optEditorToolbarView);

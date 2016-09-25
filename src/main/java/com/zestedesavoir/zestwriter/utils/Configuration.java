@@ -247,7 +247,7 @@ public class Configuration {
         conf.setProperty(ConfigData.ContentsPath.getKey(), path);
     }
 
-    public Boolean getEditorSmart(){
+    public boolean isEditorSmart(){
         return getGenericBooleanDisplay(ConfigData.EditorSmart);
     }
 
@@ -513,9 +513,9 @@ public class Configuration {
         EditorSmart("options.editor.smart", "true"),
         EditorFont("options.editor.font", "Fira Mono"),
         EditorFontSize("options.editor.fontSize", "14"),
-        EditorToolbarView("options.editor.toolbar.view", "yes"),
-        EditorLinenoView("options.editor.lineno.view", "yes"),
-        EditorRenderView("options.editor.render.view", "yes"),
+        EditorToolbarView("options.editor.toolbar.view", "true"),
+        EditorLinenoView("options.editor.lineno.view", "true"),
+        EditorRenderView("options.editor.render.view", "true"),
         DisplayTheme("options.display.theme", "light.css"),
         DisplayLang("options.display.lang", Locale.FRANCE.toString()),
         DisplayWindowPersonnalDimension("options.display.window.standardDimension", "true"),
