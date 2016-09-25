@@ -170,3 +170,10 @@
     .icon-arrow-down, .icon-chart-areaspline, .icon-chart-bar, .icon-chart-pie, .icon-link, .icon-code-tags, .icon-library-books{
         -fx-fill: #48a200;
     }
+
+.options-grid{
+    -fx-padding:0 0 0 40;
+}
+.option-auth-warning{
+    -fx-padding:0 0 0 40;
+}

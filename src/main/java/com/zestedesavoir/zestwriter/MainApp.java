@@ -135,7 +135,6 @@ public class MainApp extends Application{
 
     @Override
     public void start(Stage primaryStage) {
-
         MainApp.primaryStage = primaryStage;
         MainApp.primaryStage.setTitle(Configuration.bundle.getString("ui.app_name.text"));
         MainApp.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("images/logo.png")));
@@ -234,7 +233,6 @@ public class MainApp extends Application{
             MdTextController controller = loader.getController();
             controller.setMainApp(this);
             Index = controller;
-
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }

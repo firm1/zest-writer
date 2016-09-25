@@ -22,7 +22,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -30,7 +29,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.shape.Box;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
@@ -120,14 +118,18 @@ public class MdConvertController {
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Editor.fxml"));
         loader.load();
 
-        if(MainApp.getConfig().getEditorToolbarView().equals("no")){
+        if(!MainApp.getConfig().isEditorToolbarView()){
             BoxEditor.setTop(null);
             BoxRender.setTop(null);
         }
 
         BoxEditor.setCenter(SourceText);
         SourceText.setStyle("-fx-font-family: \"" + MainApp.getConfig().getEditorFont() + "\";-fx-font-size: " + MainApp.getConfig().getEditorFontsize() + ";");
-        initRenderTask();
+        if(MainApp.config.isEditorRenderView()) {
+            initRenderTask();
+        } else {
+            splitPane.getItems().remove(1);
+        }
         Platform.runLater(() -> {
             SourceText.replaceText(extract.getMarkdown());
             initStats();
@@ -169,7 +171,7 @@ public class MdConvertController {
             EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
                     EventHandlerHelper.on(keyPressed(KeyCode.Q, SHORTCUT_DOWN)).act( ev -> SourceText.selectAll()).create());
         }
-        if(MainApp.getConfig().getEditorSmart().booleanValue()) {
+        if(MainApp.getConfig().isEditorSmart()) {
             EventHandlerHelper.install(SourceText.onKeyReleasedProperty(),
                     EventHandlerHelper.on(keyReleased(KeyCode.TAB)).act(ev -> HandleSmartTab()).create());
             EventHandlerHelper.install(SourceText.onKeyReleasedProperty(),
@@ -185,9 +187,7 @@ public class MdConvertController {
             }
         });
 
-        Platform.runLater(() -> {
-            SourceText.requestFocus();
-        });
+        Platform.runLater(() -> SourceText.requestFocus());
     }
 
 
@@ -232,7 +232,10 @@ public class MdConvertController {
     @FXML private void initialize() {
         SourceText.getStyleClass().add("markdown-editor");
         SourceText.getStylesheets().add(MainApp.class.getResource("css/editor.css").toExternalForm());
-        SourceText.setParagraphGraphicFactory(LineNumberFactory.get(SourceText));
+
+        if(MainApp.config.isEditorLinenoView())
+            SourceText.setParagraphGraphicFactory(LineNumberFactory.get(SourceText));
+
         SaveButton.disableProperty().bind(isSaved);
     }
 
@@ -538,8 +541,6 @@ public class MdConvertController {
     }
 
     private void initRenderTask() {
-
-
         renderTask = new Service<String>() {
             @Override
             protected Task<String> createTask() {
@@ -547,7 +548,7 @@ public class MdConvertController {
                     @Override
                     protected String call() throws Exception {
                         String html = markdownToHtml(SourceText.getText());
-                        if(html != null) {
+                        if (html != null) {
                             return mainApp.getMdUtils().addHeaderAndFooter(html);
                         } else {
                             Thread.sleep(5000);
@@ -573,17 +574,19 @@ public class MdConvertController {
     }
 
     @FXML public void updateRender() {
-        if (renderTask != null) {
-            if(renderTask.getState().equals(State.READY)) {
-                renderTask.start();
+        if(MainApp.config.isEditorRenderView()) {
+            if (renderTask != null) {
+                if (renderTask.getState().equals(State.READY)) {
+                    renderTask.start();
+                }
             }
+            renderView.getEngine().getLoadWorker().stateProperty()
+                    .addListener((ObservableValue<? extends State> ov, State oldState, State newState) -> {
+                        if (newState == State.SUCCEEDED) {
+                            scrollTo(renderView, xRenderPosition, yRenderPosition);
+                        }
+                    });
         }
-        renderView.getEngine().getLoadWorker().stateProperty()
-        .addListener((ObservableValue<? extends State> ov, State oldState, State newState) -> {
-            if (newState == State.SUCCEEDED) {
-                scrollTo(renderView, xRenderPosition, yRenderPosition);
-            }
-        });
         performStats();
     }
 
@@ -674,7 +677,7 @@ public class MdConvertController {
 
     public String markdownToHtml(String chaine) {
         PythonInterpreter console = getMdBox().getPyconsole();
-        if(console != null) {
+        if (console != null) {
             console.set("text", chaine);
             console.exec(
                     "render = Markdown(extensions=(ZdsExtension({'inline': False, 'emoticons': smileys}),),safe_mode = 'escape', enable_attributes = False, tab_length = 4, output_format = 'html5', smart_emphasis = True, lazy_ol = True).convert(text)");

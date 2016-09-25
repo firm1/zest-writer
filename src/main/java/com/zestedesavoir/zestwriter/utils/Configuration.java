@@ -247,7 +247,7 @@ public class Configuration {
         conf.setProperty(ConfigData.ContentsPath.getKey(), path);
     }
 
-    public Boolean getEditorSmart(){
+    public boolean isEditorSmart(){
         return getGenericBooleanDisplay(ConfigData.EditorSmart);
     }
 
@@ -274,18 +274,28 @@ public class Configuration {
         conf.setProperty(ConfigData.EditorFontSize.getKey(), fontSize);
     }
 
-    public String getEditorToolbarView(){
-        if(conf.containsKey(ConfigData.EditorToolbarView.getKey()))
-            return conf.getProperty(ConfigData.EditorToolbarView.getKey());
-        else
-            return ConfigData.EditorToolbarView.getDefaultValue();
+    public boolean isEditorToolbarView(){
+        return getGenericBooleanDisplay(ConfigData.EditorToolbarView);
     }
 
-    public void setEditorToolbarView(String view){
-        if(!view.toLowerCase().equals("yes") && !view.toLowerCase().equals("no"))
-            view = ConfigData.EditorToolbarView.getDefaultValue();
+    public void setEditorToolbarView(boolean view){
+        conf.setProperty(ConfigData.EditorToolbarView.getKey(), String.valueOf(view));
+    }
 
-        conf.setProperty(ConfigData.EditorToolbarView.getKey(), view);
+    public boolean isEditorLinenoView(){
+        return getGenericBooleanDisplay(ConfigData.EditorLinenoView);
+    }
+
+    public void setEditorLinenoView(boolean view){
+        conf.setProperty(ConfigData.EditorLinenoView.getKey(), String.valueOf(view));
+    }
+
+    public boolean isEditorRenderView(){
+        return getGenericBooleanDisplay(ConfigData.EditorRenderView);
+    }
+
+    public void setEditorRenderView(boolean view){
+        conf.setProperty(ConfigData.EditorRenderView.getKey(), String.valueOf(view));
     }
 
     public String getDisplayTheme(){
@@ -503,7 +513,9 @@ public class Configuration {
         EditorSmart("options.editor.smart", "true"),
         EditorFont("options.editor.font", "Fira Mono"),
         EditorFontSize("options.editor.fontSize", "14"),
-        EditorToolbarView("options.editor.toolbar.view", "yes"),
+        EditorToolbarView("options.editor.toolbar.view", "true"),
+        EditorLinenoView("options.editor.lineno.view", "true"),
+        EditorRenderView("options.editor.render.view", "true"),
         DisplayTheme("options.display.theme", "light.css"),
         DisplayLang("options.display.lang", Locale.FRANCE.toString()),
         DisplayWindowPersonnalDimension("options.display.window.standardDimension", "true"),

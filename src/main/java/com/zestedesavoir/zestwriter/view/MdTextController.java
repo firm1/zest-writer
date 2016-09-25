@@ -53,7 +53,9 @@ public class MdTextController {
     }
 
     @FXML private void initialize() {
-        loadConsolePython();
+        if(MainApp.config.isEditorRenderView())
+            loadConsolePython();
+
         loadFonts();
     }
 
