@@ -15,9 +15,9 @@ Pages suivantes
 .. toctree::
    :maxdepth: 1
 
-   features
-   install
-   dev_guide
+   pages/features
+   pages/install
+   pages/dev_guide
    javadoc/packages/
 
 * :ref:`genindex`

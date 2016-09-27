@@ -66,7 +66,7 @@ templates_path = ['_templates']
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-source_suffix = ['.rst', '.md']
+source_suffix = ['.rst']
 
 # The encoding of source files.
 #
@@ -85,7 +85,7 @@ author = u'firm1 and other contributors'
 # built documents.
 #
 # The short X.Y version.
-version = u'v3.1'
+version = u'v3.1' #TODO: trouver un moyen d'affecter automatiquement cette valeur
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -169,13 +169,13 @@ html_short_title = html_title
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
 #
-html_logo = 'logo.png'
+html_logo = 'images/logo.png'
 
 # The name of an image file (relative to this directory) to use as a favicon of
 # the docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
 #
-html_favicon = 'logo.ico'
+html_favicon = 'images/logo.ico'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -293,7 +293,7 @@ latex_documents = [
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
 #
-latex_logo = 'logo.png'
+latex_logo = 'images/logo.png'
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
