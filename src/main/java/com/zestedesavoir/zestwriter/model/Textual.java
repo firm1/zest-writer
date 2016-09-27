@@ -1,6 +1,6 @@
 package com.zestedesavoir.zestwriter.model;
 
-public interface Textual{
+public interface Textual {
 
     String getMarkdown();
     void save();

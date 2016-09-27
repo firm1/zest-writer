@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 @JsonIgnoreProperties({"basePath", "filePath", "editable", "object", "countChildrenExtract", "countDescendantContainer", "rootContent"})
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="object", visible=true)
 @JsonSubTypes({@Type(value = Extract.class, name = "extract"), @Type(value = Container.class, name = "container") })
-public abstract class MetaContent implements StorageSaver {
+public abstract class MetaContent extends StorageSaver {
     Logger logger = LoggerFactory.getLogger(MetaContent.class);
 
     private String _object;
@@ -117,34 +117,5 @@ public abstract class MetaContent implements StorageSaver {
         if (file.exists()) {
             deleteFile(file);
         }
-    }
-
-    @Override
-    public void deleteFile(File file) {
-        if(file.isDirectory()) {
-            if(file.list().length==0) {
-                file.delete();
-                logger.debug("Répertoire "+file.getAbsolutePath()+" Supprimé");
-            }
-            else {
-                String files[] = file.list();
-                for(String temp:files) {
-                    File fileDelete = new File(file, temp);
-                    deleteFile(fileDelete);
-                }
-                if(file.list().length==0) {
-                    file.delete();
-                    logger.debug("Répertoire "+file.getAbsolutePath()+" Supprimé");
-                }
-            }
-        } else {
-            file.delete();
-            logger.debug("Fichier "+file.getAbsolutePath()+" Supprimé");
-        }
-    }
-
-    @Override
-    public String getBaseDirectory() {
-        return null;
     }
 }

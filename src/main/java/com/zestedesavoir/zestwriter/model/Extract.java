@@ -17,7 +17,7 @@ import java.util.Scanner;
 import java.util.function.Function;
 
 
-public class Extract extends MetaContent implements Textual, ContentNode{
+public class Extract extends MetaContent implements Textual, ContentNode {
     private String _text;
     @JsonIgnore private String markdown;
 
