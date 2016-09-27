@@ -16,6 +16,7 @@ before_install:
   - set JAVA_OPTS=-XX:MaxPermSize=1024m -Xmx1512m -Dfile.encoding=UTF-8
   - set JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y rpm ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get remove -y oracle-java8-installer ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y oracle-java8-installer ; fi
   - java -version
