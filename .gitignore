@@ -14,3 +14,4 @@ bin
 classes/
 out/
 doc/build
+doc/javadoc
