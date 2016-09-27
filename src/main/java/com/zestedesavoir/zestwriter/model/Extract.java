@@ -7,10 +7,13 @@ import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.function.Function;
 
 
@@ -36,6 +39,47 @@ public class Extract extends MetaContent implements Textual, ContentNode{
     @Override
     public String getMarkdown() {
         return markdown;
+    }
+
+    @Override
+    public void save() {
+        BufferedWriter writer = null;
+        try(OutputStream fos = new FileOutputStream(getFilePath())) {
+            writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF8"));
+            writer.append(getMarkdown());
+            writer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    @Override
+    public String readMarkdown() {
+        Path path = Paths.get(this.getFilePath());
+        StringBuilder bfString = new StringBuilder();
+        try(Scanner scanner = new Scanner(path, StandardCharsets.UTF_8.name())) {
+            while (scanner.hasNextLine()) {
+                bfString.append(scanner.nextLine());
+                bfString.append("\n");
+            }
+            scanner.close();
+            return bfString.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    @Override
+    public void loadMarkdown() {
+        setMarkdown(readMarkdown());
     }
 
     public void setMarkdown(String markdown) {
@@ -75,6 +119,26 @@ public class Extract extends MetaContent implements Textual, ContentNode{
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean canTakeContainer(Content c) {
+        return false;
+    }
+
+    @Override
+    public boolean canTakeExtract() {
+        return false;
+    }
+
+    @Override
+    public boolean isEditable() {
+        return true;
+    }
+
+    @Override
+    public void renameTitle(String title) {
+        setTitle(title);
     }
 
     @Override

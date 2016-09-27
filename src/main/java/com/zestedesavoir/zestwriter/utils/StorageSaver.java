@@ -5,9 +5,6 @@
  */
 package com.zestedesavoir.zestwriter.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 
 
@@ -18,28 +15,5 @@ import java.io.File;
 public interface StorageSaver {
     String getBaseDirectory();
 
-    public static void deleteFile(File file) {
-        Logger logger = LoggerFactory.getLogger(StorageSaver.class);
-
-        if(file.isDirectory()) {
-            if(file.list().length==0) {
-                file.delete();
-                logger.debug("Répertoire "+file.getAbsolutePath()+" Supprimé");
-            }
-            else {
-                String files[] = file.list();
-                for(String temp:files) {
-                    File fileDelete = new File(file, temp);
-                    deleteFile(fileDelete);
-                }
-                if(file.list().length==0) {
-                    file.delete();
-                    logger.debug("Répertoire "+file.getAbsolutePath()+" Supprimé");
-                }
-            }
-        } else {
-            file.delete();
-            logger.debug("Fichier "+file.getAbsolutePath()+" Supprimé");
-        }
-    }
+    void deleteFile(File file);
 }

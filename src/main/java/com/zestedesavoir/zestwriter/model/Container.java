@@ -149,6 +149,16 @@ public class Container extends MetaContent implements ContentNode {
     }
 
     @Override
+    public boolean isEditable() {
+        return true;
+    }
+
+    @Override
+    public void renameTitle(String title) {
+        setTitle(title);
+    }
+
+    @Override
     public boolean isMoveableIn(ContentNode receiver, Content root) {
         if(receiver instanceof MetaAttribute) {
             if(receiver.getTitle().equalsIgnoreCase("conclusion")) {

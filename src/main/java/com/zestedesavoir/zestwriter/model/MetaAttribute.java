@@ -4,10 +4,11 @@ import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Scanner;
 
 public class MetaAttribute implements Textual, ContentNode{
     private String basePath;
@@ -25,6 +26,47 @@ public class MetaAttribute implements Textual, ContentNode{
     @Override
     public String getMarkdown() {
         return markdown;
+    }
+
+    @Override
+    public void save() {
+        BufferedWriter writer = null;
+        try(OutputStream fos = new FileOutputStream(getFilePath())) {
+            writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF8"));
+            writer.append(getMarkdown());
+            writer.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    @Override
+    public String readMarkdown() {
+        Path path = Paths.get(this.getFilePath());
+        StringBuilder bfString = new StringBuilder();
+        try(Scanner scanner = new Scanner(path, StandardCharsets.UTF_8.name())) {
+            while (scanner.hasNextLine()) {
+                bfString.append(scanner.nextLine());
+                bfString.append("\n");
+            }
+            scanner.close();
+            return bfString.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    @Override
+    public void loadMarkdown() {
+            setMarkdown(readMarkdown());
     }
 
     @Override
@@ -80,6 +122,41 @@ public class MetaAttribute implements Textual, ContentNode{
     @Override
     public MaterialDesignIconView buildIcon() {
         return IconFactory.createFileBlankIcon();
+    }
+
+    @Override
+    public boolean canDelete() {
+        return false;
+    }
+
+    @Override
+    public boolean isMoveableIn(ContentNode receiver, Content root) {
+        return false;
+    }
+
+    @Override
+    public boolean canTakeContainer(Content c) {
+        return false;
+    }
+
+    @Override
+    public boolean canTakeExtract() {
+        return false;
+    }
+
+    @Override
+    public boolean isEditable() {
+        return true;
+    }
+
+    @Override
+    public void delete() {
+
+    }
+
+    @Override
+    public void renameTitle(String title) {
+        setTitle(title);
     }
 
     @Override

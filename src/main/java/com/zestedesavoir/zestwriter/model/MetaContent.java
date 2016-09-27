@@ -4,18 +4,21 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.zestedesavoir.zestwriter.utils.StorageSaver;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.function.Function;
-
-import static com.zestedesavoir.zestwriter.utils.StorageSaver.deleteFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @JsonIgnoreProperties({"basePath", "filePath", "editable", "object", "countChildrenExtract", "countDescendantContainer", "rootContent"})
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="object", visible=true)
 @JsonSubTypes({@Type(value = Extract.class, name = "extract"), @Type(value = Container.class, name = "container") })
-public abstract class MetaContent{
+public abstract class MetaContent implements StorageSaver {
+    Logger logger = LoggerFactory.getLogger(MetaContent.class);
+
     private String _object;
     private String _slug;
     private String _title;
@@ -116,4 +119,32 @@ public abstract class MetaContent{
         }
     }
 
+    @Override
+    public void deleteFile(File file) {
+        if(file.isDirectory()) {
+            if(file.list().length==0) {
+                file.delete();
+                logger.debug("Répertoire "+file.getAbsolutePath()+" Supprimé");
+            }
+            else {
+                String files[] = file.list();
+                for(String temp:files) {
+                    File fileDelete = new File(file, temp);
+                    deleteFile(fileDelete);
+                }
+                if(file.list().length==0) {
+                    file.delete();
+                    logger.debug("Répertoire "+file.getAbsolutePath()+" Supprimé");
+                }
+            }
+        } else {
+            file.delete();
+            logger.debug("Fichier "+file.getAbsolutePath()+" Supprimé");
+        }
+    }
+
+    @Override
+    public String getBaseDirectory() {
+        return null;
+    }
 }
