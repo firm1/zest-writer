@@ -28,16 +28,14 @@
 
 import sys
 import os
+
 ON_RTD = os.environ.get('READTHEDOCS', None) == 'True'
-OVERWRITE = os.environ.get('JAVADOC_FORCE', '0') != '0'
 
 def javadoc_build():
     from javasphinx.apidoc import main as build_doc
 
     javasphinx_params = ['javasphinx-apidoc']
-    if OVERWRITE:
-        javasphinx_params.append('-f')
-    javasphinx_params += ['-o', './javadoc', '../src/main/java/']
+    javasphinx_params += ['-f', '-o', './javadoc', '../src/main/java/']
 
     print(' '.join(javasphinx_params))
     build_doc(javasphinx_params)
