@@ -1,2 +1,2 @@
-sphinx==1.4.6
-javasphinx==0.9.13
+sphinx>=1.4.6
+javasphinx>=0.9.13

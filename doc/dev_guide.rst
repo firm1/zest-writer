@@ -18,3 +18,24 @@ Pour *builder* l'application, vous devez avoir installé Gradle et lancé la com
    gradle build
 
 À la fin, selon votre système d'exploitation, vous retrouvez un ``.exe``, un ``.deb``, un ``.rpm`` ou un ``.dmg`` dans le dossier ``build/distributions``.
+
+Documentation
+#############
+
+Préparation
+***********
+
+Installez les dépendances requises pour générer la documentation :
+
+.. code-block:: sh
+
+   pip install -r doc/local_requirements.txt
+
+Générer la documentation
+************************
+
+.. code-block:: sh
+
+   gradle doc
+
+La documentation apparaitra dans `doc/build/html`. Ouvrez index.html avec votre navigateur web pour la consulter.
