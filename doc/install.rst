@@ -5,7 +5,7 @@ Installation
 Windows
 #######
 
-Les instructions se trouvent sur `ce post <https://zestedesavoir.com/forums/sujet/5354/zest-writer-un-editeur-hors-ligne-pour-vos-contenus-zds/#p98286>`.
+Les instructions se trouvent sur `ce post <https://zestedesavoir.com/forums/sujet/5354/zest-writer-un-editeur-hors-ligne-pour-vos-contenus-zds/#p98286>`_.
 
 Os X
 ####
@@ -46,7 +46,7 @@ Jar executable (tous les OS)
 
 Pour cela vous avez besoin de **Java 8** installé sur votre système.
 
-1. Téléchargez la dernière version de Zest Writer via `ce lien <https://bintray.com/firm1/maven/zest-writer/_latestVersion#files>`.
+1. Téléchargez la dernière version de Zest Writer via `ce lien <https://bintray.com/firm1/maven/zest-writer/_latestVersion#files>`_.
 2. Ouvrez un terminal et lancez le jar via (x.y.z étant le numéro de version) : ``java -jar zest-writer-all-x.y.z.jar``.
 
 Depuis les sources
