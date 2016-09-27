@@ -13,3 +13,4 @@ bin
 *.log
 classes/
 out/
+doc/build
