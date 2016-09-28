@@ -1,8 +1,31 @@
-#Création d'un plugin pour Zest-Writer
+**************************************
+Plugins pour l'application Zest-Writer
+**************************************
 
-Nous vous conseillons de télécharger les fichiers modèles, disponible pour [IntelliJ]() ainsi que pour [Eclipse]().
+Il est possible de créer ses propres plugins pour l'application, grâce à une API que vous pouvez télécharger `ici <>`_.
 
-##Détail du fichier modèle
+*TODO*
+
+Mise en place l'API
+###################
+
+Sur IntelliJ
+************
+
+*TODO*
+
+Sur Eclipse
+***********
+
+*TODO*
+
+Création d'un plugin pour Zest-Writer
+#####################################
+
+Nous vous conseillons de télécharger les fichiers modèles, disponible pour `IntelliJ <>`_ ainsi que pour `Eclipse <>`_.
+
+Détail du fichier modèle
+************************
 
 ```java
 package com.winxaito.main;
@@ -43,14 +66,14 @@ public class Main implements ZwPlugin{
 ```
 
 ##La méthode `onEnable`
-Ensuite, la méthode `onEnable` est appelé lors du lancement de l'application.  
+Ensuite, la méthode `onEnable` est appelé lors du lancement de l'application.
 Cette méthode prend en paramètre la classe `MainApp`, il s'agit de la classe principale de l'application.
 C'est grâce à cette classe que nous pouvons modifié notre application.
 
 ##La méthode `getListener`
 La méthode `getListener` est également obligatoire, elle va retourner la liste des classes qui doivent être écoutés pour les différents événements de l'application.
 Pour ajouter une classe à écouter, il suffit d'ajouter la classe dans l'ArrayList, comme ceci
- 
+
 ```java
 listener.add(com.winxaito.main.events.WindowEvents.class);
 ```
