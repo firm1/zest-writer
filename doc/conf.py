@@ -40,13 +40,18 @@ README_REPLACEMENTS = {'doc/images/':'images/'}
 
 with open(README) as infile, open(RTD_README, 'w') as outfile:
     print_on_rtd = True
-    for line in infile.readlines():
+    for i, line in enumerate(infile.readlines()):
         for src, target in README_REPLACEMENTS.iteritems():
             line = line.replace(src, target)
         if line.startswith('.. no_rtd'):
             print_on_rtd = False
         if line.startswith('.. rtd'):
             print_on_rtd = True
+
+        if i==1:
+            line = 'Présentation\n'
+
+        print line
 
         if print_on_rtd:
             outfile.write(line)
