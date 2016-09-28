@@ -77,7 +77,7 @@ public abstract class MetaContent{
 
     public void setBasePath(String basePath) {
         this.basePath = basePath;
-        File base = new File(getFilePath());
+        File base = new File(basePath);
         if(this instanceof Container) {
             if(! base.exists()) {
                 base.mkdirs();
