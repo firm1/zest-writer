@@ -1,6 +1,6 @@
 # Zest Writer
 
-Éditeur **Hors-ligne** de contenus au format zMarkdown.
+Un éditeur **hors-ligne** de contenus au format zMarkdown.
 
 ![](src/logo/logo-128.png)
 
@@ -14,100 +14,68 @@ Linux | Windows
 
 [![Statis](https://www.openhub.net/p/zest-writer/widgets/project_thin_badge.gif)](https://www.openhub.net/p/zest-writer?ref=sample)
 
-## Installation (version stable)
+ZestWriter est un éditeur d'articles et de tutoriels en mode hors-ligne (sans avoir besoin d'une connexion internet). Il supporte la syntaxe zMarkdown (le Markdown avec les petits ajouts utilisés sur le site [Zeste de Savoir](https://zestedesavoir.com/)).
 
-### Tous les systèmes d'exploitation (Jar executable)
+Pour la procédure d'installation ou des informations concernant le développement de ZestWriter, merci de consulter [la documentation officielle sur ReadTheDocs](http://zest-writer.readthedocs.io).
 
-Pour cela vous avez besoin de **Java 8** installé sur votre système.
+## Fonctionnalités
 
-1. Téléchargez la dernière version de Zest Writer via [ce lien](https://bintray.com/firm1/maven/zest-writer/_latestVersion#files).
+### Interface
 
-2. Ouvrez un terminal et lancez le jar via (x.y.z étant le numéro de version) : `java -jar zest-writer-all-x.y.z.jar`.
+**Général**
 
-### Windows
+- différents thèmes proposés (clair, sombre, etc.) ;
 
-Les instructions se trouvent sur [ce post](https://zestedesavoir.com/forums/sujet/5354/zest-writer-un-editeur-hors-ligne-pour-vos-contenus-zds/#p98286).
+![Capture d'écran du menu de ZestWrite avec thème sombre](doc/images/zw_dark_menu.png)
 
-### Linux
+![Capture d'écran de la fenêtre de rédaction de ZestWrite avec thème clair](doc/images/zw_light_redaction.png)
 
-#### Ubuntu, Debian, etc.
+**Zone d'édition**
 
-*Pour une mise à jour passez directement à l'étape 3*.
+- boutons d'aide à la rédaction Markdown (gras, italique, blocs spéciaux, tableaux, listes, etc.).
 
-1. Importez la clé GPG bintray de  via la commande : `sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 379CE192D401AB61`
-2. Ajouter une nouvelle source via la commande : `echo "deb https://dl.bintray.com/firm1/deb wheezy main" | sudo tee -a /etc/apt/sources.list.d/zestwriter.list`.
-3. mettez à jour vos dépôts via la commande : `sudo apt-get update`.
-4. installez Zest Writer via la commande : `sudo apt-get install zestwriter`.
+![Barre de boutons](doc/images/buttons_bar.png)
 
-#### Fedora, ArchLinux, CentOs, etc.
+- possibilité de modifier la taille du texte et sa police ;
 
-1. Créez le fichier `/etc/yum.repos.d/zestwriter.repo` et copiez le contenu suivant à l'intérieur :
 
-  ```
-  [zestwriter]
-  name=zestwriter 
-  baseurl=http://dl.bintray.com/firm1/rpm
-  gpgcheck=0
-  enabled=1 
-  ```
+**Zone de rendu**
 
-2. Installez Zest Writer via la commande : `yum install zestwriter`.
+- prévisualisation instantanée lors de la rédaction ;
+- décrochage de la zone de rendu dans une fenêtre externe afin de pouvoir la placer sur un écran séparé ;
 
-### Os X
+![Zone de rendu dans une fenêtre externe](doc/images/render_window.png)
 
-1. Téléchargez la dernière version de Zest Writer via [ce lien](https://bintray.com/firm1/dmg/zest-writer/_latestVersion#files).
-2. Installez le dmg sur votre système d'exploitation.
+**Arbre de navigation des contenus (tutoriels ou articles)**
 
-## Screenshot
+- navigation à travers les différents conteneurs ;
+- déplacement des conteneurs et des extraits par *drag'n drop* ;
+- édition des titres des extraits et conteneurs.
 
-![](http://zestedesavoir.com/media/galleries/2958/0796bf63-8ff3-41a1-9550-2c9ff31089b2.png)
+![Arbre de navigation](doc/images/tree_view.png)
 
-![](http://zestedesavoir.com/media/galleries/2958/90d51a40-f5ba-431f-8a55-c4c556048535.png)
+### Révision
 
-## Fonctionnalités supportées
+- proposition de corrections orthographiques, grammaticales et typographiques du contenu ;
 
-### La rédaction
+![Prosition de correction](doc/images/grammar_hint.png)
 
-- Rédaction d'articles et de tutoriels en mode hors ligne, c'est à dire sans avoir besoin d'une connexion internet ;
-- support de la syntaxe zMarkdown (le Markdown avec les petits ajouts utilisés sur le site Zeste de Savoir) ;
-- la prévisualisation instantanée lors de la rédaction ;
-- bouton d'aide à la rédaction Markdown (gras, italique, blocs customs, tableaux, listes, etc.).
+- indices de lisibilité des extraits pour améliorer leur lisibilité (*Flesch* et *Gunning*) ;
 
-### La navigation
+![Indice de Flesch](doc/images/flesch_indice.png)
 
-- La navigation dans le sommaire d'un contenu sous forme d'arbre ;
-- le déplacement des conteneurs et des extraits grâce au *drag'n drop* ;
-- l'édition des titres des extraits et conteneurs depuis l'arbre de navigation.
+- compteur de mots et de caractères affichés en temps réel ;
+- graphiques de répartition du contenu dans les différents conteneurs.
 
-### Conseils de rédaction
+![Graphique de répartition du contenu](doc/images/chart.png)
 
-- Proposition de correction orthotypographique du contenu ;
-- indice de lisibilité des extraits (afin d'améliorer la lisibilité de son texte).
+### Synchronisation avec le site de Zeste de Savoir
 
-### Synchronisation avec le site de ZdS
+![Logo de Zeste de Savoir](doc/images/logo_zds.png)
 
-- Possibilité de se connecter au site depuis l'éditeur ;
-- possibilité de télécharger en local ses contenus en rédaction sur ZdS ;
-- possiilité d'envoyer sur le site les modifications effectuées sur le contenu en local.
+- possibilité de récupérer ses contenus en rédaction sur le site ;
+- possibilité d'envoyer sur le site les modifications effectuées sur Zeste Writer.
 
 ### Multiplateforme
 
-- L'application fonctionne sur Windows (32 et 64 bits), Linux et OS X quel que soit la version de la JVM sur votre machine, car l'application embarque sa propre JVM.
-
-## Le developpement
-
-### Outils
-
-- L'application est developpée en Java **8** (vous devez donc avoir cette version pour pouvoir developper) ;
-- l'interface utilise JavaFX ;
-- le parseur markdown utilisé est le même que celui de ZdS (l'application émule un interpreteur Python grace à Jython).
-
-### *build* de l'application
-
-Pour *builder* l'application, vous devez avoir installé Gradle et lancé la commande suivante (depuis le dossier du projet) :
-
-```sh
-gradle build
-```
-
-À la fin, selon votre système d'exploitation, vous retrouvez un `.exe`, un `.deb`, un `.rpm` ou un `.dmg` dans le dossier `build/distributions`.
+- L'application fonctionne sur Windows, Linux et OS X.
