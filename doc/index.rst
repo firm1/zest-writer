@@ -12,6 +12,7 @@ Pages suivantes
 
    presentation
    pages/install
+   pages/contribute
    pages/dev_guide
    pages/documentation
    pages/plugins
