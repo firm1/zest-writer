@@ -1,7 +1,3 @@
-.. |br| raw:: html
-
-   <br />
-
 ***********
 Zest Writer
 ***********
@@ -11,7 +7,7 @@ Un éditeur **hors-ligne** de contenus au format zMarkdown.
 .. image:: /doc/images/logo.png
    :alt: Logo de ZestWriter
 
-|br|
+--------------------------------------------------------------------------------
 
 .. image:: https://travis-ci.org/firm1/zest-writer.svg?branch=master
    :target: https://travis-ci.org/firm1/zest-writer
@@ -20,7 +16,6 @@ Un éditeur **hors-ligne** de contenus au format zMarkdown.
 .. image:: https://ci.appveyor.com/api/projects/status/n3aa5h519uxvjufq/branch/master?svg=true
    :target: https://ci.appveyor.com/project/firm1/zest-writer/branch/master
    :alt: Appveyor build Status
-
 
 .. image:: https://coveralls.io/repos/github/firm1/zest-writer/badge.svg?branch=master
    :target: https://coveralls.io/github/firm1/zest-writer?branch=master
@@ -54,11 +49,15 @@ Général
 
 - différents thèmes proposés (clair, sombre, etc.) ;
 
-.. image:: /doc/images/zw_dark_menu.png
-   :alt: Capture d'écran de la page d'accueil (thème sombre)
+.. figure:: /doc/images/zw_dark_menu.png
+   :align: center
 
-.. image:: /doc/images/zw_light_redaction.png
-   :alt: Capture d'écran de la zone de rédaction (thème clair)
+   Capture d'écran de la page d'accueil (thème sombre)
+
+.. figure:: /doc/images/zw_light_redaction.png
+   :align: center
+
+   Capture d'écran de la zone de rédaction (thème clair)
 
 Zone d'édition
 **************
