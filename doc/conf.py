@@ -75,8 +75,10 @@ def copy_rst():
     for rst_name in rst_names:
         with open(RST_DIR + rst_name) as infile, open(BUILD_RST_DIR + rst_name, 'w') as outfile:
             for line in infile.readlines():
+                line = line.replace('<\//', '[URL_RESOLVER_ESCAPE]')
                 line = line.replace('<//doc/', '<../../../../')
-                line = line.replace('<//', '<%sdoc/' % GITHUB_RAW_PATH if ON_RTD else '<../../../../../')
+                line = line.replace('<//', '<%s' % GITHUB_RAW_PATH if ON_RTD else '<../../../../../')
+                line = line.replace('[URL_RESOLVER_ESCAPE]', '<//')
                 outfile.write(line)
 
 def javadoc_build():

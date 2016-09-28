@@ -42,7 +42,22 @@ Pour connaitre la syntaxe, vous pouvez vous référer aux resources officielles 
 - `la référence complète <http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html>`_,
 - `la liste des directives <http://docutils.sourceforge.net/docs/ref/rst/directives.html>`_.
 
-Vous pouvez également regarder comment sont rédigées ces pages en lisant les fichiers ``.rst`` du dossier ``doc/pages`` (par exemple `celle-ci <//doc/rst/documentation.rst>`_).
+Vous pouvez également regarder comment sont rédigées ces pages en cliquant sur *Edit on GitHub* (*View page source* en local) en haut à droite de chaque page.
+
+Ajouts spécifiques à Zest Writer
+********************************
+
+**Fichier readme**
+
+Dans le fichier ``readme.rst`` à la racine du dépôt (fichier copié dans la documentation, partie :ref:`presentation`), les balises ``.. no_rtd`` et ``.. rtd`` permetent respectivement de marquer le début et la fin d'une zone qui ne sera pas publiée dans la documentation.
+
+**Réécriture d'URL**
+
+Les URLs précédées de ``//`` ont le comportement suivant :
+- lorsque la documentation est générée en local, elles pointent vers la racine du projet ;
+- lorsque la documentation est sur ReadTheDocs, elles pointent vers le fichier correspondant sur le GitHub (en raw).
+
+Ainsi, ```licence <\//LICENSE>`_`` donne `licence <//LICENSE>`_.
 
 Générer la documentation
 ########################
