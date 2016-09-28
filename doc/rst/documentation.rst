@@ -42,7 +42,7 @@ Pour connaitre la syntaxe, vous pouvez vous référer aux resources officielles 
 - `la référence complète <http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html>`_,
 - `la liste des directives <http://docutils.sourceforge.net/docs/ref/rst/directives.html>`_.
 
-Vous pouvez également regarder comment sont rédigées ces pages en lisant les fichiers ``.rst`` du dossier ``doc/pages`` (par exemple `celle-ci <../../../pages/documentation.rst>`_).
+Vous pouvez également regarder comment sont rédigées ces pages en lisant les fichiers ``.rst`` du dossier ``doc/pages`` (par exemple `celle-ci <//doc/rst/documentation.rst>`_).
 
 Générer la documentation
 ########################

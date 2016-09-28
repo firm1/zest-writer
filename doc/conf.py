@@ -29,35 +29,61 @@
 import sys
 import os
 from datetime import datetime
-from shutil import copyfile
+from shutil import copyfile, rmtree
+import os.path as op
 
-SOURCE_DIR = '../src/main/java/'
-OUTPUT_DIR = './javadoc'
 ON_RTD = os.environ.get('READTHEDOCS', None) == 'True'
-README = '../readme.rst'
-RTD_README = './presentation.rst'
-README_REPLACEMENTS = {'doc/images/':'images/', './LICENSE': '../../../LICENSE'}
 
-with open(README) as infile, open(RTD_README, 'w') as outfile:
-    print_on_rtd = True
-    for i, line in enumerate(infile.readlines()):
-        for src, target in README_REPLACEMENTS.iteritems():
-            line = line.replace(src, target)
-        if line.startswith('.. no_rtd'):
-            print_on_rtd = False
-        if line.startswith('.. rtd'):
-            print_on_rtd = True
+BUILD_DIR = './build/'
+SOURCE_DIR = '../src/main/java/'
+BUILD_RST_DIR = BUILD_DIR + 'rst/'
+JAVADOC_RST_DIR = BUILD_RST_DIR + 'javadoc/'
+README_PATH = '../readme.rst'
+RST_DIR = './rst/'
+RTD_README = RST_DIR + '.presentation.rst'
+GITHUB_RAW_PATH = 'https://raw.githubusercontent.com/firm1/zest-writer/master/'
 
-        if i==1:
-            line = 'Présentation\n'
+if op.exists(BUILD_DIR):
+    rmtree(BUILD_DIR)
+os.makedirs(BUILD_RST_DIR)
 
-        if print_on_rtd:
-            outfile.write(line)
+def copy_readme():
+    print '\n*** copying readme file ***\n'
+    with open(README_PATH) as infile, open(RTD_README, 'w') as outfile:
+        print_on_rtd = True
+        for i, line in enumerate(infile.readlines()):
+            line = line.replace('<./', '<//')
+            line = line.replace('./doc/images/', '../../images/')
+            if line.startswith('.. no_rtd'):
+                print_on_rtd = False
+            if line.startswith('.. rtd'):
+                print_on_rtd = True
+
+            if i==1:
+                line = 'Présentation\n'
+
+            if print_on_rtd:
+                outfile.write(line)
+
+def copy_rst():
+    print '\n*** copying rst files ***\n'
+
+    rst_names = [w[2] for w in os.walk(RST_DIR)][0]
+
+    print 'rst file names: ', rst_names
+
+    for rst_name in rst_names:
+        with open(RST_DIR + rst_name) as infile, open(BUILD_RST_DIR + rst_name, 'w') as outfile:
+            for line in infile.readlines():
+                line = line.replace('<//doc/', '<../../../../')
+                line = line.replace('<//', '<../../../../../')
+                outfile.write(line)
 
 def javadoc_build():
+    print '\n*** building javadoc ***\n'
     from javasphinx.apidoc import main as build_doc
 
-    javasphinx_params = ['javasphinx-apidoc', '-f', '-o', OUTPUT_DIR, SOURCE_DIR]
+    javasphinx_params = ['javasphinx-apidoc', '-f', '-o', JAVADOC_RST_DIR, SOURCE_DIR]
 
     print(' '.join(javasphinx_params))
     build_doc(javasphinx_params)
@@ -66,7 +92,10 @@ if not ON_RTD:  # only import and set the theme if we're building docs locally
     import sphinx_rtd_theme
     html_theme = 'sphinx_rtd_theme'
     html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-    javadoc_build()
+
+copy_readme()
+copy_rst()
+javadoc_build()
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -130,7 +159,7 @@ today_fmt = '%d/%m/%Y'
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = ['build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = []
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.

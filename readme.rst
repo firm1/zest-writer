@@ -6,7 +6,7 @@ Zest Writer
 
 Un éditeur **hors-ligne** de contenus au format zMarkdown.
 
-.. image:: /doc/images/logo.png
+.. image:: ./doc/images/logo.png
    :alt: Logo de ZestWriter
 
 .. rtd
@@ -57,12 +57,12 @@ Général
 
 - différents thèmes proposés (clair, sombre, etc.) ;
 
-.. figure:: /doc/images/zw_dark_menu.png
+.. figure:: ./doc/images/zw_dark_menu.png
    :align: center
 
    Capture d'écran de la page d'accueil (thème sombre)
 
-.. figure:: /doc/images/zw_light_redaction.png
+.. figure:: ./doc/images/zw_light_redaction.png
    :align: center
 
    Capture d'écran de la zone de rédaction (thème clair)
@@ -72,7 +72,7 @@ Zone d'édition
 
 - boutons d'aide à la rédaction Markdown (gras, italique, blocs spéciaux, tableaux, listes, etc.).
 
-.. image:: /doc/images/buttons_bar.png
+.. image:: ./doc/images/buttons_bar.png
    :alt: Barre de boutons
 
 - possibilité de modifier la taille du texte et sa police ;
@@ -83,7 +83,7 @@ Zone de rendu
 - prévisualisation instantanée lors de la rédaction ;
 - décrochage de la zone de rendu dans une fenêtre externe afin de pouvoir la placer sur un écran séparé ;
 
-.. image:: /doc/images/render_window.png
+.. image:: ./doc/images/render_window.png
    :alt: Zone de rendu dans une fenêtre externe
 
 Arbre de navigation des contenus (tutoriels ou articles)
@@ -93,7 +93,7 @@ Arbre de navigation des contenus (tutoriels ou articles)
 - déplacement des conteneurs et des extraits par *drag'n drop* ;
 - édition des titres des extraits et conteneurs.
 
-.. image:: /doc/images/tree_view.png
+.. image:: ./doc/images/tree_view.png
    :alt: Arbre de navigation
 
 Révision
@@ -101,18 +101,18 @@ Révision
 
 - proposition de corrections orthographiques, grammaticales et typographiques du contenu ;
 
-.. image:: /doc/images/grammar_hint.png
+.. image:: ./doc/images/grammar_hint.png
    :alt: Prosition de correction
 
 - indices de lisibilité des extraits pour améliorer leur lisibilité (*Flesch* et *Gunning*) ;
 
-.. image:: /doc/images/flesch_indice.png
+.. image:: ./doc/images/flesch_indice.png
    :alt: Indice de Flesch
 
 - compteur de mots et de caractères affichés en temps réel ;
 - graphiques de répartition du contenu dans les différents conteneurs.
 
-.. image:: /doc/images/chart.png
+.. image:: ./doc/images/chart.png
    :alt: Graphique de répartition du contenu
 
 Synchronisation
@@ -121,7 +121,7 @@ Synchronisation
 - possibilité de récupérer ses contenus depuis le site `Zeste de Savoir <https://zestedesavoir.com/>`_ ;
 - possibilité d'envoyer sur le site les modifications effectuées sur Zeste Writer.
 
-.. image:: /doc/images/logo_zds.png
+.. image:: ./doc/images/logo_zds.png
    :alt: Logo de Zeste de Savoir
 
 - possibilité de récupérer des contenus depuis un dépôt GitHub ;

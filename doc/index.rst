@@ -4,18 +4,15 @@ Documentation de Zest Writer
 
 Zest Writer est un éditeur hors-ligne de contenus au format zMarkdown. Il est l'outil idéal pour rédiger vos tutoriels, articles et tribunes sur le site `Zeste de Savoir <https://zestedesavoir.com/>`_.
 
-Pages suivantes
-###############
-
 .. toctree::
    :maxdepth: 1
 
-   presentation
-   pages/install
-   pages/contribute
-   pages/dev_guide
-   pages/documentation
-   pages/plugins
-   javadoc/packages/
+   build/rst/.presentation
+   build/rst/install
+   build/rst/contribute
+   build/rst/dev_guide
+   build/rst/documentation
+   build/rst/plugins
+   build/rst/javadoc/packages
 
 * :ref:`genindex`
