@@ -12,22 +12,8 @@ Outils
 Build
 #####
 
-Pour *builder* l'application, vous devez avoir installé Gradle et lancé la commande suivante (depuis le dossier du projet) :
-
-.. code-block:: sh
+Pour *builder* l'application, vous devez avoir installé Gradle et lancé la commande suivante (depuis le dossier du projet) ::
 
    gradle build
 
 À la fin, selon votre système d'exploitation, vous retrouvez un ``.exe``, un ``.deb``, un ``.rpm`` ou un ``.dmg`` dans le dossier ``build/distributions``.
-
-Documentation
-#############
-
-Préparation
-***********
-
-Installez les dépendances requises pour générer la documentation :
-
-.. code-block:: sh
-
-   pip install -r doc/local_requirements.txt

@@ -29,9 +29,7 @@ Debian, Ubuntu, etc.
 Fedora, ArchLinux, CentOs, etc.
 *******************************
 
-1. Créez le fichier ``/etc/yum.repos.d/zestwriter.repo`` et copiez le contenu suivant à l'intérieur :
-
-.. code-block:: txt
+1. Créez le fichier ``/etc/yum.repos.d/zestwriter.repo`` et copiez le contenu suivant à l'intérieur ::
 
    [zestwriter]
    name=zestwriter
@@ -52,4 +50,4 @@ Pour cela vous avez besoin de **Java 8** installé sur votre système.
 Depuis les sources
 ##################
 
-Voir le *Guide du développeur*.
+Voir le :ref:`dev_guide`
