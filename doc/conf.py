@@ -76,7 +76,7 @@ def copy_rst():
         with open(RST_DIR + rst_name) as infile, open(BUILD_RST_DIR + rst_name, 'w') as outfile:
             for line in infile.readlines():
                 line = line.replace('<//doc/', '<../../../../')
-                line = line.replace('<//', '<../../../../../')
+                line = line.replace('<//', GITHUB_RAW_PATH + 'doc/' if ON_RTD else '<../../../../../')
                 outfile.write(line)
 
 def javadoc_build():
