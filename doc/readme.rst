@@ -15,9 +15,9 @@ Pages suivantes
 .. toctree::
    :maxdepth: 1
 
-   pages/features
    pages/install
    pages/dev_guide
+   pages/documentation
    pages/plugins
    javadoc/packages/
 

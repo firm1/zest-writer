@@ -31,12 +31,3 @@ Installez les dépendances requises pour générer la documentation :
 .. code-block:: sh
 
    pip install -r doc/local_requirements.txt
-
-Générer la documentation
-************************
-
-.. code-block:: sh
-
-   gradle doc
-
-La documentation apparaitra dans `doc/build/html`. Ouvrez index.html avec votre navigateur web pour la consulter.
