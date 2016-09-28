@@ -29,10 +29,27 @@
 import sys
 import os
 from datetime import datetime
+from shutil import copyfile
 
 SOURCE_DIR = '../src/main/java/'
 OUTPUT_DIR = './javadoc'
 ON_RTD = os.environ.get('READTHEDOCS', None) == 'True'
+README = '../readme.rst'
+RTD_README = './presentation.rst'
+README_REPLACEMENTS = {'doc/images/':'images/'}
+
+with open(README) as infile, open(RTD_README, 'w') as outfile:
+    print_on_rtd = True
+    for line in infile.readlines():
+        for src, target in README_REPLACEMENTS.iteritems():
+            line = line.replace(src, target)
+        if line.startswith('.. no_rtd'):
+            print_on_rtd = False
+        if line.startswith('.. rtd'):
+            print_on_rtd = True
+
+        if print_on_rtd:
+            outfile.write(line)
 
 def javadoc_build():
     from javasphinx.apidoc import main as build_doc
@@ -182,7 +199,7 @@ html_favicon = 'images/logo.ico'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+# html_static_path = ['_static']
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
