@@ -51,8 +51,6 @@ with open(README) as infile, open(RTD_README, 'w') as outfile:
         if i==1:
             line = 'Présentation\n'
 
-        print line
-
         if print_on_rtd:
             outfile.write(line)
 
