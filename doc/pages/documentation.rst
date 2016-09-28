@@ -33,9 +33,9 @@ Voici une liste des tags les plus courament utilisés :
 
 =================================  ==========================================================
 ``@see reference``                 Fournit un lien vers un autre élément de la documentation.
-``@param name description``        Décrit le paramètre d'une méthode.
+``@param name description``        Décrit le paramètre ``name`` d'une méthode.
 ``@return description``            Décrit la valeur de retour.
-``@throws classname description``  Décrit une exception qui peut être levée depuis cette méthode.
+``@throws exception description``  Décrit une ``exception`` qui peut être levée depuis cette méthode.
 =================================  ==========================================================
 
 Documentation fonctionnelle ou utilisateur
@@ -53,6 +53,9 @@ Vous pouvez également regarder comment sont rédigées ces pages en lisant les 
 
 Générer la documentation
 ************************
+
+.. WARNING::
+   Assurez-vous d'avoir suivi la partie :ref:`install_from_sources` avant de tenter de générer la documentation.
 
 À la racine du projet, tapez simplement :
 

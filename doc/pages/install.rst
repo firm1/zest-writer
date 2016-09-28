@@ -75,12 +75,29 @@ Jar executable (tous les systèmes)
 
 Les fichiers ``jar`` sont plus légers car ils n'embarquent pas la machine virtuelle Java, en revanche il est nécessaire que celle-ci soit au préalable installée sur votre système.
 
-1. vérifier votre version de Java : ouvrez un terminal (``Windows + R`` puis ``cmd`` sous Windows) et tapez ``java -version`` ;
-2. si vous avez Java 1.7 ou antérieure, téléchargez la dernière version de Java depuis `le site officiel <http://www.java.com/fr/download/>`_ ;
+1. Vérifier votre version de Java : ouvrez un terminal (``Windows + R`` puis ``cmd`` sous Windows) et tapez ``java -version`` ;
+    - si vous avez Java 1.7 ou antérieure, téléchargez la dernière version de Java depuis `le site officiel <http://www.java.com/fr/download/>`_ ;
 3. téléchargez la dernière version de Zest Writer via `ce lien <https://bintray.com/firm1/maven/zest-writer/_latestVersion#files>`_ ;
 4. ouvrez un terminal et lancez le jar en tapant ``java -jar zest-writer-all-x.y.z.jar`` (x.y.z étant le numéro de version).
 
-Depuis les sources
-##################
+.. _install_from_sources:
 
-Voir le :ref:`dev_guide` pour installer Zest Writer depuis les sources.
+Installation depuis les sources
+###############################
+
+1. Vérifiez que vous utilisez une version du JDK supérieure ou égale à 1.8 : ouvrez un terminal et tapez ``echo $JAVA_HOME`` (sous Linux et Mac), ou ``echo %JAVA_HOME%`` (sous Windows)
+    - si votre JDK est inférieur à 1.8, téléchargez la dernière version depuis `le site officiel <http://www.oracle.com/technetwork/java/javase/downloads/index.html>`_ ;
+2. Installez *Gradle*
+    - via ``sudo apt-get install gradle`` (ou équivalent) ;
+    - ou bien depuis `le site officiel <https://docs.gradle.org/current/userguide/installation.html>`_.
+3. téléchargez les sources :
+    - via l'archive : téléchargez `l'archive contenant la dernière version <https://github.com/firm1/zest-writer/archive/master.zip>`_ puis décompressez-la ;
+    - ou via la commande Git : ``git clone https://github.com/firm1/zest-writer.git`` ;
+4. placez-vous dans le répertoire du projet (``cd zest-writer``) ;
+5. enfin, tapez dans un terminal :
+
+.. code-block:: sh
+
+   gradle build
+
+Selon votre système d'exploitation, vous devriez retrouvez un ``.exe``, un ``.deb``, un ``.rpm`` ou un ``.dmg`` dans le dossier ``build/distributions``.

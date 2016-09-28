@@ -4,18 +4,18 @@
 Guide du développeur
 ********************
 
-Outils
-######
+Outils utilisés
+###############
 
-- L'application est developpée en Java **8** (vous devez donc avoir cette version pour pouvoir developper) ;
-- l'interface utilise JavaFX ;
-- le parseur markdown utilisé est le même que celui de ZdS (l'application émule un interpreteur Python grace à Jython).
+===================  ===========================
+Version de Java      Java 8
+Interface graphique  `JavaFX <http://www.oracle.com/technetwork/java/javase/overview/javafx-overview-2158620.html>`_
+Parseur Markdown     `Python-ZMarkdown <https://github.com/zestedesavoir/Python-ZMarkdown>`_ [1]_
+===================  ===========================
 
-Build
-#####
+.. [1] Le même parseur qu'utilisé sur Zeste de Savoir (l'application émule un interpreteur Python grace à Jython).
 
-Pour *builder* l'application, vous devez avoir installé Gradle et lancé la commande suivante (depuis le dossier du projet) ::
+Build du projet
+###############
 
-   gradle build
-
-À la fin, selon votre système d'exploitation, vous retrouvez un ``.exe``, un ``.deb``, un ``.rpm`` ou un ``.dmg`` dans le dossier ``build/distributions``.
+Voir la partie :ref:`install_from_sources`.
