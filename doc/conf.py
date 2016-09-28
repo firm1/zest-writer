@@ -36,7 +36,7 @@ OUTPUT_DIR = './javadoc'
 ON_RTD = os.environ.get('READTHEDOCS', None) == 'True'
 README = '../readme.rst'
 RTD_README = './presentation.rst'
-README_REPLACEMENTS = {'doc/images/':'images/'}
+README_REPLACEMENTS = {'doc/images/':'images/', './LICENSE': '../../../LICENSE'}
 
 with open(README) as infile, open(RTD_README, 'w') as outfile:
     print_on_rtd = True

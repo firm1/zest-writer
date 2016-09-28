@@ -122,3 +122,10 @@ Multiplateforme
 ###############
 
 - L'application fonctionne sur Windows, Linux et OS X.
+
+Licence
+#######
+
+- Le code du projet est sous licence `GPL v3 <./LICENSE>`_ ;
+- la documentation sous licence `CC-BY-NC-SA <https://creativecommons.org/licenses/by-nc-sa/4.0/>`_ ;
+- le logo et l'image de la page d'accueil sont sous licence `CC-BY-NC-SA <https://creativecommons.org/licenses/by-nc-sa/4.0/>`_.
