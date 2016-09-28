@@ -35,7 +35,7 @@ Un éditeur **hors-ligne** de contenus au format zMarkdown.
 
 ZestWriter est un éditeur d'articles et de tutoriels en mode hors-ligne (sans avoir besoin d'une connexion internet). Il supporte la syntaxe zMarkdown (le Markdown avec les petits ajouts utilisés sur le site `Zeste de Savoir <https://zestedesavoir.com/>`_).
 
-Pour connaitre l'historique du projet ou suivre son actualité, vous pouvez vous rendre sur `le topic dédié<https://zestedesavoir.com/forums/sujet/5354/zest-writer-un-editeur-hors-ligne-pour-vos-contenus-zds/>`_ sur le forum de Zeste de Savoir.
+Pour connaitre l'historique du projet ou suivre son actualité, vous pouvez vous rendre sur `le topic dédié <https://zestedesavoir.com/forums/sujet/5354/zest-writer-un-editeur-hors-ligne-pour-vos-contenus-zds/>`_ sur le forum de Zeste de Savoir.
 
 .. no_rtd
 
