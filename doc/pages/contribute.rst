@@ -4,7 +4,9 @@
 Contribuer
 **********
 
-Il y a différents moyens de contribuer au projet Zest Writer.
+Vous souhaitez contribuer au projet *Zest Writer* ? Vous êtes le bienvenu !
+
+Il y a différents moyens d'apporter un petit coup de main.
 
 Suggestions et rapports de bugs
 ###############################
@@ -13,6 +15,12 @@ Si vous trouvez un bug dans le logiciel, ou si vous souhaiter proposer des amél
 
 - en particiapant `au topic dédié <https://zestedesavoir.com/forums/sujet/5354/zest-writer-un-editeur-hors-ligne-pour-vos-contenus-zds/>`_ sur le forum de Zeste de Savoir ;
 - en créant `un nouveau ticket sur GitHub <https://github.com/firm1/zest-writer/issues>`_.
+
+Concernant les rapports de bugs, ils doivent être les plus précis possible :
+- expliquez pas à pas toutes les étapes nécessaires pour permettre de reproduire l'erreur ;
+- si nécessaire, intégrez des images ;
+- donnez le stystème d'exploitation et la version de Zest Writer utilisés ;
+- joignez éventuellement le fichier de log de l'application (qui se trouve à la racine de votre dossier utilisateur).
 
 Développement
 #############

@@ -2,10 +2,18 @@
 Zest Writer
 ***********
 
+.. no_rtd
+
 Un éditeur **hors-ligne** de contenus au format zMarkdown.
 
 .. image:: /doc/images/logo.png
    :alt: Logo de ZestWriter
+
+.. rtd
+
+ZestWriter est un éditeur d'articles et de tutoriels en mode hors-ligne (sans avoir besoin d'une connexion internet). Il supporte la syntaxe *zMarkdown*, une version de Markdown utilisée sur le site `Zeste de Savoir <https://zestedesavoir.com/>`_.
+
+.. no_rtd
 
 --------------------------------------------------------------------------------
 
@@ -33,15 +41,13 @@ Un éditeur **hors-ligne** de contenus au format zMarkdown.
    :target: https://www.openhub.net/p/zest-writer?ref=sample
    :alt: Statis
 
-ZestWriter est un éditeur d'articles et de tutoriels en mode hors-ligne (sans avoir besoin d'une connexion internet). Il supporte la syntaxe zMarkdown (le Markdown avec les petits ajouts utilisés sur le site `Zeste de Savoir <https://zestedesavoir.com/>`_).
-
-Pour connaitre l'historique du projet ou suivre son actualité, vous pouvez vous rendre sur `le topic dédié <https://zestedesavoir.com/forums/sujet/5354/zest-writer-un-editeur-hors-ligne-pour-vos-contenus-zds/>`_ sur le forum de Zeste de Savoir.
-
-.. no_rtd
-
 Pour la procédure d'installation ou des informations concernant le développement de ZestWriter, merci de consulter `la documentation officielle sur ReadTheDocs <http://zest-writer.readthedocs.io>`_.
 
+--------------------------------------------------------------------------------
+
 .. rtd
+
+Pour connaitre l'historique du projet ou suivre son actualité, vous pouvez vous rendre sur `le topic dédié <https://zestedesavoir.com/forums/sujet/5354/zest-writer-un-editeur-hors-ligne-pour-vos-contenus-zds/>`_ sur le forum de Zeste de Savoir.
 
 Interface
 #########
