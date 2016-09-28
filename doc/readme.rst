@@ -18,6 +18,7 @@ Pages suivantes
    pages/features
    pages/install
    pages/dev_guide
+   pages/plugins
    javadoc/packages/
 
 * :ref:`genindex`

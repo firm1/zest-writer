@@ -31,13 +31,13 @@ Fedora, ArchLinux, CentOs, etc.
 
 1. Créez le fichier ``/etc/yum.repos.d/zestwriter.repo`` et copiez le contenu suivant à l'intérieur :
 
-```
-[zestwriter]
-name=zestwriter
-baseurl=http://dl.bintray.com/firm1/rpm
-gpgcheck=0
-enabled=1
-```
+.. code-block:: txt
+
+   [zestwriter]
+   name=zestwriter
+   baseurl=http://dl.bintray.com/firm1/rpm
+   gpgcheck=0
+   enabled=1
 
 2. Installez Zest Writer via la commande : ``yum install zestwriter``.
 

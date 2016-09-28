@@ -13,6 +13,7 @@ Build
 #####
 
 Pour *builder* l'application, vous devez avoir installé Gradle et lancé la commande suivante (depuis le dossier du projet) :
+
 .. code-block:: sh
 
    gradle build

@@ -28,14 +28,16 @@
 
 import sys
 import os
+from datetime import datetime
 
+SOURCE_DIR = '../src/main/java/'
+OUTPUT_DIR = './javadoc'
 ON_RTD = os.environ.get('READTHEDOCS', None) == 'True'
 
 def javadoc_build():
     from javasphinx.apidoc import main as build_doc
 
-    javasphinx_params = ['javasphinx-apidoc']
-    javasphinx_params += ['-f', '-o', './javadoc', '../src/main/java/']
+    javasphinx_params = ['javasphinx-apidoc', '-f', '-o', OUTPUT_DIR, SOURCE_DIR]
 
     print(' '.join(javasphinx_params))
     build_doc(javasphinx_params)
@@ -73,12 +75,12 @@ source_suffix = ['.rst']
 source_encoding = 'utf-8'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = 'readme'
 
 # General information about the project.
 project = u'Zest Writer'
-copyright = u'2016, firm1'
 author = u'firm1 and other contributors'
+copyright = u'%s, %s' % (datetime.now().year, author)
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -103,7 +105,7 @@ language = 'fr'
 #
 # Else, today_fmt is used as the format for a strftime call.
 #
-# today_fmt = '%B %d, %Y'
+today_fmt = '%d/%m/%Y'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -146,7 +148,7 @@ todo_include_todos = False
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-#
+# html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -160,7 +162,7 @@ todo_include_todos = False
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
 #
-html_title = u'Documentation de ' + project + u' ' + version
+html_title = u'Documentation de %s %s' % (project, version)
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #
@@ -230,7 +232,7 @@ html_show_sphinx = True
 
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
 #
-html_show_copyright = False
+html_show_copyright = True
 
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the
