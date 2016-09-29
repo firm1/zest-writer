@@ -7,12 +7,13 @@ import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
-import com.zestedesavoir.zestwriter.utils.GithubHttp;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.com.*;
 import com.zestedesavoir.zestwriter.view.dialogs.*;
 import com.zestedesavoir.zestwriter.view.task.*;
+import javafx.beans.property.BooleanPropertyBase;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,12 +31,15 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.fxmisc.richtext.StyleClassedTextArea;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 import org.slf4j.Logger;
@@ -64,7 +68,8 @@ public class MenuController{
     @FXML public GridPane hBottomBox;
     @FXML private Menu menuExport;
     @FXML private MenuItem menuQuit;
-
+    @FXML private MenuItem menuFindReplace;
+    public BooleanPropertyBase isOnReadingTab = new SimpleBooleanProperty(true);
 
     public MenuController(){
         super();
@@ -80,6 +85,7 @@ public class MenuController{
             menuQuit.setAccelerator(new KeyCodeCombination(KeyCode.A, KeyCombination.SHORTCUT_DOWN));
         }
         labelField.getStyleClass().addAll("label-bottom");
+        menuFindReplace.disableProperty().bind(isOnReadingTab);
     }
 
     @FXML private void HandleQuitButtonAction(ActionEvent event){
@@ -641,6 +647,19 @@ public class MenuController{
         MdCheatSheetDialog mdCheatSheetController = loader.getController();
 
         dialogStage.show();
+    }
+
+    @FXML private void HandleFindReplaceAction(ActionEvent event){
+        SplitPane sPane = (SplitPane) mainApp.getExtracts()
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().isSelected())
+                .findFirst()
+                .get()
+                .getValue().getContent();
+        BorderPane bPane = (BorderPane) sPane.getItems().get(0);
+        StyleClassedTextArea source = (StyleClassedTextArea) bPane.getCenter();
+        FunctionTreeFactory.OpenFindReplaceDialog(mainApp, source);
     }
 
     @FXML private void HandleAboutButtonAction(ActionEvent event){
