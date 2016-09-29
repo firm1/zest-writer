@@ -10,7 +10,8 @@ import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.view.com.*;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
-import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.Task;
 import javafx.event.Event;
@@ -57,6 +58,14 @@ public class MdTextController {
             loadConsolePython();
 
         loadFonts();
+        EditorList.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<Tab>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
+                        mainApp.getMenuController().isOnReadingTab.set(! (newValue.getContent() instanceof SplitPane));
+                    }
+                }
+        );
     }
 
     public TabPane getEditorList() {

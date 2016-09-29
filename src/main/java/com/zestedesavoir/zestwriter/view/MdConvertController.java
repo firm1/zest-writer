@@ -7,10 +7,10 @@ import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.FlipTable;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.com.*;
-import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.ImageInputDialog;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanPropertyBase;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
@@ -69,18 +69,7 @@ public class MdConvertController {
     private int yRenderPosition = 0;
     private StringProperty countChars = new SimpleStringProperty();
     private StringProperty countWords = new SimpleStringProperty();
-    private BooleanPropertyBase isSaved = new BooleanPropertyBase(true) {
-
-        @Override
-        public String getName() {
-            return null;
-        }
-
-        @Override
-        public Object getBean() {
-            return null;
-        }
-    };
+    private BooleanPropertyBase isSaved = new SimpleBooleanProperty(true);
     private boolean isRenderExternalWindow = false;
 
     @FXML private WebView renderView;
@@ -710,18 +699,7 @@ public class MdConvertController {
     }
 
     @FXML private void HandleFindReplaceDialog(){
-        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/FindReplaceDialog.fxml"));
-
-        Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.dialog.find.title"));
-        dialogStage.setTitle(Configuration.bundle.getString("ui.dialog.find.title"));
-        dialogStage.setResizable(false);
-
-        FindReplaceDialog findReplaceDialog = loader.getController();
-        findReplaceDialog.setMainApp(mainApp);
-        findReplaceDialog.setWindow(dialogStage);
-        findReplaceDialog.setMdConvertController(this);
-
-        dialogStage.show();
+        FunctionTreeFactory.OpenFindReplaceDialog(mainApp, SourceText);
     }
 
     /**
