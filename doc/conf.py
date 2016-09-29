@@ -59,7 +59,7 @@ def copy_readme():
             if line.startswith('.. rtd'):
                 print_on_rtd = True
 
-            if i==1:
+            if i==3:
                 line = 'Présentation\n'
 
             if print_on_rtd:
