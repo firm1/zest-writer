@@ -7,12 +7,22 @@ public interface ContentNode {
     String getTitle();
     void setTitle(String title);
     MaterialDesignIconView buildIcon();
-    boolean canDelete();
-    boolean isMoveableIn(ContentNode receiver, Content root);
-    boolean canTakeContainer(Content c);
-    boolean canTakeExtract();
+    default boolean canDelete() {
+        return false;
+    }
+    default boolean isMoveableIn(ContentNode receiver, Content root) {
+        return false;
+    }
+    default boolean canTakeContainer(Content c) { return false; }
+    default boolean canTakeExtract() {
+        return false;
+    }
 
-    boolean isEditable();
-    void delete();
-    void renameTitle(String title);
+    default boolean isEditable() {
+        return true;
+    }
+    default void delete() {}
+    default void renameTitle(String title) {
+        setTitle(title);
+    }
 }

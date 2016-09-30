@@ -1,8 +1,8 @@
 package com.zestedesavoir.zestwriter.utils.api;
 
 public interface ApiInstallerListener{
-    void onInstallStarting();
-    void onInstallEnding();
+    default void onInstallStarting(){}
+    default void onInstallEnding(){}
     void onInstallError();
     void onInstallSuccess();
 }

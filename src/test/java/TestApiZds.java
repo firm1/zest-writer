@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.zeroturnaround.zip.ZipUtil;
 
+import com.zestedesavoir.zestwriter.model.MetaContent;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 

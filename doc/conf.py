@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# /usr/bin/python3
 #
 # Zest Writer documentation build configuration file, created by
 # sphinx-quickstart on Thu Sep 22 00:12:55 2016.

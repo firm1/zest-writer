@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.materialdesignicons.*?>
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.input.*?>
-<?import javafx.scene.layout.*?>
-<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-
+<?import javafx.scene.layout.GridPane?>
 <BorderPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MenuController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
@@ -128,6 +120,7 @@
                             </MenuItem>
                         </items>
                     </Menu>
+                    <MenuItem fx:id="menuFindReplace" mnemonicParsing="false" onAction="#HandleFindReplaceAction" text="%ui.menu.tools.find_replace" disable="true" />
                     <MenuItem mnemonicParsing="false" onAction="#HandleContentsButtonAction" text="%ui.menu.tools.external_contents" disable="true" />
                 </items>
             </Menu>

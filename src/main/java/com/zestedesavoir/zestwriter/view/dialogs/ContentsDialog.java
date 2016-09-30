@@ -484,31 +484,6 @@ public class ContentsDialog implements ApiDownloaderListener, ApiInstallerListen
     }
 
     @Override
-    public void onDownloadCancelled() {
-
-    }
-
-    @Override
-    public void onDownloadPaused() {
-
-    }
-
-    @Override
-    public void onDownloadResumed() {
-
-    }
-
-    @Override
-    public void onInstallStarting() {
-
-    }
-
-    @Override
-    public void onInstallEnding() {
-
-    }
-
-    @Override
     public void onInstallError(){
         Platform.runLater(this::errorAlert);
     }

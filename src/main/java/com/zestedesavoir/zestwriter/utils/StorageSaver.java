@@ -5,20 +5,22 @@
  */
 package com.zestedesavoir.zestwriter.utils;
 
-import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 
 /**
  *
  * @author fdambrine
  */
-public class StorageSaver {
-    static Logger logger = LoggerFactory.getLogger(LocalDirectorySaver.class);
-    String getBaseDirectory() {return null;}
+public interface StorageSaver {
+    String getBaseDirectory();
 
     public static void deleteFile(File file) {
+        Logger logger = LoggerFactory.getLogger(StorageSaver.class);
+
         if(file.isDirectory()) {
             if(file.list().length==0) {
                 file.delete();

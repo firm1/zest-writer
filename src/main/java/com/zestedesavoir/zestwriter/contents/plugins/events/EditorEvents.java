@@ -7,12 +7,12 @@ public interface EditorEvents{
      * @param oldPosition Old value
      * @param newPosition New value
      */
-    void onEditorPositionChange(int oldPosition, int newPosition);
+    default void onEditorPositionChange(int oldPosition, int newPosition){}
 
     /**
      * When text in textarea are changed
      * @param oldText Old value
      * @param newText New Value
      */
-    void onEditorTextChange(String oldText, String newText);
+    default void onEditorTextChange(String oldText, String newText){}
 }

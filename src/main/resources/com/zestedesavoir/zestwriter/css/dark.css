@@ -96,7 +96,7 @@
         -fx-fill: -fx-text-inner-color;
     }
     .icon-account-key, .icon-folder-multiple, .icon-folder-plus, .icon-border-color{
-        -fx-fill: #084561;
+        -fx-fill: #3A8DFF;
     }
     .icon-close{
         -fx-fill: #f44336;

@@ -4,21 +4,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.zestedesavoir.zestwriter.utils.StorageSaver;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.function.Function;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import static com.zestedesavoir.zestwriter.utils.StorageSaver.deleteFile;
 
 @JsonIgnoreProperties({"basePath", "filePath", "editable", "object", "countChildrenExtract", "countDescendantContainer", "rootContent"})
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="object", visible=true)
 @JsonSubTypes({@Type(value = Extract.class, name = "extract"), @Type(value = Container.class, name = "container") })
-public abstract class MetaContent extends StorageSaver {
-    Logger logger = LoggerFactory.getLogger(MetaContent.class);
-
+public abstract class MetaContent{
     private String _object;
     private String _slug;
     private String _title;
@@ -81,6 +78,10 @@ public abstract class MetaContent extends StorageSaver {
     public void setBasePath(String basePath) {
         this.basePath = basePath;
         File base = new File(getFilePath());
+        File parent = base.getParentFile();
+        if(!parent.exists()) {
+            parent.mkdirs();
+        }
         if(this instanceof Container) {
             if(! base.exists()) {
                 base.mkdirs();
@@ -118,4 +119,5 @@ public abstract class MetaContent extends StorageSaver {
             deleteFile(file);
         }
     }
+
 }

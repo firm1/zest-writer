@@ -3,7 +3,6 @@ package com.zestedesavoir.zestwriter.view.dialogs;
 
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.view.MdConvertController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -14,7 +13,6 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 
 public class FindReplaceDialog{
     private MainApp mainApp;
-    private MdConvertController mdConvertController;
     private StyleClassedTextArea sourceText;
     private Stage window;
 
@@ -50,9 +48,8 @@ public class FindReplaceDialog{
         window.setOnCloseRequest(event -> resetTextFill());
     }
 
-    public void setMdConvertController(MdConvertController mdConvertController){
-        this.mdConvertController = mdConvertController;
-        this.sourceText = this.mdConvertController.getSourceText();
+    public void setSourceText(StyleClassedTextArea sourceText){
+        this.sourceText = sourceText;
     }
 
     @FXML private void initialize(){

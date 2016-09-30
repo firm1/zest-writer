@@ -5,15 +5,13 @@
  */
 package com.zestedesavoir.zestwriter.utils;
 
-
 import java.io.File;
 
 /**
  *
  * @author fdambrine
  */
-public class LocalDirectorySaver extends StorageSaver{
-
+public class LocalDirectorySaver implements StorageSaver{
     private String baseDirectory;
     private File baseDirectoryDescriptor;
 
