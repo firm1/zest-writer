@@ -24,3 +24,5 @@ doc/rst/.presentation.rst
 
 # Misc
 *.log
+venv
+doc/javalang/ # to be deleted

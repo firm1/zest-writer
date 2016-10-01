@@ -167,5 +167,5 @@ apply plugin: 'java'
 
 task doc (type:Exec) {
     workingDir './doc'
-    commandLine 'make', 'html'
+    commandLine 'make', 'html', 'serve'
 }

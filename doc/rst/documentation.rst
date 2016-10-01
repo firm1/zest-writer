@@ -44,8 +44,20 @@ Pour connaitre la syntaxe, vous pouvez vous référer aux resources officielles 
 
 Vous pouvez également regarder comment sont rédigées ces pages en cliquant sur *Edit on GitHub* (*View page source* en local) en haut à droite de chaque page.
 
+Extensions Sphinx
+*****************
+
+Sphinx permet d'ajouter `des extensions <http://www.sphinx-doc.org/en/stable/extensions.html>`_` au processus de build : chacune d'elles peuvent modifier à peu près n'importe quel aspect du traitement des documents.
+
+Les extensions Sphinx utilisées pour générer cette documentations sont :
+
+- `sphinx.ext.todo <http://www.sphinx-doc.org/en/stable/ext/todo.html>`_ : permet d'ajouter des balises ``todo`` dans la documentation et d'en faire une liste ;
+- `javasphinx <https://bronto.github.io/javasphinx/>`_ : permet le support du language Java.
+
 Ajouts spécifiques à Zest Writer
 ********************************
+
+Le fichier conf.py a été modifié afin d'apporter quelques ajouts supplémentaires. Ceux listés ci-dessous ont un impact sur la syntaxe.
 
 **Fichier readme**
 
@@ -66,7 +78,7 @@ Installez les dépendances requises pour générer la documentation :
 
 .. code-block:: sh
 
-   pip install -r doc/local_requirements.txt
+   pip install sphinx javasphinx sphinx_rtd_theme
 
 .. WARNING::
    Assurez-vous d'avoir suivi la partie :ref:`install_from_sources` avant de tenter de générer la documentation.

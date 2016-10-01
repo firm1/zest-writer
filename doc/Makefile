@@ -6,6 +6,9 @@ SPHINXOPTS    =
 SPHINXBUILD   = python3 -m sphinx
 PAPER         =
 BUILDDIR      = build
+SERVE         = python3 ./serve.py
+HTML_DIR      = build/html
+PORT          = 8000
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -43,6 +46,7 @@ help:
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 	@echo "  coverage   to run coverage check of the documentation (if enabled)"
 	@echo "  dummy      to check syntax errors of document sources"
+	@echo "  livehtml   to watch doc sources and rebuild then publish html automatically if it change."
 
 .PHONY: clean
 clean:
@@ -223,3 +227,15 @@ dummy:
 	$(SPHINXBUILD) -b dummy $(ALLSPHINXOPTS) $(BUILDDIR)/dummy
 	@echo
 	@echo "Build finished. Dummy builder generates no files."
+
+.PHONY: serve
+serve:
+	$(SERVE) -d $(HTML_DIR) -p $(PORT) > serve.log 2>&1 &
+	@echo
+	@echo "Serving the documentation at 127.0.0.1:$(PORT). 'make stop' to make it offline."
+
+.PHONY: stop
+stop:
+	$(SERVE) -s -d $(HTML_DIR) -p $(PORT)
+	@echo
+	@echo "Documentation is now offline."
