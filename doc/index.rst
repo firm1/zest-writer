@@ -13,6 +13,7 @@ Zest Writer est un éditeur hors-ligne de contenus au format zMarkdown. Il est l
    build/rst/dev_guide
    build/rst/documentation
    build/rst/plugins
+   build/rst/todo
    build/rst/javadoc/packages
 
 * :ref:`genindex`

@@ -4,7 +4,8 @@ Plugins pour l'application Zest-Writer
 
 Il est possible de créer ses propres plugins pour l'application, grâce à une API que vous pouvez télécharger `ici <http://>`_.
 
-*TODO*
+.. todo::
+   Compléter la documentation des plugins (@WinXaito).
 
 Mise en place l'API
 ###################
@@ -12,12 +13,14 @@ Mise en place l'API
 Sur IntelliJ
 ************
 
-*TODO*
+.. todo::
+   Rédiger une documentation pour la mise en place d'une API sur IntelliJ (@WinXaito).
 
 Sur Eclipse
 ***********
 
-*TODO*
+.. todo::
+   Rédiger une documentation pour la mise en place d'une API sur Eclipse (@WinXaito).
 
 Création d'un plugin pour Zest Writer
 #####################################

@@ -95,4 +95,5 @@ Guide pas à pas
 Tests unitaires
 ###############
 
-Documentation à venir.
+.. todo::
+   Rédiger une documentation pour les tests unitaires (@firm1).
