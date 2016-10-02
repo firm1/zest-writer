@@ -12,31 +12,48 @@ Code Java
 
 ===================  ===========================
 Version de Java      Java 8
-Interface graphique  `JavaFX <http://www.oracle.com/technetwork/java/javase/overview/javafx-overview-2158620.html>`_
-Parseur Markdown     `Python-ZMarkdown <https://github.com/zestedesavoir/Python-ZMarkdown>`_ [1]_
+Interface graphique  `JavaFX`_
+Parseur Markdown     `Python-ZMarkdown`_ [1]_
 Tests unitaires      Junit 4.12
 ===================  ===========================
+
+.. _JavaFX: http://www.oracle.com/technetwork/java/javase/overview/javafx-overview-2158620.html
+.. _Python-ZMarkdown: https://github.com/zestedesavoir/Python-ZMarkdown
 
 .. [1] Le même parseur qu'utilisé sur Zeste de Savoir (l'application émule un interpreteur Python grace à Jython).
 
 Livraison continue
 ******************
 
-+------------------------------+---------------+-----------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+
-| Intégration continue         | Linux et Os X | `Travis CI <https://travis-ci.org/firm1/zest-writer>`_                            | .. image:: https://travis-ci.org/firm1/zest-writer.svg?branch=master                              |
-+                              +---------------+-----------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+
-|                              | Windows       | `AppVeyor <https://ci.appveyor.com/project/firm1/zest-writer/branch/master>`_     | .. image:: https://ci.appveyor.com/api/projects/status/n3aa5h519uxvjufq/branch/master?svg=true    |
-+------------------------------+---------------+-----------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+
-| Couverture des tests                         | `Coveralls <https://coveralls.io/github/firm1/zest-writer?branch=master>`_        | .. image:: https://coveralls.io/repos/github/firm1/zest-writer/badge.svg?branch=master            |
-+------------------------------+---------------+-----------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+
-| Vérification de dépendances                  | `VersionEye <https://www.versioneye.com/user/projects/5719ed6bfcd19a0039f17b07>`_ | .. image:: https://www.versioneye.com/user/projects/5719ed6bfcd19a0039f17b07/badge.svg?style=flat |
-+------------------------------+---------------+-----------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+
-| Analyse du code                              | `OpenHub <https://www.openhub.net/p/zest-writer?ref=sample>`_                     | .. image:: https://www.openhub.net/p/zest-writer/widgets/project_thin_badge.gif                   |
-+                                              +-----------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+
-|                                              | Sonar                                                                             | à venir                                                                                           |
-+------------------------------+---------------+-----------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+
-| Publication de documentation                 | `ReadTheDocs <http://zest-writer.readthedocs.io>`_                                | .. image:: https://readthedocs.org/projects/zest-writer/badge                                     |
-+------------------------------+---------------+-----------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+
++------------------------------+---------------+----------------+---------------+
+| Intégration continue         | Linux et Os X | `Travis CI`_   | |travisCI|    |
++                              +---------------+----------------+---------------+
+|                              | Windows       | `AppVeyor`_    | |AppVeyor|    |
++------------------------------+---------------+----------------+---------------+
+| Couverture des tests                         | `Coveralls`_   | |coverAlls|   |
++------------------------------+---------------+----------------+---------------+
+| Vérification de dépendances                  | `VersionEye`_  | |versionEye|  |
++------------------------------+---------------+----------------+---------------+
+| Analyse du code                              | `OpenHub`_     | |OpenHub|     |
++                                              +----------------+---------------+
+|                                              | Sonar          | à venir       |
++------------------------------+---------------+----------------+---------------+
+| Publication de documentation                 | `ReadTheDocs`_ | |ReadTheDocs| |
++------------------------------+---------------+----------------+---------------+
+
+.. _Travis CI: https://travis-ci.org/firm1/zest-writer
+.. _AppVeyor: https://ci.appveyor.com/project/firm1/zest-writer/branch/master
+.. _Coveralls: https://coveralls.io/github/firm1/zest-writer?branch=master
+.. _VersionEye: https://www.versioneye.com/user/projects/5719ed6bfcd19a0039f17b07
+.. _OpenHub: https://www.openhub.net/p/zest-writer?ref=sample
+.. _ReadTheDocs: http://zest-writer.readthedocs.io
+
+.. |travisCI| image:: https://travis-ci.org/firm1/zest-writer.svg?branch=master
+.. |appVeyor| image:: https://ci.appveyor.com/api/projects/status/n3aa5h519uxvjufq/branch/master?svg=true
+.. |coverAlls| image:: https://coveralls.io/repos/github/firm1/zest-writer/badge.svg?branch=master
+.. |versionEye| image:: https://www.versioneye.com/user/projects/5719ed6bfcd19a0039f17b07/badge.svg?style=flat
+.. |OpenHub| image:: https://www.openhub.net/p/zest-writer/widgets/project_thin_badge.gif
+.. |ReadTheDocs| image:: https://readthedocs.org/projects/zest-writer/badge
 
 Workflow
 ########
@@ -54,9 +71,7 @@ Guide pas à pas
 3. *clonez* votre propre dépôt : ``git clone url_de_votre_dépôt`` ;
 
 .. WARNING::
-   Si votre projet local provient d'un clone du dépôt principal et non du votre, pensez à modifier la destitation de ``remote origin`` :
-
-   .. code-block:: sh
+   Si votre projet local provient d'un clone du dépôt principal et non du votre, pensez à modifier la destitation de ``remote origin`` : ::
 
       git remote set-url origin url_de_votre_dépôt
 
@@ -69,9 +84,7 @@ Guide pas à pas
    Si vous avez déjà apporté vos modifications (non commitées) sur ``master``, vous pouvez les remiser : ``git stash``, ``git checkout -b "new_feature"``, puis ``git stash pop``.
 
 6. apportez vos modifications en autant de commits que nécessaire (sans oublier de commenter votre code avec la :ref:`javadoc`) ;
-7. vérifier que ces modifications passent les tests unitaires :
-
-.. code-block:: sh
+7. vérifier que ces modifications passent les tests unitaires : ::
 
    gradle check
 
@@ -84,9 +97,7 @@ Guide pas à pas
 11. pensez à récupérer régulièrement les derniers changements effectués sur le dépôt principal : ``git fetch https://github.com/firm1/zest-writer`` depuis ``master`` ;
 
 .. TIP::
-   Vous pouvez créer un *git remote* qui pointe vers le dépôt principal :
-
-   .. code-block:: sh
+   Vous pouvez créer un *git remote* qui pointe vers le dépôt principal : ::
 
       git remote add firm1 https://github.com/firm1/zest-writer
 

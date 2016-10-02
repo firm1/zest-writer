@@ -40,17 +40,46 @@ Pour connaitre la syntaxe, vous pouvez vous référer :
 
 - aux fichiers sources de cette documentation en cliquant sur *Edit on GitHub* (*View page source* en local) en haut à droite de chaque page.
 - à `cet éditeur reStructuredText en ligne <http://rst.ninjs.org/>`_, qui vous évitera d'attendre le build complet si vous voulez tester une syntaxe dont vous n'êtes pas sur ;
-- à la documentation de Sphinx http://www.sphinx-doc.org/en/stable/rest.html ;
+- à la `documentation de Sphinx <http://www.sphinx-doc.org/en/stable/rest.html>`_, notamment `les balises Sphinx <http://www.sphinx-doc.org/en/stable/markup/index.html>`_ ;
 - `la référence complète <http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html>`_ de reST, notamment `la liste des directives <http://docutils.sourceforge.net/docs/ref/rst/directives.html>`_.
+
+Voici toutefois une cheatsheet minimaliste :
+
+============================================  ===================
+Rendu                                         Syntaxe
+============================================  ===================
+*italique*                                    .. code-block:: txt
+
+                                                 *italique*
+**gras**                                      .. code-block:: txt
+
+                                                 **gras**
+``code``                                      .. code-block:: txt
+
+                                                 ``code``
+`lien externe <https://zestedesavoir.com/>`_  .. code-block:: txt
+
+                                                 `lien externe <https://zestedesavoir.com/>`_
+référence vers :ref:`Javadoc`                 .. code-block:: txt
+
+                                                 référence vers :ref:`Javadoc`
+============================================  ===================
+
+
+Configuration
+*************
+
+Le fichier `conf.py </doc/conf.py>`_ contient les paramètres pour générer la documentation. Voici ceux qui ont une importance pour la syntaxe :
+
+- language par défaut pour les blocs de code : ``shell`` ;
 
 Extensions Sphinx
 *****************
 
-Sphinx permet d'ajouter `des extensions <http://www.sphinx-doc.org/en/stable/extensions.html>`_` au processus de build : chacune d'elles peuvent modifier à peu près n'importe quel aspect du traitement des documents.
-
-Les extensions Sphinx utilisées pour générer cette documentations sont :
+Sphinx permet d'ajouter `des extensions <http://www.sphinx-doc.org/en/stable/extensions.html>`_` au processus de build : chacune d'elles peuvent modifier à peu près n'importe quel aspect du traitement des documents. Les extensions Sphinx utilisées pour générer cette documentations sont :
 
 - `sphinx.ext.todo <http://www.sphinx-doc.org/en/stable/ext/todo.html>`_ : permet d'ajouter des balises ``todo`` dans la documentation et d'en faire une liste (voir :ref:`todo` ) ;
+- `sphinx.ext.autosectionlabel <http://www.sphinx-doc.org/en/stable/ext/autosectionlabel.html>`_ : permet de faire des référence vers des titres
 - `javasphinx <https://bronto.github.io/javasphinx/>`_ : permet de générer la Javadoc à partir des commentaires dans le code.
 
 Ajouts spécifiques à Zest Writer
@@ -73,9 +102,7 @@ Ainsi, ```licence <\//LICENSE>`_`` donne `licence <//LICENSE>`_.
 Générer la documentation
 ########################
 
-Installez les dépendances requises pour générer la documentation :
-
-.. code-block:: sh
+Installez les dépendances requises pour générer la documentation : ::
 
    pip install sphinx javasphinx sphinx_rtd_theme
 
@@ -83,8 +110,6 @@ Installez les dépendances requises pour générer la documentation :
    Assurez-vous d'avoir suivi la partie :ref:`install_from_sources` avant de tenter de générer la documentation.
 
 À la racine du projet, tapez simplement :
-
-.. code-block:: sh
 
    gradle doc
 

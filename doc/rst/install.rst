@@ -7,13 +7,19 @@ Installation
 Windows
 #######
 
-Téléchargez le setup (recommandé) ou l'executable correspondant à votre architecture (32 bits ou 64 bits) et lancez l'installateur. Un fichier ``setup`` lancera un installateur qui installera le programme dans le dossier approprié, tandis qu'un fichier ``executable`` contient l'ensemble du programme et peut être executé n'importe où.
+Téléchargez le setup (recommandé) ou l'executable correspondant à votre architecture (32 bits ou 64 bits) et lancez l'installateur. Un fichier ``setup`` lancera un installateur qui installera le programme dans le dossier approprié, tandis qu'un fichier ``exécutable`` contient l'ensemble du programme et peut être executé n'importe où.
 
-====================================================================================================================================  ====================================================================================================================================
-Windows 32 bits                                                                                                                       Windows 64 bits
-`exécutable <https://ci.appveyor.com/api/buildjobs/1b8oa0uv8b6skthh/artifacts/build%2Fdistributions%2Fzest-writer-for-windows.zip>`_  `exécutable <https://ci.appveyor.com/api/buildjobs/cmwax4m523t6gol4/artifacts/build%2Fdistributions%2Fzest-writer-for-windows.zip>`_
-`setup <https://ci.appveyor.com/api/buildjobs/1b8oa0uv8b6skthh/artifacts/build%2Fdistributions%2FZestWriter-1.3.0.exe>`_              `setup <https://ci.appveyor.com/api/buildjobs/cmwax4m523t6gol4/artifacts/build%2Fdistributions%2FZestWriter-1.3.0.exe>`_
-====================================================================================================================================  ====================================================================================================================================
+=====================  ======================
+Windows 32 bits        Windows 64 bits
+=====================  ======================
+`exécutable 32 bits`_  `exécutable 64 bits`_
+`setup 32 bits`_       `setup 64 bits`_
+=====================  ======================
+
+.. _exécutable 32 bits: https://ci.appveyor.com/api/buildjobs/1b8oa0uv8b6skthh/artifacts/build%2Fdistributions%2Fzest-writer-for-windows.zip
+.. _exécutable 64 bits: https://ci.appveyor.com/api/buildjobs/cmwax4m523t6gol4/artifacts/build%2Fdistributions%2Fzest-writer-for-windows.zip
+.. _setup 32 bits: https://ci.appveyor.com/api/buildjobs/1b8oa0uv8b6skthh/artifacts/build%2Fdistributions%2FZestWriter-1.3.0.exe
+.. _setup 64 bits: https://ci.appveyor.com/api/buildjobs/cmwax4m523t6gol4/artifacts/build%2Fdistributions%2FZestWriter-1.3.0.exe
 
 .. NOTE::
    Pour vérifier si votre ordinateur tourne sur une version 32 bits ou 64 bits de Windows, cliquez le bouton ``Windows``, ``Ordinateur``, puis ``Propriétés`` et regardez en dessous de ``Système``.
@@ -34,25 +40,17 @@ Debian, Ubuntu, etc.
 
 1. importez la clé GPG de bintray :
 
-.. code-block:: sh
-
    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 379CE192D401AB61
 
 2. ajouter une nouvelle source :
-
-.. code-block:: sh
 
    echo "deb https://dl.bintray.com/firm1/deb wheezy main" | sudo tee -a /etc/apt/sources.list.d/zestwriter.list
 
 3. mettez à jour vos dépôts :
 
-.. code-block:: sh
-
    sudo apt-get update
 
 4. installez Zest Writer :
-
-.. code-block:: sh
 
    sudo apt-get install zestwriter
 
@@ -98,8 +96,6 @@ Installation depuis les sources
     - ou via la commande Git : ``git clone https://github.com/firm1/zest-writer.git`` ;
 4. placez-vous dans le répertoire du projet (``cd zest-writer``) ;
 5. enfin, tapez dans un terminal :
-
-.. code-block:: sh
 
    gradle build
 
