@@ -36,7 +36,7 @@ from subprocess import Popen, PIPE
 ON_RTD = os.environ.get('READTHEDOCS', None) == 'True'
 
 BUILD_DIR = './build/'
-SOURCE_DIR = '../src/main/java/'
+SOURCE_DIR = '../src/'
 BUILD_RST_DIR = BUILD_DIR + 'rst/'
 JAVADOC_RST_DIR = BUILD_RST_DIR + 'javadoc/'
 README_PATH = '../readme.rst'
@@ -49,8 +49,7 @@ if op.exists(BUILD_DIR):
 os.makedirs(BUILD_RST_DIR)
 
 def get_version():
-    '''Returns project version as string from 'git describe' command.'''
-
+    '''Returns the project version and release as string from 'git describe' command.'''
 
     pipe = Popen('git describe --tags --always', stdout=PIPE, shell=True)
     desc = pipe.stdout.read().decode('utf-8')
@@ -98,8 +97,15 @@ def javadoc_build():
     print '\n*** building javadoc ***\n'
     from javasphinx.apidoc import main as build_doc
 
-    javasphinx_params = ['javasphinx-apidoc', '-f', '-o', JAVADOC_RST_DIR, SOURCE_DIR]
+    main_source_path = op.join(SOURCE_DIR, 'main', 'java')
+    main_build_path = op.join(JAVADOC_RST_DIR, 'main')
+    javasphinx_params = ['javasphinx-apidoc', '-t', 'Main', '-o', main_build_path, main_source_path]
+    print(' '.join(javasphinx_params))
+    build_doc(javasphinx_params)
 
+    test_source_path = op.join(SOURCE_DIR, 'test', 'java')
+    test_build_path = op.join(JAVADOC_RST_DIR, 'test')
+    javasphinx_params = ['javasphinx-apidoc', '-t', 'Test', '-o', test_build_path, test_source_path]
     print(' '.join(javasphinx_params))
     build_doc(javasphinx_params)
 

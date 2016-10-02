@@ -31,18 +31,17 @@ Voici une liste des tags les plus courament utilisés :
 ``@throws exception description``  Décrit une ``exception`` qui peut être levée depuis cette méthode.
 =================================  ==========================================================
 
-Documentation fonctionnelle ou utilisateur
+Documentation fonctionnelle et utilisateur
 ##########################################
 
-Les pages contenant de la documentation fonctionnelle ou utilisateur telle que celle-ci sont à rédiger en `reStructuredText <https://fr.wikipedia.org/wiki/ReStructuredText>`_ (rst).
+Les pages contenant de la documentation fonctionnelle ou utilisateur telle que celle-ci sont à rédiger en `reStructuredText <https://fr.wikipedia.org/wiki/ReStructuredText>`_ (reST).
 
-Pour connaitre la syntaxe, vous pouvez vous référer aux resources officielles sur sourceforge :
+Pour connaitre la syntaxe, vous pouvez vous référer :
 
-- `la référence rapide <http://docutils.sourceforge.net/docs/user/rst/quickref.html#tables>`_ ;
-- `la référence complète <http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html>`_,
-- `la liste des directives <http://docutils.sourceforge.net/docs/ref/rst/directives.html>`_.
-
-Vous pouvez également regarder comment sont rédigées ces pages en cliquant sur *Edit on GitHub* (*View page source* en local) en haut à droite de chaque page.
+- aux fichiers sources de cette documentation en cliquant sur *Edit on GitHub* (*View page source* en local) en haut à droite de chaque page.
+- à `cet éditeur reStructuredText en ligne <http://rst.ninjs.org/>`_, qui vous évitera d'attendre le build complet si vous voulez tester une syntaxe dont vous n'êtes pas sur ;
+- à la documentation de Sphinx http://www.sphinx-doc.org/en/stable/rest.html ;
+- `la référence complète <http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html>`_ de reST, notamment `la liste des directives <http://docutils.sourceforge.net/docs/ref/rst/directives.html>`_.
 
 Extensions Sphinx
 *****************
@@ -51,13 +50,13 @@ Sphinx permet d'ajouter `des extensions <http://www.sphinx-doc.org/en/stable/ext
 
 Les extensions Sphinx utilisées pour générer cette documentations sont :
 
-- `sphinx.ext.todo <http://www.sphinx-doc.org/en/stable/ext/todo.html>`_ : permet d'ajouter des balises ``todo`` dans la documentation et d'en faire une liste ;
-- `javasphinx <https://bronto.github.io/javasphinx/>`_ : permet le support du language Java.
+- `sphinx.ext.todo <http://www.sphinx-doc.org/en/stable/ext/todo.html>`_ : permet d'ajouter des balises ``todo`` dans la documentation et d'en faire une liste (voir :ref:`todo` ) ;
+- `javasphinx <https://bronto.github.io/javasphinx/>`_ : permet de générer la Javadoc à partir des commentaires dans le code.
 
 Ajouts spécifiques à Zest Writer
 ********************************
 
-Le fichier conf.py a été modifié afin d'apporter quelques ajouts supplémentaires. Ceux listés ci-dessous ont un impact sur la syntaxe.
+Le fichier ``conf.py`` a été modifié afin d'apporter quelques ajouts supplémentaires. Ceux listés ci-dessous ont un impact sur la syntaxe.
 
 **Fichier readme**
 

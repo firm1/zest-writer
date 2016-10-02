@@ -6,9 +6,9 @@ classes/
 out/
 
 # Gradle
-bin
-build
-.gradle
+bin/
+build/
+.gradle/
 /.nb-gradle/
 
 # IDEs
@@ -19,10 +19,10 @@ build
 .classpath
 
 # Documentation
-doc/build
+doc/build/
 doc/rst/.presentation.rst
+doc/javalang/
 
 # Misc
 *.log
-venv
-doc/javalang/ # to be deleted
+venv/
