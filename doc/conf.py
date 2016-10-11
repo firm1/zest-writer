@@ -56,7 +56,9 @@ def copy_rst():
     print 'rst file names: ', rst_names
 
     for rst_name in rst_names:
-        with open(RST_DIR + rst_name) as infile, open(BUILD_RST_DIR + rst_name, 'w') as outfile:
+        input_path = RST_DIR + rst_name
+        output_path = BUILD_RST_DIR + (rst_name if not rst_name[0] == '.' else rst_name[1:])
+        with open(input_path) as infile, open(output_path, 'w') as outfile:
             for line in infile.readlines():
                 line = line.replace('<\//', '[URL_RESOLVER_ESCAPE]')
                 line = line.replace('<//doc/', '<../../../../')

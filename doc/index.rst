@@ -7,7 +7,7 @@ Zest Writer est un éditeur hors-ligne de contenus au format zMarkdown. Il est l
 .. toctree::
    :maxdepth: 1
 
-   build/rst/.presentation
+   build/rst/presentation
    build/rst/install
    build/rst/contribute
    build/rst/dev_guide
