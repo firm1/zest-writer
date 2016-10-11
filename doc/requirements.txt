@@ -1,1 +1,2 @@
-javasphinx==0.9.13
+-e git://github.com/roipoussiere/javalang.git#egg=javalang
+-e git://github.com/roipoussiere/javasphinx.git#egg=javasphinx
