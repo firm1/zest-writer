@@ -21,7 +21,6 @@ build/
 # Documentation
 doc/build/
 doc/rst/.presentation.rst
-doc/javalang/
 
 # Misc
 *.log

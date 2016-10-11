@@ -3,7 +3,7 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD   = python3 -m sphinx
+SPHINXBUILD   = ../venv/bin/python3 -m sphinx
 PAPER         =
 BUILDDIR      = build
 SERVE         = python3 ./serve.py

@@ -95,7 +95,7 @@ javadoc_build()
 
 extensions = [
     'sphinx.ext.todo',
-    'sphinx.ext.autosectionlabel',
+    # 'sphinx.ext.autosectionlabel', # can be enabled locally but this extension is not found from readthdocs.io.
     'javasphinx'
 ]
 
