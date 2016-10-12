@@ -168,3 +168,8 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.9'
 }
 apply plugin: 'java'
+
+task doc (type:Exec) {
+    workingDir './doc'
+    commandLine 'make', 'html', 'serve'
+}
