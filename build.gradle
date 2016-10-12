@@ -5,6 +5,10 @@ plugins {
     id "com.eriwen.gradle.css" version "2.12.0"
 }
 
+if(JavaVersion.current() < JavaVersion.VERSION_1_8){
+    throw new GradleException("This build must be run with java 8 or higher. Current version is " + JavaVersion.current() + ".\nYou should install jdk >= 1.8 from http://www.oracle.com/technetwork/java/javase/downloads and/or check your JAVA_HOME.")
+}
+
 apply from: "http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.plugin"
 
 processResources {
