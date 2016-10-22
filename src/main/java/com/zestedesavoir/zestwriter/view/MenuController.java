@@ -741,7 +741,15 @@ public class MenuController{
                         if(versionOnline == null) {
                             throw new IOException();
                         } else {
-                            return versionOnline.equals(current);
+                            String[] locale_tab = current.split(".");
+                            for(String s:locale_tab) {
+                                try {
+                                    Integer.valueOf(s);
+                                } catch(Exception e) {
+                                    return true;
+                                }
+                            }
+                            return versionOnline.compareTo(current) <= 0;
                         }
                     }
                 };
