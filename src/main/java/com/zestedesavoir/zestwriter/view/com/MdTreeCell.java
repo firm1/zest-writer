@@ -144,6 +144,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                     getItem().delete();
                     saveManifestJson();
                 }
+                index.refreshRecentProject();
             }
         });
 
