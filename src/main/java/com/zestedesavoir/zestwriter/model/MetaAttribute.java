@@ -108,4 +108,8 @@ public class MetaAttribute implements Textual, ContentNode{
         return super.equals(obj);
     }
 
+    @Override
+    public boolean isEditable() {
+        return false;
+    }
 }
