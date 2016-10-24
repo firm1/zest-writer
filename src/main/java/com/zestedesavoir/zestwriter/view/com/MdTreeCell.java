@@ -51,6 +51,16 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 		this.logger = LoggerFactory.getLogger(getClass());
 	}
 
+    private void closeTab(Textual closedTextual) {
+        for (Map.Entry<Textual, Tab> entry : index.getMainApp().getExtracts().entrySet()) {
+            if (entry.getKey().equals(closedTextual)) {
+                index.getEditorList().getTabs().remove(entry.getValue());
+                index.getMainApp().getExtracts().remove(entry);
+                break;
+            }
+        }
+    }
+
 	public void initContextMenu(ContentNode item) {
         MenuItem addMenuItem1 = new MenuItem(Configuration.bundle.getString("ui.actions.add_extract.label"));
         MenuItem addMenuItem2 = new MenuItem(Configuration.bundle.getString("ui.actions.add_container.label"));
@@ -103,15 +113,28 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 logger.debug("Tentative de suppression");
                 if(getTreeItem().getValue() instanceof Content) {
-                    Content deleteContent = (Content) getTreeItem().getValue();
-                    // delete last projects
-                    MainApp.config.delActionProject(deleteContent.getFilePath());
-                    // delete physically file
-                    deleteContent.delete();
-                    // delete in logical tree
-                    index.getMainApp().getContents().clear();
-                    index.refreshRecentProject();
+                    FunctionTreeFactory.clearContent(index.getMainApp().getExtracts(), index.getMainApp().getIndex().getEditorList(), () -> {
+                        Content deleteContent = (Content) getTreeItem().getValue();
+                        // delete last projects
+                        MainApp.config.delActionProject(deleteContent.getFilePath());
+                        // delete physically file
+                        deleteContent.delete();
+                        // delete in logical tree
+                        index.getMainApp().getContents().clear();
+                        index.refreshRecentProject();
+                        return null;
+                    });
                 } else {
+                    // close tabs
+                    if(getTreeItem().getValue() instanceof Textual) {
+                        closeTab((Textual) getTreeItem().getValue());
+                    } else if (getTreeItem().getValue() instanceof Container) {
+                        Container deleteContainer = (Container) getTreeItem().getValue();
+                        deleteContainer.doOnTextual(textual -> {
+                            closeTab(textual);
+                            return null;
+                        });
+                    }
                     // delete in logical tree
                     Container parentContainer = (Container) getTreeItem().getParent().getValue();
                     parentContainer.getChildren().remove(getItem());
