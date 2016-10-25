@@ -37,4 +37,4 @@ deploy:
     package: x86
     publish: true
     override: true
-    explode: true
+    explode: false
