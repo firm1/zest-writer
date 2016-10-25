@@ -1,9 +1,12 @@
 version: '{build}'
 
 environment:
+
+environment:
   TERM: dumb
+  BINTRAY_KEY:
+    secure: uM4le5ByQ6WNAILGPWMhO0iAl4VH9iaHXfcBdHktVpXmrV9t7IT/oJYco9oYJsgJ
   matrix:
-    - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
     - JAVA_HOME: C:\Program Files (x86)\Java\jdk1.8.0
 install:
   - set PATH=%JAVA_HOME%\bin;%PATH%
@@ -27,3 +30,15 @@ artifacts:
 
 on_failure:
   - echo Somebody setup us the bomb
+
+deploy:
+  - provider: BinTray
+    username: firm1
+    api_key:
+      secure: %BINTRAY_KEY%
+    subject: firm1
+    repo: windows
+    package: x86
+    publish: true
+    override: true
+    explode: true
