@@ -276,6 +276,11 @@ public class MdTextController {
             EditorList.getTabs().remove(tab);
             mainApp.getExtracts().remove(extract);
             t.consume();
+            if (getSplitPane().getItems().size() <= 1) {
+                if(EditorList.getTabs().size() == 1) {
+                    controllerConvert.addTreeSummary();
+                }
+            }
         });
 
         mainApp.getExtracts().put(extract, tab);

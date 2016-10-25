@@ -519,13 +519,17 @@ public class MdConvertController {
      * Render Toolbar Action
      */
 
+    public void addTreeSummary() {
+        mdBox.getSplitPane().getItems().add(0, mdBox.treePane);
+        mdBox.getSplitPane().setDividerPositions(0.2);
+        SplitPane.setResizableWithParent(mdBox.treePane,Boolean.FALSE);
+    }
+
     @FXML private void HandleFullScreeenButtonAction(ActionEvent event) {
         if (mdBox.getSplitPane().getItems().size() > 1) {
             mdBox.getSplitPane().getItems().remove(0);
         } else {
-            mdBox.getSplitPane().getItems().add(0, mdBox.treePane);
-            mdBox.getSplitPane().setDividerPositions(0.2);
-            SplitPane.setResizableWithParent(mdBox.treePane,Boolean.FALSE);
+            addTreeSummary();
         }
     }
 
