@@ -2,8 +2,6 @@ version: '{build}'
 
 environment:
   TERM: dumb
-  BINTRAY_KEY:
-    secure: uM4le5ByQ6WNAILGPWMhO0iAl4VH9iaHXfcBdHktVpXmrV9t7IT/oJYco9oYJsgJ
   matrix:
     - JAVA_HOME: C:\Program Files (x86)\Java\jdk1.8.0
 install:
@@ -33,7 +31,7 @@ deploy:
   - provider: BinTray
     username: firm1
     api_key:
-      secure: %BINTRAY_KEY%
+      secure: uM4le5ByQ6WNAILGPWMhO0iAl4VH9iaHXfcBdHktVpXmrV9t7IT/oJYco9oYJsgJ
     subject: firm1
     repo: windows
     package: x86
