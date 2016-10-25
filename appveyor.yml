@@ -1,8 +1,6 @@
 version: '{build}'
 
 environment:
-
-environment:
   TERM: dumb
   BINTRAY_KEY:
     secure: uM4le5ByQ6WNAILGPWMhO0iAl4VH9iaHXfcBdHktVpXmrV9t7IT/oJYco9oYJsgJ
