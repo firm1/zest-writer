@@ -10,7 +10,6 @@ install:
   - gradlew.bat clean
   - set JAVA_OPTS=-XX:MaxPermSize=1024m -Xmx1512m -Dfile.encoding=UTF-8
   - set JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
-  - set ZW_VERSION=1.3.1
   - choco install -y InnoSetup
   - set PATH="C:\\Program Files (x86)\\Inno Setup 5";%PATH%
 
@@ -30,8 +29,11 @@ on_failure:
 
 deploy:
   - provider: BinTray
+    on:
+      branch: master
+      appveyor_repo_tag: true
     username: firm1
-    version: $(ZW_VERSION)
+    version: $(APPVEYOR_REPO_TAG_NAME)
     api_key:
       secure: uM4le5ByQ6WNAILGPWMhO0iAl4VH9iaHXfcBdHktVpXmrV9t7IT/oJYco9oYJsgJ
     subject: firm1
