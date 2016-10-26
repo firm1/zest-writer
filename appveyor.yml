@@ -3,8 +3,10 @@ version: '{build}'
 environment:
   TERM: dumb
   matrix:
-    - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
     - JAVA_HOME: C:\Program Files (x86)\Java\jdk1.8.0
+      PLATFORM: windows-x86
+    - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+      PLATFORM: windows-x64
 install:
   - set PATH=%JAVA_HOME%\bin;%PATH%
   - echo %PATH%
@@ -19,11 +21,23 @@ build_script:
   - gradlew.bat -u -i clean assemble
 
 artifacts:
-  - path: build\distributions\ZestWriter
-    name: "zest-writer-for-windows"
-    type: zip
   - path: build\distributions\*.exe
     name: setup-zest-writer-for-windows
 
 on_failure:
   - echo Somebody setup us the bomb
+
+deploy:
+  - provider: BinTray
+    on:
+      appveyor_repo_tag: true
+    username: firm1
+    version: $(APPVEYOR_REPO_TAG_NAME)
+    api_key:
+      secure: uM4le5ByQ6WNAILGPWMhO0iAl4VH9iaHXfcBdHktVpXmrV9t7IT/oJYco9oYJsgJ
+    subject: firm1
+    repo: $(PLATFORM)
+    package: setup
+    publish: true
+    override: true
+    explode: false
