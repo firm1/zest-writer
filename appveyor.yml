@@ -19,7 +19,7 @@ build_script:
 
 artifacts:
   - path: build\distributions\ZestWriter
-    name: "zest-writer-for-windows"
+    name: zest-writer-for-windows-$(APPVEYOR_REPO_TAG_NAME)
     type: zip
   - path: build\distributions\*.exe
     name: setup-zest-writer-for-windows
