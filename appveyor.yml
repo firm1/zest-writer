@@ -30,7 +30,7 @@ on_failure:
 deploy:
   - provider: BinTray
     on:
-      branch: master
+      branch: deploy_win_on_bintray
       appveyor_repo_tag: true
     username: firm1
     version: $(APPVEYOR_REPO_TAG_NAME)
