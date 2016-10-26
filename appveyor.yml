@@ -18,9 +18,6 @@ build_script:
   - gradlew.bat -u -i clean assemble
 
 artifacts:
-  - path: build\distributions\ZestWriter
-    name: zest-writer-for-windows-$(APPVEYOR_REPO_TAG_NAME)
-    type: zip
   - path: build\distributions\*.exe
     name: setup-zest-writer-for-windows
 
@@ -30,7 +27,6 @@ on_failure:
 deploy:
   - provider: BinTray
     on:
-      branch: deploy_win_on_bintray
       appveyor_repo_tag: true
     username: firm1
     version: $(APPVEYOR_REPO_TAG_NAME)
