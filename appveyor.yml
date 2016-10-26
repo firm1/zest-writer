@@ -4,6 +4,9 @@ environment:
   TERM: dumb
   matrix:
     - JAVA_HOME: C:\Program Files (x86)\Java\jdk1.8.0
+      PLATFORM: x86
+    - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+      PLATFORM: x64
 install:
   - set PATH=%JAVA_HOME%\bin;%PATH%
   - echo %PATH%
@@ -34,7 +37,7 @@ deploy:
       secure: uM4le5ByQ6WNAILGPWMhO0iAl4VH9iaHXfcBdHktVpXmrV9t7IT/oJYco9oYJsgJ
     subject: firm1
     repo: windows
-    package: x86
+    package: $(PLATFORM)
     publish: true
     override: true
     explode: false
