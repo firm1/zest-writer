@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
+import com.zestedesavoir.zestwriter.view.com.IconFactory;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -95,6 +97,15 @@ public class Content extends Container implements ContentNode{
         sb.append("# ").append(getConclusion().getTitle()).append("\n\n");
         sb.append(getConclusion().readMarkdown());
         return sb.toString();
+    }
+
+    @Override
+    public MaterialDesignIconView buildIcon() {
+        if(getType().equals("ARTICLE")) {
+            return IconFactory.createArticleIcon();
+        } else {
+            return IconFactory.createTutorialIcon();
+        }
     }
 
     public void saveToMarkdown(File file) {

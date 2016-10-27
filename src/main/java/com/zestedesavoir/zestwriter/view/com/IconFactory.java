@@ -77,6 +77,14 @@ public class IconFactory {
         return makeIcon(MaterialDesignIcon.CODE_TAGS, "icon-code-tags"); //48a200
     }
 
+    public static MaterialDesignIconView createArticleIcon() {
+        return makeIcon(MaterialDesignIcon.BOOK_OPEN, "icon-book-open"); //ef9708
+    }
+
+    public static MaterialDesignIconView createTutorialIcon() {
+        return makeIcon(MaterialDesignIcon.LIBRARY_BOOKS, "icon-library-books"); //48a200
+    }
+
     public static MaterialDesignIconView createContentIcon(String type) {
         MaterialDesignIconView icon;
         if(type.equalsIgnoreCase("ARTICLE")) {
