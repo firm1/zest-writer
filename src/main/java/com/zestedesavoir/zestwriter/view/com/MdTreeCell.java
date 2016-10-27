@@ -82,11 +82,15 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         menuStatCountPie.setGraphic(IconFactory.createStatsPieIcon());
         addMenu.getItems().clear();
 
-        if (item.canTakeContainer(((Content)index.getSummary().getRoot().getValue()))) {
-            addMenu.getItems().add(addMenuItem2);
-        }
-        if (item.canTakeExtract()) {
+        if(item instanceof Container) {
             addMenu.getItems().add(addMenuItem1);
+            addMenu.getItems().add(addMenuItem2);
+            if (!item.canTakeContainer(((Content) index.getSummary().getRoot().getValue()))) {
+                addMenuItem2.setDisable(true);
+            }
+            if (!item.canTakeExtract()) {
+                addMenuItem1.setDisable(true);
+            }
         }
         if (item.isEditable()) {
             addMenu.getItems().add(addMenuItem3);

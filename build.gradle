@@ -132,6 +132,12 @@ dependencies {
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
 }
 
+
+task setZwVersion(type: Exec) {
+    executable "bash"
+    args "-c", "export", "ZW_VERSION="+version
+}
+
 test {
     filter {
         includeTestsMatching "*Test*"
