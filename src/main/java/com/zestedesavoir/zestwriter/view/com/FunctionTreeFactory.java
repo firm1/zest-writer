@@ -14,6 +14,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.fxmisc.richtext.StyleClassedTextArea;
@@ -196,6 +197,8 @@ public class FunctionTreeFactory {
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/FindReplaceDialog.fxml"));
 
         Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.dialog.find.title"));
+        dialogStage.setAlwaysOnTop(true);
+        dialogStage.initModality(Modality.NONE);
         dialogStage.setTitle(Configuration.bundle.getString("ui.dialog.find.title"));
         dialogStage.setResizable(false);
 
