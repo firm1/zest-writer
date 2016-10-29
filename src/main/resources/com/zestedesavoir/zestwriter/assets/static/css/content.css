@@ -72,6 +72,9 @@ a {
 .warning:not(.alert-box) {
     background: #eee7da;
 }
+.spoiler:not(.alert-box) {
+    background: #eee;
+}
 
 .error:not(.alert-box), .information:not(.alert-box), .question:not(.alert-box), .spoiler:not(.alert-box), .warning:not(.alert-box) {
     margin: 25px 0;

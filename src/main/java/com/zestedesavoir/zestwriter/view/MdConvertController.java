@@ -343,6 +343,7 @@ public class MdConvertController {
         choices.add("question");
         choices.add("attention");
         choices.add("erreur");
+        choices.add("secret");
 
         ChoiceDialog<String> dialog = new ChoiceDialog<>("information", choices);
         FunctionTreeFactory.addTheming(dialog.getDialogPane());
