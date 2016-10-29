@@ -70,6 +70,10 @@
     -fx-fill: derive(-fx-background, 90%);
 }
 
+.styled-text-area .caret {
+    -fx-stroke: derive(-fx-background, 90%);
+}
+
 .lineno {
     -fx-background-color: derive(-fx-base,20%);
     -fx-text-fill: derive(-fx-background, 90%);
