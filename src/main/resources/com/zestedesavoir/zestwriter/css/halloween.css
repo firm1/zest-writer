@@ -1,0 +1,122 @@
+.root {
+    -fx-base: #111;
+    -fx-background: #111;
+    -fx-control-inner-background: #111;
+    -fx-text-inner-color: #F8AD32;
+}
+
+
+.menu-bar {
+    -fx-background-color: -fx-base;
+    -fx-border-color: derive(-fx-background, 20%) derive(-fx-background, 20%) -fx-text-inner-color derive(-fx-background, 20%);
+    -fx-border-width: 0 0 3px 0;
+}
+
+.tab, .menu, .menu-item{
+    -fx-padding: 10 20 10 20;
+}
+
+.tab-pane {
+    -fx-background-image: url("../images/halloween/hd-halloween-wallpaper-16.jpg");
+    -fx-background-repeat: stretch;
+    -fx-background-position: bottom center;
+    -fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0);
+}
+
+.table-row-cell {
+    -fx-cell-size: 80px;
+    -fx-padding: 20 5 20 5;
+}
+
+.hyperlink{
+    -fx-border-width:0;
+    -fx-underline:false;
+    -fx-text-fill: derive(-fx-base, 90%);
+}
+
+.hyperlink:hover{
+    -fx-underline:true;
+}
+
+.box-content {
+    -fx-border-color: derive(-fx-base, 10%) derive(-fx-base, 10%) -fx-text-inner-color derive(-fx-base, 10%);
+    -fx-background-color: derive(-fx-base, -20%);
+}
+
+.box-content .label {
+    -fx-background-color: derive(-fx-base, -20%);
+    -fx-text-fill: derive(-fx-base, 80%);
+}
+
+.box-content .hyperlink {
+    -fx-font-size: 1.6em;
+}
+
+.title-content-home {
+    -fx-font-size: 1.8em;
+    -fx-text-fill: -fx-text-inner-color;
+    -fx-padding: 20 10 0 10;
+}
+
+.home-header-box {
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: #FFF;
+
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab:selected > .tab-container > .tab-label {
+    -fx-text-fill: -fx-text-inner-color;
+    -fx-font-weight: bold;
+}
+
+.styled-text-area {
+    -fx-background-color: derive(-fx-background, -20%);
+}
+
+.styled-text-area .text {
+    -fx-fill: derive(-fx-background, 90%);
+}
+
+.lineno {
+    -fx-background-color: derive(-fx-base,20%);
+    -fx-text-fill: derive(-fx-background, 90%);
+}
+
+.subtitle {
+    -fx-font-weight: bold;
+    -fx-font-size: 13pt;
+    -fx-text-fill: #ea9408;
+    -fx-label-padding: 20;
+}
+.options-grid{
+    -fx-padding:0 0 0 40;
+}
+.option-auth-warning{
+    -fx-padding:0 0 0 40;
+}
+.label-bottom {
+    -fx-fill: #FFF;
+}
+.logo-clem {
+    -fx-image: url('../images/halloween/home-clem-halloween.png');
+}
+
+/* Icons */
+    .glyph-icon {
+        -fx-fill: -fx-text-inner-color;
+    }
+    .icon-account-key, .icon-folder-multiple, .icon-folder-plus, .icon-border-color{
+        -fx-fill: #3A8DFF;
+    }
+    .icon-close{
+        -fx-fill: #f44336;
+    }
+    .icon-file, .icon-file-outline, .icon-book-open{
+        -fx-fill: #ef9708;
+    }
+    .icon-google-plus{
+        -fx-fill: #dd4b39;
+    }
+    .icon-arrow-down, .icon-chart-areaspline, .icon-chart-bar, .icon-chart-pie, .icon-link, .icon-code-tags, .icon-library-books{
+        -fx-fill: #48a200;
+    }

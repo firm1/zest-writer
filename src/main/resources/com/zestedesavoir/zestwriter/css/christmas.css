@@ -86,7 +86,7 @@
     -fx-padding:0 0 0 40;
 }
 .logo-clem {
-    -fx-image: url('../assets/static/icons/home-clem-christmas.png');
+    -fx-image: url('../images/home-clem-christmas.png');
 }
 
 /* Icons */
