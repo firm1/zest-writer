@@ -7,19 +7,16 @@ Installation
 Windows
 #######
 
-Téléchargez le setup (recommandé) ou l'executable correspondant à votre architecture (32 bits ou 64 bits) et lancez l'installateur. Un fichier ``setup`` lancera un installateur qui installera le programme dans le dossier approprié, tandis qu'un fichier ``exécutable`` contient l'ensemble du programme et peut être executé n'importe où.
+Téléchargez le setup correspondant à votre architecture (32 bits ou 64 bits) et lancez l'installateur. Le fichier ``setup`` lancera un installateur qui installera le programme dans le dossier approprié.
 
 =====================  ======================
 Windows 32 bits        Windows 64 bits
 =====================  ======================
-`exécutable 32 bits`_  `exécutable 64 bits`_
 `setup 32 bits`_       `setup 64 bits`_
 =====================  ======================
 
-.. _exécutable 32 bits: https://ci.appveyor.com/api/buildjobs/1b8oa0uv8b6skthh/artifacts/build%2Fdistributions%2Fzest-writer-for-windows.zip
-.. _exécutable 64 bits: https://ci.appveyor.com/api/buildjobs/cmwax4m523t6gol4/artifacts/build%2Fdistributions%2Fzest-writer-for-windows.zip
-.. _setup 32 bits: https://ci.appveyor.com/api/buildjobs/1b8oa0uv8b6skthh/artifacts/build%2Fdistributions%2FZestWriter-1.3.0.exe
-.. _setup 64 bits: https://ci.appveyor.com/api/buildjobs/cmwax4m523t6gol4/artifacts/build%2Fdistributions%2FZestWriter-1.3.0.exe
+.. _setup 32 bits: https://bintray.com/firm1/windows-x86/setup/_latestVersion#files
+.. _setup 64 bits: https://bintray.com/firm1/windows-x64/setup/_latestVersion#files
 
 .. NOTE::
    Pour vérifier si votre ordinateur tourne sur une version 32 bits ou 64 bits de Windows, cliquez le bouton ``Windows``, ``Ordinateur``, puis ``Propriétés`` et regardez en dessous de ``Système``.
@@ -40,19 +37,20 @@ Debian, Ubuntu, etc.
 
 1. importez la clé GPG de bintray :
 
-   sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 379CE192D401AB61
+   ``sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 379CE192D401AB61``
 
-2. ajouter une nouvelle source :
+2. ajoutez une nouvelle source :
 
-   echo "deb https://dl.bintray.com/firm1/deb wheezy main" | sudo tee -a /etc/apt/sources.list.d/zestwriter.list
+   ``echo "deb https://dl.bintray.com/firm1/deb wheezy main" | sudo tee -a /etc/apt/sources.list.d/zestwriter.list``
 
 3. mettez à jour vos dépôts :
 
-   sudo apt-get update
+   ``sudo apt-get update``
 
 4. installez Zest Writer :
 
-   sudo apt-get install zestwriter
+   ``sudo apt-get install zestwriter``
+
 
 Fedora, ArchLinux, CentOs, etc.
 *******************************
@@ -67,7 +65,7 @@ Fedora, ArchLinux, CentOs, etc.
    gpgcheck=0
    enabled=1
 
-2. Installez Zest Writer en tapant ``yum install zestwriter``.
+2. Installez Zest Writer en saisissant dans votre terminal ``yum install zestwriter``.
 
 Jar executable (tous les systèmes)
 ##################################
@@ -97,6 +95,6 @@ Installation depuis les sources
 4. placez-vous dans le répertoire du projet (``cd zest-writer``) ;
 5. enfin, tapez dans un terminal :
 
-   gradle build
+   ``gradle build``
 
 Selon votre système d'exploitation, vous devriez retrouvez un ``.exe``, un ``.deb``, un ``.rpm`` ou un ``.dmg`` dans le dossier ``build/distributions``.
