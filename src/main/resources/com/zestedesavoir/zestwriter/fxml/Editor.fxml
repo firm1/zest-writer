@@ -166,7 +166,7 @@
                         <Tooltip text="%ui.editor.button.fullscreen" />
                   </tooltip>
                   <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="FULLSCREEN" size="1.8em" />
+                        <MaterialDesignIconView fill="#084561" glyphName="PLAYLIST_REMOVE" size="1.8em" />
                     </graphic>
                   </Button>
 
