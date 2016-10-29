@@ -3,6 +3,7 @@ package com.zestedesavoir.zestwriter.view.com;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.*;
 import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.utils.Theme;
 import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
 import javafx.application.Platform;
@@ -157,7 +158,12 @@ public class FunctionTreeFactory {
     }
 
     public static void addTheming(Pane pane) {
-        pane.getStylesheets().add(MainApp.class.getResource("css/"+ MainApp.config.getDisplayTheme()).toExternalForm());
+        Theme forcedTheme = Theme.getActiveTheme();
+        if(forcedTheme == null ) {
+            pane.getStylesheets().add(MainApp.class.getResource("css/" + MainApp.config.getDisplayTheme()).toExternalForm());
+        } else {
+            pane.getStylesheets().add(MainApp.class.getResource("css/" + forcedTheme.getFilename()).toExternalForm());
+        }
     }
 
     public static String getUniqueFilePath(String path, String ext) {
