@@ -10,10 +10,6 @@ body {
     line-height: 1.9em;
     background-color: #F7F7F7;
     word-wrap: break-word;
-
-    /* WinXaito's Dark */
-        /*background-color: #3C3F41;
-        color: #b6b6b6;*/
 }
 
 h3{
@@ -116,28 +112,28 @@ a {
     content: " ";
     display: block;
     background-repeat: no-repeat;
-    background-image: url("static/images/question.png");
+    background-image: url("../blockicons/question.png");
 }
 
 .error.ico-after::after {
     content: " ";
     display: block;
     background-repeat: no-repeat;
-    background-image: url("static/images/error.png");
+    background-image: url("../blockicons/error.png");
 }
 
 .warning.ico-after::after {
     content: " ";
     display: block;
     background-repeat: no-repeat;
-    background-image: url("static/images/warning.png");
+    background-image: url("../blockicons/warning.png");
 }
 
 .information.ico-after::after {
     content: " ";
     display: block;
     background-repeat: no-repeat;
-    background-image: url("static/images/information.png");
+    background-image: url("../blockicons/information.png");
 }
 
 
