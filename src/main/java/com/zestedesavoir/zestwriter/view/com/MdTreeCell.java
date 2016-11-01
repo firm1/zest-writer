@@ -244,6 +244,12 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
                 if (!result.get().trim().equals("")) {
+                    for(Map.Entry<Textual, Tab> entry:index.getMainApp().getExtracts().entrySet()) {
+                        if(entry.getKey().equals((Textual) item1.getValue())) {
+                            entry.getValue().setText(result.get());
+                            break;
+                        }
+                    }
                     item1.getValue().renameTitle(result.get());
                     saveManifestJson();
                     index.openContent(content);
