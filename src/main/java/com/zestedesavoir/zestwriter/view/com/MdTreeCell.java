@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.*;
 import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.MdTextController;
@@ -71,9 +72,11 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         MenuItem menuStatCountHisto = new MenuItem(Configuration.bundle.getString("ui.actions.stats.count.histo"));
         MenuItem menuStatCountPie = new MenuItem(Configuration.bundle.getString("ui.actions.stats.count.pie"));
         MenuItem menuStatReadability = new MenuItem(Configuration.bundle.getString("ui.actions.stats.readability"));
+        MenuItem menuStatMistakes = new MenuItem(Configuration.bundle.getString("ui.actions.stats.mistake"));
         menuStats.getItems().add(menuStatCountHisto);
         menuStats.getItems().add(menuStatCountPie);
         menuStats.getItems().add(menuStatReadability);
+        menuStats.getItems().add(menuStatMistakes);
         addMenuItem1.setGraphic(IconFactory.createFileIcon());
         addMenuItem2.setGraphic(IconFactory.createAddFolderIcon());
         addMenuItem3.setGraphic(IconFactory.createEditIcon());
@@ -83,6 +86,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         menuStatCountHisto.setGraphic(IconFactory.createStatsHistoIcon());
         menuStatCountPie.setGraphic(IconFactory.createStatsPieIcon());
         menuStatReadability.setGraphic(IconFactory.createStatsHistoIcon());
+        menuStatMistakes.setGraphic(IconFactory.createAbcIcon());
         addMenu.getItems().clear();
 
         if(item instanceof Container) {
@@ -387,6 +391,46 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 }
             }
             lineChart.getData().addAll(series1, series2);
+            dialog.getDialogPane().setContent(lineChart);
+            dialog.setResizable(true);
+            dialog.showAndWait();
+        });
+
+        menuStatMistakes.setOnAction(t -> {
+            logger.debug("Tentative de calcul du nombre de fautes");
+            BaseDialog dialog = new BaseDialog(Configuration.bundle.getString("ui.actions.stats.label"), Configuration.bundle.getString("ui.actions.stats.header")+" "+getItem().getTitle());
+            dialog.getDialogPane().setPrefSize(800, 600);
+            dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.bundle.getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
+
+            // draw
+            final CategoryAxis xAxis = new CategoryAxis();
+            final NumberAxis yAxis = new NumberAxis();
+            final LineChart<String,Number> lineChart = new LineChart<>(xAxis, yAxis);
+            lineChart.setTitle(Configuration.bundle.getString("ui.actions.stats.mistake"));
+
+            xAxis.setLabel(Configuration.bundle.getString("ui.actions.stats.xaxis"));
+            yAxis.setLabel(Configuration.bundle.getString("ui.actions.stats.mistakes.yaxis"));
+
+            XYChart.Series series1 = new XYChart.Series();
+            series1.setName(Configuration.bundle.getString("ui.actions.stats.mistakes.yaxis"));
+            Container container = (Container) getItem();
+
+            Corrector corrector = new Corrector();
+            Function<Textual, Integer> performCorrection = (Textual ch) -> {
+                String md = ch.readMarkdown();
+                try {
+                    return corrector.countMistakes(index, md);
+                } catch(Exception e) {
+                    return 0;
+                }
+            };
+            Map<Textual, Integer> statMistake = container.doOnTextual(performCorrection);
+            for(Map.Entry<Textual, Integer> st:statMistake.entrySet()) {
+                if(!(st.getKey() instanceof MetaAttribute)) {
+                    series1.getData().add(new XYChart.Data(st.getKey().getTitle(), st.getValue()));
+                }
+            }
+            lineChart.getData().addAll(series1);
             dialog.getDialogPane().setContent(lineChart);
             dialog.setResizable(true);
             dialog.showAndWait();

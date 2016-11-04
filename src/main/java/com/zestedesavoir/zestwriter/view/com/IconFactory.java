@@ -85,6 +85,10 @@ public class IconFactory {
         return makeIcon(MaterialDesignIcon.LIBRARY_BOOKS, "icon-library-books"); //48a200
     }
 
+    public static MaterialDesignIconView createAbcIcon() {
+        return makeIcon(MaterialDesignIcon.SPELLCHECK, "icon-correction"); //48a200
+    }
+
     public static MaterialDesignIconView createContentIcon(String type) {
         MaterialDesignIconView icon;
         if(type.equalsIgnoreCase("ARTICLE")) {
