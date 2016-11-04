@@ -3,6 +3,7 @@ package com.zestedesavoir.zestwriter.view;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
+import com.zestedesavoir.zestwriter.model.MetaAttribute;
 import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
@@ -25,6 +26,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -130,7 +132,13 @@ public class MenuController{
                 easy = Configuration.bundle.getString("ui.level.very_easy");
             }
 
-            String v1 = entry.getKey().getTitle();
+            String v1;
+            if(entry.getKey() instanceof MetaAttribute) {
+                MetaAttribute attribute = (MetaAttribute) entry.getKey();
+                v1 = attribute.getTitle()+ " (" + attribute.getParent().getTitle() + ")";
+            } else {
+                v1 = entry.getKey().getTitle();
+            }
             String v2 = entry.getValue().toString() + " (" + easy + ")";
             rows.add(v1 + " => " + v2);
         }

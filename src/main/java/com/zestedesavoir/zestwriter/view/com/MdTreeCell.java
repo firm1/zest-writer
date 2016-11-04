@@ -248,6 +248,12 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
                 if (!result.get().trim().equals("")) {
+                    for(Map.Entry<Textual, Tab> entry:index.getMainApp().getExtracts().entrySet()) {
+                        if(entry.getKey().equals((Textual) item1.getValue())) {
+                            entry.getValue().setText(result.get());
+                            break;
+                        }
+                    }
                     item1.getValue().renameTitle(result.get());
                     saveManifestJson();
                     index.openContent(content);
@@ -302,6 +308,9 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             for(Map.Entry<Textual, Integer> st:stat.entrySet()) {
                 if(!(st.getKey() instanceof MetaAttribute)) {
                     series1.getData().add(new XYChart.Data(st.getKey().getTitle(), st.getValue()));
+                } else {
+                    MetaAttribute attribute = (MetaAttribute) st.getKey();
+                    series1.getData().add(new XYChart.Data(attribute.getTitle()+ " (" + attribute.getParent().getTitle() + ")", st.getValue()));
                 }
             }
             barChart.getData().addAll(series1);
@@ -328,6 +337,9 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             for(Map.Entry<Textual, Integer> st:stat.entrySet()) {
                 if(!(st.getKey() instanceof MetaAttribute)) {
                     pieChartData.add(new PieChart.Data(st.getKey().getTitle(), st.getValue()));
+                } else {
+                    MetaAttribute attribute = (MetaAttribute) st.getKey();
+                    pieChartData.add(new PieChart.Data(attribute.getTitle()+ " (" + attribute.getParent().getTitle() + ")", st.getValue()));
                 }
             }
             final PieChart chart = new PieChart(pieChartData);
@@ -383,11 +395,17 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             for(Map.Entry<Textual, Double> st:statG.entrySet()) {
                 if(!(st.getKey() instanceof MetaAttribute)) {
                     series1.getData().add(new XYChart.Data(st.getKey().getTitle(), st.getValue()));
+                } else {
+                    MetaAttribute attribute = (MetaAttribute) st.getKey();
+                    series1.getData().add(new XYChart.Data(attribute.getTitle()+ " (" + attribute.getParent().getTitle() + ")", st.getValue()));
                 }
             }
             for(Map.Entry<Textual, Double> st:statF.entrySet()) {
                 if(!(st.getKey() instanceof MetaAttribute)) {
                     series2.getData().add(new XYChart.Data(st.getKey().getTitle(), st.getValue()));
+                } else {
+                    MetaAttribute attribute = (MetaAttribute) st.getKey();
+                    series2.getData().add(new XYChart.Data(attribute.getTitle()+ " (" + attribute.getParent().getTitle() + ")", st.getValue()));
                 }
             }
             lineChart.getData().addAll(series1, series2);
