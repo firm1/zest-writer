@@ -24,6 +24,10 @@ public class MetadataContent {
         return type;
     }
 
+    public boolean isArticle() {return type.equalsIgnoreCase("article");}
+
+    public boolean isTutorial() {return type.equalsIgnoreCase("tutorial");}
+
     @Override
     public String toString() {
         return getSlug();

@@ -55,6 +55,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class MenuController{
     private MainApp mainApp;
@@ -447,10 +448,30 @@ public class MenuController{
         hBottomBox.getChildren().clear();
         hBottomBox.add(labelField, 0, 0);
 
+        try {
+            if(mainApp.getContents ().get (0).isArticle()) {
+                MainApp.getZdsutils().initInfoOnlineContent("article");
+            } else {
+                MainApp.getZdsutils().initInfoOnlineContent("tutorial");
+            }
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        }
+
 
         List<MetadataContent> contents = new ArrayList<>();
         contents.add(new MetadataContent(null, "---"+Configuration.bundle.getString("ui.content.new.title")+"---", null));
-        contents.addAll(MainApp.getZdsutils().getContentListOnline());
+        List<MetadataContent> possibleContent;
+        if(mainApp.getContents ().get (0).isArticle()) {
+            possibleContent = MainApp.getZdsutils().getContentListOnline().stream()
+                    .filter(meta -> meta.isArticle())
+                    .collect(Collectors.toList());
+        } else {
+            possibleContent = MainApp.getZdsutils().getContentListOnline().stream()
+                    .filter(meta -> meta.isTutorial())
+                    .collect(Collectors.toList());
+        }
+        contents.addAll(possibleContent);
 
         Dialog<Pair<String, MetadataContent>> dialog = new CustomDialog<>();
         dialog.setTitle(Configuration.bundle.getString("ui.content.select.title"));
