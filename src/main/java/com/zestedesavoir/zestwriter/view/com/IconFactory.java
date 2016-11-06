@@ -37,6 +37,10 @@ public class IconFactory {
         return makeIcon(MaterialDesignIcon.CLOSE, "icon-close"); //f44336
     }
 
+    public static MaterialDesignIconView createMoveIcon() {
+        return makeIcon(MaterialDesignIcon.FOLDER_MOVE, "icon-move"); //f44336
+    }
+
     public static MaterialDesignIconView createFileIcon() {
         return makeIcon(MaterialDesignIcon.FILE, "icon-file"); //ef9708
     }

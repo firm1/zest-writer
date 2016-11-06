@@ -21,12 +21,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -68,6 +70,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         MenuItem addMenuItem3 = new MenuItem(Configuration.bundle.getString("ui.actions.rename.label"));
         MenuItem addMenuItem4 = new MenuItem(Configuration.bundle.getString("ui.actions.delete.label"));
         MenuItem addMenuItem5 = new MenuItem(Configuration.bundle.getString("ui.actions.edit.label"));
+        MenuItem addMenuItem6 = new MenuItem(Configuration.bundle.getString("ui.actions.merge_extracts.label"));
         Menu menuStats = new Menu(Configuration.bundle.getString("ui.actions.stats.label"));
         MenuItem menuStatCountHisto = new MenuItem(Configuration.bundle.getString("ui.actions.stats.count.histo"));
         MenuItem menuStatCountPie = new MenuItem(Configuration.bundle.getString("ui.actions.stats.count.pie"));
@@ -82,6 +85,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         addMenuItem3.setGraphic(IconFactory.createEditIcon());
         addMenuItem4.setGraphic(IconFactory.createRemoveIcon());
         addMenuItem5.setGraphic(IconFactory.createEditIcon());
+        addMenuItem6.setGraphic(IconFactory.createMoveIcon());
         menuStats.setGraphic(IconFactory.createStatsIcon());
         menuStatCountHisto.setGraphic(IconFactory.createStatsHistoIcon());
         menuStatCountPie.setGraphic(IconFactory.createStatsPieIcon());
@@ -104,10 +108,17 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         }
         if (item instanceof Content) {
             addMenu.getItems().add(addMenuItem5);
+            if(((Content) item).isArticle()) {
+                addMenuItem6.setDisable(true);
+            }
         }
         if(item instanceof Container) {
             addMenu.getItems().add(new SeparatorMenuItem());
             addMenu.getItems().add(menuStats);
+        }
+        if (item.canMergeExtracts((Content) index.getSummary().getRoot().getValue())) {
+            addMenu.getItems().add(new SeparatorMenuItem());
+            addMenu.getItems().add(addMenuItem6);
         }
         if (item.canDelete()) {
             addMenu.getItems().add(new SeparatorMenuItem());
@@ -277,6 +288,82 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 }
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
+            }
+        });
+
+        addMenuItem6.setOnAction(t -> {
+            logger.debug("Tentative de déplacement des extraits");
+            TextInputDialog dialog = new TextInputDialog(Configuration.bundle.getString("ui.dialog.add_container"));
+
+            dialog.setTitle(Configuration.bundle.getString("ui.dialog.add_container.title"));
+            dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.add_container.header"));
+            dialog.setContentText(Configuration.bundle.getString("ui.dialog.add_container.text")+" :");
+
+            Optional<String> result = dialog.showAndWait();
+            if (result.isPresent()) {
+                // lists extracts
+                List<Extract> extracts = ((Container)getItem()).getChildren().stream()
+                        .map(ext -> (Extract) ext)
+                        .collect(Collectors.toList());
+
+                String slug = ZdsHttp.toSlug(result.get());
+                String baseSlug = FunctionTreeFactory.getUniqueDirPath(getItem().getFilePath() + "/" + slug);
+                Container container = new Container("container",
+                        slug,
+                        result.get(),
+                        (baseSlug + "/" + "introduction.md").substring(baseFilePath.length()+1),
+                        (baseSlug + "/" + "conclusion.md").substring(baseFilePath.length()+1),
+                        new ArrayList<>());
+                container.setBasePath(baseFilePath);
+                ((Container)getItem()).getChildren().add(container);
+
+                // create files
+                File dirFile = new File(container.getFilePath());
+                File introFile = new File(container.getIntroduction().getFilePath());
+                File concluFile = new File(container.getConclusion().getFilePath());
+
+                if (!dirFile.exists() && !dirFile.isDirectory()) {
+                    dirFile.mkdir();
+                }
+                try {
+                    if (!introFile.exists()) {
+                        introFile.createNewFile();
+                    }
+                } catch (IOException e) {
+                    logger.error("Erreur lors de la création de "+introFile.getAbsolutePath(), e);
+                }
+                try {
+                    if (!concluFile.exists()) {
+                        concluFile.createNewFile();
+                    }
+                } catch (IOException e) {
+                    logger.error("Erreur lors de la créeation de "+concluFile.getAbsolutePath(), e);
+                }
+
+                // move physical file to new directory
+                extracts.stream()
+                        .forEach(extract -> {
+                            try {
+                                FileUtils.moveFileToDirectory(new File(extract.getFilePath()), new File(container.getFilePath()), false);
+                            } catch (IOException e) {
+                                logger.error("Erreur lors du déplacement d'un extrait", e);
+                            }
+                        });
+                // move logical file to new directory
+                extracts.stream()
+                        .forEach(extract -> {
+                            ((Container)getItem()).getChildren().remove(extract);
+                            String oldText = extract.getText();
+                            if(oldText.indexOf("/") != -1) {
+                                oldText = oldText.substring(oldText.indexOf("/")+1);
+                            }
+                            extract.setText((baseSlug+"/"+oldText).substring(baseFilePath.length()+1));
+
+                        });
+                container.getChildren().addAll(extracts);
+
+                saveManifestJson();
+                index.openContent(content);
             }
         });
 

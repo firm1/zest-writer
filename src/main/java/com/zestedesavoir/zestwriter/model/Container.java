@@ -149,6 +149,11 @@ public class Container extends MetaContent implements ContentNode {
     }
 
     @Override
+    public boolean canMergeExtracts(Content c) {
+        return getCountChildrenExtract() > 0 && getCountAncestorsContainer(c) < 3;
+    }
+
+    @Override
     public boolean isMoveableIn(ContentNode receiver, Content root) {
         if(receiver instanceof MetaAttribute) {
             if(receiver.getTitle().equalsIgnoreCase("conclusion")) {

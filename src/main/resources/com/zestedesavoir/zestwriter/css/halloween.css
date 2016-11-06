@@ -109,7 +109,7 @@
     .glyph-icon {
         -fx-fill: -fx-text-inner-color;
     }
-    .icon-account-key, .icon-folder-multiple, .icon-folder-plus, .icon-border-color{
+    .icon-account-key, .icon-folder-multiple, .icon-folder-plus, .icon-border-color, .icon-move{
         -fx-fill: #3A8DFF;
     }
     .icon-close{

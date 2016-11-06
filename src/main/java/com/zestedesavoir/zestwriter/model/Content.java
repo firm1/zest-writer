@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-@JsonIgnoreProperties({"basePath", "filePath", "editable", "countChildrenExtract", "countDescendantContainer" ,"rootContent", "depth"})
+@JsonIgnoreProperties({"basePath", "filePath", "editable", "countChildrenExtract", "countDescendantContainer" ,"rootContent", "depth", "tutorial", "article"})
 public class Content extends Container implements ContentNode{
     private int _version;
     private String _licence;
@@ -106,6 +106,14 @@ public class Content extends Container implements ContentNode{
         } else {
             return IconFactory.createTutorialIcon();
         }
+    }
+
+    public boolean isArticle() {
+        return getType().equals("ARTICLE");
+    }
+
+    public boolean isTutorial() {
+        return getType().equals("TUTORIAL");
     }
 
     public void saveToMarkdown(File file) {
