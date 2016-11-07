@@ -758,6 +758,47 @@ public class MenuController{
         });
     }
 
+    @FXML private void HandleImportZdsButtonAction() {
+        TextInputDialog dialog = new TextInputDialog("https://zestedesavoir.com/");
+        dialog.setTitle(Configuration.bundle.getString("ui.dialog.import.zds.title"));
+        dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.import.zds.header"));
+        dialog.setContentText(Configuration.bundle.getString("ui.dialog.import.zds.text")+" :");
+        dialog.getEditor().setPrefWidth(500);
+        dialog.initOwner(MainApp.getPrimaryStage());
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(url -> {
+            hBottomBox.getChildren().clear();
+            hBottomBox.add(pb, 0, 0);
+            hBottomBox.add(labelField, 1, 0);
+            DownloadZdsService downloadZdsTask = new DownloadZdsService(url, MainApp.getZdsutils().getOfflineContentPathDir(), MainApp.getZdsutils().getOnlineContentPathDir());
+            labelField.textProperty().bind(downloadZdsTask.messageProperty());
+            pb.progressProperty().bind(downloadZdsTask.progressProperty());
+            Alert alert = new CustomAlert(AlertType.NONE);
+            downloadZdsTask.setOnFailed (t -> {
+                alert.setAlertType(AlertType.ERROR);
+                alert.setTitle(Configuration.bundle.getString("ui.dialog.download.zds.failed.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.download.zds.failed.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.download.zds.failed.text"));
+                alert.showAndWait();
+                hBottomBox.getChildren().clear();
+            });
+            downloadZdsTask.setOnSucceeded (t -> {
+                FunctionTreeFactory.switchContent (downloadZdsTask.getValue (), mainApp.getContents ());
+                alert.setAlertType(AlertType.INFORMATION);
+                alert.setTitle(Configuration.bundle.getString("ui.dialog.download.zds.success.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.download.zds.success.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.download.zds.success.text"));
+                alert.showAndWait();
+                hBottomBox.getChildren().clear();
+            });
+
+            if(result.isPresent()){
+                downloadZdsTask.start();
+            }
+        });
+    }
+
     @FXML private void HandleCheckUpdateButtonAction(ActionEvent event){
         Service<Boolean> checkService = new Service<Boolean>() {
             @Override
