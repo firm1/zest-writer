@@ -6,6 +6,7 @@ import com.sun.javafx.scene.control.skin.TabPaneSkin;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
+import com.zestedesavoir.zestwriter.model.MetaAttribute;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.view.com.*;
@@ -225,6 +226,20 @@ public class MdTextController {
         }
     }
 
+    private TreeItem<ContentNode> selectItemOnTree(TreeItem<ContentNode> item, Textual textual) {
+        for(TreeItem<ContentNode> node: item.getChildren()) {
+            if(node.getValue().getFilePath().equals(textual.getFilePath())) {
+                return node;
+            } else {
+                TreeItem<ContentNode> it = selectItemOnTree(node, textual);
+                if(it != null) {
+                    return it;
+                }
+            }
+        }
+        return null;
+    }
+
     public void createTabExtract(Textual extract) throws IOException {
         logger.debug("Tentative de création d'un nouvel onglet pour "+extract.getTitle());
         extract.loadMarkdown();
@@ -282,6 +297,14 @@ public class MdTextController {
                 }
             }
         });
+        tab.setOnSelectionChanged(t -> {
+            TreeItem<ContentNode> selected = selectItemOnTree(Summary.getRoot(), extract);
+            if(selected != null) {
+                Summary.getSelectionModel().select(selected);
+            }
+        });
+
+        Summary.getSelectionModel().select(selectItemOnTree(Summary.getRoot(), extract));
 
         mainApp.getExtracts().put(extract, tab);
         logger.info("Nouvel onglet crée pour "+extract.getTitle());
