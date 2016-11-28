@@ -73,11 +73,9 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         MenuItem addMenuItem6 = new MenuItem(Configuration.bundle.getString("ui.actions.merge_extracts.label"));
         Menu menuStats = new Menu(Configuration.bundle.getString("ui.actions.stats.label"));
         MenuItem menuStatCountHisto = new MenuItem(Configuration.bundle.getString("ui.actions.stats.count.histo"));
-        MenuItem menuStatCountPie = new MenuItem(Configuration.bundle.getString("ui.actions.stats.count.pie"));
         MenuItem menuStatReadability = new MenuItem(Configuration.bundle.getString("ui.actions.stats.readability"));
         MenuItem menuStatMistakes = new MenuItem(Configuration.bundle.getString("ui.actions.stats.mistake"));
         menuStats.getItems().add(menuStatCountHisto);
-        menuStats.getItems().add(menuStatCountPie);
         menuStats.getItems().add(menuStatReadability);
         menuStats.getItems().add(menuStatMistakes);
         addMenuItem1.setGraphic(IconFactory.createFileIcon());
@@ -88,7 +86,6 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         addMenuItem6.setGraphic(IconFactory.createMoveIcon());
         menuStats.setGraphic(IconFactory.createStatsIcon());
         menuStatCountHisto.setGraphic(IconFactory.createStatsHistoIcon());
-        menuStatCountPie.setGraphic(IconFactory.createStatsPieIcon());
         menuStatReadability.setGraphic(IconFactory.createStatsHistoIcon());
         menuStatMistakes.setGraphic(IconFactory.createAbcIcon());
         addMenu.getItems().clear();
@@ -403,39 +400,6 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             }
             barChart.getData().addAll(series1);
             dialog.getDialogPane().setContent(barChart);
-            dialog.setResizable(true);
-            dialog.showAndWait();
-        });
-
-        menuStatCountPie.setOnAction(t -> {
-            logger.debug("Tentative de calcul des statistiques de type Camembert");
-            BaseDialog dialog = new BaseDialog(Configuration.bundle.getString("ui.actions.stats.label"), Configuration.bundle.getString("ui.actions.stats.header")+" "+getItem().getTitle());
-            dialog.getDialogPane().setPrefSize(800, 600);
-            dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.bundle.getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
-
-            // draw
-            ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
-            Container container = (Container) getItem();
-            Function<Textual, Integer> performCount = (Textual ch) -> {
-                String md = ch.readMarkdown();
-                Readability readText = new Readability(md);
-                return readText.getCharacters();
-            };
-            Map<Textual, Integer> stat = container.doOnTextual(performCount);
-            for(Map.Entry<Textual, Integer> st:stat.entrySet()) {
-                if(!(st.getKey() instanceof MetaAttribute)) {
-                    pieChartData.add(new PieChart.Data(st.getKey().getTitle(), st.getValue()));
-                } else {
-                    MetaAttribute attribute = (MetaAttribute) st.getKey();
-                    pieChartData.add(new PieChart.Data(attribute.getTitle()+ " (" + attribute.getParent().getTitle() + ")", st.getValue()));
-                }
-            }
-            final PieChart chart = new PieChart(pieChartData);
-
-            chart.setTitle(Configuration.bundle.getString("ui.actions.stats.type.pie"));
-            chart.setLegendVisible(false);
-
-            dialog.getDialogPane().setContent(chart);
             dialog.setResizable(true);
             dialog.showAndWait();
         });
