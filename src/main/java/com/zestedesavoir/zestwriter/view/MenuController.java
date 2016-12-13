@@ -98,7 +98,7 @@ public class MenuController{
     public static String markdownToHtml(MdTextController index, String chaine){
         PythonInterpreter console = index.getPyconsole();
         console.set("text", chaine);
-        console.exec("render = Markdown(extensions=(ZdsExtension({'inline': False, 'emoticons': smileys}),),safe_mode = 'escape', enable_attributes = False, tab_length = 4, output_format = 'html5', smart_emphasis = True, lazy_ol = True).convert(text)");
+        console.exec("render = mk_instance.convert(text)");
         PyString render = console.get("render", PyString.class);
         return render.toString();
     }

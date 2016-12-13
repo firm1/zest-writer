@@ -674,7 +674,7 @@ public class MdConvertController {
         if (console != null) {
             console.set("text", chaine);
             console.exec(
-                    "render = Markdown(extensions=(ZdsExtension({'inline': False, 'emoticons': smileys}),),safe_mode = 'escape', enable_attributes = False, tab_length = 4, output_format = 'html5', smart_emphasis = True, lazy_ol = True).convert(text)");
+                    "render = mk_instance.convert(text)");
             PyString render = console.get("render", PyString.class);
             return render.toString();
         } else {

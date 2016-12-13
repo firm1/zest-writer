@@ -57,10 +57,6 @@ javafx {
     signingMode 'release'
 }
 
-String getProjectProperty(String propertyName) {
-    project.hasProperty(propertyName) ? project.property(propertyName) : null
-}
-
 repositories {
     mavenLocal()
     mavenCentral()
@@ -127,7 +123,7 @@ dependencies {
     compile group: 'org.zeroturnaround', name: 'zt-zip', version: '1.9'
     compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.12'
     compile group: 'org.fxmisc.richtext', name: 'richtextfx', version: '0.6.10'
-    compile group: 'com.zestedesavoir.zmarkdown', name: 'java-zmarkdown', version: '2.6.1'
+    compile group: 'com.zestedesavoir.zmarkdown', name: 'java-zmarkdown', version: '2.6.0.17'
     compile group: 'com.fasterxml', name: 'jackson-module-json-org', version: '0.9.1'
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
 }

@@ -87,6 +87,7 @@ public class MdTextController {
             pyconsole.exec("from markdown import Markdown");
             pyconsole.exec("from markdown.extensions.zds import ZdsExtension");
             pyconsole.exec("from smileys_definition import smileys");
+            pyconsole.exec("mk_instance = Markdown(extensions=(ZdsExtension(inline=False, emoticons=smileys, js_support=False, ping_url=None),),safe_mode = 'escape', enable_attributes = False, tab_length = 4, output_format = 'html5', smart_emphasis = True, lazy_ol = True)");
             logger.info("PYTHON STARTED");
             pythonStarted=true;
         }).start();
