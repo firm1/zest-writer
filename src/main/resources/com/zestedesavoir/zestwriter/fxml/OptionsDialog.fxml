@@ -265,12 +265,12 @@
                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                </rowConstraints>
                                                <children>
-                                                   <Label text="%ui.options.advanced.protocol" />
-                                                   <Label text="%ui.options.advanced.protocol" GridPane.rowIndex="1" />
-                                                   <Label text="%ui.options.advanced.hostname" GridPane.rowIndex="2" />
+                                                   <Label text="%ui.options.advanced.protocol" GridPane.rowIndex="0" />
+                                                   <Label text="%ui.options.advanced.hostname" GridPane.rowIndex="1" />
+                                                   <Label text="%ui.options.advanced.port" GridPane.rowIndex="2" />
+                                                   <ComboBox fx:id="optAdvancedProtocol" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                                                    <TextField fx:id="optAdvancedHost" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                    <TextField fx:id="optAdvancedPort" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                   <ComboBox fx:id="optAdvancedProtocol" GridPane.columnIndex="1" />
                                                </children>
                                  <padding>
                                     <Insets left="20.0" />

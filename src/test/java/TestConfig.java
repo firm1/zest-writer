@@ -30,7 +30,7 @@ public class TestConfig {
         assertEquals(new File(TEST_DIR, ".zestwriter").exists(), true);
         assertEquals(new File(TEST_DIR, ".zestwriter"+File.separator+"conf.properties").exists(), true);
         assertEquals(config.getAdvancedServerHost(), "zestedesavoir.com");
-        assertEquals(config.getAdvancedServerPort(), "80");
+        assertEquals(config.getAdvancedServerPort(), "443");
         assertEquals(config.getAdvancedServerProtocol(), "https");
         assertEquals(config.getAuthentificationPassword(), "");
         assertEquals(config.getAuthentificationUsername(), "");
@@ -102,7 +102,7 @@ public class TestConfig {
 
         config.resetAllOptions();
         assertEquals(config.getAdvancedServerHost(), "zestedesavoir.com");
-        assertEquals(config.getAdvancedServerPort(), "80");
+        assertEquals(config.getAdvancedServerPort(), "443");
         assertEquals(config.getAdvancedServerProtocol(), "https");
         assertEquals(config.getAuthentificationPassword(), "");
         assertEquals(config.getAuthentificationUsername(), "");

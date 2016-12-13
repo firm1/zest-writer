@@ -481,7 +481,6 @@ public class ZdsHttp {
         String dirname = Paths.get(zipFilePath).getFileName().toString();
         dirname = dirname.substring(0, dirname.length() - 4);
         // create output directory is not exists
-        System.out.println("dirname = "+dirname);
         File folder = new File(destFolder + File.separator + dirname);
         logger.debug("Tentative de dezippage de " + zipFilePath + " dans " + folder.getAbsolutePath());
         if (!folder.exists()) {

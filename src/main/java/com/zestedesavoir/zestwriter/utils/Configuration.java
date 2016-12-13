@@ -424,10 +424,12 @@ public class Configuration {
     }
 
     public String getAdvancedServerPort(){
-        if(conf.containsKey(ConfigData.AdvancedServerPort.getKey()))
+        if(conf.containsKey(ConfigData.AdvancedServerPort.getKey())) {
             return conf.getProperty(ConfigData.AdvancedServerPort.getKey());
-        else
+        }
+        else {
             return ConfigData.AdvancedServerPort.getDefaultValue();
+        }
     }
 
     public void setAdvancedServerPort(String port){
@@ -527,9 +529,9 @@ public class Configuration {
         AdvancedApiServerHost("options.advanced.host", "winxaito.com"),
         AdvancedApiServerUri("options.advanced.host", "api"),
         AdvancedApiServerPort("options.advanced.port", "80"),
-        AdvancedServerProtocol("options.advanced.protocol", "https"),
-        AdvancedServerHost("options.advanced.host", "zestedesavoir.com"),
-        AdvancedServerPort("options.advanced.port", "80");
+        AdvancedServerProtocol("server.protocol", "https"),
+        AdvancedServerHost("server.host", "zestedesavoir.com"),
+        AdvancedServerPort("server.port", "443");
 
         private String key;
         private String defaultValue;
