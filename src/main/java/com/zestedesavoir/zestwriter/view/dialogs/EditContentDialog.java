@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Object>>>{
 	public static int MAX_TITLE_LENGTH = 80;
-	public static int MAX_SUBTITLE_LENGTH = 160;
+	public static int MAX_SUBTITLE_LENGTH = 200;
 	private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
 	private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
 
@@ -64,16 +64,16 @@ public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Objec
 
 	    TextField title = new TextField(defaultContent.getTitle());
 		title.textProperty().addListener((ov, oldValue, newValue) -> {
-            if (title.getText().length() > MAX_TITLE_LENGTH) {
-                String s = title.getText().substring(0, MAX_TITLE_LENGTH);
-                title.setText(s);
+            if (newValue.length() > MAX_TITLE_LENGTH) {
+                title.setText(oldValue);
             }
         });
-	    TextField subtitle = new TextField(defaultContent.getDescription());
+	    TextArea subtitle = new TextArea(defaultContent.getDescription());
+        subtitle.setWrapText(true);
+        subtitle.setPrefHeight(80);
 		subtitle.textProperty().addListener((ov, oldValue, newValue) -> {
-            if (subtitle.getText().length() > MAX_SUBTITLE_LENGTH) {
-                String s = subtitle.getText().substring(0, MAX_TITLE_LENGTH);
-                subtitle.setText(s);
+            if (newValue.length() > MAX_SUBTITLE_LENGTH) {
+                subtitle.setText(oldValue);
             }
         });
 	    ComboBox<TypeContent> type = new ComboBox<>(typeOptions);
