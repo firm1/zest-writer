@@ -151,6 +151,7 @@ public class OptionsDialog{
 
         if(directory != null && directory.exists()){
             config.setWorkspacePath(directory.getAbsolutePath());
+            workspacepath.setText(directory.getAbsolutePath());
         }
     }
 
