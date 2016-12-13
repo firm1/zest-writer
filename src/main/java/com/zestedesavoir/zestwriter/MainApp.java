@@ -45,6 +45,8 @@ import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 public class MainApp extends Application{
@@ -68,12 +70,15 @@ public class MainApp extends Application{
 
     public MainApp() {
         super();
+
+        initEnvVariable();
         logger = LoggerFactory.getLogger(MainApp.class);
 
         logger.info("Version Java de l'utilisateur: " + System.getProperty("java.version"));
         logger.info("Architecture du système utilisateur: " + System.getProperty("os.arch"));
         logger.info("Nom du système utilisateur: " + System.getProperty("os.name"));
         logger.info("Version du système utilisateur: " + System.getProperty("os.version"));
+        logger.info("Emplacement du fichier de log: " + System.getProperty("zw.logPath"));
 
         if(args.length > 0) {
             config = new Configuration(args[0]);
@@ -96,6 +101,31 @@ public class MainApp extends Application{
     public static void main(String[] args) {
         MainApp.args  = args;
         launch(args);
+    }
+
+    private void initEnvVariable() {
+        Path logPath = null;
+        Path logDir = null;
+        String os = System.getProperty("os.name").toLowerCase();
+        if(os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") >= 0) {
+            logPath = Paths.get(System.getProperty("user.home"), ".config", "zest-writer", "zest-writer.log");
+            logDir = logPath.getParent();
+        } else if(os.indexOf("win") >= 0) {
+            logPath = Paths.get(System.getProperty("user.home"), "AppData", "Local", "zest-writer",  "zest-writer.log");
+            logDir = logPath.getParent();
+        } else if(os.indexOf("mac") >= 0) {
+            logPath = Paths.get(System.getProperty("user.home"), "Library", "Application Support", "zest-writer", "zest-writer.log");
+            logDir = logPath.getParent();
+        } else {
+            logPath = Paths.get(System.getProperty("user.home"), "zest-writer.log");
+            logDir = logPath.getParent();
+        }
+        File dir = new File(logDir.toString());
+        File log = new File(logPath.toString());
+        if(! dir.exists()) {
+            dir.mkdirs();
+        }
+        System.setProperty("zw.logPath", log.getAbsolutePath());
     }
 
 

@@ -101,7 +101,7 @@ public class Configuration {
         conf = new Properties(props);
 
         if(!confFile.exists()) {
-            logger.debug("le fichier de configuartion "+confFile.getAbsolutePath()+" n'existe pas");
+            logger.debug("le fichier de configuration "+confFile.getAbsolutePath()+" n'existe pas");
             setWorkspacePath(Configuration.getDefaultWorkspace());
             saveConfFile();
         }
