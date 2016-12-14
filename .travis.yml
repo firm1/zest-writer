@@ -19,8 +19,7 @@ before_install:
   - java -version
 
 script:
-  - ./gradlew check -Dzw.username=$ZDS_USERNAME -Dzw.password=$ZDS_PASSWORD -Dzw.github_user=$GITHUB_USER -Dzw.github_token=$GITHUB_TOKEN --info
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew sonarqube -Dzw.username=$ZDS_USERNAME -Dzw.password=$ZDS_PASSWORD -Dzw.github_user=$GITHUB_USER -Dzw.github_token=$GITHUB_TOKEN -Dsonar.login=$SONAR_TOKEN ; fi
+  - scripts/travis.sh
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew fatJar ; fi
 
 after_success:
