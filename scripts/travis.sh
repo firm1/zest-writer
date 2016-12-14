@@ -14,7 +14,7 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ -n "${GITHUB_TOKEN:-}" ]; then
         -Dsonar.github.repository=$TRAVIS_REPO_SLUG \
         -Dsonar.github.oauth=$GITHUB_TOKEN
 else
-    ./gradlew check --info \
+    ./gradlew sonarqube --info \
             -Dzw.username=$ZDS_USERNAME \
             -Dzw.password=$ZDS_PASSWORD \
             -Dzw.github_user=$GITHUB_USER \
