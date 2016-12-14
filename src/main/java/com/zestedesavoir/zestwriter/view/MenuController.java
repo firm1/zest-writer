@@ -1,5 +1,6 @@
 package com.zestedesavoir.zestwriter.view;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
@@ -30,17 +31,20 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.controlsfx.control.Rating;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
@@ -49,11 +53,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -116,23 +117,8 @@ public class MenuController{
         };
         Map<Textual, Double> fleshResult = ((Content)mainApp.getIndex().getSummary().getRoot().getValue()).doOnTextual(calFlesh);
 
-        ObservableList<String> rows = FXCollections.observableArrayList();
+        ObservableList<ModelLisibilty> rows = FXCollections.observableArrayList();
         for(Entry<Textual, Double> entry : fleshResult.entrySet()){
-            String easy;
-            if(entry.getValue() < 30){
-                easy = Configuration.bundle.getString("ui.level.very_difficult");
-            }else if(entry.getValue() < 50){
-                easy = Configuration.bundle.getString("ui.level.difficult");
-            }else if(entry.getValue() < 60){
-                easy = Configuration.bundle.getString("ui.level.quite_difficult");
-            }else if(entry.getValue() < 70){
-                easy = Configuration.bundle.getString("ui.level.normal");
-            }else if(entry.getValue() < 80){
-                easy = Configuration.bundle.getString("ui.level.easy");
-            }else{
-                easy = Configuration.bundle.getString("ui.level.very_easy");
-            }
-
             String v1;
             if(entry.getKey() instanceof MetaAttribute) {
                 MetaAttribute attribute = (MetaAttribute) entry.getKey();
@@ -140,25 +126,31 @@ public class MenuController{
             } else {
                 v1 = entry.getKey().getTitle();
             }
-            String v2 = entry.getValue().toString() + " (" + easy + ")";
-            rows.add(v1 + " => " + v2);
+            Double t = (entry.getValue()/100)*5;
+            Rating rating = new Rating(5, t.intValue());
+            rows.add(new ModelLisibilty(v1, rating));
         }
 
         // Create the custom dialog.
         CustomDialog<Pair<String, String>> dialog = new CustomDialog<>();
+        dialog.setResizable(true);
         dialog.setTitle(Configuration.bundle.getString("ui.menu.edit.readable.flesch_index"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.menu.edit.readable.flesch_index.header"));
 
         // Set the button types.
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        ListView<String> list = new ListView<>();
-        list.setPrefSize(800, 500);
-        list.setItems(rows);
+        TableView table = new TableView();
+        table.setPrefSize(600, 400);
+        TableColumn colText = new TableColumn();
+        colText.setCellValueFactory(new PropertyValueFactory<ModelLisibilty, String>("text"));
+        TableColumn colRate = new TableColumn();
+        colRate.setCellValueFactory(new PropertyValueFactory<ModelLisibilty, Rating>("rating"));
+        table.getColumns().addAll(colText, colRate);
+        table.setItems(rows);
 
 
-        dialog.getDialogPane().setContent(list);
-
+        dialog.getDialogPane().setContent(table);
         dialog.setResultConverter(dialogButton -> {
             if(dialogButton == ButtonType.OK){
                 return null;
@@ -182,43 +174,40 @@ public class MenuController{
         };
         Map<Textual, Double> gunningResult = ((Content)mainApp.getIndex().getSummary().getRoot().getValue()).doOnTextual(calFlesh);
 
-        ObservableList<String> rows = FXCollections.observableArrayList();
+        ObservableList<ModelLisibilty> rows = FXCollections.observableArrayList();
         for(Entry<Textual, Double> entry : gunningResult.entrySet()){
-            String easy;
-            if(entry.getValue() >= 15){
-                easy = Configuration.bundle.getString("ui.level.very_difficult");
-            }else if(entry.getValue() >= 12){
-                easy = Configuration.bundle.getString("ui.level.difficult");
-            }else if(entry.getValue() >= 10){
-                easy = Configuration.bundle.getString("ui.level.quite_difficult");
-            }else if(entry.getValue() >= 8){
-                easy = Configuration.bundle.getString("ui.level.normal");
-            }else if(entry.getValue() >= 6){
-                easy = Configuration.bundle.getString("ui.level.easy");
-            }else{
-                easy = Configuration.bundle.getString("ui.level.very_easy");
+            String v1;
+            if(entry.getKey() instanceof MetaAttribute) {
+                MetaAttribute attribute = (MetaAttribute) entry.getKey();
+                v1 = attribute.getTitle()+ " (" + attribute.getParent().getTitle() + ")";
+            } else {
+                v1 = entry.getKey().getTitle();
             }
-
-            String v1 = entry.getKey().getTitle();
-            String v2 = entry.getValue().toString() + " (" + easy + ")";
-            rows.add(v1 + " => " + v2);
+            Double t = (entry.getValue()/100)*5;
+            Rating rating = new Rating(5, t.intValue());
+            rows.add(new ModelLisibilty(v1, rating));
         }
 
         // Create the custom dialog.
         CustomDialog<Pair<String, String>> dialog = new CustomDialog<>();
+        dialog.setResizable(true);
         dialog.setTitle(Configuration.bundle.getString("ui.menu.edit.readable.gunning_index"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.menu.edit.readable.gunning_index.header"));
 
         // Set the button types.
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        ListView<String> list = new ListView<>();
-        list.setPrefSize(800, 500);
-        list.setItems(rows);
+        TableView table = new TableView();
+        table.setPrefSize(600, 400);
+        TableColumn colText = new TableColumn();
+        colText.setCellValueFactory(new PropertyValueFactory<ModelLisibilty, String>("text"));
+        TableColumn colRate = new TableColumn();
+        colRate.setCellValueFactory(new PropertyValueFactory<ModelLisibilty, Rating>("rating"));
+        table.getColumns().addAll(colText, colRate);
+        table.setItems(rows);
 
 
-        dialog.getDialogPane().setContent(list);
-
+        dialog.getDialogPane().setContent(table);
         dialog.setResultConverter(dialogButton -> {
             if(dialogButton == ButtonType.OK){
                 return null;
