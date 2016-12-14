@@ -51,22 +51,22 @@ import java.util.HashMap;
 
 public class MainApp extends Application{
     public static Configuration config;
-    private static Stage primaryStage;
+    private Stage primaryStage;
     private static ZdsHttp zdsutils;
     private static Markdown mdUtils;
     private Scene scene;
     private BorderPane rootLayout;
     private ObservableMap<Textual, Tab> extracts = FXCollections.observableMap(new HashMap<>());
     private ObservableList<Content> contents = FXCollections.observableArrayList();
-    private MdTextController Index;
+    private MdTextController index;
     private StringBuilder key = new StringBuilder();
     private static Logger logger;
     private MenuController menuController;
     private PluginsManager pm;
     private static ContentsConfig contentsConfigPlugins;
     private static ContentsConfig contentsConfigThemes;
-    public static String[] args;
-    public static File defaultHome;
+    private static String[] args;
+    protected static File defaultHome;
 
     public MainApp() {
         super();
@@ -104,20 +104,21 @@ public class MainApp extends Application{
     }
 
     private void initEnvVariable() {
-        Path logPath = null;
-        Path logDir = null;
+        Path logPath;
+        Path logDir;
+        String appName = "zest-writer";
         String os = System.getProperty("os.name").toLowerCase();
         if(os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") >= 0) {
-            logPath = Paths.get(System.getProperty("user.home"), ".config", "zest-writer", "zest-writer.log");
+            logPath = Paths.get(System.getProperty("user.home"), ".config", appName, appName+".log");
             logDir = logPath.getParent();
         } else if(os.indexOf("win") >= 0) {
-            logPath = Paths.get(System.getProperty("user.home"), "AppData", "Local", "zest-writer",  "zest-writer.log");
+            logPath = Paths.get(System.getProperty("user.home"), "AppData", "Local", appName,  appName+".log");
             logDir = logPath.getParent();
         } else if(os.indexOf("mac") >= 0) {
-            logPath = Paths.get(System.getProperty("user.home"), "Library", "Application Support", "zest-writer", "zest-writer.log");
+            logPath = Paths.get(System.getProperty("user.home"), "Library", "Application Support", appName, appName+".log");
             logDir = logPath.getParent();
         } else {
-            logPath = Paths.get(System.getProperty("user.home"), "zest-writer.log");
+            logPath = Paths.get(System.getProperty("user.home"), appName+".log");
             logDir = logPath.getParent();
         }
         File dir = new File(logDir.toString());
@@ -133,7 +134,7 @@ public class MainApp extends Application{
         return config;
     }
 
-    public static Stage getPrimaryStage() {
+    public Stage getPrimaryStage() {
         return primaryStage;
     }
 
@@ -146,7 +147,7 @@ public class MainApp extends Application{
     }
 
     public MdTextController getIndex() {
-        return Index;
+        return index;
     }
 
     public ObservableList<Content> getContents() {
@@ -163,58 +164,58 @@ public class MainApp extends Application{
 
     public static Markdown getMdUtils() { return mdUtils; }
 
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+    }
+
     @Override
     public void start(Stage primaryStage) {
-        MainApp.primaryStage = primaryStage;
-        MainApp.primaryStage.setTitle(Configuration.bundle.getString("ui.app_name.text"));
-        MainApp.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("images/logo.png")));
-        MainApp.primaryStage.setMinWidth(400);
-        MainApp.primaryStage.setMinHeight(400);
+        setPrimaryStage(primaryStage);
+        getPrimaryStage().setTitle(Configuration.bundle.getString("ui.app_name.text"));
+        getPrimaryStage().getIcons().add(new Image(getClass().getResourceAsStream("images/logo.png")));
+        getPrimaryStage().setMinWidth(400);
+        getPrimaryStage().setMinHeight(400);
 
 
         if(config.isDisplayWindowMaximize()){
-            MainApp.primaryStage.setX(config.getDisplayWindowPositionX());
-            MainApp.primaryStage.setY(config.getDisplayWindowPositionY());
-            MainApp.primaryStage.setMaximized(true);
+            getPrimaryStage().setX(config.getDisplayWindowPositionX());
+            getPrimaryStage().setY(config.getDisplayWindowPositionY());
+            getPrimaryStage().setMaximized(true);
         }else{
             if(config.isDisplayWindowPersonnalDimension()){
-                MainApp.primaryStage.setWidth(config.getDisplayWindowWidth());
-                MainApp.primaryStage.setHeight(config.getDisplayWindowHeight());
+                getPrimaryStage().setWidth(config.getDisplayWindowWidth());
+                getPrimaryStage().setHeight(config.getDisplayWindowHeight());
             }else{
-                MainApp.primaryStage.setWidth(Double.parseDouble(Configuration.ConfigData.DisplayWindowWidth.getDefaultValue()));
-                MainApp.primaryStage.setHeight(Double.parseDouble(Configuration.ConfigData.DisplayWindowHeight.getDefaultValue()));
+                getPrimaryStage().setWidth(Double.parseDouble(Configuration.ConfigData.DisplayWindowWidth.getDefaultValue()));
+                getPrimaryStage().setHeight(Double.parseDouble(Configuration.ConfigData.DisplayWindowHeight.getDefaultValue()));
             }
             if(config.isDisplayWindowPersonnalPosition()){
-                MainApp.primaryStage.setX(config.getDisplayWindowPositionX());
-                MainApp.primaryStage.setY(config.getDisplayWindowPositionY());
+                getPrimaryStage().setX(config.getDisplayWindowPositionX());
+                getPrimaryStage().setY(config.getDisplayWindowPositionY());
             }
         }
 
-        MainApp.primaryStage.setOnCloseRequest(t -> {
-            // TODO: Plugin
-            //pm.disablePlugins();
+        getPrimaryStage().setOnCloseRequest(t -> {
 
-            if(MainApp.primaryStage.isMaximized() && config.isDisplayWindowPersonnalDimension())
+            if(getPrimaryStage().isMaximized() && config.isDisplayWindowPersonnalDimension())
                 config.setDisplayWindowMaximize("true");
 
             quitApp();
             t.consume();
         });
-        MainApp.primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> {
+        getPrimaryStage().widthProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowWidth(String.valueOf(newValue));
         });
-        MainApp.primaryStage.heightProperty().addListener((observable, oldValue, newValue) -> {
+        getPrimaryStage().heightProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowHeight(String.valueOf(newValue));
         });
-        MainApp.primaryStage.xProperty().addListener((observable, oldValue, newValue) -> {
+        getPrimaryStage().xProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowPositionX(String.valueOf(newValue));
         });
-        MainApp.primaryStage.yProperty().addListener((observable, oldValue, newValue) -> {
+        getPrimaryStage().yProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowPositionY(String.valueOf(newValue));
         });
 
-        // TODO: Plugin
-        //initPlugins();
         initRootLayout();
         showWriter();
         initConnection();
@@ -262,7 +263,7 @@ public class MainApp extends Application{
 
             MdTextController controller = loader.getController();
             controller.setMainApp(this);
-            Index = controller;
+            index = controller;
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
@@ -289,7 +290,9 @@ public class MainApp extends Application{
             menuController.gethBottomBox().getChildren().addAll(menuController.getLabelField());
             menuController.getLabelField().textProperty().bind(loginTask.messageProperty());
 
-            loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
+            loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue,
+                                                   Worker.State oldValue,
+                                                   Worker.State newValue) -> {
                 Alert alert = new CustomAlert(Alert.AlertType.NONE);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.auth.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.auth.state.header"));
@@ -314,14 +317,6 @@ public class MainApp extends Application{
 
             loginTask.start();
         }
-    }
-
-    public void initPlugins(){
-        contentsConfigPlugins = new ContentsConfig(ContentsDialog.ContentType.PLUGIN);
-        contentsConfigThemes = new ContentsConfig(ContentsDialog.ContentType.THEME);
-
-        pm = new PluginsManager(this);
-        pm.enablePlugins();
     }
 
     private void loadCombinason() {
