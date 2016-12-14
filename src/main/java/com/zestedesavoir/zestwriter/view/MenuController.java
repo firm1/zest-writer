@@ -320,7 +320,7 @@ public class MenuController{
         }
         defaultDirectory = new File(MainApp.getZdsutils().getOfflineContentPathDir());
         chooser.setInitialDirectory(defaultDirectory);
-        File selectedDirectory = chooser.showDialog(MainApp.getPrimaryStage());
+        File selectedDirectory = chooser.showDialog(mainApp.getPrimaryStage());
 
         if(selectedDirectory != null){
             File manifest = new File(selectedDirectory.getAbsolutePath() + File.separator + "manifest.json");
@@ -578,9 +578,9 @@ public class MenuController{
 
     @FXML private void HandleSwitchWorkspaceAction(ActionEvent event) throws IOException{
         DirectoryChooser fileChooser = new DirectoryChooser();
-        fileChooser.setInitialDirectory(MainApp.defaultHome);
+        fileChooser.setInitialDirectory(mainApp.getDefaultHome());
         fileChooser.setTitle(Configuration.bundle.getString("ui.dialog.switchworkspace"));
-        File selectedDirectory = fileChooser.showDialog(MainApp.getPrimaryStage());
+        File selectedDirectory = fileChooser.showDialog(mainApp.getPrimaryStage());
         if(selectedDirectory!=null) {
             MainApp.getConfig().setWorkspacePath(selectedDirectory.getAbsolutePath());
             MainApp.getConfig().loadWorkspace();
@@ -598,9 +598,9 @@ public class MenuController{
     @FXML private void HandleExportMarkdownButtonAction(ActionEvent event){
         Content content = mainApp.getContents().get(0);
         DirectoryChooser fileChooser = new DirectoryChooser();
-        fileChooser.setInitialDirectory(MainApp.defaultHome);
+        fileChooser.setInitialDirectory(mainApp.getDefaultHome());
         fileChooser.setTitle(Configuration.bundle.getString("ui.dialog.export.dir.title"));
-        File selectedDirectory = fileChooser.showDialog(MainApp.getPrimaryStage());
+        File selectedDirectory = fileChooser.showDialog(mainApp.getPrimaryStage());
         File selectedFile = new File(selectedDirectory, ZdsHttp.toSlug(content.getTitle()) + ".md");
         logger.debug("Tentative d'export vers le fichier " + selectedFile.getAbsolutePath());
 
@@ -622,9 +622,9 @@ public class MenuController{
     @FXML private void HandleExportPdfButtonAction(ActionEvent event){
         Content content = mainApp.getContents().get(0);
         DirectoryChooser fileChooser = new DirectoryChooser();
-        fileChooser.setInitialDirectory(MainApp.defaultHome);
+        fileChooser.setInitialDirectory(mainApp.getDefaultHome());
         fileChooser.setTitle(Configuration.bundle.getString("ui.dialog.export.dir.title"));
-        File selectedDirectory = fileChooser.showDialog(MainApp.getPrimaryStage());
+        File selectedDirectory = fileChooser.showDialog(mainApp.getPrimaryStage());
         File selectedFile = new File(selectedDirectory, ZdsHttp.toSlug(content.getTitle()) + ".pdf");
         logger.debug("Tentative d'export vers le fichier " + selectedFile.getAbsolutePath());
 
@@ -712,7 +712,7 @@ public class MenuController{
         dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.import.github.header"));
         dialog.setContentText(Configuration.bundle.getString("ui.dialog.import.github.text")+" :");
         dialog.getEditor().setPrefWidth(500);
-        dialog.initOwner(MainApp.getPrimaryStage());
+        dialog.initOwner(mainApp.getPrimaryStage());
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(url -> {
@@ -753,7 +753,7 @@ public class MenuController{
         dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.import.zds.header"));
         dialog.setContentText(Configuration.bundle.getString("ui.dialog.import.zds.text")+" :");
         dialog.getEditor().setPrefWidth(500);
-        dialog.initOwner(MainApp.getPrimaryStage());
+        dialog.initOwner(mainApp.getPrimaryStage());
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(url -> {
@@ -848,7 +848,7 @@ public class MenuController{
 
         Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.tools.external_contents"));
         dialogStage.setResizable(false);
-        dialogStage.initOwner(MainApp.getPrimaryStage());
+        dialogStage.initOwner(mainApp.getPrimaryStage());
 
         ContentsDialog contentsController = loader.getController();
         contentsController.setWindow(dialogStage);

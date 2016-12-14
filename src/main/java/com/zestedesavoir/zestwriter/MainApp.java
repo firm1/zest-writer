@@ -158,8 +158,8 @@ public class MainApp extends Application{
         return extracts;
     }
 
-    public PluginsManager getPluginsManager(){
-        return pm;
+    public static File getDefaultHome() {
+        return defaultHome;
     }
 
     public static Markdown getMdUtils() { return mdUtils; }

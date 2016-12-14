@@ -348,7 +348,7 @@ public class MdConvertController {
         ChoiceDialog<String> dialog = new ChoiceDialog<>("information", choices);
         FunctionTreeFactory.addTheming(dialog.getDialogPane());
         dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(MainApp.getPrimaryStage());
+        dialog.initOwner(mainApp.getPrimaryStage());
         dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.bloc.title"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.bloc.header"));
         dialog.setContentText(Configuration.bundle.getString("ui.editor.dialog.bloc.text"));
@@ -662,7 +662,7 @@ public class MdConvertController {
         dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.goto.title"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.goto.header"));
         dialog.setContentText(Configuration.bundle.getString("ui.editor.dialog.goto.text"));
-        dialog.initOwner(MainApp.getPrimaryStage());
+        dialog.initOwner(mainApp.getPrimaryStage());
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(line -> SourceText.positionCaret(SourceText.position(Integer.parseInt(line)-1, 0).toOffset()));

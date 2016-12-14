@@ -145,7 +145,7 @@ public class OptionsDialog{
     @FXML private void HandleGeneralBrowseAction(){
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle(Configuration.bundle.getString("ui.options.workspace"));
-        directoryChooser.setInitialDirectory(MainApp.defaultHome);
+        directoryChooser.setInitialDirectory(mainApp.getDefaultHome());
 
         File directory = directoryChooser.showDialog(null);
 
