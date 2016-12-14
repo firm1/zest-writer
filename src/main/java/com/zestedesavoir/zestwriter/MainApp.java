@@ -51,7 +51,7 @@ import java.util.HashMap;
 
 public class MainApp extends Application{
     public static Configuration config;
-    private Stage primaryStage;
+    private static Stage primaryStage;
     private static ZdsHttp zdsutils;
     private static Markdown mdUtils;
     private Scene scene;
@@ -134,7 +134,7 @@ public class MainApp extends Application{
         return config;
     }
 
-    public Stage getPrimaryStage() {
+    public static Stage getPrimaryStage() {
         return primaryStage;
     }
 

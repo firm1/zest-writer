@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 
 public class Configuration {
     private final Logger logger;
-    public Properties conf;
-    public Properties actions;
+    private Properties conf;
+    private Properties actions;
     private File confFile;
     private File actionFile;
     private StorageSaver offlineSaver;

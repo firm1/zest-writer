@@ -84,6 +84,10 @@ public class MenuController{
         this.mainApp = mainApp;
     }
 
+    public MainApp getMainApp() {
+        return mainApp;
+    }
+
     @FXML private void initialize() {
         if(FunctionTreeFactory.isMacOs()) {
             menuQuit.setAccelerator(new KeyCodeCombination(KeyCode.A, KeyCombination.SHORTCUT_DOWN));

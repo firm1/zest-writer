@@ -5,7 +5,6 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 public class CustomDialog<T> extends Dialog<T> {
 
