@@ -77,16 +77,17 @@ public class MainApp extends Application{
         initEnvVariable();
         logger = LoggerFactory.getLogger(MainApp.class);
 
-        java.util.logging.Logger logger2 = java.util.logging.Logger.getLogger(GlobalScreen.class.getPackage().getName());
-        logger2.setLevel(Level.OFF);
+        if(FunctionTreeFactory.isLinuxOs()){
+            java.util.logging.Logger logger2 = java.util.logging.Logger.getLogger(GlobalScreen.class.getPackage().getName());
+            logger2.setLevel(Level.OFF);
 
-        try{
-            GlobalScreen.registerNativeHook();
-            keyListener = new KeyListener();
-            GlobalScreen.addNativeKeyListener(keyListener);
-        }catch(NativeHookException e){
-            logger.error("Error for initialize KeyListener", e);
-            System.exit(1);
+            try{
+                GlobalScreen.registerNativeHook();
+                keyListener = new KeyListener();
+                GlobalScreen.addNativeKeyListener(keyListener);
+            }catch(NativeHookException e){
+                logger.error("Error for initialize KeyListener", e);
+            }
         }
 
         logger.info("Version Java de l'utilisateur: " + System.getProperty("java.version"));
@@ -124,13 +125,13 @@ public class MainApp extends Application{
         Path logDir;
         String appName = "zest-writer";
         String os = System.getProperty("os.name").toLowerCase();
-        if(os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") >= 0) {
+        if(FunctionTreeFactory.isLinuxOs()) {
             logPath = Paths.get(System.getProperty("user.home"), ".config", appName, appName+".log");
             logDir = logPath.getParent();
-        } else if(os.indexOf("win") >= 0) {
+        } else if(FunctionTreeFactory.isWindowsOs()) {
             logPath = Paths.get(System.getProperty("user.home"), "AppData", "Local", appName,  appName+".log");
             logDir = logPath.getParent();
-        } else if(os.indexOf("mac") >= 0) {
+        } else if(FunctionTreeFactory.isMacOs()) {
             logPath = Paths.get(System.getProperty("user.home"), "Library", "Application Support", appName, appName+".log");
             logDir = logPath.getParent();
         } else {

@@ -37,9 +37,17 @@ import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 public class FunctionTreeFactory {
-
     public static boolean isMacOs() {
-        return System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0;
+        return System.getProperty("os.name").toLowerCase().contains("mac");
+    }
+
+    public static boolean isWindowsOs(){
+        return System.getProperty("os.name").toLowerCase().contains("win");
+    }
+
+    public static boolean isLinuxOs(){
+        String os = System.getProperty("os.name").toLowerCase();
+        return os.contains("lin") || os.contains("nix") || os.contains("nux") || os.contains("aix") || os.contains("uni");
     }
 
     public static Map<String,Object> initContentDialog(Content defaultContent) {

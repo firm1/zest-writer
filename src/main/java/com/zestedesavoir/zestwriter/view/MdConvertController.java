@@ -8,6 +8,7 @@ import com.zestedesavoir.zestwriter.utils.FlipTable;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.com.*;
 import com.zestedesavoir.zestwriter.view.dialogs.ImageInputDialog;
+import com.ziclix.python.sql.pipe.Source;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanPropertyBase;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -86,8 +87,13 @@ public class MdConvertController {
         logger = LoggerFactory.getLogger(MdConvertController.class);
         SourceText = new CustomStyledClassedTextArea();
 
-        MainApp.keyListener.setSourceText(SourceText);
-        MainApp.keyListener.setMdConvertController(this);
+        if(FunctionTreeFactory.isLinuxOs()){
+            MainApp.keyListener.setSourceText(SourceText);
+
+            SourceText.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                MainApp.keyListener.setEnable(newValue);
+            });
+        }
     }
 
     public MdTextController getMdBox() {
@@ -133,8 +139,6 @@ public class MdConvertController {
                 updateRender();
             });
             updateRender();
-
-            MainApp.keyListener.setSourceText(SourceText);
         });
 
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
