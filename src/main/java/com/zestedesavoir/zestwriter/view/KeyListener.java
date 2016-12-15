@@ -1,8 +1,8 @@
 package com.zestedesavoir.zestwriter.view;
 
 import com.zestedesavoir.zestwriter.view.com.CustomStyledClassedTextArea;
-import com.ziclix.python.sql.pipe.Source;
 import javafx.application.Platform;
+import javafx.scene.input.KeyCode;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.jnativehook.keyboard.NativeKeyEvent;

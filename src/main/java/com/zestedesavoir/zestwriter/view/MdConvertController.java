@@ -97,7 +97,6 @@ public class MdConvertController {
         logger = LoggerFactory.getLogger(MdConvertController.class);
         SourceText = new CustomStyledClassedTextArea();
 
-        logger.info("Set sourceText for keyListener");
         MainApp.keyListener.setSourceText(SourceText);
         MainApp.keyListener.setMdConvertController(this);
     }

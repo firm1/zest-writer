@@ -44,7 +44,7 @@ public class TestConfig {
         assertFalse(config.isDisplayWindowMaximize());
         assertTrue(config.isDisplayWindowPersonnalDimension());
         assertTrue(config.isDisplayWindowPersonnalPosition());
-        assertEquals(config.isEditorToolbarView(), "yes");
+        assertEquals(config.isEditorToolbarView(), true);
         assertEquals(config.getEditorFontsize(), 14);
         assertEquals(config.getEditorFont(), "Fira Mono");
 
@@ -70,7 +70,7 @@ public class TestConfig {
         config.setDisplayWindowMaximize("true");
         config.setDisplayWindowPersonnalPosition("false");
         config.setDisplayWindowStandardDimension("false");
-        config.setEditorToolbarView("no");
+        config.setEditorToolbarView(false);
         config.setEditorFont("Arial");
         config.setEditorFontSize("13");
         config.saveConfFile();
