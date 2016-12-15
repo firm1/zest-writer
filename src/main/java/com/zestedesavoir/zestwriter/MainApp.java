@@ -7,6 +7,7 @@ import com.zestedesavoir.zestwriter.contents.internal.ContentsConfig;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Markdown;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
+import com.zestedesavoir.zestwriter.view.KeyListener;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
 import com.zestedesavoir.zestwriter.view.com.CustomAlert;
@@ -25,7 +26,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -36,8 +36,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +47,7 @@ import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.logging.Level;
 
 public class MainApp extends Application{
     public static Configuration config;
@@ -65,10 +67,23 @@ public class MainApp extends Application{
     private static ContentsConfig contentsConfigThemes;
     public static String[] args;
     public static File defaultHome;
+    public static KeyListener keyListener;
 
     public MainApp() {
         super();
         logger = LoggerFactory.getLogger(MainApp.class);
+
+        java.util.logging.Logger logger2 = java.util.logging.Logger.getLogger(GlobalScreen.class.getPackage().getName());
+        logger2.setLevel(Level.OFF);
+
+        try{
+            GlobalScreen.registerNativeHook();
+            keyListener = new KeyListener();
+            GlobalScreen.addNativeKeyListener(keyListener);
+        }catch(NativeHookException e){
+            logger.error("Error for initialize KeyListener", e);
+            System.exit(1);
+        }
 
         if(args.length > 0) {
             config = new Configuration(args[0]);

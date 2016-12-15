@@ -96,6 +96,10 @@ public class MdConvertController {
         super();
         logger = LoggerFactory.getLogger(MdConvertController.class);
         SourceText = new CustomStyledClassedTextArea();
+
+        logger.info("Set sourceText for keyListener");
+        MainApp.keyListener.setSourceText(SourceText);
+        MainApp.keyListener.setMdConvertController(this);
     }
 
     public MdTextController getMdBox() {
@@ -137,6 +141,8 @@ public class MdConvertController {
                 updateRender();
             });
             updateRender();
+
+            MainApp.keyListener.setSourceText(SourceText);
         });
 
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
@@ -769,5 +775,9 @@ public class MdConvertController {
         catch(JSException e) {
             return 0;
         }
+    }
+
+    public void appendSourceText(String text){
+        SourceText.appendText(text);
     }
 }
