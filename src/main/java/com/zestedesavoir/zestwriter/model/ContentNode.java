@@ -25,4 +25,5 @@ public interface ContentNode {
     default void renameTitle(String title) {
         setTitle(title);
     }
+    default boolean canMergeExtracts(Content c) {return false; }
 }

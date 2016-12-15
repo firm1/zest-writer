@@ -1,12 +1,45 @@
 package com.zestedesavoir.zestwriter.utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.zestedesavoir.zestwriter.model.MetadataContent;
+import javafx.util.Pair;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.LaxRedirectStrategy;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.impl.cookie.BasicClientCookie;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.zeroturnaround.zip.ZipUtil;
+
+import java.io.*;
 import java.net.HttpCookie;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
@@ -25,47 +58,6 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
-import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.*;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.impl.cookie.BasicClientCookie;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.ssl.SSLContextBuilder;
-import org.apache.http.ssl.SSLContexts;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.zestedesavoir.zestwriter.model.MetadataContent;
-
-import javafx.util.Pair;
-
-import javax.net.ssl.SSLContext;
-
 
 public class ZdsHttp {
     private String idUser;
@@ -82,7 +74,7 @@ public class ZdsHttp {
     private String cookies;
     private HttpClientContext context;
     private String localSlug;
-    private final Logger logger;
+    private static final Logger logger = LoggerFactory.getLogger(ZdsHttp.class);
     private static String USER_AGENT = "Mozilla/5.0";
     private Configuration config;
     private final static Pattern NONLATIN = Pattern.compile("[^\\w-]");
@@ -214,7 +206,6 @@ public class ZdsHttp {
 
     public ZdsHttp(Configuration config) {
         super();
-        logger = LoggerFactory.getLogger(ZdsHttp.class);
         this.config = config;
         this.protocol = config.getAdvancedServerProtocol();
         this.hostname = config.getAdvancedServerHost();
@@ -486,6 +477,22 @@ public class ZdsHttp {
         fos.close();
     }
 
+    public static File unzipOnlineContent(String zipFilePath, String destFolder) {
+        String dirname = Paths.get(zipFilePath).getFileName().toString();
+        dirname = dirname.substring(0, dirname.length() - 4);
+        // create output directory is not exists
+        File folder = new File(destFolder + File.separator + dirname);
+        logger.debug("Tentative de dezippage de " + zipFilePath + " dans " + folder.getAbsolutePath());
+        if (!folder.exists()) {
+            folder.mkdir();
+            logger.info("Dézippage dans " + folder.getAbsolutePath() + " réalisé avec succès");
+        } else {
+            logger.debug("Le répertoire dans lequel vous souhaitez dezipper existe déjà ");
+        }
+        ZipUtil.unpack(new File(zipFilePath), folder);
+        return folder;
+    }
+
     public void unzipOnlineContent(String zipFilePath) {
 
         byte[] buffer = new byte[1024];
@@ -534,5 +541,34 @@ public class ZdsHttp {
 
     public boolean isAuthenticated() {
         return authenticated;
+    }
+
+    public static String getZdsZipball(String id, String slug, String type, String destFolder) throws IOException{
+            CloseableHttpClient httpclient = HttpClients.custom()
+                    .setRedirectStrategy(new LaxRedirectStrategy())
+                    .build();
+            String urlForGet = "https://zestedesavoir.com/" + type + "/zip/"+ id + "/" + slug + ".zip";
+            logger.debug("Tentative de téléchargement du lien "+urlForGet);
+            logger.debug("Répertoire de téléchargement cible : "+destFolder);
+
+            HttpGet get = new HttpGet(urlForGet);
+
+            logger.debug("Execution de la requete http");
+
+            HttpResponse response = httpclient.execute(get);
+
+            InputStream is = response.getEntity().getContent();
+            String filePath = destFolder + File.separator + slug + ".zip";
+            FileOutputStream fos = new FileOutputStream(new File(filePath));
+
+
+            logger.debug("Début du téléchargement");
+            int inByte;
+            while ((inByte = is.read()) != -1)
+                fos.write(inByte);
+            is.close();
+            fos.close();
+            logger.debug("Archive téléchargée : "+filePath);
+            return filePath;
     }
 }

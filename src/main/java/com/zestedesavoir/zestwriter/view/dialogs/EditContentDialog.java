@@ -1,27 +1,32 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
-import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.License;
 import com.zestedesavoir.zestwriter.model.TypeContent;
 import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.view.com.CustomAlert;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.scene.control.*;
 import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
+import java.text.Normalizer;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Object>>>{
+	public static int MAX_TITLE_LENGTH = 80;
+	public static int MAX_SUBTITLE_LENGTH = 200;
+	private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
+	private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
+
 	public static ObservableList<TypeContent> typeOptions = FXCollections.observableArrayList(new TypeContent("ARTICLE", "Article"), new TypeContent("TUTORIAL","Tutoriel"));
     public static ObservableList<License> licOptions = FXCollections.observableArrayList(
         new License("CC BY", Configuration.bundle.getString("ui.content.label.license.ccby")),
@@ -33,6 +38,13 @@ public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Objec
         new License("Tous droits réservés", Configuration.bundle.getString("ui.content.label.license.allright")),
         new License("CC 0", Configuration.bundle.getString("ui.content.label.license.cc0"))
     );
+
+	public static String getSlug(String input) {
+		String nowhitespace = WHITESPACE.matcher(input).replaceAll("");
+		String normalized = Normalizer.normalize(nowhitespace, Normalizer.Form.NFD);
+		String slug = NONLATIN.matcher(normalized).replaceAll("");
+		return slug.toLowerCase(Locale.ENGLISH);
+	}
 
 	public EditContentDialog(Content defaultContent) {
 		super(Configuration.bundle.getString("ui.content.new.title"), Configuration.bundle.getString("ui.content.new.header"));
@@ -51,7 +63,19 @@ public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Objec
 	    grid.setPadding(new Insets(20, 150, 10, 10));
 
 	    TextField title = new TextField(defaultContent.getTitle());
-	    TextField subtitle = new TextField(defaultContent.getDescription());
+		title.textProperty().addListener((ov, oldValue, newValue) -> {
+            if (newValue.length() > MAX_TITLE_LENGTH) {
+                title.setText(oldValue);
+            }
+        });
+	    TextArea subtitle = new TextArea(defaultContent.getDescription());
+        subtitle.setWrapText(true);
+        subtitle.setPrefHeight(80);
+		subtitle.textProperty().addListener((ov, oldValue, newValue) -> {
+            if (newValue.length() > MAX_SUBTITLE_LENGTH) {
+                subtitle.setText(oldValue);
+            }
+        });
 	    ComboBox<TypeContent> type = new ComboBox<>(typeOptions);
 	    type.setValue(typeOptions.get(typeOptions.indexOf(new TypeContent(defaultContent.getType(), ""))));
 
@@ -81,6 +105,25 @@ public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Objec
 	            map.put("description",subtitle.getText());
 	            map.put("type",type.getValue().getCode());
 	            map.put("licence",license.getValue().getCode());
+				if(map.get("title").toString().length() == 0) {
+					CustomAlert alert = new CustomAlert(Alert.AlertType.ERROR);
+					alert.setTitle(Configuration.bundle.getString("ui.content.new.error.title.limit.title"));
+					alert.setHeaderText(Configuration.bundle.getString("ui.content.new.error.title.limit.header"));
+					alert.setContentText(Configuration.bundle.getString("ui.content.new.error.title.limit.text"));
+
+					alert.showAndWait();
+					return null;
+				}
+
+				if(getSlug(map.get("title").toString()).equals("")) {
+                    CustomAlert alert = new CustomAlert(Alert.AlertType.ERROR);
+                    alert.setTitle(Configuration.bundle.getString("ui.content.new.error.title.slug.title"));
+                    alert.setHeaderText(Configuration.bundle.getString("ui.content.new.error.title.slug.header"));
+                    alert.setContentText(Configuration.bundle.getString("ui.content.new.error.title.slug.text"));
+
+                    alert.showAndWait();
+                    return null;
+				}
 	            return new Pair<>("res", map);
 	        }
 	        return null;

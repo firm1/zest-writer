@@ -3,16 +3,18 @@ package com.zestedesavoir.zestwriter.view;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
+import com.zestedesavoir.zestwriter.model.MetaAttribute;
 import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
-import com.zestedesavoir.zestwriter.utils.GithubHttp;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.com.*;
 import com.zestedesavoir.zestwriter.view.dialogs.*;
 import com.zestedesavoir.zestwriter.view.task.*;
+import javafx.beans.property.BooleanPropertyBase;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,15 +29,20 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.controlsfx.control.Rating;
+import org.fxmisc.richtext.StyleClassedTextArea;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 import org.slf4j.Logger;
@@ -49,6 +56,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class MenuController{
     private MainApp mainApp;
@@ -64,7 +72,8 @@ public class MenuController{
     @FXML public GridPane hBottomBox;
     @FXML private Menu menuExport;
     @FXML private MenuItem menuQuit;
-
+    @FXML private MenuItem menuFindReplace;
+    public BooleanPropertyBase isOnReadingTab = new SimpleBooleanProperty(true);
 
     public MenuController(){
         super();
@@ -75,11 +84,16 @@ public class MenuController{
         this.mainApp = mainApp;
     }
 
+    public MainApp getMainApp() {
+        return mainApp;
+    }
+
     @FXML private void initialize() {
         if(FunctionTreeFactory.isMacOs()) {
             menuQuit.setAccelerator(new KeyCodeCombination(KeyCode.A, KeyCombination.SHORTCUT_DOWN));
         }
         labelField.getStyleClass().addAll("label-bottom");
+        menuFindReplace.disableProperty().bind(isOnReadingTab);
     }
 
     @FXML private void HandleQuitButtonAction(ActionEvent event){
@@ -89,7 +103,7 @@ public class MenuController{
     public static String markdownToHtml(MdTextController index, String chaine){
         PythonInterpreter console = index.getPyconsole();
         console.set("text", chaine);
-        console.exec("render = Markdown(extensions=(ZdsExtension({'inline': False, 'emoticons': smileys}),),safe_mode = 'escape', enable_attributes = False, tab_length = 4, output_format = 'html5', smart_emphasis = True, lazy_ol = True).convert(text)");
+        console.exec("render = mk_instance.convert(text)");
         PyString render = console.get("render", PyString.class);
         return render.toString();
     }
@@ -107,43 +121,40 @@ public class MenuController{
         };
         Map<Textual, Double> fleshResult = ((Content)mainApp.getIndex().getSummary().getRoot().getValue()).doOnTextual(calFlesh);
 
-        ObservableList<String> rows = FXCollections.observableArrayList();
+        ObservableList<ModelLisibilty> rows = FXCollections.observableArrayList();
         for(Entry<Textual, Double> entry : fleshResult.entrySet()){
-            String easy;
-            if(entry.getValue() < 30){
-                easy = Configuration.bundle.getString("ui.level.very_difficult");
-            }else if(entry.getValue() < 50){
-                easy = Configuration.bundle.getString("ui.level.difficult");
-            }else if(entry.getValue() < 60){
-                easy = Configuration.bundle.getString("ui.level.quite_difficult");
-            }else if(entry.getValue() < 70){
-                easy = Configuration.bundle.getString("ui.level.normal");
-            }else if(entry.getValue() < 80){
-                easy = Configuration.bundle.getString("ui.level.easy");
-            }else{
-                easy = Configuration.bundle.getString("ui.level.very_easy");
+            String v1;
+            if(entry.getKey() instanceof MetaAttribute) {
+                MetaAttribute attribute = (MetaAttribute) entry.getKey();
+                v1 = attribute.getTitle()+ " (" + attribute.getParent().getTitle() + ")";
+            } else {
+                v1 = entry.getKey().getTitle();
             }
-
-            String v1 = entry.getKey().getTitle();
-            String v2 = entry.getValue().toString() + " (" + easy + ")";
-            rows.add(v1 + " => " + v2);
+            Double t = (entry.getValue()/100)*5;
+            Rating rating = new Rating(5, t.intValue());
+            rows.add(new ModelLisibilty(v1, rating));
         }
 
         // Create the custom dialog.
         CustomDialog<Pair<String, String>> dialog = new CustomDialog<>();
+        dialog.setResizable(true);
         dialog.setTitle(Configuration.bundle.getString("ui.menu.edit.readable.flesch_index"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.menu.edit.readable.flesch_index.header"));
 
         // Set the button types.
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        ListView<String> list = new ListView<>();
-        list.setPrefSize(800, 500);
-        list.setItems(rows);
+        TableView table = new TableView();
+        table.setPrefSize(600, 400);
+        TableColumn colText = new TableColumn();
+        colText.setCellValueFactory(new PropertyValueFactory<ModelLisibilty, String>("text"));
+        TableColumn colRate = new TableColumn();
+        colRate.setCellValueFactory(new PropertyValueFactory<ModelLisibilty, Rating>("rating"));
+        table.getColumns().addAll(colText, colRate);
+        table.setItems(rows);
 
 
-        dialog.getDialogPane().setContent(list);
-
+        dialog.getDialogPane().setContent(table);
         dialog.setResultConverter(dialogButton -> {
             if(dialogButton == ButtonType.OK){
                 return null;
@@ -167,43 +178,40 @@ public class MenuController{
         };
         Map<Textual, Double> gunningResult = ((Content)mainApp.getIndex().getSummary().getRoot().getValue()).doOnTextual(calFlesh);
 
-        ObservableList<String> rows = FXCollections.observableArrayList();
+        ObservableList<ModelLisibilty> rows = FXCollections.observableArrayList();
         for(Entry<Textual, Double> entry : gunningResult.entrySet()){
-            String easy;
-            if(entry.getValue() >= 15){
-                easy = Configuration.bundle.getString("ui.level.very_difficult");
-            }else if(entry.getValue() >= 12){
-                easy = Configuration.bundle.getString("ui.level.difficult");
-            }else if(entry.getValue() >= 10){
-                easy = Configuration.bundle.getString("ui.level.quite_difficult");
-            }else if(entry.getValue() >= 8){
-                easy = Configuration.bundle.getString("ui.level.normal");
-            }else if(entry.getValue() >= 6){
-                easy = Configuration.bundle.getString("ui.level.easy");
-            }else{
-                easy = Configuration.bundle.getString("ui.level.very_easy");
+            String v1;
+            if(entry.getKey() instanceof MetaAttribute) {
+                MetaAttribute attribute = (MetaAttribute) entry.getKey();
+                v1 = attribute.getTitle()+ " (" + attribute.getParent().getTitle() + ")";
+            } else {
+                v1 = entry.getKey().getTitle();
             }
-
-            String v1 = entry.getKey().getTitle();
-            String v2 = entry.getValue().toString() + " (" + easy + ")";
-            rows.add(v1 + " => " + v2);
+            Double t = (entry.getValue()/100)*5;
+            Rating rating = new Rating(5, t.intValue());
+            rows.add(new ModelLisibilty(v1, rating));
         }
 
         // Create the custom dialog.
         CustomDialog<Pair<String, String>> dialog = new CustomDialog<>();
+        dialog.setResizable(true);
         dialog.setTitle(Configuration.bundle.getString("ui.menu.edit.readable.gunning_index"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.menu.edit.readable.gunning_index.header"));
 
         // Set the button types.
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        ListView<String> list = new ListView<>();
-        list.setPrefSize(800, 500);
-        list.setItems(rows);
+        TableView table = new TableView();
+        table.setPrefSize(600, 400);
+        TableColumn colText = new TableColumn();
+        colText.setCellValueFactory(new PropertyValueFactory<ModelLisibilty, String>("text"));
+        TableColumn colRate = new TableColumn();
+        colRate.setCellValueFactory(new PropertyValueFactory<ModelLisibilty, Rating>("rating"));
+        table.getColumns().addAll(colText, colRate);
+        table.setItems(rows);
 
 
-        dialog.getDialogPane().setContent(list);
-
+        dialog.getDialogPane().setContent(table);
         dialog.setResultConverter(dialogButton -> {
             if(dialogButton == ButtonType.OK){
                 return null;
@@ -316,7 +324,7 @@ public class MenuController{
         }
         defaultDirectory = new File(MainApp.getZdsutils().getOfflineContentPathDir());
         chooser.setInitialDirectory(defaultDirectory);
-        File selectedDirectory = chooser.showDialog(MainApp.getPrimaryStage());
+        File selectedDirectory = chooser.showDialog(mainApp.getPrimaryStage());
 
         if(selectedDirectory != null){
             File manifest = new File(selectedDirectory.getAbsolutePath() + File.separator + "manifest.json");
@@ -433,10 +441,30 @@ public class MenuController{
         hBottomBox.getChildren().clear();
         hBottomBox.add(labelField, 0, 0);
 
+        try {
+            if(mainApp.getContents ().get (0).isArticle()) {
+                MainApp.getZdsutils().initInfoOnlineContent("article");
+            } else {
+                MainApp.getZdsutils().initInfoOnlineContent("tutorial");
+            }
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        }
+
 
         List<MetadataContent> contents = new ArrayList<>();
         contents.add(new MetadataContent(null, "---"+Configuration.bundle.getString("ui.content.new.title")+"---", null));
-        contents.addAll(MainApp.getZdsutils().getContentListOnline());
+        List<MetadataContent> possibleContent;
+        if(mainApp.getContents ().get (0).isArticle()) {
+            possibleContent = MainApp.getZdsutils().getContentListOnline().stream()
+                    .filter(meta -> meta.isArticle())
+                    .collect(Collectors.toList());
+        } else {
+            possibleContent = MainApp.getZdsutils().getContentListOnline().stream()
+                    .filter(meta -> meta.isTutorial())
+                    .collect(Collectors.toList());
+        }
+        contents.addAll(possibleContent);
 
         Dialog<Pair<String, MetadataContent>> dialog = new CustomDialog<>();
         dialog.setTitle(Configuration.bundle.getString("ui.content.select.title"));
@@ -554,9 +582,9 @@ public class MenuController{
 
     @FXML private void HandleSwitchWorkspaceAction(ActionEvent event) throws IOException{
         DirectoryChooser fileChooser = new DirectoryChooser();
-        fileChooser.setInitialDirectory(MainApp.defaultHome);
+        fileChooser.setInitialDirectory(mainApp.getDefaultHome());
         fileChooser.setTitle(Configuration.bundle.getString("ui.dialog.switchworkspace"));
-        File selectedDirectory = fileChooser.showDialog(MainApp.getPrimaryStage());
+        File selectedDirectory = fileChooser.showDialog(mainApp.getPrimaryStage());
         if(selectedDirectory!=null) {
             MainApp.getConfig().setWorkspacePath(selectedDirectory.getAbsolutePath());
             MainApp.getConfig().loadWorkspace();
@@ -574,9 +602,9 @@ public class MenuController{
     @FXML private void HandleExportMarkdownButtonAction(ActionEvent event){
         Content content = mainApp.getContents().get(0);
         DirectoryChooser fileChooser = new DirectoryChooser();
-        fileChooser.setInitialDirectory(MainApp.defaultHome);
+        fileChooser.setInitialDirectory(mainApp.getDefaultHome());
         fileChooser.setTitle(Configuration.bundle.getString("ui.dialog.export.dir.title"));
-        File selectedDirectory = fileChooser.showDialog(MainApp.getPrimaryStage());
+        File selectedDirectory = fileChooser.showDialog(mainApp.getPrimaryStage());
         File selectedFile = new File(selectedDirectory, ZdsHttp.toSlug(content.getTitle()) + ".md");
         logger.debug("Tentative d'export vers le fichier " + selectedFile.getAbsolutePath());
 
@@ -598,9 +626,9 @@ public class MenuController{
     @FXML private void HandleExportPdfButtonAction(ActionEvent event){
         Content content = mainApp.getContents().get(0);
         DirectoryChooser fileChooser = new DirectoryChooser();
-        fileChooser.setInitialDirectory(MainApp.defaultHome);
+        fileChooser.setInitialDirectory(mainApp.getDefaultHome());
         fileChooser.setTitle(Configuration.bundle.getString("ui.dialog.export.dir.title"));
-        File selectedDirectory = fileChooser.showDialog(MainApp.getPrimaryStage());
+        File selectedDirectory = fileChooser.showDialog(mainApp.getPrimaryStage());
         File selectedFile = new File(selectedDirectory, ZdsHttp.toSlug(content.getTitle()) + ".pdf");
         logger.debug("Tentative d'export vers le fichier " + selectedFile.getAbsolutePath());
 
@@ -643,6 +671,19 @@ public class MenuController{
         dialogStage.show();
     }
 
+    @FXML private void HandleFindReplaceAction(ActionEvent event){
+        SplitPane sPane = (SplitPane) mainApp.getExtracts()
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().isSelected())
+                .findFirst()
+                .get()
+                .getValue().getContent();
+        BorderPane bPane = (BorderPane) sPane.getItems().get(0);
+        StyleClassedTextArea source = (StyleClassedTextArea) bPane.getCenter();
+        FunctionTreeFactory.OpenFindReplaceDialog(mainApp, source);
+    }
+
     @FXML private void HandleAboutButtonAction(ActionEvent event){
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/AboutDialog.fxml"));
 
@@ -675,7 +716,7 @@ public class MenuController{
         dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.import.github.header"));
         dialog.setContentText(Configuration.bundle.getString("ui.dialog.import.github.text")+" :");
         dialog.getEditor().setPrefWidth(500);
-        dialog.initOwner(MainApp.getPrimaryStage());
+        dialog.initOwner(mainApp.getPrimaryStage());
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(url -> {
@@ -710,6 +751,47 @@ public class MenuController{
         });
     }
 
+    @FXML private void HandleImportZdsButtonAction() {
+        TextInputDialog dialog = new TextInputDialog("https://zestedesavoir.com/");
+        dialog.setTitle(Configuration.bundle.getString("ui.dialog.import.zds.title"));
+        dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.import.zds.header"));
+        dialog.setContentText(Configuration.bundle.getString("ui.dialog.import.zds.text")+" :");
+        dialog.getEditor().setPrefWidth(500);
+        dialog.initOwner(mainApp.getPrimaryStage());
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(url -> {
+            hBottomBox.getChildren().clear();
+            hBottomBox.add(pb, 0, 0);
+            hBottomBox.add(labelField, 1, 0);
+            DownloadZdsService downloadZdsTask = new DownloadZdsService(url, MainApp.getZdsutils().getOfflineContentPathDir(), MainApp.getZdsutils().getOnlineContentPathDir());
+            labelField.textProperty().bind(downloadZdsTask.messageProperty());
+            pb.progressProperty().bind(downloadZdsTask.progressProperty());
+            Alert alert = new CustomAlert(AlertType.NONE);
+            downloadZdsTask.setOnFailed (t -> {
+                alert.setAlertType(AlertType.ERROR);
+                alert.setTitle(Configuration.bundle.getString("ui.dialog.download.zds.failed.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.download.zds.failed.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.download.zds.failed.text"));
+                alert.showAndWait();
+                hBottomBox.getChildren().clear();
+            });
+            downloadZdsTask.setOnSucceeded (t -> {
+                FunctionTreeFactory.switchContent (downloadZdsTask.getValue (), mainApp.getContents ());
+                alert.setAlertType(AlertType.INFORMATION);
+                alert.setTitle(Configuration.bundle.getString("ui.dialog.download.zds.success.title"));
+                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.download.zds.success.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.download.zds.success.text"));
+                alert.showAndWait();
+                hBottomBox.getChildren().clear();
+            });
+
+            if(result.isPresent()){
+                downloadZdsTask.start();
+            }
+        });
+    }
+
     @FXML private void HandleCheckUpdateButtonAction(ActionEvent event){
         Service<Boolean> checkService = new Service<Boolean>() {
             @Override
@@ -722,7 +804,15 @@ public class MenuController{
                         if(versionOnline == null) {
                             throw new IOException();
                         } else {
-                            return versionOnline.equals(current);
+                            String[] locale_tab = current.split(".");
+                            for(String s:locale_tab) {
+                                try {
+                                    Integer.valueOf(s);
+                                } catch(Exception e) {
+                                    return true;
+                                }
+                            }
+                            return versionOnline.compareTo(current) <= 0;
                         }
                     }
                 };
@@ -762,7 +852,7 @@ public class MenuController{
 
         Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.tools.external_contents"));
         dialogStage.setResizable(false);
-        dialogStage.initOwner(MainApp.getPrimaryStage());
+        dialogStage.initOwner(mainApp.getPrimaryStage());
 
         ContentsDialog contentsController = loader.getController();
         contentsController.setWindow(dialogStage);

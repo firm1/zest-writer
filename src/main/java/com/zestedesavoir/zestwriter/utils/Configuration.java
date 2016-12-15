@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 
 public class Configuration {
     private final Logger logger;
-    public Properties conf;
-    public Properties actions;
+    private Properties conf;
+    private Properties actions;
     private File confFile;
     private File actionFile;
     private StorageSaver offlineSaver;
@@ -101,7 +101,7 @@ public class Configuration {
         conf = new Properties(props);
 
         if(!confFile.exists()) {
-            logger.debug("le fichier de configuartion "+confFile.getAbsolutePath()+" n'existe pas");
+            logger.debug("le fichier de configuration "+confFile.getAbsolutePath()+" n'existe pas");
             setWorkspacePath(Configuration.getDefaultWorkspace());
             saveConfFile();
         }
@@ -247,7 +247,7 @@ public class Configuration {
         conf.setProperty(ConfigData.ContentsPath.getKey(), path);
     }
 
-    public Boolean getEditorSmart(){
+    public boolean isEditorSmart(){
         return getGenericBooleanDisplay(ConfigData.EditorSmart);
     }
 
@@ -424,10 +424,12 @@ public class Configuration {
     }
 
     public String getAdvancedServerPort(){
-        if(conf.containsKey(ConfigData.AdvancedServerPort.getKey()))
+        if(conf.containsKey(ConfigData.AdvancedServerPort.getKey())) {
             return conf.getProperty(ConfigData.AdvancedServerPort.getKey());
-        else
+        }
+        else {
             return ConfigData.AdvancedServerPort.getDefaultValue();
+        }
     }
 
     public void setAdvancedServerPort(String port){
@@ -513,9 +515,9 @@ public class Configuration {
         EditorSmart("options.editor.smart", "true"),
         EditorFont("options.editor.font", "Fira Mono"),
         EditorFontSize("options.editor.fontSize", "14"),
-        EditorToolbarView("options.editor.toolbar.view", "yes"),
-        EditorLinenoView("options.editor.lineno.view", "yes"),
-        EditorRenderView("options.editor.render.view", "yes"),
+        EditorToolbarView("options.editor.toolbar.view", "true"),
+        EditorLinenoView("options.editor.lineno.view", "true"),
+        EditorRenderView("options.editor.render.view", "true"),
         DisplayTheme("options.display.theme", "light.css"),
         DisplayLang("options.display.lang", Locale.FRANCE.toString()),
         DisplayWindowPersonnalDimension("options.display.window.standardDimension", "true"),
@@ -527,9 +529,9 @@ public class Configuration {
         AdvancedApiServerHost("options.advanced.host", "winxaito.com"),
         AdvancedApiServerUri("options.advanced.host", "api"),
         AdvancedApiServerPort("options.advanced.port", "80"),
-        AdvancedServerProtocol("options.advanced.protocol", "https"),
-        AdvancedServerHost("options.advanced.host", "zestedesavoir.com"),
-        AdvancedServerPort("options.advanced.port", "80");
+        AdvancedServerProtocol("server.protocol", "https"),
+        AdvancedServerHost("server.host", "zestedesavoir.com"),
+        AdvancedServerPort("server.port", "443");
 
         private String key;
         private String defaultValue;

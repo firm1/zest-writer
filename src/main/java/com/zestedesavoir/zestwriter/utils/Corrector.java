@@ -1,5 +1,8 @@
 package com.zestedesavoir.zestwriter.utils;
 
+import com.zestedesavoir.zestwriter.view.MdTextController;
+import com.zestedesavoir.zestwriter.view.MenuController;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.examples.HtmlToPlainText;
 import org.languagetool.JLanguageTool;
@@ -78,7 +81,7 @@ public class Corrector {
         return st.toString();
     }
 
-    private AnnotatedText makeAnnotatedText(String pseudoXml) {
+    public AnnotatedText makeAnnotatedText(String pseudoXml) {
         AnnotatedTextBuilder builder = new AnnotatedTextBuilder();
         StringTokenizer tokenizer = new StringTokenizer(pseudoXml, "<>", true);
         boolean inMarkup = false;
@@ -197,5 +200,21 @@ public class Corrector {
             }
         }
         return bf.toString();
+    }
+
+    public int countMistakes(MdTextController mdTextController, String markdown) {
+        String htmlText = StringEscapeUtils.unescapeHtml(MenuController.markdownToHtml(mdTextController, markdown));
+        AnnotatedText markup = makeAnnotatedText(htmlText);
+
+        langTool.getAllActiveRules().stream()
+                .filter(rule -> rule instanceof SpellingCheckRule).forEach(rule -> ((SpellingCheckRule) rule).acceptPhrases(wordsToIgnore));
+        try {
+            List<RuleMatch> matches = matches = langTool.check(markup);
+            return matches.size();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

@@ -3,15 +3,9 @@ import com.zestedesavoir.zestwriter.utils.Corrector;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.languagetool.JLanguageTool;
-import org.languagetool.language.French;
-import org.languagetool.markup.AnnotatedText;
-import org.languagetool.rules.RuleMatch;
-
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotSame;
 
 public class TestCorrect {
 
@@ -37,7 +31,7 @@ public class TestCorrect {
     public void testEscapeCodeRejectIfNotInMarkup() {
         String txt = "<p>Tapez sudo apt-get install vim</p>";
         String result = corrector.checkHtmlContent(StringEscapeUtils.unescapeHtml(txt));
-        assertNotEquals(result, txt);
+        assertNotSame(result, txt);
     }
 
     @Test
@@ -51,7 +45,7 @@ public class TestCorrect {
     public void testEscapeCodeAcceptNotInMarkupButRejectWhenOut() {
         String txt="<p>Tapez <code>sudo apt-get install vim</code> mon sudo est dehors</p>";
         String result = corrector.checkHtmlContent(StringEscapeUtils.unescapeHtml(txt));
-        assertNotEquals(result, txt);
+        assertNotSame(result, txt);
     }
 
     @Test

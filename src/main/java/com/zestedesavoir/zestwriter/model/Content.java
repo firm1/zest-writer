@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
+import com.zestedesavoir.zestwriter.view.com.IconFactory;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -17,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-@JsonIgnoreProperties({"basePath", "filePath", "editable", "countChildrenExtract", "countDescendantContainer" ,"rootContent", "depth"})
+@JsonIgnoreProperties({"basePath", "filePath", "editable", "countChildrenExtract", "countDescendantContainer" ,"rootContent", "depth", "tutorial", "article"})
 public class Content extends Container implements ContentNode{
     private int _version;
     private String _licence;
@@ -95,6 +97,23 @@ public class Content extends Container implements ContentNode{
         sb.append("# ").append(getConclusion().getTitle()).append("\n\n");
         sb.append(getConclusion().readMarkdown());
         return sb.toString();
+    }
+
+    @Override
+    public MaterialDesignIconView buildIcon() {
+        if(getType().equals("ARTICLE")) {
+            return IconFactory.createArticleIcon();
+        } else {
+            return IconFactory.createTutorialIcon();
+        }
+    }
+
+    public boolean isArticle() {
+        return getType().equals("ARTICLE");
+    }
+
+    public boolean isTutorial() {
+        return getType().equals("TUTORIAL");
     }
 
     public void saveToMarkdown(File file) {

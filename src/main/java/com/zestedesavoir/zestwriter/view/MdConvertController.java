@@ -7,10 +7,10 @@ import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.FlipTable;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.com.*;
-import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.ImageInputDialog;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanPropertyBase;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
@@ -69,18 +69,7 @@ public class MdConvertController {
     private int yRenderPosition = 0;
     private StringProperty countChars = new SimpleStringProperty();
     private StringProperty countWords = new SimpleStringProperty();
-    private BooleanPropertyBase isSaved = new BooleanPropertyBase(true) {
-
-        @Override
-        public String getName() {
-            return null;
-        }
-
-        @Override
-        public Object getBean() {
-            return null;
-        }
-    };
+    private BooleanPropertyBase isSaved = new SimpleBooleanProperty(true);
     private boolean isRenderExternalWindow = false;
 
     @FXML private WebView renderView;
@@ -128,7 +117,11 @@ public class MdConvertController {
 
         BoxEditor.setCenter(SourceText);
         SourceText.setStyle("-fx-font-family: \"" + MainApp.getConfig().getEditorFont() + "\";-fx-font-size: " + MainApp.getConfig().getEditorFontsize() + ";");
-        initRenderTask();
+        if(MainApp.config.isEditorRenderView()) {
+            initRenderTask();
+        } else {
+            splitPane.getItems().remove(1);
+        }
         Platform.runLater(() -> {
             SourceText.replaceText(extract.getMarkdown());
             initStats();
@@ -172,7 +165,7 @@ public class MdConvertController {
             EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
                     EventHandlerHelper.on(keyPressed(KeyCode.Q, SHORTCUT_DOWN)).act( ev -> SourceText.selectAll()).create());
         }
-        if(MainApp.getConfig().getEditorSmart()) {
+        if(MainApp.getConfig().isEditorSmart()) {
             EventHandlerHelper.install(SourceText.onKeyReleasedProperty(),
                     EventHandlerHelper.on(keyReleased(KeyCode.TAB)).act(ev -> HandleSmartTab()).create());
             EventHandlerHelper.install(SourceText.onKeyReleasedProperty(),
@@ -355,11 +348,12 @@ public class MdConvertController {
         choices.add("question");
         choices.add("attention");
         choices.add("erreur");
+        choices.add("secret");
 
         ChoiceDialog<String> dialog = new ChoiceDialog<>("information", choices);
         FunctionTreeFactory.addTheming(dialog.getDialogPane());
         dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(MainApp.getPrimaryStage());
+        dialog.initOwner(mainApp.getPrimaryStage());
         dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.bloc.title"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.bloc.header"));
         dialog.setContentText(Configuration.bundle.getString("ui.editor.dialog.bloc.text"));
@@ -531,51 +525,51 @@ public class MdConvertController {
      * Render Toolbar Action
      */
 
+    public void addTreeSummary() {
+        mdBox.getSplitPane().getItems().add(0, mdBox.treePane);
+        mdBox.getSplitPane().setDividerPositions(0.2);
+        SplitPane.setResizableWithParent(mdBox.treePane,Boolean.FALSE);
+    }
+
     @FXML private void HandleFullScreeenButtonAction(ActionEvent event) {
         if (mdBox.getSplitPane().getItems().size() > 1) {
             mdBox.getSplitPane().getItems().remove(0);
         } else {
-            mdBox.getSplitPane().getItems().add(0, mdBox.treePane);
-            mdBox.getSplitPane().setDividerPositions(0.2);
-            SplitPane.setResizableWithParent(mdBox.treePane,Boolean.FALSE);
+            addTreeSummary();
         }
     }
 
     private void initRenderTask() {
-        if(MainApp.config.isEditorRenderView()) {
-            renderTask = new Service<String>() {
-                @Override
-                protected Task<String> createTask() {
-                    return new Task<String>() {
-                        @Override
-                        protected String call() throws Exception {
-                            String html = markdownToHtml(SourceText.getText());
-                            if (html != null) {
-                                return mainApp.getMdUtils().addHeaderAndFooter(html);
-                            } else {
-                                Thread.sleep(5000);
-                                throw new IOException();
+        renderTask = new Service<String>() {
+            @Override
+            protected Task<String> createTask() {
+                return new Task<String>() {
+                    @Override
+                    protected String call() throws Exception {
+                        String html = markdownToHtml(SourceText.getText());
+                        if (html != null) {
+                            return mainApp.getMdUtils().addHeaderAndFooter(html);
+                        } else {
+                            Thread.sleep(5000);
+                            throw new IOException();
 
-                            }
                         }
+                    }
 
-                    };
-                }
-            };
+                };
+            }
+        };
 
-            renderTask.setOnFailed(t -> {
-                renderTask.restart();
-            });
-            renderTask.setOnSucceeded(t -> {
-                yRenderPosition = getVScrollValue(renderView);
-                xRenderPosition = getHScrollValue(renderView);
-                renderView.getEngine().loadContent(renderTask.valueProperty().getValue());
-                renderTask.reset();
+        renderTask.setOnFailed(t -> {
+            renderTask.restart();
+        });
+        renderTask.setOnSucceeded(t -> {
+            yRenderPosition = getVScrollValue(renderView);
+            xRenderPosition = getHScrollValue(renderView);
+            renderView.getEngine().loadContent(renderTask.valueProperty().getValue());
+            renderTask.reset();
 
-            });
-        }else{
-            splitPane.getItems().remove(1);
-        }
+        });
     }
 
     @FXML public void updateRender() {
@@ -591,8 +585,8 @@ public class MdConvertController {
                             scrollTo(renderView, xRenderPosition, yRenderPosition);
                         }
                     });
-            performStats();
         }
+        performStats();
     }
 
     @FXML private void HandleValidateButtonAction(ActionEvent event) {
@@ -673,7 +667,7 @@ public class MdConvertController {
         dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.goto.title"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.goto.header"));
         dialog.setContentText(Configuration.bundle.getString("ui.editor.dialog.goto.text"));
-        dialog.initOwner(MainApp.getPrimaryStage());
+        dialog.initOwner(mainApp.getPrimaryStage());
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(line -> SourceText.positionCaret(SourceText.position(Integer.parseInt(line)-1, 0).toOffset()));
@@ -681,18 +675,14 @@ public class MdConvertController {
 
 
     public String markdownToHtml(String chaine) {
-        if(MainApp.config.isEditorRenderView()) {
-            PythonInterpreter console = getMdBox().getPyconsole();
-            if (console != null) {
-                console.set("text", chaine);
-                console.exec(
-                        "render = Markdown(extensions=(ZdsExtension({'inline': False, 'emoticons': smileys}),),safe_mode = 'escape', enable_attributes = False, tab_length = 4, output_format = 'html5', smart_emphasis = True, lazy_ol = True).convert(text)");
-                PyString render = console.get("render", PyString.class);
-                return render.toString();
-            } else {
-                return null;
-            }
-        }else{
+        PythonInterpreter console = getMdBox().getPyconsole();
+        if (console != null) {
+            console.set("text", chaine);
+            console.exec(
+                    "render = mk_instance.convert(text)");
+            PyString render = console.get("render", PyString.class);
+            return render.toString();
+        } else {
             return null;
         }
     }
@@ -719,18 +709,7 @@ public class MdConvertController {
     }
 
     @FXML private void HandleFindReplaceDialog(){
-        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/FindReplaceDialog.fxml"));
-
-        Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.dialog.find.title"));
-        dialogStage.setTitle(Configuration.bundle.getString("ui.dialog.find.title"));
-        dialogStage.setResizable(false);
-
-        FindReplaceDialog findReplaceDialog = loader.getController();
-        findReplaceDialog.setMainApp(mainApp);
-        findReplaceDialog.setWindow(dialogStage);
-        findReplaceDialog.setMdConvertController(this);
-
-        dialogStage.show();
+        FunctionTreeFactory.OpenFindReplaceDialog(mainApp, SourceText);
     }
 
     /**

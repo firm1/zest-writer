@@ -6,11 +6,13 @@ import com.sun.javafx.scene.control.skin.TabPaneSkin;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
+import com.zestedesavoir.zestwriter.model.MetaAttribute;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.view.com.*;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
-import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.Task;
 import javafx.event.Event;
@@ -57,6 +59,14 @@ public class MdTextController {
             loadConsolePython();
 
         loadFonts();
+        EditorList.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<Tab>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
+                        mainApp.getMenuController().isOnReadingTab.set(! (newValue.getContent() instanceof SplitPane));
+                    }
+                }
+        );
     }
 
     public TabPane getEditorList() {
@@ -77,6 +87,7 @@ public class MdTextController {
             pyconsole.exec("from markdown import Markdown");
             pyconsole.exec("from markdown.extensions.zds import ZdsExtension");
             pyconsole.exec("from smileys_definition import smileys");
+            pyconsole.exec("mk_instance = Markdown(extensions=(ZdsExtension(inline=False, emoticons=smileys, js_support=False, ping_url=None),),safe_mode = 'escape', enable_attributes = False, tab_length = 4, output_format = 'html5', smart_emphasis = True, lazy_ol = True)");
             logger.info("PYTHON STARTED");
             pythonStarted=true;
         }).start();
@@ -216,6 +227,20 @@ public class MdTextController {
         }
     }
 
+    private TreeItem<ContentNode> selectItemOnTree(TreeItem<ContentNode> item, Textual textual) {
+        for(TreeItem<ContentNode> node: item.getChildren()) {
+            if(node.getValue().getFilePath().equals(textual.getFilePath())) {
+                return node;
+            } else {
+                TreeItem<ContentNode> it = selectItemOnTree(node, textual);
+                if(it != null) {
+                    return it;
+                }
+            }
+        }
+        return null;
+    }
+
     public void createTabExtract(Textual extract) throws IOException {
         logger.debug("Tentative de création d'un nouvel onglet pour "+extract.getTitle());
         extract.loadMarkdown();
@@ -267,7 +292,20 @@ public class MdTextController {
             EditorList.getTabs().remove(tab);
             mainApp.getExtracts().remove(extract);
             t.consume();
+            if (getSplitPane().getItems().size() <= 1) {
+                if(EditorList.getTabs().size() == 1) {
+                    controllerConvert.addTreeSummary();
+                }
+            }
         });
+        tab.setOnSelectionChanged(t -> {
+            TreeItem<ContentNode> selected = selectItemOnTree(Summary.getRoot(), extract);
+            if(selected != null) {
+                Summary.getSelectionModel().select(selected);
+            }
+        });
+
+        Summary.getSelectionModel().select(selectItemOnTree(Summary.getRoot(), extract));
 
         mainApp.getExtracts().put(extract, tab);
         logger.info("Nouvel onglet crée pour "+extract.getTitle());

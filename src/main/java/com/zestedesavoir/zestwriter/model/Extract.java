@@ -9,7 +9,7 @@ import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -94,7 +94,7 @@ public class Extract extends MetaContent implements Textual, ContentNode{
 
     @Override
     public <R> Map<Textual, R> doOnTextual(Function<Textual,R> f) {
-        Map<Textual, R> map = new HashMap<>();
+        Map<Textual, R> map = new LinkedHashMap<>();
 
         map.put(this, f.apply(this));
 

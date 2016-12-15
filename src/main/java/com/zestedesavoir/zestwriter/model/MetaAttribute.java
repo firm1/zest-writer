@@ -54,9 +54,12 @@ public class MetaAttribute implements Textual, ContentNode{
     }
 
     public void setBasePath(String basePath) {
-
         this.basePath = basePath;
         File base = new File(getFilePath());
+        File parent = base.getParentFile();
+        if(!parent.exists()) {
+            parent.mkdirs();
+        }
         if(! base.exists()) {
             try {
                 base.createNewFile();
@@ -105,4 +108,8 @@ public class MetaAttribute implements Textual, ContentNode{
         return super.equals(obj);
     }
 
+    @Override
+    public boolean isEditable() {
+        return false;
+    }
 }

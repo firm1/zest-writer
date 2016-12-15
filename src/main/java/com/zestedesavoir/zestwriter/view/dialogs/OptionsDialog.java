@@ -145,12 +145,13 @@ public class OptionsDialog{
     @FXML private void HandleGeneralBrowseAction(){
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle(Configuration.bundle.getString("ui.options.workspace"));
-        directoryChooser.setInitialDirectory(MainApp.defaultHome);
+        directoryChooser.setInitialDirectory(mainApp.getDefaultHome());
 
         File directory = directoryChooser.showDialog(null);
 
         if(directory != null && directory.exists()){
             config.setWorkspacePath(directory.getAbsolutePath());
+            workspacepath.setText(directory.getAbsolutePath());
         }
     }
 
@@ -224,7 +225,7 @@ public class OptionsDialog{
         optEditorToolbarView = config.isEditorToolbarView();
         optEditorLinenoView = config.isEditorLinenoView();
         optEditorRenderView = config.isEditorRenderView();
-        optSmartEditor = config.getEditorSmart();
+        optSmartEditor = config.isEditorSmart();
 
         optEditorToolbarViewYes.setSelected(optEditorToolbarView);
         optEditorToolbarViewNo.setSelected(!optEditorToolbarView);

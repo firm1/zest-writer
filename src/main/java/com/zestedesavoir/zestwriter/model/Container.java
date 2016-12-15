@@ -13,7 +13,7 @@ import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -149,6 +149,11 @@ public class Container extends MetaContent implements ContentNode {
     }
 
     @Override
+    public boolean canMergeExtracts(Content c) {
+        return getCountChildrenExtract() > 0 && getCountAncestorsContainer(c) < 3;
+    }
+
+    @Override
     public boolean isMoveableIn(ContentNode receiver, Content root) {
         if(receiver instanceof MetaAttribute) {
             if(receiver.getTitle().equalsIgnoreCase("conclusion")) {
@@ -196,7 +201,7 @@ public class Container extends MetaContent implements ContentNode {
 
     @Override
     public <R> Map<Textual, R> doOnTextual(Function<Textual,R> f) {
-        Map<Textual, R> map = new HashMap<>();
+        Map<Textual, R> map = new LinkedHashMap<>();
 
         map.put(getIntroduction(), f.apply(getIntroduction()));
 

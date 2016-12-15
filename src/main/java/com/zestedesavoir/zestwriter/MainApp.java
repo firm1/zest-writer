@@ -1,9 +1,9 @@
 package com.zestedesavoir.zestwriter;
 
+import com.zestedesavoir.zestwriter.contents.internal.ContentsConfig;
+import com.zestedesavoir.zestwriter.contents.plugins.PluginsManager;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
-import com.zestedesavoir.zestwriter.contents.plugins.PluginsManager;
-import com.zestedesavoir.zestwriter.contents.internal.ContentsConfig;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Markdown;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
@@ -13,7 +13,6 @@ import com.zestedesavoir.zestwriter.view.MenuController;
 import com.zestedesavoir.zestwriter.view.com.CustomAlert;
 import com.zestedesavoir.zestwriter.view.com.CustomFXMLLoader;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
-import com.zestedesavoir.zestwriter.view.dialogs.ContentsDialog;
 import com.zestedesavoir.zestwriter.view.task.LoginService;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -46,6 +45,8 @@ import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.logging.Level;
 
@@ -58,7 +59,7 @@ public class MainApp extends Application{
     private BorderPane rootLayout;
     private ObservableMap<Textual, Tab> extracts = FXCollections.observableMap(new HashMap<>());
     private ObservableList<Content> contents = FXCollections.observableArrayList();
-    private MdTextController Index;
+    private MdTextController index;
     private StringBuilder key = new StringBuilder();
     private static Logger logger;
     private MenuController menuController;
@@ -69,8 +70,11 @@ public class MainApp extends Application{
     public static File defaultHome;
     public static KeyListener keyListener;
 
+
     public MainApp() {
         super();
+
+        initEnvVariable();
         logger = LoggerFactory.getLogger(MainApp.class);
 
         java.util.logging.Logger logger2 = java.util.logging.Logger.getLogger(GlobalScreen.class.getPackage().getName());
@@ -84,6 +88,13 @@ public class MainApp extends Application{
             logger.error("Error for initialize KeyListener", e);
             System.exit(1);
         }
+
+        logger.info("Version Java de l'utilisateur: " + System.getProperty("java.version"));
+        logger.info("Architecture du système utilisateur: " + System.getProperty("os.arch"));
+        logger.info("Nom du système utilisateur: " + System.getProperty("os.name"));
+        logger.info("Version du système utilisateur: " + System.getProperty("os.version"));
+        logger.info("Emplacement du fichier de log: " + System.getProperty("zw.logPath"));
+
 
         if(args.length > 0) {
             config = new Configuration(args[0]);
@@ -108,6 +119,32 @@ public class MainApp extends Application{
         launch(args);
     }
 
+    private void initEnvVariable() {
+        Path logPath;
+        Path logDir;
+        String appName = "zest-writer";
+        String os = System.getProperty("os.name").toLowerCase();
+        if(os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") >= 0) {
+            logPath = Paths.get(System.getProperty("user.home"), ".config", appName, appName+".log");
+            logDir = logPath.getParent();
+        } else if(os.indexOf("win") >= 0) {
+            logPath = Paths.get(System.getProperty("user.home"), "AppData", "Local", appName,  appName+".log");
+            logDir = logPath.getParent();
+        } else if(os.indexOf("mac") >= 0) {
+            logPath = Paths.get(System.getProperty("user.home"), "Library", "Application Support", appName, appName+".log");
+            logDir = logPath.getParent();
+        } else {
+            logPath = Paths.get(System.getProperty("user.home"), appName+".log");
+            logDir = logPath.getParent();
+        }
+        File dir = new File(logDir.toString());
+        File log = new File(logPath.toString());
+        if(! dir.exists()) {
+            dir.mkdirs();
+        }
+        System.setProperty("zw.logPath", log.getAbsolutePath());
+    }
+
 
     public static Configuration getConfig() {
         return config;
@@ -126,7 +163,7 @@ public class MainApp extends Application{
     }
 
     public MdTextController getIndex() {
-        return Index;
+        return index;
     }
 
     public ObservableList<Content> getContents() {
@@ -137,64 +174,64 @@ public class MainApp extends Application{
         return extracts;
     }
 
-    public PluginsManager getPluginsManager(){
-        return pm;
+    public static File getDefaultHome() {
+        return defaultHome;
     }
 
     public static Markdown getMdUtils() { return mdUtils; }
 
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+    }
+
     @Override
     public void start(Stage primaryStage) {
-        MainApp.primaryStage = primaryStage;
-        MainApp.primaryStage.setTitle(Configuration.bundle.getString("ui.app_name.text"));
-        MainApp.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("images/logo.png")));
-        MainApp.primaryStage.setMinWidth(800);
-        MainApp.primaryStage.setMinHeight(500);
+        setPrimaryStage(primaryStage);
+        getPrimaryStage().setTitle(Configuration.bundle.getString("ui.app_name.text"));
+        getPrimaryStage().getIcons().add(new Image(getClass().getResourceAsStream("images/logo.png")));
+        getPrimaryStage().setMinWidth(400);
+        getPrimaryStage().setMinHeight(400);
 
 
         if(config.isDisplayWindowMaximize()){
-            MainApp.primaryStage.setX(config.getDisplayWindowPositionX());
-            MainApp.primaryStage.setY(config.getDisplayWindowPositionY());
-            MainApp.primaryStage.setMaximized(true);
+            getPrimaryStage().setX(config.getDisplayWindowPositionX());
+            getPrimaryStage().setY(config.getDisplayWindowPositionY());
+            getPrimaryStage().setMaximized(true);
         }else{
             if(config.isDisplayWindowPersonnalDimension()){
-                MainApp.primaryStage.setWidth(config.getDisplayWindowWidth());
-                MainApp.primaryStage.setHeight(config.getDisplayWindowHeight());
+                getPrimaryStage().setWidth(config.getDisplayWindowWidth());
+                getPrimaryStage().setHeight(config.getDisplayWindowHeight());
             }else{
-                MainApp.primaryStage.setWidth(Double.parseDouble(Configuration.ConfigData.DisplayWindowWidth.getDefaultValue()));
-                MainApp.primaryStage.setHeight(Double.parseDouble(Configuration.ConfigData.DisplayWindowHeight.getDefaultValue()));
+                getPrimaryStage().setWidth(Double.parseDouble(Configuration.ConfigData.DisplayWindowWidth.getDefaultValue()));
+                getPrimaryStage().setHeight(Double.parseDouble(Configuration.ConfigData.DisplayWindowHeight.getDefaultValue()));
             }
             if(config.isDisplayWindowPersonnalPosition()){
-                MainApp.primaryStage.setX(config.getDisplayWindowPositionX());
-                MainApp.primaryStage.setY(config.getDisplayWindowPositionY());
+                getPrimaryStage().setX(config.getDisplayWindowPositionX());
+                getPrimaryStage().setY(config.getDisplayWindowPositionY());
             }
         }
 
-        MainApp.primaryStage.setOnCloseRequest(t -> {
-            // TODO: Plugin
-            //pm.disablePlugins();
+        getPrimaryStage().setOnCloseRequest(t -> {
 
-            if(MainApp.primaryStage.isMaximized() && config.isDisplayWindowPersonnalDimension())
+            if(getPrimaryStage().isMaximized() && config.isDisplayWindowPersonnalDimension())
                 config.setDisplayWindowMaximize("true");
 
             quitApp();
             t.consume();
         });
-        MainApp.primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> {
+        getPrimaryStage().widthProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowWidth(String.valueOf(newValue));
         });
-        MainApp.primaryStage.heightProperty().addListener((observable, oldValue, newValue) -> {
+        getPrimaryStage().heightProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowHeight(String.valueOf(newValue));
         });
-        MainApp.primaryStage.xProperty().addListener((observable, oldValue, newValue) -> {
+        getPrimaryStage().xProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowPositionX(String.valueOf(newValue));
         });
-        MainApp.primaryStage.yProperty().addListener((observable, oldValue, newValue) -> {
+        getPrimaryStage().yProperty().addListener((observable, oldValue, newValue) -> {
             config.setDisplayWindowPositionY(String.valueOf(newValue));
         });
 
-        // TODO: Plugin
-        //initPlugins();
         initRootLayout();
         showWriter();
         initConnection();
@@ -242,7 +279,7 @@ public class MainApp extends Application{
 
             MdTextController controller = loader.getController();
             controller.setMainApp(this);
-            Index = controller;
+            index = controller;
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
@@ -269,7 +306,9 @@ public class MainApp extends Application{
             menuController.gethBottomBox().getChildren().addAll(menuController.getLabelField());
             menuController.getLabelField().textProperty().bind(loginTask.messageProperty());
 
-            loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
+            loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue,
+                                                   Worker.State oldValue,
+                                                   Worker.State newValue) -> {
                 Alert alert = new CustomAlert(Alert.AlertType.NONE);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.auth.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.auth.state.header"));
@@ -294,14 +333,6 @@ public class MainApp extends Application{
 
             loginTask.start();
         }
-    }
-
-    public void initPlugins(){
-        contentsConfigPlugins = new ContentsConfig(ContentsDialog.ContentType.PLUGIN);
-        contentsConfigThemes = new ContentsConfig(ContentsDialog.ContentType.THEME);
-
-        pm = new PluginsManager(this);
-        pm.enablePlugins();
     }
 
     private void loadCombinason() {

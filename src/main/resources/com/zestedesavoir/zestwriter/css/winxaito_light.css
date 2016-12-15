@@ -1,0 +1,179 @@
+/* General */
+    .root {
+        -fx-text-inner-color: #044763;
+        -fx-focus-color: transparent;
+        -fx-faint-focus-color:transparent;
+    }
+
+/* Menu */
+    .menu-bar {
+        -fx-border-color: #DDD #DDD #F8AD32 #DDD;
+        -fx-border-width: 0 0 3px 0;
+        -fx-background-color: #ececec;
+    }
+    .menu, .menu-item{
+        -fx-padding: 2 15;
+        -fx-text-alignment: center;
+        -fx-border-width: 2;
+        -fx-border-color: #ececec;
+        -fx-background-color: #ececec;
+    }
+    .menu:hover, .menu:showing, .menu-item:hover, .menu-item:showing{
+        -fx-background-color: #dddddd;
+        -fx-border-color: #cccccc;
+    }
+    .menu .label, .menu-item .label{
+        -fx-text-fill:black;
+    }
+    .context-menu{
+        -fx-padding: 0;
+        -fx-background-color: #ececec;
+        -fx-border-width: 1;
+        -fx-border-color: #d1d1d1;
+    }
+
+/* Tab */
+    .tab-header-area{
+        -fx-padding: 0;
+        -fx-border-radius: 0;
+    }
+    .tab{
+        -fx-background-color: #ececec;
+        -fx-padding: 2 10 2 15;
+        -fx-border-width: 2;
+        -fx-border-color: #ececec;
+    }
+    .tab:hover{
+        -fx-border-color: #b9b9b9;
+    }
+    .tab:selected{
+        -fx-border-color: #898989;
+    }
+    .tab-label{
+        -fx-font-weight: normal;
+        -fx-border-color: transparent;
+        -fx-border-width: 0 5 0 0;
+    }
+
+/* Home page */
+    .hyperlink{
+        -fx-border-width:0;
+        -fx-underline:false;
+        -fx-text-fill: -fx-text-inner-color;
+    }
+    .hyperlink:hover{
+        -fx-underline:true;
+    }
+    .box-content {
+        -fx-border-color: #DDD #DDD -fx-text-inner-color #DDD;
+        -fx-background-color: #FFF;
+    }
+    .box-content .label {
+        -fx-background-color: #FFF;
+    }
+    .box-content .hyperlink {
+        -fx-font-size: 1.6em;
+    }
+    .title-content-home {
+        -fx-font-size: 1.8em;
+        -fx-text-fill: -fx-text-inner-color;
+        -fx-padding: 20 10 0 10;
+    }
+    .home-header-box {
+        -fx-border-width: 0 0 2 0;
+        -fx-border-color: #FFF;
+        -fx-background-color: -fx-text-inner-color;
+    }
+    .subtitle {
+        -fx-font-weight: bold;
+        -fx-font-size: 13pt;
+        -fx-text-fill: #ea9408;
+        -fx-label-padding: 20;
+    }
+
+/* Editor */
+    .tool-bar{
+        -fx-padding: 0 15 0.5 0;
+        -fx-spacing: 0;
+        -fx-background-color: #ececec;
+        -fx-border-color: -fx-text-inner-color;
+        -fx-border-width: 0 0 3 0;
+    }
+    .button{
+        -fx-padding: 4 7;
+        -fx-border-width: 1 1 1 1;
+        -fx-border-color: #d4d4d4;
+        -fx-border-radius: 0;
+        -fx-background-color: transparent;
+    }
+    .button:hover{
+        -fx-background-color: #dcdcdc;
+        -fx-border-color: #aaaaaa;
+    }
+    .separator:horizontal, .line{
+        -fx-background-color: #898989;
+        -fx-border-width: 0;
+        -fx-border-color: transparent;
+    }
+    .separator:vertical .line{
+        -fx-background-color: #a8a8a8;
+        -fx-border-width: 1.5;
+        -fx-border-color: transparent;
+    }
+    .lineno {
+        -fx-background-color: derive(-fx-base,20%);
+        -fx-text-fill: #999;
+        /* Hide lineno */
+            visibility: hidden;
+            -fx-padding: -1em;
+    }
+    .styled-text-area{
+        -fx-padding: 2;
+        -fx-background-color: -fx-background;
+    }
+    .styled-text-area .text {
+        -fx-fill: #000;
+    }
+
+/* TreeView */
+    .tree-cell{
+        -fx-border-width: 2;
+        -fx-border-color: #ececec;
+        -fx-background-color: #ececec;
+        -fx-text-fill: black;
+    }
+    .tree-cell:hover{
+        -fx-background-color: #dddddd;
+        -fx-border-color: #cccccc;
+    }
+    .tree-cell:empty:hover{
+        -fx-border-color: #ececec;
+        -fx-background-color: #ececec;
+    }
+
+/* Icons */
+    .glyph-icon {
+        -fx-fill: -fx-text-inner-color;
+    }
+    .icon-account-key, .icon-folder-multiple, .icon-folder-plus, .icon-border-color, .icon-move{
+        -fx-fill: #084561;
+    }
+    .icon-close{
+        -fx-fill: #f44336;
+    }
+    .icon-file, .icon-file-outline, .icon-book-open{
+        -fx-fill: #ef9708;
+    }
+    .icon-google-plus{
+        -fx-fill: #dd4b39;
+    }
+    .icon-arrow-down, .icon-chart-areaspline, .icon-chart-bar, .icon-chart-pie, .icon-link, .icon-code-tags, .icon-library-books{
+        -fx-fill: #48a200;
+    }
+
+.options-grid{
+    -fx-padding:0 0 0 40;
+}
+.option-auth-warning{
+    -fx-padding:0 0 0 40;
+}

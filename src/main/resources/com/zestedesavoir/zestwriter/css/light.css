@@ -58,11 +58,6 @@
     -fx-font-weight: bold;
 }
 
-.glyph-icon {
-    -fx-fill: -fx-text-inner-color;
-}
-
-
 .styled-text-area {
     -fx-background-color: -fx-background;
 }
@@ -82,9 +77,32 @@
     -fx-text-fill: #ea9408;
     -fx-label-padding: 20;
 }
+
 .options-grid{
     -fx-padding:0 0 0 40;
 }
 .option-auth-warning{
     -fx-padding:0 0 0 40;
 }
+
+/* Icons */
+.glyph-icon {
+    -fx-fill: -fx-text-inner-color;
+}
+.icon-account-key, .icon-folder-multiple, .icon-folder-plus, .icon-border-color, .icon-move{
+    -fx-fill: #084561;
+}
+.icon-close{
+    -fx-fill: #f44336;
+}
+.icon-file, .icon-file-outline, .icon-book-open{
+    -fx-fill: #ef9708;
+}
+.icon-google-plus{
+    -fx-fill: #dd4b39;
+}
+.icon-arrow-down, .icon-chart-areaspline, .icon-chart-bar, .icon-chart-pie, .icon-link, .icon-code-tags, .icon-library-books{
+    -fx-fill: #48a200;
+}
+
+

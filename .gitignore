@@ -1,15 +1,27 @@
-build
-bin
-.classpath
-.gradle
-.project
-.settings
-.idea
-*.iml
+# Compiled files
 *.pyc
 *.pyo
 *.class
-/.nb-gradle/
-*.log
 classes/
 out/
+
+# Gradle
+bin/
+build/
+.gradle/
+/.nb-gradle/
+
+# IDEs
+.idea
+*.iml
+.project
+.settings
+.classpath
+
+# Documentation
+doc/build/
+doc/rst/.presentation.rst
+
+# Misc
+*.log
+venv/

@@ -2,19 +2,34 @@ package com.zestedesavoir.zestwriter.view.com;
 
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.*;
+import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.utils.Corrector;
+import com.zestedesavoir.zestwriter.utils.Theme;
+import com.zestedesavoir.zestwriter.view.MdTextController;
+import com.zestedesavoir.zestwriter.view.MenuController;
 import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
+import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.Event;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Pair;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.fxmisc.richtext.StyleClassedTextArea;
+import org.languagetool.markup.AnnotatedText;
+import org.languagetool.rules.RuleMatch;
+import org.languagetool.rules.spelling.SpellingCheckRule;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -151,7 +166,12 @@ public class FunctionTreeFactory {
     }
 
     public static void addTheming(Pane pane) {
-        pane.getStylesheets().add(MainApp.class.getResource("css/"+ MainApp.config.getDisplayTheme()).toExternalForm());
+        Theme forcedTheme = Theme.getActiveTheme();
+        if(forcedTheme == null ) {
+            pane.getStylesheets().add(MainApp.class.getResource("css/" + MainApp.config.getDisplayTheme()).toExternalForm());
+        } else {
+            pane.getStylesheets().add(MainApp.class.getResource("css/" + forcedTheme.getFilename()).toExternalForm());
+        }
     }
 
     public static String getUniqueFilePath(String path, String ext) {
@@ -185,5 +205,22 @@ public class FunctionTreeFactory {
             contents.add(content);
         }
 
+    }
+
+    public static void OpenFindReplaceDialog(MainApp mainApp, StyleClassedTextArea sourceText) {
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/FindReplaceDialog.fxml"));
+
+        Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.dialog.find.title"));
+        dialogStage.setAlwaysOnTop(true);
+        dialogStage.initModality(Modality.NONE);
+        dialogStage.setTitle(Configuration.bundle.getString("ui.dialog.find.title"));
+        dialogStage.setResizable(false);
+
+        FindReplaceDialog findReplaceDialog = loader.getController();
+        findReplaceDialog.setMainApp(mainApp);
+        findReplaceDialog.setWindow(dialogStage);
+        findReplaceDialog.setSourceText(sourceText);
+
+        dialogStage.show();
     }
 }
