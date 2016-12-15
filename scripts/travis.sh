@@ -15,7 +15,7 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ -n "${GITHUB_TOKEN:-}" ]; then
         -Dsonar.github.oauth=$GITHUB_TOKEN \
         -Dsonar.host.url=https://sonar.winxaito.com
 else
-    ./gradlew sonarqube --info \
+    ./gradlew sonarqube --debug \
             -Dzw.username=$ZDS_USERNAME \
             -Dzw.password=$ZDS_PASSWORD \
             -Dzw.github_user=$GITHUB_USER \
