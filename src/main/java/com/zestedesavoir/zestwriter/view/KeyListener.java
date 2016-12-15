@@ -26,7 +26,7 @@ public class KeyListener implements NativeKeyListener{
         if(sourceText != null){
             logger.info("KeyPressed: Code: " + nativeKeyEvent.getKeyCode() + " Str: " + nativeKeyEvent.toString());
 
-            if(nativeKeyEvent.getKeyCode() == 27){
+            if(nativeKeyEvent.getKeyCode() == 26){
                 if(cirumflex){
                     Platform.runLater(() -> sourceText.appendText("^^ (Youpi !)"));
                     logger.info("AppendText: ^^");
