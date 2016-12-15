@@ -12,7 +12,7 @@ public class Theme {
     private int endDay=0;
     private int endMonth=0;
 
-    public static List<Theme> themeAvailable = Arrays.asList(
+    private static List<Theme> themeAvailable = Arrays.asList(
             new Theme("dark.css", Configuration.bundle.getString("ui.options.display.theme.dark")),
             new Theme("light.css", Configuration.bundle.getString("ui.options.display.theme.light")),
             new Theme("halloween.css", Configuration.bundle.getString("ui.options.display.theme.halloween"), 31, 10, 02, 11),
@@ -56,6 +56,10 @@ public class Theme {
 
     public int getEndMonth() {
         return endMonth;
+    }
+
+    public static List<Theme> getThemeAvailable() {
+        return themeAvailable;
     }
 
     @Override

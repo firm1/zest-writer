@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.zestedesavoir.zestwriter.MainApp;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,9 +96,11 @@ public abstract class MetaContent{
         } else {
             if(! base.exists()) {
                 try {
-                    base.createNewFile();
+                    if(!base.createNewFile()) {
+                        MainApp.getLogger().error("Problème lors de la création de "+base.getAbsolutePath());
+                    }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    MainApp.getLogger().error("Problème lors de la création de "+base.getAbsolutePath(), e);
                 }
             }
         }

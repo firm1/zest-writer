@@ -165,6 +165,10 @@ public class MainApp extends Application{
         this.primaryStage = primaryStage;
     }
 
+    public static Logger getLogger() {
+        return logger;
+    }
+
     @Override
     public void start(Stage primaryStage) {
         setPrimaryStage(primaryStage);

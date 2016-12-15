@@ -255,7 +255,7 @@ public class OptionsDialog{
     }
 
     private void setDisplayOptions(){
-        optDisplayTheme.getItems().addAll(Theme.themeAvailable);
+        optDisplayTheme.getItems().addAll(Theme.getThemeAvailable());
         optDisplayTheme.setValue(Theme.getThemeFromFileName(config.getDisplayTheme()));
 
         optDisplayTheme.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {

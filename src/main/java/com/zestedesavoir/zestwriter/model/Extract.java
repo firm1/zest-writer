@@ -86,6 +86,11 @@ public class Extract extends MetaContent implements Textual, ContentNode{
     }
 
     @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
     public String exportContentToMarkdown(int level, int levelDepth) {
         return FunctionTreeFactory.padding(level) +
                 " " + getTitle() + "\n\n" +

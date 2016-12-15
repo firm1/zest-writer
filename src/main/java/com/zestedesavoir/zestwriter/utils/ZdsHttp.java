@@ -167,6 +167,7 @@ public class ZdsHttp {
         context = HttpClientContext.create();
         cookieStore = new BasicCookieStore();
         context.setCookieStore(cookieStore);
+        PoolingHttpClientConnectionManager cm = null;
 
         try {
             SSLContextBuilder builder = new SSLContextBuilder();
@@ -180,7 +181,7 @@ public class ZdsHttp {
             SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build());
 
             Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory> create().register("https", sslsf).register("http", new PlainConnectionSocketFactory()).build();
-            PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+            cm = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
             // Increase max total connection to 200
             cm.setMaxTotal(500);
             // Increase default max connection per route to 20
@@ -198,6 +199,8 @@ public class ZdsHttp {
             logger.error(e.getMessage(), e);
         } catch (KeyStoreException e) {
             logger.error(e.getMessage(), e);
+        } finally {
+            cm.close();
         }
         
         contentListOnline = new ArrayList<>();
@@ -496,6 +499,8 @@ public class ZdsHttp {
     public void unzipOnlineContent(String zipFilePath) {
 
         byte[] buffer = new byte[1024];
+        ZipInputStream zis = null;
+        FileOutputStream fos = null;
         try {
             String dirname = Paths.get(zipFilePath).getFileName().toString();
             dirname = dirname.substring(0, dirname.length() - 4);
@@ -505,7 +510,7 @@ public class ZdsHttp {
             if (!folder.exists()) {
                 folder.mkdir();
                 // get the zip file content
-                ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFilePath));
+                zis = new ZipInputStream(new FileInputStream(zipFilePath));
                 // get the zipped file list entry
                 ZipEntry ze = zis.getNextEntry();
 
@@ -516,19 +521,16 @@ public class ZdsHttp {
                     File newFile = new File(folder + File.separator + fileName);
                     new File(newFile.getParent()).mkdirs();
 
-                    FileOutputStream fos = new FileOutputStream(newFile);
+                    fos = new FileOutputStream(newFile);
 
                     int len;
                     while ((len = zis.read(buffer)) > 0) {
                         fos.write(buffer, 0, len);
                     }
-
-                    fos.close();
                     ze = zis.getNextEntry();
                 }
 
                 zis.closeEntry();
-                zis.close();
                 logger.info("Dézippage dans " + folder.getAbsolutePath() + " réalisé avec succès");
             } else {
                 logger.debug("Le répertoire dans lequel vous souhaitez dezipper existe déjà ");
@@ -536,6 +538,13 @@ public class ZdsHttp {
 
         } catch (IOException ex) {
             logger.debug("Echec de dezippage dans " + zipFilePath);
+        } finally {
+            try {
+                zis.close();
+                fos.close();
+            } catch (Exception e) {
+                logger.debug("Echec de dezippage dans " + zipFilePath);
+            }
         }
     }
 
