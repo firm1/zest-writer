@@ -195,11 +195,12 @@ public class ZdsHttp {
 
         } catch (NoSuchAlgorithmException e) {
             logger.error(e.getMessage(), e);
+            cm.close();
         } catch (KeyManagementException e) {
             logger.error(e.getMessage(), e);
+            cm.close();
         } catch (KeyStoreException e) {
             logger.error(e.getMessage(), e);
-        } finally {
             cm.close();
         }
         

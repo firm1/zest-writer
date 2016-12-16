@@ -27,7 +27,7 @@ public interface StorageSaver {
                 if(file.delete()) {
                     logger.debug("Répertoire " + file.getAbsolutePath() + " Supprimé");
                 } else {
-                    MainApp.getLogger().error("Impossible de supprimer le répertoire "+file.getAbsolutePath());
+                    logger.error("Impossible de supprimer le répertoire "+file.getAbsolutePath());
                 }
             }
             else {
@@ -40,7 +40,7 @@ public interface StorageSaver {
                     if(file.delete()) {
                         logger.debug("Répertoire " + file.getAbsolutePath() + " Supprimé");
                     } else {
-                        MainApp.getLogger().error("Impossible de supprimer le répertoire "+file.getAbsolutePath());
+                        logger.error("Impossible de supprimer le répertoire "+file.getAbsolutePath());
                     }
                 }
             }
@@ -48,7 +48,7 @@ public interface StorageSaver {
             if(file.delete()) {
                 logger.debug("Fichier " + file.getAbsolutePath() + " Supprimé");
             } else {
-                MainApp.getLogger().error("Impossible de supprimer le fichier "+file.getAbsolutePath());
+                logger.error("Impossible de supprimer le fichier "+file.getAbsolutePath());
             }
         }
     }
