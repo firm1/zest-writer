@@ -195,13 +195,19 @@ public class ZdsHttp {
 
         } catch (NoSuchAlgorithmException e) {
             logger.error(e.getMessage(), e);
-            cm.close();
+            if(cm != null) {
+                cm.close();
+            }
         } catch (KeyManagementException e) {
             logger.error(e.getMessage(), e);
-            cm.close();
+            if(cm != null) {
+                cm.close();
+            }
         } catch (KeyStoreException e) {
             logger.error(e.getMessage(), e);
-            cm.close();
+            if(cm != null) {
+                cm.close();
+            }
         }
         
         contentListOnline = new ArrayList<>();
