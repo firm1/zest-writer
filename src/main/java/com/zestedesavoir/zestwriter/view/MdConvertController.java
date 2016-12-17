@@ -86,14 +86,6 @@ public class MdConvertController {
         super();
         logger = LoggerFactory.getLogger(MdConvertController.class);
         SourceText = new CustomStyledClassedTextArea();
-
-        if(FunctionTreeFactory.isLinuxOs()){
-            MainApp.keyListener.setSourceText(SourceText);
-
-            SourceText.focusedProperty().addListener((observable, oldValue, newValue) -> {
-                MainApp.keyListener.setEnable(newValue);
-            });
-        }
     }
 
     public MdTextController getMdBox() {
@@ -139,6 +131,14 @@ public class MdConvertController {
                 updateRender();
             });
             updateRender();
+
+            if(FunctionTreeFactory.isLinuxOs()){
+                MainApp.keyListener.setSourceText(SourceText);
+
+                SourceText.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                    MainApp.keyListener.setEnable(newValue);
+                });
+            }
         });
 
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),

@@ -25,57 +25,51 @@ public class KeyListener implements NativeKeyListener{
     @Override
     public void nativeKeyPressed(NativeKeyEvent e){
         if(sourceText != null && enable){
-            logger.debug("Keypressed: " + e.getKeyCode() + " -- " + e.getModifiers());
+            logger.debug("Keypressed: " + e.getRawCode() + " -- " + e.getModifiers());
 
-            if(e.getKeyCode() == 26 && e.getModifiers() == 0){
-                //Circumflex on Linux (27 for Windows)
-                // + without modifiers
-
+            if(e.getRawCode() == 221){
                 if(cirumflex){
-                    Platform.runLater(() -> sourceText.appendText("^^"));
+                    appendSpecialCharacter("^^");
                     cirumflex = false;
                 }else{
                     cirumflex = true;
                     trema = false;
                 }
-            }else if(e.getKeyCode() == 26 && e.getModifiers() == 1){
-                //Trema with shift
-                // + (41 for Windows without shift) (Shift is the modifiers)
-
+            }else if(e.getRawCode() == 192){
                 if(trema){
-                    Platform.runLater(() -> sourceText.appendText("¨¨"));
+                    appendSpecialCharacter("¨¨");
                     trema = false;
                 }else{
                     trema = true;
                     cirumflex = false;
                 }
             }else{
-                switch(e.getKeyCode()){
-                    case 18: //E
+                switch(e.getRawCode()){
+                    case 69: //E
                         if(cirumflex)
                             appendSpecialCharacter("ê");
                         else if(trema)
                             appendSpecialCharacter("ë");
                         break;
-                    case 30: //A
+                    case 65: //A
                         if(cirumflex)
                             appendSpecialCharacter("â");
                         else if(trema)
                             appendSpecialCharacter("ä");
                         break;
-                    case 23: //I
+                    case 73: //I
                         if(cirumflex)
                             appendSpecialCharacter("î");
                         else if(trema)
                             appendSpecialCharacter("ï");
                         break;
-                    case 24: //O
+                    case 79: //O
                         if(cirumflex)
                             appendSpecialCharacter("ô");
                         else if(trema)
                             appendSpecialCharacter("ö");
                         break;
-                    case 22: //U
+                    case 85: //U
                         if(cirumflex)
                             appendSpecialCharacter("û");
                         else if(trema)
@@ -106,8 +100,8 @@ public class KeyListener implements NativeKeyListener{
     }
 
     private void appendSpecialCharacter(String letter){
-        logger.debug("Append special character (Linux Only): " + letter);
-        Platform.runLater(() -> sourceText.deleteText(sourceText.getCaretPosition() - 1, sourceText.getCaretPosition()));
+        logger.debug("Append special character (Linux Only): " + letter + " (Length: " + letter.length() + ")");
+        Platform.runLater(() -> sourceText.deleteText(sourceText.getCaretPosition() - letter.length(), sourceText.getCaretPosition()));
         Platform.runLater(() -> sourceText.appendText(letter));
         cirumflex = false;
         trema = false;

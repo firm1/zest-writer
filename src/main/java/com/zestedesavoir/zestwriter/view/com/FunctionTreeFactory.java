@@ -46,8 +46,9 @@ public class FunctionTreeFactory {
     }
 
     public static boolean isLinuxOs(){
-        String os = System.getProperty("os.name").toLowerCase();
-        return os.contains("lin") || os.contains("nix") || os.contains("nux") || os.contains("aix") || os.contains("uni");
+        return true;
+        /*String os = System.getProperty("os.name").toLowerCase();
+        return os.contains("lin") || os.contains("nix") || os.contains("nux") || os.contains("aix") || os.contains("uni");*/
     }
 
     public static Map<String,Object> initContentDialog(Content defaultContent) {
