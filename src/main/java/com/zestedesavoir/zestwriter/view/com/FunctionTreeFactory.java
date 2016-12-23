@@ -5,6 +5,7 @@ import com.zestedesavoir.zestwriter.model.*;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.Theme;
+import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
 import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
@@ -220,5 +221,23 @@ public class FunctionTreeFactory {
         findReplaceDialog.setSourceText(sourceText);
 
         dialogStage.show();
+    }
+
+    public static String getNumberOfTextualReadMinutes(String text) {
+        Readability rd = new Readability(text);
+        Double mins = rd.getNumberOfReadMinutes(text);
+
+        if(mins < 1 ) return Configuration.bundle.getString("ui.label.lessof") + " 1 " + Configuration.bundle.getString("ui.label.time.minute");
+        if(mins < 2 ) return " 2 " + Configuration.bundle.getString("ui.label.time.minute")+ "s";
+        if(mins < 5 ) return " 5 " + Configuration.bundle.getString("ui.label.time.minute")+ "s";
+        else if (mins < 10 ) return "10 " + Configuration.bundle.getString("ui.label.time.minute")+ "s";
+        else if (mins < 15 ) return "15 " + Configuration.bundle.getString("ui.label.time.minute")+ "s";
+        else if (mins < 20 ) return "20 " + Configuration.bundle.getString("ui.label.time.minute")+ "s";
+        else if (mins < 30 ) return "30 " + Configuration.bundle.getString("ui.label.time.minute")+ "s";
+        else if (mins < 40 ) return "40 " + Configuration.bundle.getString("ui.label.time.minute")+ "s";
+        else if (mins < 60 ) return "1 " + Configuration.bundle.getString("ui.label.time.hour")+ "s";
+        else if (mins < 90 ) return "1 " + Configuration.bundle.getString("ui.label.time.hour") + "s 30 " + Configuration.bundle.getString("ui.label.time.minute");
+        else if (mins < 120 ) return "2 " + Configuration.bundle.getString("ui.label.time.hour") + "s";
+        else return Configuration.bundle.getString("ui.label.moreof") + 2 + Configuration.bundle.getString("ui.label.time.hour") + "s";
     }
 }

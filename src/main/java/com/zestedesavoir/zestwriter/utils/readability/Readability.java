@@ -118,6 +118,13 @@ public class Readability {
         else return 0;
     }
 
+    public static Double getNumberOfReadMinutes(String text) {
+        Integer words = getNumberOfCharacters(text);
+        Integer avgReadTimePerMin = 2000;
+
+        return (new Double(words)/avgReadTimePerMin);
+    }
+
     /**
      *
      * http://en.wikipedia.org/wiki/SMOG_Index

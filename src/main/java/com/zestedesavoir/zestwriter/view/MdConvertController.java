@@ -69,6 +69,7 @@ public class MdConvertController {
     private int yRenderPosition = 0;
     private StringProperty countChars = new SimpleStringProperty();
     private StringProperty countWords = new SimpleStringProperty();
+    private StringProperty countTimes = new SimpleStringProperty();
     private BooleanPropertyBase isSaved = new SimpleBooleanProperty(true);
     private boolean isRenderExternalWindow = false;
 
@@ -630,6 +631,7 @@ public class MdConvertController {
         Readability readText = new Readability(SourceText.getText());
         countChars.setValue(Configuration.bundle.getString("ui.statusbar.stats.chars") + readText.getCharacters());
         countWords.setValue(Configuration.bundle.getString("ui.statusbar.stats.words") + readText.getWords());
+        countTimes.setValue(FunctionTreeFactory.getNumberOfTextualReadMinutes(SourceText.getText()));
     }
 
     public void initStats() {
@@ -639,18 +641,25 @@ public class MdConvertController {
         ColumnConstraints c1 = new ColumnConstraints();
         ColumnConstraints c2 = new ColumnConstraints();
         ColumnConstraints c3 = new ColumnConstraints();
-        c1.setPercentWidth(70);
-        c2.setPercentWidth(15);
-        c2.setPercentWidth(15);
+        ColumnConstraints c4 = new ColumnConstraints();
+        c1.setPercentWidth(50);
+        c2.setPercentWidth(20);
+        c3.setPercentWidth(15);
+        c4.setPercentWidth(15);
         Label chars = new Label();
         Label words = new Label();
+        Label times = new Label();
         chars.setStyle("-fx-font-size: 0.9em;");
         words.setStyle("-fx-font-size: 0.9em;");
-        mainApp.getMenuController().hBottomBox.getColumnConstraints().addAll(c1, c2, c3);
-        mainApp.getMenuController().hBottomBox.add(chars, 1, 0);
-        mainApp.getMenuController().hBottomBox.add(words, 2, 0);
+        times.setStyle("-fx-font-size: 0.9em;");
+        mainApp.getMenuController().hBottomBox.getColumnConstraints().addAll(c1, c2, c3, c4);
+        mainApp.getMenuController().hBottomBox.add(times, 1, 0);
+        mainApp.getMenuController().hBottomBox.add(chars, 2, 0);
+        mainApp.getMenuController().hBottomBox.add(words, 3, 0);
+
         chars.textProperty().bind(countChars);
         words.textProperty().bind(countWords);
+        times.textProperty().bind(countTimes);
         performStats();
     }
 
