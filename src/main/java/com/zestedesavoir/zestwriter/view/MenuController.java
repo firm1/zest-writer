@@ -93,7 +93,7 @@ public class MenuController{
         menuFindReplace.disableProperty().bind(isOnReadingTab);
     }
 
-    @FXML private void HandleQuitButtonAction(ActionEvent event){
+    @FXML private void handleQuitButtonAction(ActionEvent event){
         mainApp.quitApp();
     }
 
@@ -105,7 +105,7 @@ public class MenuController{
         return render.toString();
     }
 
-    private void HandleIndex(Function<Textual, Double> calFlesh, String title, String header) {
+    private void handleIndex(Function<Textual, Double> calFlesh, String title, String header) {
         Map<Textual, Double> fleshResult = ((Content)mainApp.getIndex().getSummary().getRoot().getValue()).doOnTextual(calFlesh);
 
         ObservableList<ModelLisibilty> rows = FXCollections.observableArrayList();
@@ -152,7 +152,7 @@ public class MenuController{
         dialog.showAndWait();
     }
 
-    @FXML private void HandleFleshButtonAction(ActionEvent event){
+    @FXML private void handleFleshButtonAction(ActionEvent event){
         Function<Textual, Double> calFlesh = (Textual ch) -> {
             String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
             String plainText = Corrector.HtmlToTextWithoutCode(htmlText);
@@ -164,12 +164,12 @@ public class MenuController{
             }
         };
 
-        HandleIndex(calFlesh,
+        handleIndex(calFlesh,
                 Configuration.bundle.getString("ui.menu.edit.readable.flesch_index"),
                 Configuration.bundle.getString("ui.menu.edit.readable.flesch_index.header"));
     }
 
-    @FXML private void HandleGunningButtonAction(ActionEvent event){
+    @FXML private void handleGunningButtonAction(ActionEvent event){
         Function<Textual, Double> calGuning = (Textual ch) -> {
             String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
             String plainText = Corrector.HtmlToTextWithoutCode(htmlText);
@@ -180,12 +180,12 @@ public class MenuController{
                 return rd.getGunningFog();
             }
         };
-        HandleIndex(calGuning,
+        handleIndex(calGuning,
                 Configuration.bundle.getString("ui.menu.edit.readable.gunning_index"),
                 Configuration.bundle.getString("ui.menu.edit.readable.gunning_index.header"));
     }
 
-    @FXML private void HandleReportWithoutTypoButtonAction(ActionEvent event){
+    @FXML private void handleReportWithoutTypoButtonAction(ActionEvent event){
         TextArea textArea = new TextArea();
         textArea.setEditable(true);
         textArea.setWrapText(true);
@@ -226,7 +226,7 @@ public class MenuController{
         correctTask.start();
     }
 
-    @FXML private void HandleNewButtonAction(ActionEvent event){
+    @FXML private void handleNewButtonAction(ActionEvent event){
         File defaultDirectory;
 
         if(MainApp.getConfig().getWorkspaceFactory() == null){
@@ -275,7 +275,7 @@ public class MenuController{
         }
     }
 
-    @FXML private void HandleOpenButtonAction(ActionEvent event){
+    @FXML private void handleOpenButtonAction(ActionEvent event){
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle(Configuration.bundle.getString("ui.menu.dialog.open.title"));
         File defaultDirectory;
@@ -308,7 +308,7 @@ public class MenuController{
         menuExport.setDisable(false);
     }
 
-    @FXML public Service<Void> HandleLoginButtonAction(ActionEvent event){
+    @FXML public Service<Void> handleLoginButtonAction(ActionEvent event){
         // Button for google
         Button googleAuth = new Button(Configuration.bundle.getString("ui.dialog.auth.google.title"), IconFactory.createGoogleIcon());
         LoginDialog dialog = new LoginDialog(googleAuth);
@@ -350,9 +350,9 @@ public class MenuController{
         downloadContentTask.start();
     }
 
-    @FXML private void HandleDownloadButtonAction(ActionEvent event){
+    @FXML private void handleDownloadButtonAction(ActionEvent event){
         if(! MainApp.getZdsutils().isAuthenticated()){
-            Service<Void> loginTask = HandleLoginButtonAction(event);
+            Service<Void> loginTask = handleLoginButtonAction(event);
             loginTask.setOnSucceeded(t -> {
                 if(!mainApp.getContents().isEmpty()){
                     menuUpload.setDisable(false);
@@ -479,9 +479,9 @@ public class MenuController{
         }
     }
 
-    @FXML private void HandleUploadButtonAction(ActionEvent event){
+    @FXML private void handleUploadButtonAction(ActionEvent event){
         if(! MainApp.getZdsutils().isAuthenticated()){
-            Service<Void> loginTask = HandleLoginButtonAction(event);
+            Service<Void> loginTask = handleLoginButtonAction(event);
             loginTask.setOnCancelled(t -> {
                 hBottomBox.getChildren().clear();
                 Alert alert = new CustomAlert(AlertType.ERROR);
@@ -503,7 +503,7 @@ public class MenuController{
         }
     }
 
-    @FXML private void HandleSwitchWorkspaceAction(ActionEvent event) throws IOException{
+    @FXML private void handleSwitchWorkspaceAction(ActionEvent event) throws IOException{
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setInitialDirectory(MainApp.getDefaultHome());
         fileChooser.setTitle(Configuration.bundle.getString("ui.dialog.switchworkspace"));
@@ -522,7 +522,7 @@ public class MenuController{
         }
     }
 
-    @FXML private void HandleExportMarkdownButtonAction(ActionEvent event){
+    @FXML private void handleExportMarkdownButtonAction(ActionEvent event){
         Content content = mainApp.getContents().get(0);
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setInitialDirectory(MainApp.getDefaultHome());
@@ -546,7 +546,7 @@ public class MenuController{
         }
     }
 
-    @FXML private void HandleExportPdfButtonAction(ActionEvent event){
+    @FXML private void handleExportPdfButtonAction(ActionEvent event){
         Content content = mainApp.getContents().get(0);
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setInitialDirectory(MainApp.getDefaultHome());
@@ -584,7 +584,7 @@ public class MenuController{
         }
     }
 
-    @FXML private void HandleMdCheatSheetButtonAction(ActionEvent event){
+    @FXML private void handleMdCheatSheetButtonAction(ActionEvent event){
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/MdCheatSheetDialog.fxml"));
 
         Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.help.md_cheat_sheet"));
@@ -594,7 +594,7 @@ public class MenuController{
         dialogStage.show();
     }
 
-    @FXML private void HandleFindReplaceAction(ActionEvent event){
+    @FXML private void handleFindReplaceAction(ActionEvent event){
         SplitPane sPane = (SplitPane) mainApp.getExtracts()
                 .entrySet()
                 .stream()
@@ -607,7 +607,7 @@ public class MenuController{
         FunctionTreeFactory.OpenFindReplaceDialog(source);
     }
 
-    @FXML private void HandleAboutButtonAction(ActionEvent event){
+    @FXML private void handleAboutButtonAction(ActionEvent event){
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/AboutDialog.fxml"));
 
         Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.help.about"));
@@ -619,7 +619,7 @@ public class MenuController{
         dialogStage.show();
     }
 
-    @FXML private void HandleOptionsButtonAction(ActionEvent event){
+    @FXML private void handleOptionsButtonAction(ActionEvent event){
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/OptionsDialog.fxml"));
 
         Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.options"));
@@ -633,7 +633,7 @@ public class MenuController{
         dialogStage.show();
     }
 
-    @FXML private void HandleImportGithubButtonAction() {
+    @FXML private void handleImportGithubButtonAction() {
         TextInputDialog dialog = new TextInputDialog("https://github.com/");
         dialog.setTitle(Configuration.bundle.getString("ui.dialog.import.github.title"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.import.github.header"));
@@ -674,7 +674,7 @@ public class MenuController{
         });
     }
 
-    @FXML private void HandleImportZdsButtonAction() {
+    @FXML private void handleImportZdsButtonAction() {
         TextInputDialog dialog = new TextInputDialog("https://zestedesavoir.com/");
         dialog.setTitle(Configuration.bundle.getString("ui.dialog.import.zds.title"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.import.zds.header"));
@@ -715,7 +715,7 @@ public class MenuController{
         });
     }
 
-    @FXML private void HandleCheckUpdateButtonAction(ActionEvent event){
+    @FXML private void handleCheckUpdateButtonAction(ActionEvent event){
         Service<Boolean> checkService = new Service<Boolean>() {
             @Override
             protected Task<Boolean> createTask() {
@@ -770,7 +770,7 @@ public class MenuController{
         checkService.start();
     }
 
-    @FXML private void HandleContentsButtonAction(ActionEvent event){
+    @FXML private void handleContentsButtonAction(ActionEvent event){
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/ContentsDialog.fxml"));
 
         Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.tools.external_contents"));

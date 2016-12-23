@@ -9,7 +9,7 @@
    <top>
        <MenuBar BorderPane.alignment="CENTER">
            <Menu mnemonicParsing="false" text="%ui.menu.file">
-               <MenuItem fx:id="menuNewContent" mnemonicParsing="false" onAction="#HandleNewButtonAction"
+               <MenuItem fx:id="menuNewContent" mnemonicParsing="false" onAction="#handleNewButtonAction"
                          text="%ui.menu.file.new">
                    <graphic>
                        <MaterialDesignIconView fill="#084561" glyphName="FOLDER_PLUS" size="1.8em"/>
@@ -18,7 +18,7 @@
                        <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
                    </accelerator>
                </MenuItem>
-               <MenuItem mnemonicParsing="false" onAction="#HandleOpenButtonAction" text="%ui.menu.file.open">
+               <MenuItem mnemonicParsing="false" onAction="#handleOpenButtonAction" text="%ui.menu.file.open">
                    <graphic>
                        <MaterialDesignIconView fill="#084561" glyphName="FOLDER" size="1.8em"/>
                    </graphic>
@@ -26,7 +26,7 @@
                        <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
                    </accelerator>
                </MenuItem>
-               <MenuItem mnemonicParsing="false" onAction="#HandleSwitchWorkspaceAction"
+               <MenuItem mnemonicParsing="false" onAction="#handleSwitchWorkspaceAction"
                          text="%ui.menu.file.switch_dir">
                    <graphic>
                        <MaterialDesignIconView fill="#084561" glyphName="FOLDER_MOVE" size="1.8em"/>
@@ -37,13 +37,13 @@
                    <graphic>
                        <MaterialDesignIconView fill="#084561" glyphName="FILE_IMPORT" size="1.8em"/>
                    </graphic>
-                   <MenuItem mnemonicParsing="false" onAction="#HandleImportGithubButtonAction"
+                   <MenuItem mnemonicParsing="false" onAction="#handleImportGithubButtonAction"
                              text="%ui.menu.import.github">
                        <graphic>
                            <MaterialDesignIconView fill="#084561" glyphName="GITHUB_CIRCLE" size="1.8em"/>
                        </graphic>
                    </MenuItem>
-                   <MenuItem mnemonicParsing="false" onAction="#HandleImportZdsButtonAction"
+                   <MenuItem mnemonicParsing="false" onAction="#handleImportZdsButtonAction"
                              text="%ui.menu.import.zds">
                        <graphic>
                            <MaterialDesignIconView fill="#084561" glyphName="WEB" size="1.8em"/>
@@ -54,13 +54,13 @@
                    <graphic>
                        <MaterialDesignIconView fill="#084561" glyphName="FILE_EXPORT" size="1.8em"/>
                    </graphic>
-                   <MenuItem mnemonicParsing="false" onAction="#HandleExportMarkdownButtonAction"
+                   <MenuItem mnemonicParsing="false" onAction="#handleExportMarkdownButtonAction"
                              text="%ui.menu.export.mardkown">
                        <graphic>
                            <MaterialDesignIconView fill="#084561" glyphName="MARKDOWN" size="1.8em"/>
                        </graphic>
                    </MenuItem>
-                   <MenuItem mnemonicParsing="false" onAction="#HandleExportPdfButtonAction"
+                   <MenuItem mnemonicParsing="false" onAction="#handleExportPdfButtonAction"
                              text="%ui.menu.export.pdf">
                        <graphic>
                            <MaterialDesignIconView fill="#084561" glyphName="FILE_PDF" size="1.8em"/>
@@ -68,7 +68,7 @@
                    </MenuItem>
                </Menu>
                <SeparatorMenuItem/>
-               <MenuItem fx:id="menuQuit" mnemonicParsing="false" onAction="#HandleQuitButtonAction"
+               <MenuItem fx:id="menuQuit" mnemonicParsing="false" onAction="#handleQuitButtonAction"
                          text="%ui.menu.quit">
                    <graphic>
                        <MaterialDesignIconView fill="#084561" glyphName="EXIT_TO_APP" size="1.8em"/>
@@ -80,7 +80,7 @@
            </Menu>
            <Menu mnemonicParsing="false" text="%ui.menu.edit">
                <MenuItem fx:id="menuReport" disable="true" mnemonicParsing="false"
-                         onAction="#HandleReportWithoutTypoButtonAction" text="%ui.menu.edit.correction">
+                         onAction="#handleReportWithoutTypoButtonAction" text="%ui.menu.edit.correction">
                    <graphic>
                        <MaterialDesignIconView fill="#084561" glyphName="SPELLCHECK" size="1.8em"/>
                    </graphic>
@@ -92,12 +92,12 @@
                    <graphic>
                        <MaterialDesignIconView fill="#084561" glyphName="READ" size="1.8em"/>
                    </graphic>
-                   <MenuItem mnemonicParsing="false" onAction="#HandleFleshButtonAction"
+                   <MenuItem mnemonicParsing="false" onAction="#handleFleshButtonAction"
                              text="%ui.menu.edit.readable.flesch_index"/>
-                   <MenuItem mnemonicParsing="false" onAction="#HandleGunningButtonAction"
+                   <MenuItem mnemonicParsing="false" onAction="#handleGunningButtonAction"
                              text="%ui.menu.edit.readable.gunning_index"/>
                </Menu>
-               <MenuItem fx:id="menuOptions" mnemonicParsing="false" onAction="#HandleOptionsButtonAction"
+               <MenuItem fx:id="menuOptions" mnemonicParsing="false" onAction="#handleOptionsButtonAction"
                          text="%ui.menu.options">
                    <graphic>
                        <MaterialDesignIconView fill="#084561" glyphName="SETTINGS" size="1.8em"/>
@@ -106,7 +106,7 @@
            </Menu>
            <Menu mnemonicParsing="false" text="%ui.menu.tools">
                <Menu mnemonicParsing="false" text="%ui.menu.syncho">
-                   <MenuItem fx:id="menuDownload" mnemonicParsing="false" onAction="#HandleDownloadButtonAction"
+                   <MenuItem fx:id="menuDownload" mnemonicParsing="false" onAction="#handleDownloadButtonAction"
                              text="%ui.menu.syncho.download">
                        <graphic>
                            <MaterialDesignIconView fill="#084561" glyphName="CLOUD_DOWNLOAD" size="1.8em"/>
@@ -117,7 +117,7 @@
                        </accelerator>
                    </MenuItem>
                    <MenuItem fx:id="menuUpload" disable="true" mnemonicParsing="false"
-                             onAction="#HandleUploadButtonAction" text="%ui.menu.syncho.upload">
+                             onAction="#handleUploadButtonAction" text="%ui.menu.syncho.upload">
                        <graphic>
                            <MaterialDesignIconView fill="#084561" glyphName="CLOUD_UPLOAD" size="1.8em"/>
                        </graphic>
@@ -127,16 +127,16 @@
                        </accelerator>
                    </MenuItem>
                </Menu>
-               <MenuItem fx:id="menuFindReplace" mnemonicParsing="false" onAction="#HandleFindReplaceAction"
+               <MenuItem fx:id="menuFindReplace" mnemonicParsing="false" onAction="#handleFindReplaceAction"
                          text="%ui.menu.tools.find_replace" disable="true"/>
-               <MenuItem mnemonicParsing="false" onAction="#HandleContentsButtonAction"
+               <MenuItem mnemonicParsing="false" onAction="#handleContentsButtonAction"
                          text="%ui.menu.tools.external_contents" disable="true"/>
            </Menu>
            <Menu mnemonicParsing="false" text="%ui.menu.help">
-               <MenuItem mnemonicParsing="false" onAction="#HandleAboutButtonAction" text="%ui.menu.help.about"/>
-               <MenuItem mnemonicParsing="false" onAction="#HandleMdCheatSheetButtonAction"
+               <MenuItem mnemonicParsing="false" onAction="#handleAboutButtonAction" text="%ui.menu.help.about"/>
+               <MenuItem mnemonicParsing="false" onAction="#handleMdCheatSheetButtonAction"
                          text="%ui.menu.help.md_cheat_sheet"/>
-               <MenuItem mnemonicParsing="false" onAction="#HandleCheckUpdateButtonAction"
+               <MenuItem mnemonicParsing="false" onAction="#handleCheckUpdateButtonAction"
                          text="%ui.menu.help.check_update"/>
            </Menu>
        </MenuBar>

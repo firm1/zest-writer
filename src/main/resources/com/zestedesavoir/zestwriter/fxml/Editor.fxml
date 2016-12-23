@@ -15,7 +15,7 @@
     <BorderPane fx:id="BoxEditor">
         <top>
             <ToolBar fx:id="editorToolBar" BorderPane.alignment="CENTER">
-                <Button fx:id="SaveButton" mnemonicParsing="false" onAction="#HandleSaveButtonAction">
+                <Button fx:id="SaveButton" mnemonicParsing="false" onAction="#handleSaveButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.save"/>
                     </tooltip>
@@ -24,7 +24,7 @@
                   </graphic>
                 </Button>
                 <Separator orientation="VERTICAL"/>
-                <Button mnemonicParsing="false" onAction="#HandleBoldButtonAction">
+                <Button mnemonicParsing="false" onAction="#handleBoldButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.bold"/>
                     </tooltip>
@@ -32,7 +32,7 @@
                         <MaterialDesignIconView fill="#084561" glyphName="FORMAT_BOLD" size="1.8em"/>
                     </graphic>
                 </Button>
-                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleItalicButtonAction">
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleItalicButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.italic"/>
                     </tooltip>
@@ -41,7 +41,7 @@
                     </graphic>
                 </Button>
                 <Separator orientation="VERTICAL"/>
-                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBarredButtonAction">
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleBarredButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.barred"/>
                     </tooltip>
@@ -49,7 +49,7 @@
                       <MaterialDesignIconView fill="#084561" glyphName="FORMAT_STRIKETHROUGH" size="1.8em"/>
                   </graphic>
                 </Button>
-                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleTouchButtonAction">
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleTouchButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.keyboard"/>
                     </tooltip>
@@ -57,7 +57,7 @@
                       <MaterialDesignIconView fill="#084561" glyphName="KEYBOARD" size="1.8em"/>
                   </graphic>
                 </Button>
-                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleLinkButtonAction">
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleLinkButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.link"/>
                     </tooltip>
@@ -65,7 +65,7 @@
                       <MaterialDesignIconView fill="#084561" glyphName="LINK" size="1.8em"/>
                   </graphic>
                 </Button>
-                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleCodeButtonAction">
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleCodeButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.code"/>
                     </tooltip>
@@ -73,7 +73,7 @@
                       <MaterialDesignIconView fill="#084561" glyphName="CODE_TAGS" size="1.8em"/>
                   </graphic>
                 </Button>
-                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleImgButtonAction">
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleImgButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.image"/>
                     </tooltip>
@@ -81,7 +81,7 @@
                       <MaterialDesignIconView fill="#084561" glyphName="IMAGE" size="1.8em"/>
                   </graphic>
                 </Button>
-                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleExpButtonAction">
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleExpButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.exp"/>
                     </tooltip>
@@ -89,7 +89,7 @@
                       <MaterialDesignIconView fill="#084561" glyphName="FORMAT_SUPERSCRIPT" size="1.8em"/>
                   </graphic>
                 </Button>
-                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleIndButtonAction">
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleIndButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.ind"/>
                     </tooltip>
@@ -98,7 +98,7 @@
                   </graphic>
                 </Button>
                 <Separator orientation="VERTICAL"/>
-                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleCenterButtonAction">
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleCenterButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.center"/>
                     </tooltip>
@@ -106,7 +106,7 @@
                       <MaterialDesignIconView fill="#084561" glyphName="FORMAT_ALIGN_CENTER" size="1.8em"/>
                   </graphic>
                 </Button>
-                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleRightButtonAction">
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleRightButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.right"/>
                     </tooltip>
@@ -115,7 +115,7 @@
                   </graphic>
                 </Button>
                 <Separator orientation="VERTICAL"/>
-                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBulletButtonAction">
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleBulletButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.bullet"/>
                     </tooltip>
@@ -123,7 +123,7 @@
                       <MaterialDesignIconView fill="#084561" glyphName="FORMAT_LIST_BULLETED" size="1.8em"/>
                   </graphic>
                 </Button>
-                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleNumberedButtonAction">
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleNumberedButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.numbered"/>
                     </tooltip>
@@ -132,7 +132,7 @@
                   </graphic>
                 </Button>
                 <Separator orientation="VERTICAL"/>
-                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleHeaderButtonAction">
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleHeaderButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.header"/>
                     </tooltip>
@@ -140,7 +140,7 @@
                       <MaterialDesignIconView fill="#084561" glyphName="FORMAT_HEADER_INCREASE" size="1.8em"/>
                   </graphic>
                 </Button>
-                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleQuoteButtonAction">
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleQuoteButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.quote"/>
                     </tooltip>
@@ -148,7 +148,7 @@
                       <MaterialDesignIconView fill="#084561" glyphName="FORMAT_QUOTE" size="1.8em"/>
                   </graphic>
                 </Button>
-                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBlocButtonAction">
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleBlocButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.bloc"/>
                     </tooltip>
@@ -156,7 +156,7 @@
                       <MaterialDesignIconView fill="#084561" glyphName="INFORMATION" size="1.8em"/>
                   </graphic>
                 </Button>
-                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleTableButtonAction">
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleTableButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.table"/>
                     </tooltip>
@@ -176,7 +176,7 @@
         </center>
         <top>
             <ToolBar fx:id="editorToolBarRender" BorderPane.alignment="CENTER">
-                <Button fx:id="FullScreeen" mnemonicParsing="false" onAction="#HandleFullScreeenButtonAction">
+                <Button fx:id="FullScreeen" mnemonicParsing="false" onAction="#handleFullScreeenButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.fullscreen"/>
                     </tooltip>
@@ -185,7 +185,7 @@
                     </graphic>
                 </Button>
 
-                <Button fx:id="CorrectButton" mnemonicParsing="false" onAction="#HandleValidateButtonAction">
+                <Button fx:id="CorrectButton" mnemonicParsing="false" onAction="#handleValidateButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.correct"/>
                     </tooltip>
@@ -194,7 +194,7 @@
                   </graphic>
                 </Button>
 
-                <Button fx:id="ExternalWindow" mnemonicParsing="false" onAction="#HandleExternalButtonAction">
+                <Button fx:id="ExternalWindow" mnemonicParsing="false" onAction="#handleExternalButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.externalrender"/>
                     </tooltip>

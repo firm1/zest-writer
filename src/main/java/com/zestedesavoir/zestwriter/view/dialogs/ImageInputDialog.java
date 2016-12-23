@@ -56,7 +56,7 @@ public class ImageInputDialog{
 
     @FXML private void HandleSelectFileAction(){
         if(! zdsUtils.isAuthenticated()){
-            Service<Void> loginTask = menuManager.HandleLoginButtonAction(null);
+            Service<Void> loginTask = menuManager.handleLoginButtonAction(null);
 
             loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
                 Alert alert;

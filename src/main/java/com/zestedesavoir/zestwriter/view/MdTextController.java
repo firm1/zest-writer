@@ -265,7 +265,7 @@ public class MdTextController {
                 if (result.isPresent()) {
                     if (result.get() != buttonTypeCancel) {
                         if (result.get() == buttonTypeYes) {
-                            controllerConvert.HandleSaveButtonAction(null);
+                            controllerConvert.handleSaveButtonAction(null);
                         }
                         Event.fireEvent(tab, new Event(Tab.CLOSED_EVENT));
                     } else {

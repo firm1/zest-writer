@@ -71,7 +71,6 @@ public class MdConvertController {
     private StringProperty countWords = new SimpleStringProperty();
     private StringProperty countTimes = new SimpleStringProperty();
     private BooleanPropertyBase isSaved = new SimpleBooleanProperty(true);
-    private boolean isRenderExternalWindow = false;
 
     @FXML private WebView renderView;
     @FXML private Button SaveButton;
@@ -79,8 +78,8 @@ public class MdConvertController {
     @FXML private BorderPane BoxEditor;
     @FXML private BorderPane BoxRender;
     private CustomStyledClassedTextArea SourceText;
-    public final static Pattern recognizeNumber = Pattern.compile("^(\\s*)([\\d][\\.]) (\\s*)(.*)");
-    public final static Pattern recognizeBullet = Pattern.compile("^(\\s*)([*|-]) (\\s*)(.*)");
+    public static final Pattern recognizeNumber = Pattern.compile("^(\\s*)([\\d][\\.]) (\\s*)(.*)");
+    public static final Pattern recognizeBullet = Pattern.compile("^(\\s*)([*|-]) (\\s*)(.*)");
 
     public MdConvertController() {
         super();
@@ -101,9 +100,6 @@ public class MdConvertController {
         this.mdBox = mdBox;
         this.tab = tab;
         this.extract = extract;
-
-        // TODO: Plugin
-        //mainApp.getPluginsManager().setPluginEditor(this);
 
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Editor.fxml"));
         loader.load();
@@ -134,38 +130,38 @@ public class MdConvertController {
         });
 
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper.on(keyPressed(KeyCode.S, SHORTCUT_DOWN)).act( ev -> HandleSaveButtonAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.S, SHORTCUT_DOWN)).act( ev -> handleSaveButtonAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper.on(keyPressed(KeyCode.G, SHORTCUT_DOWN)).act( ev -> HandleBoldButtonAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.G, SHORTCUT_DOWN)).act( ev -> handleBoldButtonAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper.on(keyPressed(KeyCode.I, SHORTCUT_DOWN)).act( ev -> HandleItalicButtonAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.I, SHORTCUT_DOWN)).act( ev -> handleItalicButtonAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper.on(keyPressed(KeyCode.B, SHORTCUT_DOWN)).act( ev -> HandleBarredButtonAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.B, SHORTCUT_DOWN)).act( ev -> handleBarredButtonAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper.on(keyPressed(KeyCode.K, SHORTCUT_DOWN)).act( ev -> HandleTouchButtonAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.K, SHORTCUT_DOWN)).act( ev -> handleTouchButtonAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper.on(keyPressed(KeyCode.PLUS, SHORTCUT_DOWN)).act( ev -> HandleExpButtonAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.PLUS, SHORTCUT_DOWN)).act( ev -> handleExpButtonAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper.on(keyPressed(KeyCode.EQUALS, SHORTCUT_DOWN)).act( ev -> HandleIndButtonAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.EQUALS, SHORTCUT_DOWN)).act( ev -> handleIndButtonAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper.on(keyPressed(KeyCode.E, SHORTCUT_DOWN)).act( ev -> HandleCenterButtonAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.E, SHORTCUT_DOWN)).act( ev -> handleCenterButtonAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper.on(keyPressed(KeyCode.D, SHIFT_DOWN, SHORTCUT_DOWN)).act( ev -> HandleRightButtonAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.D, SHIFT_DOWN, SHORTCUT_DOWN)).act( ev -> handleRightButtonAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper.on(keyPressed(KeyCode.SPACE, SHORTCUT_DOWN)).act( ev -> HandleUnbreakableAction(null)).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.SPACE, SHORTCUT_DOWN)).act( ev -> handleUnbreakableAction(null)).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper.on(keyPressed(KeyCode.L, SHORTCUT_DOWN)).act( ev -> HandleGoToLineAction()).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.L, SHORTCUT_DOWN)).act( ev -> handleGoToLineAction()).create());
         EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                EventHandlerHelper.on(keyPressed(KeyCode.F, SHORTCUT_DOWN)).act( ev -> HandleFindReplaceDialog()).create());
+                EventHandlerHelper.on(keyPressed(KeyCode.F, SHORTCUT_DOWN)).act( ev -> handleFindReplaceDialog()).create());
         if(FunctionTreeFactory.isMacOs()) {
             EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
                     EventHandlerHelper.on(keyPressed(KeyCode.Q, SHORTCUT_DOWN)).act( ev -> SourceText.selectAll()).create());
         }
         if(MainApp.getConfig().isEditorSmart()) {
             EventHandlerHelper.install(SourceText.onKeyReleasedProperty(),
-                    EventHandlerHelper.on(keyReleased(KeyCode.TAB)).act(ev -> HandleSmartTab()).create());
+                    EventHandlerHelper.on(keyReleased(KeyCode.TAB)).act(ev -> handleSmartTab()).create());
             EventHandlerHelper.install(SourceText.onKeyReleasedProperty(),
-                    EventHandlerHelper.on(keyReleased(KeyCode.ENTER)).act(ev -> HandleSmartEnter()).create());
+                    EventHandlerHelper.on(keyReleased(KeyCode.ENTER)).act(ev -> handleSmartEnter()).create());
         }
 
         tab.setOnSelectionChanged(t -> {
@@ -177,11 +173,11 @@ public class MdConvertController {
             }
         });
 
-        Platform.runLater(() -> SourceText.requestFocus());
+        Platform.runLater(SourceText::requestFocus);
     }
 
 
-    private void HandleSmartEnter() {
+    private void handleSmartEnter() {
         int precLine = SourceText.getCurrentParagraph() - 1;
         if(precLine >= 0) {
             String line = SourceText.getParagraph(precLine).toString();
@@ -191,7 +187,7 @@ public class MdConvertController {
                 matcher = recognizeNumber.matcher(line);
             }
             if(matcher.matches()) {
-                if(matcher.group(4).trim().equals("")) {
+                if("".equals(matcher.group(4).trim())) {
                     int positionCaret = SourceText.getCaretPosition();
                     SourceText.deleteText(positionCaret-line.length() - 1, positionCaret);
                 } else {
@@ -201,7 +197,7 @@ public class MdConvertController {
         }
     }
 
-    private void HandleSmartTab() {
+    private void handleSmartTab() {
         int caseLine = SourceText.getCurrentParagraph();
         if(caseLine >= 0) {
             String line = SourceText.getParagraph(caseLine).toString();
@@ -233,7 +229,7 @@ public class MdConvertController {
      * Editor Toolbar Action
      */
 
-    @FXML public void HandleSaveButtonAction(ActionEvent event) {
+    @FXML public void handleSaveButtonAction(ActionEvent event) {
         extract.setMarkdown(SourceText.getText());
         extract.save();
         tab.setText(extract.getTitle());
@@ -242,39 +238,39 @@ public class MdConvertController {
         SourceText.requestFocus();
     }
 
-    @FXML private void HandleBoldButtonAction(ActionEvent event) {
+    @FXML private void handleBoldButtonAction(ActionEvent event) {
         replaceAction("****", 2, "**", "**");
     }
 
-    @FXML private void HandleItalicButtonAction(ActionEvent event) {
+    @FXML private void handleItalicButtonAction(ActionEvent event) {
         replaceAction("**", 1, "*", "*");
     }
 
-    @FXML private void HandleBarredButtonAction(ActionEvent event) {
+    @FXML private void handleBarredButtonAction(ActionEvent event) {
         replaceAction("~~~~", 2, "~~", "~~");
     }
 
-    @FXML private void HandleTouchButtonAction(ActionEvent event) {
+    @FXML private void handleTouchButtonAction(ActionEvent event) {
         replaceAction("||||", 2, "||", "||");
     }
 
-    @FXML private void HandleExpButtonAction(ActionEvent event) {
+    @FXML private void handleExpButtonAction(ActionEvent event) {
         replaceAction("^^", 1, "^", "^");
     }
 
-    @FXML private void HandleIndButtonAction(ActionEvent event) {
+    @FXML private void handleIndButtonAction(ActionEvent event) {
         replaceAction("~~", 1, "~", "~");
     }
 
-    @FXML private void HandleCenterButtonAction(ActionEvent event) {
+    @FXML private void handleCenterButtonAction(ActionEvent event) {
         replaceAction("\n->  <-", 3, "\n-> ", " <-");
     }
 
-    @FXML private void HandleRightButtonAction(ActionEvent event) {
+    @FXML private void handleRightButtonAction(ActionEvent event) {
         replaceAction("\n->  ->", 3, "\n-> ", " ->\n");
     }
 
-    @FXML private void HandleImgButtonAction(ActionEvent event) {
+    @FXML private void handleImgButtonAction(ActionEvent event) {
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/ImageInput.fxml"));
 
         Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.dialog.upload.img.title"));
@@ -289,7 +285,7 @@ public class MdConvertController {
 
         dialogStage.show();
     }
-    @FXML private void HandleBulletButtonAction(ActionEvent event) {
+    @FXML private void handleBulletButtonAction(ActionEvent event) {
         if(SourceText.getSelectedText().isEmpty()){
             SourceText.replaceText(SourceText.getSelection(), "- ");
         }else{
@@ -305,7 +301,7 @@ public class MdConvertController {
         SourceText.requestFocus();
     }
 
-    @FXML private void HandleNumberedButtonAction(ActionEvent event) {
+    @FXML private void handleNumberedButtonAction(ActionEvent event) {
         if(SourceText.getSelectedText().isEmpty()){
             SourceText.replaceText(SourceText.getSelection(), "1. ");
         }else{
@@ -323,16 +319,16 @@ public class MdConvertController {
         SourceText.requestFocus();
     }
 
-    @FXML private void HandleHeaderButtonAction(ActionEvent event) {
+    @FXML private void handleHeaderButtonAction(ActionEvent event) {
         SourceText.replaceText(SourceText.getSelection(), "# " + SourceText.getSelectedText());
         SourceText.requestFocus();
     }
 
-    @FXML private void HandleQuoteButtonAction(ActionEvent event) {
+    @FXML private void handleQuoteButtonAction(ActionEvent event) {
         replaceAction("> ", 0, "> ", "\n\n");
     }
 
-    @FXML private void HandleBlocButtonAction(ActionEvent event) {
+    @FXML private void handleBlocButtonAction(ActionEvent event) {
         String text = "";
         String[] lines = SourceText.getSelectedText().split("\n");
         for (String line : lines) {
@@ -363,7 +359,7 @@ public class MdConvertController {
         SourceText.requestFocus();
     }
 
-    @FXML private void HandleTableButtonAction(ActionEvent event) throws IOException {
+    @FXML private void handleTableButtonAction(ActionEvent event) throws IOException {
         // Create the custom dialog.
         Dialog<Pair<ObservableList, ObservableList<ZRow>>> dialog = new CustomDialog<>();
         dialog.setTitle(Configuration.bundle.getString("ui.editor.button.table"));
@@ -410,7 +406,7 @@ public class MdConvertController {
         });
     }
 
-    @FXML private void HandleLinkButtonAction(ActionEvent event) {
+    @FXML private void handleLinkButtonAction(ActionEvent event) {
         String link = SourceText.getSelectedText();
 
         // Create the custom dialog.
@@ -461,7 +457,7 @@ public class MdConvertController {
         SourceText.requestFocus();
     }
 
-    @FXML private void HandleCodeButtonAction(ActionEvent event) {
+    @FXML private void handleCodeButtonAction(ActionEvent event) {
         String code = SourceText.getSelectedText();
         if (code.trim().startsWith("```") && code.trim().endsWith("```")) {
             int start = code.trim().indexOf('\n') + 1;
@@ -527,7 +523,7 @@ public class MdConvertController {
         SplitPane.setResizableWithParent(mdBox.treePane,Boolean.FALSE);
     }
 
-    @FXML private void HandleFullScreeenButtonAction(ActionEvent event) {
+    @FXML private void handleFullScreeenButtonAction(ActionEvent event) {
         if (mdBox.getSplitPane().getItems().size() > 1) {
             mdBox.getSplitPane().getItems().remove(0);
         } else {
@@ -544,7 +540,7 @@ public class MdConvertController {
                     protected String call() throws Exception {
                         String html = markdownToHtml(SourceText.getText());
                         if (html != null) {
-                            return mainApp.getMdUtils().addHeaderAndFooter(html);
+                            return MainApp.getMdUtils().addHeaderAndFooter(html);
                         } else {
                             Thread.sleep(5000);
                             throw new IOException();
@@ -583,7 +579,7 @@ public class MdConvertController {
         performStats();
     }
 
-    @FXML private void HandleValidateButtonAction(ActionEvent event) {
+    @FXML private void handleValidateButtonAction(ActionEvent event) {
         String s = StringEscapeUtils.unescapeHtml(markdownToHtml(SourceText.getText()));
         if(corrector == null) {
         	corrector = new Corrector();
@@ -599,7 +595,7 @@ public class MdConvertController {
         }
     }
 
-    @FXML private void HandleExternalButtonAction(ActionEvent event){
+    @FXML private void handleExternalButtonAction(ActionEvent event){
         splitPane.getItems().remove(1);
 
         Stage stage = new CustomStage(Configuration.bundle.getString("ui.window.externalrender.title"));
@@ -622,7 +618,7 @@ public class MdConvertController {
         });
     }
 
-    @FXML private void HandleUnbreakableAction(ActionEvent event) {
+    @FXML private void handleUnbreakableAction(ActionEvent event) {
         SourceText.replaceText(SourceText.getSelection(), SourceText.getSelectedText() + "\u00a0");
         SourceText.requestFocus();
     }
@@ -635,6 +631,7 @@ public class MdConvertController {
     }
 
     public void initStats() {
+        String fontSize="-fx-font-size: 0.9em;";
         mainApp.getMenuController().gethBottomBox().getChildren().clear();
         mainApp.getMenuController().gethBottomBox().getColumnConstraints().clear();
         mainApp.getMenuController().gethBottomBox().setPadding(new Insets(5, 5, 5, 5));
@@ -649,9 +646,9 @@ public class MdConvertController {
         Label chars = new Label();
         Label words = new Label();
         Label times = new Label();
-        chars.setStyle("-fx-font-size: 0.9em;");
-        words.setStyle("-fx-font-size: 0.9em;");
-        times.setStyle("-fx-font-size: 0.9em;");
+        chars.setStyle(fontSize);
+        words.setStyle(fontSize);
+        times.setStyle(fontSize);
         mainApp.getMenuController().gethBottomBox().getColumnConstraints().addAll(c1, c2, c3, c4);
         mainApp.getMenuController().gethBottomBox().add(times, 1, 0);
         mainApp.getMenuController().gethBottomBox().add(chars, 2, 0);
@@ -664,12 +661,12 @@ public class MdConvertController {
     }
 
 
-    public void HandleGoToLineAction() {
+    public void handleGoToLineAction() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.goto.title"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.goto.header"));
         dialog.setContentText(Configuration.bundle.getString("ui.editor.dialog.goto.text"));
-        dialog.initOwner(mainApp.getPrimaryStage());
+        dialog.initOwner(MainApp.getPrimaryStage());
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(line -> SourceText.positionCaret(SourceText.position(Integer.parseInt(line)-1, 0).toOffset()));
@@ -697,18 +694,14 @@ public class MdConvertController {
             SourceText.replaceText(SourceText.getSelection(), beforeString + SourceText.getSelectedText() + afterString);
         }
 
-        Platform.runLater(() -> SourceText.requestFocus());
+        Platform.runLater(SourceText::requestFocus);
     }
 
     public boolean isSaved() {
         return isSaved.getValue();
     }
 
-    public void setSaved(boolean isSaved) {
-        this.isSaved.setValue(isSaved);
-    }
-
-    @FXML private void HandleFindReplaceDialog(){
+    @FXML private void handleFindReplaceDialog(){
         FunctionTreeFactory.OpenFindReplaceDialog(SourceText);
     }
 
@@ -735,6 +728,7 @@ public class MdConvertController {
             return (Integer) view.getEngine().executeScript("document.body.scrollTop");
         }
         catch(JSException e) {
+            logger.trace(e.getMessage(), e);
             return 0;
         }
     }
@@ -751,6 +745,7 @@ public class MdConvertController {
             return (Integer) view.getEngine().executeScript("document.body.scrollLeft");
         }
         catch(JSException e) {
+            logger.trace(e.getMessage(), e);
             return 0;
         }
     }
