@@ -3,6 +3,7 @@ package com.zestedesavoir.zestwriter.utils;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 public class Lang {
     private Locale locale;
@@ -22,6 +23,11 @@ public class Lang {
     }
 
     public static Lang getLangFromCode(String code) {
-        return langAvailable.stream().filter(p -> p.getLocale().toString().equals(code)).findFirst().get();
+        Optional <Lang> lang = langAvailable.stream().filter(p -> p.getLocale().toString().equals(code)).findFirst();
+        if(lang.isPresent()) {
+            return lang.get();
+        } else {
+            return null;
+        }
     }
 }

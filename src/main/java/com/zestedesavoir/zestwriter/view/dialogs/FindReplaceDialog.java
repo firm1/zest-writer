@@ -2,7 +2,6 @@ package com.zestedesavoir.zestwriter.view.dialogs;
 
 
 import com.zestedesavoir.zestwriter.MainApp;
-import com.zestedesavoir.zestwriter.contents.internal.InternalMapper;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,7 +11,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.fxmisc.richtext.StyleClassedTextArea;
-import org.python.antlr.op.In;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FindReplaceDialog{
-    private MainApp mainApp;
     private StyleClassedTextArea sourceText;
-    private Stage window;
 
     private int replaceIndex;
     private int findIndex;
@@ -47,15 +43,6 @@ public class FindReplaceDialog{
         REPLACE_ALL
     }
 
-    public void setMainApp(MainApp mainApp){
-        this.mainApp = mainApp;
-    }
-
-    public void setWindow(Stage window){
-        this.window = window;
-        window.setOnCloseRequest(event -> resetTextFill());
-    }
-
     public void setSourceText(StyleClassedTextArea sourceText){
         this.sourceText = sourceText;
     }
@@ -67,18 +54,10 @@ public class FindReplaceDialog{
         replaceButton.disableProperty().bind(replaceField.textProperty().isEmpty());
         replaceAllButton.disableProperty().bind(replaceField.textProperty().isEmpty());
 
-        caseSensitive.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            refreshSearch();
-        });
-        wholeWord.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            refreshSearch();
-        });
-        markLines.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            refreshSearch();
-        });
-        selectionOnly.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            refreshSearch();
-        });
+        caseSensitive.selectedProperty().addListener((observable, oldValue, newValue) -> refreshSearch());
+        wholeWord.selectedProperty().addListener((observable, oldValue, newValue) -> refreshSearch());
+        markLines.selectedProperty().addListener((observable, oldValue, newValue) -> refreshSearch());
+        selectionOnly.selectedProperty().addListener((observable, oldValue, newValue) -> refreshSearch());
     }
 
     @FXML private void HandleSearchFieldChange(){
@@ -118,7 +97,7 @@ public class FindReplaceDialog{
                 left=m.group(1).length();
                 right = m.group(2).length();
             }
-            matches.add(new Pair<Integer, Integer>(m.start()+startFrom+left, m.end()+startFrom-right));
+            matches.add(new Pair<>(m.start() + startFrom + left, m.end() + startFrom - right));
         }
         return matches;
     }

@@ -53,13 +53,12 @@ class ZRow {
 
 }
 public class TableController {
-    private MdConvertController editorController;
     private final ObservableList<ZRow> datas = FXCollections.observableArrayList(new ZRow(1));
 
     @FXML private TableView<ZRow> tableView;
 
     public void setEditor(MdConvertController editorController) {
-        this.editorController = editorController;
+        MdConvertController editorController1 = editorController;
     }
 
     @FXML private void initialize() {

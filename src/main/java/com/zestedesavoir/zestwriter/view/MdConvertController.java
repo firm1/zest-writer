@@ -555,9 +555,7 @@ public class MdConvertController {
             }
         };
 
-        renderTask.setOnFailed(t -> {
-            renderTask.restart();
-        });
+        renderTask.setOnFailed(t -> renderTask.restart());
         renderTask.setOnSucceeded(t -> {
             yRenderPosition = getVScrollValue(renderView);
             xRenderPosition = getHScrollValue(renderView);
@@ -690,9 +688,7 @@ public class MdConvertController {
             SourceText.replaceText(SourceText.getSelection(), beforeString + SourceText.getSelectedText() + afterString);
         }
 
-        Platform.runLater(() -> {
-            SourceText.requestFocus();
-        });
+        Platform.runLater(() -> SourceText.requestFocus());
     }
 
     public boolean isSaved() {
@@ -704,7 +700,7 @@ public class MdConvertController {
     }
 
     @FXML private void HandleFindReplaceDialog(){
-        FunctionTreeFactory.OpenFindReplaceDialog(mainApp, SourceText);
+        FunctionTreeFactory.OpenFindReplaceDialog(SourceText);
     }
 
     /**

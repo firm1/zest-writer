@@ -15,10 +15,10 @@ public class Theme {
     public static List<Theme> themeAvailable = Arrays.asList(
             new Theme("dark.css", Configuration.bundle.getString("ui.options.display.theme.dark")),
             new Theme("light.css", Configuration.bundle.getString("ui.options.display.theme.light")),
-            new Theme("halloween.css", Configuration.bundle.getString("ui.options.display.theme.halloween"), 31, 10, 02, 11),
+            new Theme("halloween.css", Configuration.bundle.getString("ui.options.display.theme.halloween"), 31, 10, 2, 11),
             new Theme("winxaito_light.css", "WinXaito's Light"),
             new Theme("winxaito_dark.css", "WinXaito's Dark"),
-            new Theme("christmas.css", Configuration.bundle.getString("ui.options.display.theme.christmas"), 15, 10, 27, 10));
+            new Theme("christmas.css", Configuration.bundle.getString("ui.options.display.theme.christmas"), 15, 12, 27, 12));
 
     public Theme(String filename, String label, int startDay, int startMonth, int endDay, int endMonth) {
         this.filename = filename;
@@ -70,13 +70,15 @@ public class Theme {
     }
 
     public static Theme getActiveTheme() {
-        Date d = new Date();
         for(Theme t:themeAvailable) {
             if(t.startDay !=0) {
                 Calendar cal = Calendar.getInstance();
                 int day = cal.get(Calendar.DAY_OF_MONTH);
                 int month = cal.get(Calendar.MONTH) + 1;
-                if (month <= t.getEndMonth() && month >= t.getStartMonth() && day <= t.getEndDay() && day >= t.getStartDay()) {
+                int dateStartComparator = (t.getStartMonth() * 100 ) + t.getStartDay();
+                int dateEndComparator = (t.getEndMonth() * 100 ) + t.getEndDay();
+                int dateComparator = (month * 100 ) + day;
+                if (dateComparator <= dateEndComparator && dateComparator >= dateStartComparator) {
                     return t;
                 }
             }

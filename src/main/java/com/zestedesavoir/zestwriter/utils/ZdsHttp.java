@@ -75,7 +75,7 @@ public class ZdsHttp {
     private HttpClientContext context;
     private String localSlug;
     private static final Logger logger = LoggerFactory.getLogger(ZdsHttp.class);
-    private static String USER_AGENT = "Mozilla/5.0";
+    private static final String USER_AGENT = "Mozilla/5.0";
     private Configuration config;
     private final static Pattern NONLATIN = Pattern.compile("[^\\w-]");
     private final static Pattern WHITESPACE = Pattern.compile("[\\s]");
@@ -170,12 +170,7 @@ public class ZdsHttp {
 
         try {
             SSLContextBuilder builder = new SSLContextBuilder();
-            builder.loadTrustMaterial(null, new TrustStrategy() {
-                @Override
-                public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                    return true;
-                }
-            });
+            builder.loadTrustMaterial(null, (TrustStrategy) (chain, authType) -> true);
 
             SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build());
 
@@ -192,11 +187,7 @@ public class ZdsHttp {
                     .setSSLSocketFactory(sslsf)
                     .build();
 
-        } catch (NoSuchAlgorithmException e) {
-            logger.error(e.getMessage(), e);
-        } catch (KeyManagementException e) {
-            logger.error(e.getMessage(), e);
-        } catch (KeyStoreException e) {
+        } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
             logger.error(e.getMessage(), e);
         }
         
@@ -367,8 +358,8 @@ public class ZdsHttp {
 
             Document doc = Jsoup.parse(resultPost.getValue());
             Elements endPoints = doc.select("input[name=avatar_url]");
-            for(Element point:endPoints) {
-                return getBaseUrl() + point.attr("value").trim();
+            if(!endPoints.isEmpty()) {
+                return getBaseUrl() + endPoints.first().attr("value").trim();
             }
         }
         return "http://";

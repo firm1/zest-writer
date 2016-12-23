@@ -60,12 +60,7 @@ public class MdTextController {
 
         loadFonts();
         EditorList.getSelectionModel().selectedItemProperty().addListener(
-                new ChangeListener<Tab>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
-                        mainApp.getMenuController().isOnReadingTab.set(! (newValue.getContent() instanceof SplitPane));
-                    }
-                }
+                (observable, oldValue, newValue) -> mainApp.getMenuController().isOnReadingTab.set(! (newValue.getContent() instanceof SplitPane))
         );
     }
 
@@ -131,22 +126,18 @@ public class MdTextController {
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
 
-        mainApp.getContents().addListener((ListChangeListener<Content>) change -> {
-            FunctionTreeFactory.clearContent(mainApp.getExtracts(), EditorList, () -> {
-                Summary.setRoot(null);
-                for (Content content : mainApp.getContents()) {
-                    openContent(content);
-                }
-                return null;
-            });
-        });
+        mainApp.getContents().addListener((ListChangeListener<Content>) change -> FunctionTreeFactory.clearContent(mainApp.getExtracts(), EditorList, () -> {
+            Summary.setRoot(null);
+            mainApp.getContents().forEach(this::openContent);
+            return null;
+        }));
 
         mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.TAB, SHORTCUT_DOWN), () -> switchTabTo(true));
         mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.TAB, SHORTCUT_DOWN, SHIFT_DOWN), () -> switchTabTo(false));
         if(FunctionTreeFactory.isMacOs()) {
-            mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.Z, SHORTCUT_DOWN), () -> closeCurrentTab());
+            mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.Z, SHORTCUT_DOWN), this::closeCurrentTab);
         } else {
-            mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.W, SHORTCUT_DOWN), () -> closeCurrentTab());
+            mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.W, SHORTCUT_DOWN), this::closeCurrentTab);
         }
 
         refreshRecentProject();
@@ -178,9 +169,7 @@ public class MdTextController {
                     Label description = new Label(c.getDescription());
                     description.setWrapText(true);
                     MaterialDesignIconView type = IconFactory.createContentIcon(c.getType());
-                    link.setOnAction(t -> {
-                        FunctionTreeFactory.switchContent(c, mainApp.getContents());
-                    });
+                    link.setOnAction(t -> FunctionTreeFactory.switchContent(c, mainApp.getContents()));
                     bPane.setTop(link);
                     bPane.setBottom(description);
                     bPane.setLeft(type);

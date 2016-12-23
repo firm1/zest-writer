@@ -92,7 +92,7 @@ public class GithubHttp {
         if(map.containsKey("description")) {
             title = (String) map.get("description");
         }
-        Content current = new Content("container", toSlug(title), title, "introduction.md", "conclusion.md", new ArrayList<MetaContent>(), 2, "CC-BY", title, "TUTORIAL");
+        Content current = new Content("container", toSlug(title), title, "introduction.md", "conclusion.md", new ArrayList<>(), 2, "CC-BY", title, "TUTORIAL");
         // read all directory
         current.getChildren ().addAll (loadDirectory (folder.length () + File.separator.length (), new File(folder)));
         current.setBasePath (folder);
@@ -115,14 +115,14 @@ public class GithubHttp {
     private static List<MetaContent> loadDirectory(int countBase, File folder) {
         List<MetaContent> metas = new ArrayList<> ();
         File[] listF = folder.listFiles();
-        for(File file : listF) {
+        for(File file : listF != null ? listF : new File[0]) {
             String name = file.getName();
             if(file.isDirectory ()) {
                 String intro = file.getAbsolutePath ().substring (countBase)+File.separator+"introduction.md";
                 String conclu = file.getAbsolutePath ().substring (countBase)+File.separator+"conclusion.md";
                 intro = intro.replace (File.separator, "/");
                 conclu = conclu.replace (File.separator, "/");
-                MetaContent container = new Container ("container", ZdsHttp.toSlug (name), name, intro ,conclu, new ArrayList<MetaContent> ());
+                MetaContent container = new Container ("container", ZdsHttp.toSlug (name), name, intro ,conclu, new ArrayList<>());
                 ((Container)container).getChildren().addAll (loadDirectory (countBase, file));
                 metas.add(container);
                 File fileIntro = new File (file, "introduction.md");

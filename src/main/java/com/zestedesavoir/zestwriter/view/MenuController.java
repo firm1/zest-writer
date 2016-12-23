@@ -60,7 +60,6 @@ import java.util.stream.Collectors;
 
 public class MenuController{
     private MainApp mainApp;
-    private TextArea textArea;
     private final ProgressBar pb = new ProgressBar(0);
     private final Text labelField = new Text("");
     private final Logger logger;
@@ -223,7 +222,7 @@ public class MenuController{
     }
 
     @FXML private void HandleReportWithoutTypoButtonAction(ActionEvent event){
-        textArea = new TextArea();
+        TextArea textArea = new TextArea();
         textArea.setEditable(true);
         textArea.setWrapText(true);
 
@@ -457,11 +456,11 @@ public class MenuController{
         List<MetadataContent> possibleContent;
         if(mainApp.getContents ().get (0).isArticle()) {
             possibleContent = MainApp.getZdsutils().getContentListOnline().stream()
-                    .filter(meta -> meta.isArticle())
+                    .filter(MetadataContent::isArticle)
                     .collect(Collectors.toList());
         } else {
             possibleContent = MainApp.getZdsutils().getContentListOnline().stream()
-                    .filter(meta -> meta.isTutorial())
+                    .filter(MetadataContent::isTutorial)
                     .collect(Collectors.toList());
         }
         contents.addAll(possibleContent);
@@ -681,7 +680,7 @@ public class MenuController{
                 .getValue().getContent();
         BorderPane bPane = (BorderPane) sPane.getItems().get(0);
         StyleClassedTextArea source = (StyleClassedTextArea) bPane.getCenter();
-        FunctionTreeFactory.OpenFindReplaceDialog(mainApp, source);
+        FunctionTreeFactory.OpenFindReplaceDialog(source);
     }
 
     @FXML private void HandleAboutButtonAction(ActionEvent event){

@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
 public class FunctionTreeFactory {
 
     public static boolean isMacOs() {
-        return System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0;
+        return System.getProperty("os.name").toLowerCase().contains("mac");
     }
 
     public static Map<String,Object> initContentDialog(Content defaultContent) {
@@ -207,7 +207,7 @@ public class FunctionTreeFactory {
 
     }
 
-    public static void OpenFindReplaceDialog(MainApp mainApp, StyleClassedTextArea sourceText) {
+    public static void OpenFindReplaceDialog(StyleClassedTextArea sourceText) {
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/FindReplaceDialog.fxml"));
 
         Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.dialog.find.title"));
@@ -217,8 +217,6 @@ public class FunctionTreeFactory {
         dialogStage.setResizable(false);
 
         FindReplaceDialog findReplaceDialog = loader.getController();
-        findReplaceDialog.setMainApp(mainApp);
-        findReplaceDialog.setWindow(dialogStage);
         findReplaceDialog.setSourceText(sourceText);
 
         dialogStage.show();

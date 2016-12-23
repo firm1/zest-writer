@@ -96,9 +96,7 @@ public class ImageInputDialog{
                 alert.setContentText(Configuration.bundle.getString("ui.dialog.upload.img.failed.text"));
                 alert.showAndWait();
             });
-            uploadImageTask.setOnSucceeded(t -> {
-                link.setText(uploadImageTask.getValue());
-            });
+            uploadImageTask.setOnSucceeded(t -> link.setText(uploadImageTask.getValue()));
             uploadImageTask.start();
         }
     }

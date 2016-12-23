@@ -13,14 +13,12 @@ import java.io.File;
 import java.io.IOException;
 
 public class UploadImageService extends Service<String>{
-    private final Logger logger;
     private Content content;
 	private File imageFile;
 
     public UploadImageService(Content content, File imageFile) {
         this.content = content;
         this.imageFile = imageFile;
-		logger = LoggerFactory.getLogger(getClass());
 	}
 
 	public MetadataContent getContentFromSlug() {

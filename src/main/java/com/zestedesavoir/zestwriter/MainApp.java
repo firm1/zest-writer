@@ -105,13 +105,13 @@ public class MainApp extends Application{
         Path logDir;
         String appName = "zest-writer";
         String os = System.getProperty("os.name").toLowerCase();
-        if(os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") >= 0) {
+        if(os.contains("nix") || os.contains("nux") || os.contains("aix")) {
             logPath = Paths.get(System.getProperty("user.home"), ".config", appName, appName+".log");
             logDir = logPath.getParent();
-        } else if(os.indexOf("win") >= 0) {
+        } else if(os.contains("win")) {
             logPath = Paths.get(System.getProperty("user.home"), "AppData", "Local", appName,  appName+".log");
             logDir = logPath.getParent();
-        } else if(os.indexOf("mac") >= 0) {
+        } else if(os.contains("mac")) {
             logPath = Paths.get(System.getProperty("user.home"), "Library", "Application Support", appName, appName+".log");
             logDir = logPath.getParent();
         } else {
@@ -200,18 +200,10 @@ public class MainApp extends Application{
             quitApp();
             t.consume();
         });
-        getPrimaryStage().widthProperty().addListener((observable, oldValue, newValue) -> {
-            config.setDisplayWindowWidth(String.valueOf(newValue));
-        });
-        getPrimaryStage().heightProperty().addListener((observable, oldValue, newValue) -> {
-            config.setDisplayWindowHeight(String.valueOf(newValue));
-        });
-        getPrimaryStage().xProperty().addListener((observable, oldValue, newValue) -> {
-            config.setDisplayWindowPositionX(String.valueOf(newValue));
-        });
-        getPrimaryStage().yProperty().addListener((observable, oldValue, newValue) -> {
-            config.setDisplayWindowPositionY(String.valueOf(newValue));
-        });
+        getPrimaryStage().widthProperty().addListener((observable, oldValue, newValue) -> config.setDisplayWindowWidth(String.valueOf(newValue)));
+        getPrimaryStage().heightProperty().addListener((observable, oldValue, newValue) -> config.setDisplayWindowHeight(String.valueOf(newValue)));
+        getPrimaryStage().xProperty().addListener((observable, oldValue, newValue) -> config.setDisplayWindowPositionX(String.valueOf(newValue)));
+        getPrimaryStage().yProperty().addListener((observable, oldValue, newValue) -> config.setDisplayWindowPositionY(String.valueOf(newValue)));
 
         initRootLayout();
         showWriter();

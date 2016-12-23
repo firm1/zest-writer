@@ -13,7 +13,6 @@ import java.io.File;
  */
 public class LocalDirectorySaver implements StorageSaver{
     private String baseDirectory;
-    private File baseDirectoryDescriptor;
 
     public LocalDirectorySaver(String baseDirectory)throws RuntimeException{
         this.baseDirectory = baseDirectory;
@@ -26,8 +25,8 @@ public class LocalDirectorySaver implements StorageSaver{
     }
 
     private void openDirCreateIfNecessary(){
-        this.baseDirectoryDescriptor = new File(baseDirectory);
-        if(!this.baseDirectoryDescriptor.exists() && !this.baseDirectoryDescriptor.mkdirs()){
+        File baseDirectoryDescriptor = new File(baseDirectory);
+        if(!baseDirectoryDescriptor.exists() && !baseDirectoryDescriptor.mkdirs()){
             throw new RuntimeException("Could not create " + baseDirectory);
         }
     }

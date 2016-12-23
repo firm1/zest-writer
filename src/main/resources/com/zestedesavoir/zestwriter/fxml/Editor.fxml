@@ -9,187 +9,200 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.web.WebView?>
 
-<SplitPane fx:id="splitPane" dividerPositions="0.5" prefHeight="633.0" prefWidth="773.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MdConvertController">
-   <items>
-      <BorderPane fx:id="BoxEditor">
-         <top>
+<SplitPane fx:id="splitPane" dividerPositions="0.5" prefHeight="633.0" prefWidth="773.0"
+           xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.zestedesavoir.zestwriter.view.MdConvertController">
+    <BorderPane fx:id="BoxEditor">
+        <top>
             <ToolBar fx:id="editorToolBar" BorderPane.alignment="CENTER">
-              <items>
-                  <Button fx:id="SaveButton" mnemonicParsing="false" onAction="#HandleSaveButtonAction">
+                <Button fx:id="SaveButton" mnemonicParsing="false" onAction="#HandleSaveButtonAction">
                     <tooltip>
-                        <Tooltip text="%ui.editor.button.save" />
+                        <Tooltip text="%ui.editor.button.save"/>
                     </tooltip>
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="CONTENT_SAVE" size="1.8em" />
-                     </graphic></Button>
-                  <Separator orientation="VERTICAL" />
+                  <graphic>
+                      <MaterialDesignIconView fill="#084561" glyphName="CONTENT_SAVE" size="1.8em"/>
+                  </graphic>
+                </Button>
+                <Separator orientation="VERTICAL"/>
                 <Button mnemonicParsing="false" onAction="#HandleBoldButtonAction">
-                	<tooltip>
-				        <Tooltip text="%ui.editor.button.bold" />
-				    </tooltip>
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_BOLD" size="1.8em" />
-                     </graphic>
+                    <tooltip>
+                        <Tooltip text="%ui.editor.button.bold"/>
+                    </tooltip>
+                    <graphic>
+                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_BOLD" size="1.8em"/>
+                    </graphic>
                 </Button>
                 <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleItalicButtonAction">
-                	<tooltip>
-				        <Tooltip text="%ui.editor.button.italic" />
-				    </tooltip>
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_ITALIC" size="1.8em" />
-                     </graphic></Button>
-                  <Separator orientation="VERTICAL" />
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBarredButtonAction">
-                  	<tooltip>
-				        <Tooltip text="%ui.editor.button.barred" />
-				    </tooltip>
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_STRIKETHROUGH" size="1.8em" />
-                     </graphic></Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleTouchButtonAction">
-                  	<tooltip>
-				        <Tooltip text="%ui.editor.button.keyboard" />
-				    </tooltip>
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="KEYBOARD" size="1.8em" />
-                     </graphic></Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleLinkButtonAction">
                     <tooltip>
-                        <Tooltip text="%ui.editor.button.link" />
+                        <Tooltip text="%ui.editor.button.italic"/>
                     </tooltip>
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="LINK" size="1.8em" />
-                     </graphic></Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleCodeButtonAction">
-                    <tooltip>
-                        <Tooltip text="%ui.editor.button.code" />
-                    </tooltip>
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="CODE_TAGS" size="1.8em" />
-                     </graphic></Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleImgButtonAction">
-                    <tooltip>
-                        <Tooltip text="%ui.editor.button.image" />
-                    </tooltip>
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="IMAGE" size="1.8em" />
-                     </graphic></Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleExpButtonAction">
-                  	<tooltip>
-				        <Tooltip text="%ui.editor.button.exp" />
-				    </tooltip>
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_SUPERSCRIPT" size="1.8em" />
-                     </graphic></Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleIndButtonAction">
-                  	<tooltip>
-				        <Tooltip text="%ui.editor.button.ind" />
-				    </tooltip>
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_SUBSCRIPT" size="1.8em" />
-                     </graphic></Button>
-                  <Separator orientation="VERTICAL" />
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleCenterButtonAction">
-                  	<tooltip>
-				        <Tooltip text="%ui.editor.button.center" />
-				    </tooltip>
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_ALIGN_CENTER" size="1.8em" />
-                     </graphic></Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleRightButtonAction">
-                  	<tooltip>
-				        <Tooltip text="%ui.editor.button.right" />
-				    </tooltip>
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_ALIGN_RIGHT" size="1.8em" />
-                     </graphic></Button>
-                  <Separator orientation="VERTICAL" />
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBulletButtonAction">
-                  	<tooltip>
-				        <Tooltip text="%ui.editor.button.bullet" />
-				    </tooltip>
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_LIST_BULLETED" size="1.8em" />
-                     </graphic></Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleNumberedButtonAction">
-                  	<tooltip>
-				        <Tooltip text="%ui.editor.button.numbered" />
-				    </tooltip>
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_LIST_NUMBERS" size="1.8em" />
-                     </graphic></Button>
-                  <Separator orientation="VERTICAL" />
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleHeaderButtonAction">
-                  	<tooltip>
-				        <Tooltip text="%ui.editor.button.header" />
-				    </tooltip>
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_HEADER_INCREASE" size="1.8em" />
-                     </graphic></Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleQuoteButtonAction">
-                  	<tooltip>
-				        <Tooltip text="%ui.editor.button.quote" />
-				    </tooltip>
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_QUOTE" size="1.8em" />
-                     </graphic></Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBlocButtonAction">
-                  	<tooltip>
-				        <Tooltip text="%ui.editor.button.bloc" />
-				    </tooltip>
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="INFORMATION" size="1.8em" />
-                     </graphic></Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleTableButtonAction">
-                  	<tooltip>
-				        <Tooltip text="%ui.editor.button.table" />
-				    </tooltip>
-                     <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="TABLE" size="1.8em" />
-                     </graphic></Button>
-              </items>
-            </ToolBar>
-         </top>
-         <center>
-
-         </center>
-      </BorderPane>
-      <BorderPane fx:id="BoxRender" prefHeight="200.0" prefWidth="200.0">
-         <center>
-            <WebView fx:id="renderView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-         </center>
-         <top>
-            <ToolBar fx:id="editorToolBarRender" BorderPane.alignment="CENTER">
-               <items>
-                  <Button fx:id="FullScreeen" mnemonicParsing="false" onAction="#HandleFullScreeenButtonAction">
-                  <tooltip>
-                        <Tooltip text="%ui.editor.button.fullscreen" />
-                  </tooltip>
-                  <graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="PLAYLIST_REMOVE" size="1.8em" />
+                    <graphic>
+                        <MaterialDesignIconView fill="#084561" glyphName="FORMAT_ITALIC" size="1.8em"/>
                     </graphic>
-                  </Button>
-
-                  <Button fx:id="CorrectButton" mnemonicParsing="false" onAction="#HandleValidateButtonAction">
-                  <tooltip>
-                        <Tooltip text="%ui.editor.button.correct" />
-                  </tooltip>
-                  	<graphic>
-                        <MaterialDesignIconView fill="#084561" glyphName="SPELLCHECK" size="1.8em" />
-                     </graphic>
-                  </Button>
-
-                   <Button fx:id="ExternalWindow" mnemonicParsing="false" onAction="#HandleExternalButtonAction">
-                       <tooltip>
-                           <Tooltip text="%ui.editor.button.externalrender" />
-                       </tooltip>
-                       <graphic>
-                           <MaterialDesignIconView fill="#084561" glyphName="EXPORT" size="1.8em" />
-                       </graphic>
-                   </Button>
-               </items>
+                </Button>
+                <Separator orientation="VERTICAL"/>
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBarredButtonAction">
+                    <tooltip>
+                        <Tooltip text="%ui.editor.button.barred"/>
+                    </tooltip>
+                  <graphic>
+                      <MaterialDesignIconView fill="#084561" glyphName="FORMAT_STRIKETHROUGH" size="1.8em"/>
+                  </graphic>
+                </Button>
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleTouchButtonAction">
+                    <tooltip>
+                        <Tooltip text="%ui.editor.button.keyboard"/>
+                    </tooltip>
+                  <graphic>
+                      <MaterialDesignIconView fill="#084561" glyphName="KEYBOARD" size="1.8em"/>
+                  </graphic>
+                </Button>
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleLinkButtonAction">
+                    <tooltip>
+                        <Tooltip text="%ui.editor.button.link"/>
+                    </tooltip>
+                  <graphic>
+                      <MaterialDesignIconView fill="#084561" glyphName="LINK" size="1.8em"/>
+                  </graphic>
+                </Button>
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleCodeButtonAction">
+                    <tooltip>
+                        <Tooltip text="%ui.editor.button.code"/>
+                    </tooltip>
+                  <graphic>
+                      <MaterialDesignIconView fill="#084561" glyphName="CODE_TAGS" size="1.8em"/>
+                  </graphic>
+                </Button>
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleImgButtonAction">
+                    <tooltip>
+                        <Tooltip text="%ui.editor.button.image"/>
+                    </tooltip>
+                  <graphic>
+                      <MaterialDesignIconView fill="#084561" glyphName="IMAGE" size="1.8em"/>
+                  </graphic>
+                </Button>
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleExpButtonAction">
+                    <tooltip>
+                        <Tooltip text="%ui.editor.button.exp"/>
+                    </tooltip>
+                  <graphic>
+                      <MaterialDesignIconView fill="#084561" glyphName="FORMAT_SUPERSCRIPT" size="1.8em"/>
+                  </graphic>
+                </Button>
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleIndButtonAction">
+                    <tooltip>
+                        <Tooltip text="%ui.editor.button.ind"/>
+                    </tooltip>
+                  <graphic>
+                      <MaterialDesignIconView fill="#084561" glyphName="FORMAT_SUBSCRIPT" size="1.8em"/>
+                  </graphic>
+                </Button>
+                <Separator orientation="VERTICAL"/>
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleCenterButtonAction">
+                    <tooltip>
+                        <Tooltip text="%ui.editor.button.center"/>
+                    </tooltip>
+                  <graphic>
+                      <MaterialDesignIconView fill="#084561" glyphName="FORMAT_ALIGN_CENTER" size="1.8em"/>
+                  </graphic>
+                </Button>
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleRightButtonAction">
+                    <tooltip>
+                        <Tooltip text="%ui.editor.button.right"/>
+                    </tooltip>
+                  <graphic>
+                      <MaterialDesignIconView fill="#084561" glyphName="FORMAT_ALIGN_RIGHT" size="1.8em"/>
+                  </graphic>
+                </Button>
+                <Separator orientation="VERTICAL"/>
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBulletButtonAction">
+                    <tooltip>
+                        <Tooltip text="%ui.editor.button.bullet"/>
+                    </tooltip>
+                  <graphic>
+                      <MaterialDesignIconView fill="#084561" glyphName="FORMAT_LIST_BULLETED" size="1.8em"/>
+                  </graphic>
+                </Button>
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleNumberedButtonAction">
+                    <tooltip>
+                        <Tooltip text="%ui.editor.button.numbered"/>
+                    </tooltip>
+                  <graphic>
+                      <MaterialDesignIconView fill="#084561" glyphName="FORMAT_LIST_NUMBERS" size="1.8em"/>
+                  </graphic>
+                </Button>
+                <Separator orientation="VERTICAL"/>
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleHeaderButtonAction">
+                    <tooltip>
+                        <Tooltip text="%ui.editor.button.header"/>
+                    </tooltip>
+                  <graphic>
+                      <MaterialDesignIconView fill="#084561" glyphName="FORMAT_HEADER_INCREASE" size="1.8em"/>
+                  </graphic>
+                </Button>
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleQuoteButtonAction">
+                    <tooltip>
+                        <Tooltip text="%ui.editor.button.quote"/>
+                    </tooltip>
+                  <graphic>
+                      <MaterialDesignIconView fill="#084561" glyphName="FORMAT_QUOTE" size="1.8em"/>
+                  </graphic>
+                </Button>
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleBlocButtonAction">
+                    <tooltip>
+                        <Tooltip text="%ui.editor.button.bloc"/>
+                    </tooltip>
+                  <graphic>
+                      <MaterialDesignIconView fill="#084561" glyphName="INFORMATION" size="1.8em"/>
+                  </graphic>
+                </Button>
+                <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#HandleTableButtonAction">
+                    <tooltip>
+                        <Tooltip text="%ui.editor.button.table"/>
+                    </tooltip>
+                  <graphic>
+                      <MaterialDesignIconView fill="#084561" glyphName="TABLE" size="1.8em"/>
+                  </graphic>
+                </Button>
             </ToolBar>
-         </top>
-      </BorderPane>
-   </items>
+        </top>
+        <center>
+
+        </center>
+    </BorderPane>
+    <BorderPane fx:id="BoxRender" prefHeight="200.0" prefWidth="200.0">
+        <center>
+          <WebView fx:id="renderView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER"/>
+        </center>
+        <top>
+            <ToolBar fx:id="editorToolBarRender" BorderPane.alignment="CENTER">
+                <Button fx:id="FullScreeen" mnemonicParsing="false" onAction="#HandleFullScreeenButtonAction">
+                    <tooltip>
+                        <Tooltip text="%ui.editor.button.fullscreen"/>
+                    </tooltip>
+                    <graphic>
+                        <MaterialDesignIconView fill="#084561" glyphName="PLAYLIST_REMOVE" size="1.8em"/>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="CorrectButton" mnemonicParsing="false" onAction="#HandleValidateButtonAction">
+                    <tooltip>
+                        <Tooltip text="%ui.editor.button.correct"/>
+                    </tooltip>
+                    <graphic>
+                        <MaterialDesignIconView fill="#084561" glyphName="SPELLCHECK" size="1.8em"/>
+                  </graphic>
+                </Button>
+
+                <Button fx:id="ExternalWindow" mnemonicParsing="false" onAction="#HandleExternalButtonAction">
+                    <tooltip>
+                        <Tooltip text="%ui.editor.button.externalrender"/>
+                    </tooltip>
+                    <graphic>
+                        <MaterialDesignIconView fill="#084561" glyphName="EXPORT" size="1.8em"/>
+                    </graphic>
+                </Button>
+            </ToolBar>
+        </top>
+    </BorderPane>
 </SplitPane>

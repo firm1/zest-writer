@@ -17,8 +17,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MdCheatSheetDialog {
-    private final String CHEAT_SHEET_LOCATION = "assets/static/html/zMdCheatSheet.html";
-    private final String TITLE_REGEX = "(?m)^<!--(.*)-->$";
+    private final static String CHEAT_SHEET_LOCATION = "assets/static/html/zMdCheatSheet.html";
+    private final static String TITLE_REGEX = "(?m)^<!--(.*)-->$";
 
     @FXML private TabPane cheatSheetTabPane;
     private Logger logger;

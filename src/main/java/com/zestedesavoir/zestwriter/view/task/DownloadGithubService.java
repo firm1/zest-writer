@@ -43,7 +43,7 @@ public class DownloadGithubService extends Service<Content>{
                     logger.info ("Répertoire à analyser : " + folder.getAbsolutePath ());
                     // get folder in unzip folder
                     File[] listFolder = folder.listFiles ();
-                    if (listFolder.length > 0) {
+                    if ((listFolder != null ? listFolder.length : 0) > 0) {
                         if (listFolder[0].isDirectory ()) {
                             File target = listFolder[0];
                             logger.info ("(GitHub import) Répertoire cible : " + target.getAbsolutePath ());

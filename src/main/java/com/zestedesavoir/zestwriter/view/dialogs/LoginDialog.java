@@ -50,9 +50,7 @@ public class LoginDialog extends BaseDialog<Pair<String, String>> {
             }
         });
 
-        username.textProperty().addListener((observable, oldValue, newValue) -> {
-            loginButton.setDisable(newValue.trim().isEmpty());
-        });
+        username.textProperty().addListener((observable, oldValue, newValue) -> loginButton.setDisable(newValue.trim().isEmpty()));
 
         this.getDialogPane().setContent(getGridPane());
 

@@ -352,7 +352,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                         .forEach(extract -> {
                             ((Container)getItem()).getChildren().remove(extract);
                             String oldText = extract.getText();
-                            if(oldText.indexOf("/") != -1) {
+                            if(oldText.contains("/")) {
                                 oldText = oldText.substring(oldText.indexOf("/")+1);
                             }
                             extract.setText((baseSlug+"/"+oldText).substring(baseFilePath.length()+1));
@@ -374,14 +374,14 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             // draw
             final CategoryAxis xAxis = new CategoryAxis();
             final NumberAxis yAxis = new NumberAxis();
-            final BarChart<String,Number> barChart = new BarChart<>(xAxis, yAxis);
+            final BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
             barChart.setCategoryGap(5);
             barChart.setBarGap(5);
 
             xAxis.setLabel(Configuration.bundle.getString("ui.actions.stats.xaxis"));
             yAxis.setLabel(Configuration.bundle.getString("ui.actions.stats.yaxis"));
 
-            XYChart.Series series1 = new XYChart.Series();
+            XYChart.Series<String, Number> series1 = new XYChart.Series();
             series1.setName(Configuration.bundle.getString("ui.actions.stats.type.histogram"));
             Container container = (Container) getItem();
             Function<Textual, Integer> performCount = (Textual ch) -> {
@@ -419,8 +419,8 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             xAxis.setLabel(Configuration.bundle.getString("ui.actions.stats.xaxis"));
             yAxis.setLabel(Configuration.bundle.getString("ui.actions.readable.yaxis"));
 
-            XYChart.Series series1 = new XYChart.Series();
-            XYChart.Series series2 = new XYChart.Series();
+            XYChart.Series<String, Number> series1 = new XYChart.Series();
+            XYChart.Series<String, Number> series2 = new XYChart.Series();
             series1.setName(Configuration.bundle.getString("ui.menu.edit.readable.gunning_index"));
             series2.setName(Configuration.bundle.getString("ui.menu.edit.readable.flesch_index"));
             Container container = (Container) getItem();
@@ -481,7 +481,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             xAxis.setLabel(Configuration.bundle.getString("ui.actions.stats.xaxis"));
             yAxis.setLabel(Configuration.bundle.getString("ui.actions.stats.mistakes.yaxis"));
 
-            XYChart.Series series1 = new XYChart.Series();
+            XYChart.Series<String, Number> series1 = new XYChart.Series();
             series1.setName(Configuration.bundle.getString("ui.actions.stats.mistakes.yaxis"));
             Container container = (Container) getItem();
 
@@ -495,11 +495,9 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 }
             };
             Map<Textual, Integer> statMistake = container.doOnTextual(performCorrection);
-            for(Map.Entry<Textual, Integer> st:statMistake.entrySet()) {
-                if(!(st.getKey() instanceof MetaAttribute)) {
-                    series1.getData().add(new XYChart.Data(st.getKey().getTitle(), st.getValue()));
-                }
-            }
+            statMistake.entrySet().stream().filter(st -> !(st.getKey() instanceof MetaAttribute)).forEachOrdered(st -> {
+                series1.getData().add(new XYChart.Data(st.getKey().getTitle(), st.getValue()));
+            });
             lineChart.getData().addAll(series1);
             dialog.getDialogPane().setContent(lineChart);
             dialog.setResizable(true);

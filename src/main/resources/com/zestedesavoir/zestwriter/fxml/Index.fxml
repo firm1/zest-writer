@@ -1,84 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-
-<AnchorPane styleClass="content-index" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.MdTextController">
-   <children>
-      <SplitPane fx:id="splitPane" dividerPositions="0.2" layoutX="-315.0" layoutY="-210.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <items>
-            <AnchorPane fx:id="treePane" SplitPane.resizableWithParent="false">
-               <children>
-                  <TreeView fx:id="Summary" editable="true" prefHeight="400.0" prefWidth="380.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
-               </children>
-            </AnchorPane>
-            <AnchorPane>
-               <children>
-                  <TabPane fx:id="EditorList" minWidth="400.0" prefHeight="410.0" prefWidth="422.0" tabClosingPolicy="ALL_TABS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    <tabs>
-                      <Tab fx:id="Home" closable="false" text="%ui.home">
-                           <content>
-                              <VBox>
-                                 <children>
-                                    <VBox styleClass="home-header-box" alignment="CENTER_LEFT" prefHeight="10.0" prefWidth="100.0">
-                                       <padding>
-                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                       </padding>
-                                       <children>
-                                          <HBox alignment="CENTER_LEFT" prefWidth="600.0">
-                                             <children>
-                                                <ImageView fitHeight="90.0" fitWidth="500.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../images/logo_home.png" />
-                                                   </image>
-                                                </ImageView>
-                                                <HBox alignment="CENTER_RIGHT" prefWidth="1000.0">
-                                                   <children>
-                                                      <ImageView styleClass="logo-clem" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                                                         <image>
-                                                            <Image url="@../images/clem.png" />
-                                                         </image>
-                                                      </ImageView>
-                                                   </children>
-                                                   <padding>
-                                                      <Insets right="20.0" />
-                                                   </padding>
-                                                </HBox>
-                                             </children>
-                                             <padding>
-                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                             </padding>
-                                          </HBox>
-                                       </children>
-                                    </VBox>
-                                    <VBox fx:id="contentBox">
-                                       <children>
-                                       <Label styleClass="title-content-home" text="%ui.home.last_content"></Label>
-                                       </children>
-                                       <padding>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" />
-                                       </padding>
-                                    </VBox>
-                                 </children></VBox></content></Tab>
-                    </tabs>
-                  </TabPane>
-               </children>
-            </AnchorPane>
-         </items>
-      </SplitPane>
-   </children>
+<?import javafx.scene.layout.*?>
+<AnchorPane styleClass="content-index" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.zestedesavoir.zestwriter.view.MdTextController">
+   <SplitPane fx:id="splitPane" dividerPositions="0.2" layoutX="-315.0" layoutY="-210.0"
+              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+              AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="treePane" SplitPane.resizableWithParent="false">
+         <TreeView fx:id="Summary" editable="true" prefHeight="400.0" prefWidth="380.0"
+                   AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+                   AnchorPane.topAnchor="0"/>
+      </AnchorPane>
+      <AnchorPane>
+         <TabPane fx:id="EditorList" minWidth="400.0" prefHeight="410.0" prefWidth="422.0"
+                  tabClosingPolicy="ALL_TABS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Tab fx:id="Home" closable="false" text="%ui.home">
+               <VBox>
+                  <VBox styleClass="home-header-box" alignment="CENTER_LEFT" prefHeight="10.0"
+                        prefWidth="100.0">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                     </padding>
+                     <HBox alignment="CENTER_LEFT" prefWidth="600.0">
+                        <padding>
+                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                        </padding>
+                        <ImageView fitHeight="90.0" fitWidth="500.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                           <Image url="@../images/logo_home.png"/>
+                        </ImageView>
+                        <HBox alignment="CENTER_RIGHT" prefWidth="1000.0">
+                           <padding>
+                              <Insets right="20.0"/>
+                           </padding>
+                           <ImageView styleClass="logo-clem" fitHeight="100.0"
+                                      fitWidth="100.0" pickOnBounds="true"
+                                      preserveRatio="true">
+                              <Image url="@../images/clem.png"/>
+                           </ImageView>
+                        </HBox>
+                     </HBox>
+                  </VBox>
+                  <VBox fx:id="contentBox">
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0"/>
+                     </padding>
+                     <Label styleClass="title-content-home" text="%ui.home.last_content"></Label>
+                  </VBox>
+               </VBox>
+            </Tab>
+         </TabPane>
+      </AnchorPane>
+   </SplitPane>
 </AnchorPane>

@@ -18,7 +18,7 @@ import java.io.File;
 public interface StorageSaver {
     String getBaseDirectory();
 
-    public static void deleteFile(File file) {
+    static void deleteFile(File file) {
         Logger logger = LoggerFactory.getLogger(StorageSaver.class);
 
         if(file.isDirectory()) {
@@ -28,7 +28,7 @@ public interface StorageSaver {
             }
             else {
                 String files[] = file.list();
-                for(String temp:files) {
+                for(String temp: files != null ? files : new String[0]) {
                     File fileDelete = new File(file, temp);
                     deleteFile(fileDelete);
                 }
