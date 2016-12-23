@@ -3,11 +3,8 @@ package com.zestedesavoir.zestwriter.view.com;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.*;
 import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.Theme;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
-import com.zestedesavoir.zestwriter.view.MdTextController;
-import com.zestedesavoir.zestwriter.view.MenuController;
 import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
 import javafx.application.Platform;
@@ -22,15 +19,10 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.fxmisc.richtext.StyleClassedTextArea;
-import org.languagetool.markup.AnnotatedText;
-import org.languagetool.rules.RuleMatch;
-import org.languagetool.rules.spelling.SpellingCheckRule;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -200,7 +192,7 @@ public class FunctionTreeFactory {
     }
 
     public static void switchContent(Content content, ObservableList<Content> contents) {
-        if(contents.size() > 0) {
+        if(!contents.isEmpty()) {
             contents.set(0, content);
         } else {
             contents.add(content);
@@ -224,8 +216,7 @@ public class FunctionTreeFactory {
     }
 
     public static String getNumberOfTextualReadMinutes(String text) {
-        Readability rd = new Readability(text);
-        Double mins = rd.getNumberOfReadMinutes(text);
+        Double mins = Readability.getNumberOfReadMinutes(text);
 
         if(mins < 1 ) return Configuration.bundle.getString("ui.label.lessof") + " 1 " + Configuration.bundle.getString("ui.label.time.minute");
         if(mins < 2 ) return " 2 " + Configuration.bundle.getString("ui.label.time.minute")+ "s";
