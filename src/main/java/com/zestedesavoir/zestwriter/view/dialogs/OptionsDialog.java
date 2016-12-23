@@ -71,7 +71,7 @@ public class OptionsDialog{
         this.optionsWindow = window;
     }
 
-    @FXML private void HandleSaveButtonAction(){
+    @FXML private void handleSaveButtonAction(){
         config.setEditorFont(optEditorFont);
         config.setEditorFontSize(String.valueOf(optEditorFontSize));
         config.setEditorToolbarView(optEditorToolbarView);
@@ -109,7 +109,7 @@ public class OptionsDialog{
         optionsWindow.close();
     }
 
-    @FXML private void HandleCancelButtonAction(){
+    @FXML private void handleCancelButtonAction(){
         Alert alert = new CustomAlert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(Configuration.bundle.getString("ui.options.cancel.title"));
         alert.setHeaderText(Configuration.bundle.getString("ui.options.cancel.header"));
@@ -125,7 +125,7 @@ public class OptionsDialog{
         }
     }
 
-    @FXML private void HandleResetButtonAction(){
+    @FXML private void handleResetButtonAction(){
         Alert alert = new CustomAlert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(Configuration.bundle.getString("ui.options.reset.title"));
         alert.setHeaderText(Configuration.bundle.getString("ui.options.reset.header"));
@@ -142,7 +142,7 @@ public class OptionsDialog{
         }
     }
 
-    @FXML private void HandleGeneralBrowseAction(){
+    @FXML private void handleGeneralBrowseAction(){
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle(Configuration.bundle.getString("ui.options.workspace"));
         directoryChooser.setInitialDirectory(mainApp.getDefaultHome());
@@ -155,7 +155,7 @@ public class OptionsDialog{
         }
     }
 
-    @FXML private void HandleEditorFontChoice(){
+    @FXML private void handleEditorFontChoice(){
         Dialog<Font> fontSelector = new FontSelectorDialog(new Font(config.getEditorFont(), config.getEditorFontsize()));
         Optional<Font> result = fontSelector.showAndWait();
 
@@ -168,49 +168,49 @@ public class OptionsDialog{
         }
     }
 
-    @FXML private void HandleDisplayWindowMaximizeYes(){
+    @FXML private void handleDisplayWindowMaximizeYes(){
         optDisplayWindowDimensionYes.setDisable(true);
         optDisplayWindowDimensionNo.setDisable(true);
         optDisplayWindowPositionYes.setDisable(true);
         optDisplayWindowPositionNo.setDisable(true);
     }
 
-    @FXML private void HandleDisplayWindowMaximizeNo(){
+    @FXML private void handleDisplayWindowMaximizeNo(){
         optDisplayWindowDimensionYes.setDisable(false);
         optDisplayWindowDimensionNo.setDisable(false);
         optDisplayWindowPositionYes.setDisable(false);
         optDisplayWindowPositionNo.setDisable(false);
     }
 
-    @FXML private void HandleEditorToolbarViewYes(){
+    @FXML private void handleEditorToolbarViewYes(){
         optEditorToolbarView = true;
     }
 
-    @FXML private void HandleEditorToolbarViewNo(){
+    @FXML private void handleEditorToolbarViewNo(){
         optEditorToolbarView = false;
     }
 
-    @FXML private void HandleEditorRenderViewYes(){
+    @FXML private void handleEditorRenderViewYes(){
         optEditorRenderView = true;
     }
 
-    @FXML private void HandleEditorRenderViewNo(){
+    @FXML private void handleEditorRenderViewNo(){
         optEditorRenderView = false;
     }
 
-    @FXML private void HandleEditorLinenoViewYes(){
+    @FXML private void handleEditorLinenoViewYes(){
         optEditorLinenoView = true;
     }
 
-    @FXML private void HandleEditorLinenoViewNo(){
+    @FXML private void handleEditorLinenoViewNo(){
         optEditorLinenoView = false;
     }
 
-    @FXML private void HandleSmartEditorYes(){
+    @FXML private void handleSmartEditorYes(){
         optSmartEditor = true;
     }
 
-    @FXML private void HandleSmartEditorNo(){
+    @FXML private void handleSmartEditorNo(){
         optSmartEditor = false;
     }
 

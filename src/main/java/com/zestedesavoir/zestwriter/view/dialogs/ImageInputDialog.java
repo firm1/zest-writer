@@ -49,12 +49,12 @@ public class ImageInputDialog{
     }
 
 
-    @FXML private void HandleInsertAction(){
+    @FXML private void handleInsertAction(){
         SourceText.replaceText(SourceText.getSelection(),"![" + title.getText() + "](" + link.getText() + ")");
         stage.close();
     }
 
-    @FXML private void HandleSelectFileAction(){
+    @FXML private void handleSelectFileAction(){
         if(! zdsUtils.isAuthenticated()){
             Service<Void> loginTask = menuManager.handleLoginButtonAction(null);
 

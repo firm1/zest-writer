@@ -9,18 +9,9 @@ import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.dialogs.BaseDialog;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
-import javafx.geometry.Side;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +35,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
     public MdTreeCell(MdTextController index) {
 		this.index = index;
-        if(index.getMainApp().getContents().size() > 0) {
+        if(!index.getMainApp().getContents().isEmpty()) {
             this.content = index.getMainApp().getContents().stream().findFirst().get();
             this.baseFilePath = this.content.getBasePath();
         }
@@ -64,7 +55,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         }
     }
 
-	public void initContextMenu(ContentNode item) {
+	private void initContextMenu(ContentNode item) {
         MenuItem addMenuItem1 = new MenuItem(Configuration.bundle.getString("ui.actions.add_extract.label"));
         MenuItem addMenuItem2 = new MenuItem(Configuration.bundle.getString("ui.actions.add_container.label"));
         MenuItem addMenuItem3 = new MenuItem(Configuration.bundle.getString("ui.actions.rename.label"));
@@ -229,14 +220,18 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 }
                 try {
                     if (!introFile.exists()) {
-                        introFile.createNewFile();
+                        if(!introFile.createNewFile()) {
+                            logger.trace("Problème de création du fichier "+introFile.getAbsolutePath());
+                        }
                     }
                 } catch (IOException e) {
                     logger.error("Erreur lors de la créeation de "+introFile.getAbsolutePath(), e);
                 }
                 try {
                     if (!concluFile.exists()) {
-                        concluFile.createNewFile();
+                        if(!concluFile.createNewFile()) {
+                            logger.trace("Problème de création du fichier "+concluFile.getAbsolutePath());
+                        }
                     }
                 } catch (IOException e) {
                     logger.error("Erreur lors de la créeation de "+concluFile.getAbsolutePath(), e);
@@ -258,7 +253,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             if (result.isPresent()) {
                 if (!result.get().trim().equals("")) {
                     for(Map.Entry<Textual, Tab> entry:index.getMainApp().getExtracts().entrySet()) {
-                        if(entry.getKey().equals((Textual) item1.getValue())) {
+                        if(entry.getKey().equals(item1.getValue())) {
                             entry.getValue().setText(result.get());
                             break;
                         }
@@ -339,25 +334,23 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 }
 
                 // move physical file to new directory
-                extracts.stream()
-                        .forEach(extract -> {
-                            try {
-                                FileUtils.moveFileToDirectory(new File(extract.getFilePath()), new File(container.getFilePath()), false);
-                            } catch (IOException e) {
-                                logger.error("Erreur lors du déplacement d'un extrait", e);
-                            }
-                        });
+                extracts.forEach(extract -> {
+                    try {
+                        FileUtils.moveFileToDirectory(new File(extract.getFilePath()), new File(container.getFilePath()), false);
+                    } catch (IOException e) {
+                        logger.error("Erreur lors du déplacement d'un extrait", e);
+                    }
+                });
                 // move logical file to new directory
-                extracts.stream()
-                        .forEach(extract -> {
-                            ((Container)getItem()).getChildren().remove(extract);
-                            String oldText = extract.getText();
-                            if(oldText.contains("/")) {
-                                oldText = oldText.substring(oldText.indexOf("/")+1);
-                            }
-                            extract.setText((baseSlug+"/"+oldText).substring(baseFilePath.length()+1));
+                extracts.forEach(extract -> {
+                    ((Container) getItem()).getChildren().remove(extract);
+                    String oldText = extract.getText();
+                    if (oldText.contains("/")) {
+                        oldText = oldText.substring(oldText.indexOf("/") + 1);
+                    }
+                    extract.setText((baseSlug + "/" + oldText).substring(baseFilePath.length() + 1));
 
-                        });
+                });
                 container.getChildren().addAll(extracts);
 
                 saveManifestJson();
@@ -381,7 +374,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             xAxis.setLabel(Configuration.bundle.getString("ui.actions.stats.xaxis"));
             yAxis.setLabel(Configuration.bundle.getString("ui.actions.stats.yaxis"));
 
-            XYChart.Series<String, Number> series1 = new XYChart.Series();
+            XYChart.Series<String, Number> series1 = new XYChart.Series<>();
             series1.setName(Configuration.bundle.getString("ui.actions.stats.type.histogram"));
             Container container = (Container) getItem();
             Function<Textual, Integer> performCount = (Textual ch) -> {
@@ -430,6 +423,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                     Readability readText = new Readability(md);
                     return readText.getGunningFog();
                 } catch(Exception e) {
+                    logger.trace(e.getMessage(), e);
                     return 0.0;
                 }
             };
@@ -439,6 +433,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                     Readability readText = new Readability(md);
                     return readText.getFleschReadingEase();
                 } catch(Exception e) {
+                    logger.trace(e.getMessage(), e);
                     return 0.0;
                 }
             };
@@ -491,13 +486,14 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 try {
                     return corrector.countMistakes(index, md);
                 } catch(Exception e) {
+                    logger.trace(e.getMessage(), e);
                     return 0;
                 }
             };
             Map<Textual, Integer> statMistake = container.doOnTextual(performCorrection);
-            statMistake.entrySet().stream().filter(st -> !(st.getKey() instanceof MetaAttribute)).forEachOrdered(st -> {
-                series1.getData().add(new XYChart.Data(st.getKey().getTitle(), st.getValue()));
-            });
+            statMistake.entrySet().stream()
+                    .filter(st -> !(st.getKey() instanceof MetaAttribute))
+                    .forEachOrdered(st -> series1.getData().add(new XYChart.Data(st.getKey().getTitle(), st.getValue())));
             lineChart.getData().addAll(series1);
             dialog.getDialogPane().setContent(lineChart);
             dialog.setResizable(true);
