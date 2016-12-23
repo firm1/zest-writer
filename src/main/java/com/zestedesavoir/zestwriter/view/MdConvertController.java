@@ -635,9 +635,9 @@ public class MdConvertController {
     }
 
     public void initStats() {
-        mainApp.getMenuController().hBottomBox.getChildren().clear();
-        mainApp.getMenuController().hBottomBox.getColumnConstraints().clear();
-        mainApp.getMenuController().hBottomBox.setPadding(new Insets(5, 5, 5, 5));
+        mainApp.getMenuController().gethBottomBox().getChildren().clear();
+        mainApp.getMenuController().gethBottomBox().getColumnConstraints().clear();
+        mainApp.getMenuController().gethBottomBox().setPadding(new Insets(5, 5, 5, 5));
         ColumnConstraints c1 = new ColumnConstraints();
         ColumnConstraints c2 = new ColumnConstraints();
         ColumnConstraints c3 = new ColumnConstraints();
@@ -652,10 +652,10 @@ public class MdConvertController {
         chars.setStyle("-fx-font-size: 0.9em;");
         words.setStyle("-fx-font-size: 0.9em;");
         times.setStyle("-fx-font-size: 0.9em;");
-        mainApp.getMenuController().hBottomBox.getColumnConstraints().addAll(c1, c2, c3, c4);
-        mainApp.getMenuController().hBottomBox.add(times, 1, 0);
-        mainApp.getMenuController().hBottomBox.add(chars, 2, 0);
-        mainApp.getMenuController().hBottomBox.add(words, 3, 0);
+        mainApp.getMenuController().gethBottomBox().getColumnConstraints().addAll(c1, c2, c3, c4);
+        mainApp.getMenuController().gethBottomBox().add(times, 1, 0);
+        mainApp.getMenuController().gethBottomBox().add(chars, 2, 0);
+        mainApp.getMenuController().gethBottomBox().add(words, 3, 0);
 
         chars.textProperty().bind(countChars);
         words.textProperty().bind(countWords);
