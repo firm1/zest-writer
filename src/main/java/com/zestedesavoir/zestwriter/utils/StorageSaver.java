@@ -5,6 +5,7 @@
  */
 package com.zestedesavoir.zestwriter.utils;
 
+import com.zestedesavoir.zestwriter.MainApp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +24,11 @@ public interface StorageSaver {
 
         if(file.isDirectory()) {
             if(file.list().length==0) {
-                file.delete();
-                logger.debug("Répertoire "+file.getAbsolutePath()+" Supprimé");
+                if(file.delete()) {
+                    logger.debug("Répertoire " + file.getAbsolutePath() + " Supprimé");
+                } else {
+                    logger.error("Impossible de supprimer le répertoire "+file.getAbsolutePath());
+                }
             }
             else {
                 String files[] = file.list();
@@ -33,13 +37,19 @@ public interface StorageSaver {
                     deleteFile(fileDelete);
                 }
                 if(file.list().length==0) {
-                    file.delete();
-                    logger.debug("Répertoire "+file.getAbsolutePath()+" Supprimé");
+                    if(file.delete()) {
+                        logger.debug("Répertoire " + file.getAbsolutePath() + " Supprimé");
+                    } else {
+                        logger.error("Impossible de supprimer le répertoire "+file.getAbsolutePath());
+                    }
                 }
             }
         } else {
-            file.delete();
-            logger.debug("Fichier "+file.getAbsolutePath()+" Supprimé");
+            if(file.delete()) {
+                logger.debug("Fichier " + file.getAbsolutePath() + " Supprimé");
+            } else {
+                logger.error("Impossible de supprimer le fichier "+file.getAbsolutePath());
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.zestedesavoir.zestwriter.model;
 
+import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 
 import java.io.*;
@@ -18,7 +19,7 @@ public interface Textual{
             writer.append(getMarkdown());
             writer.flush();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainApp.getLogger().error(e.getMessage(), e);
         } finally {
             try {
                 if (writer != null) {
@@ -30,7 +31,7 @@ public interface Textual{
     }
     default String readMarkdown() {
         Path path = Paths.get(this.getFilePath());
-        Scanner scanner;
+        Scanner scanner = null;
         StringBuilder bfString = new StringBuilder();
         try {
             scanner = new Scanner(path, StandardCharsets.UTF_8.name());
@@ -41,7 +42,14 @@ public interface Textual{
             scanner.close();
             return bfString.toString();
         } catch (IOException e) {
-            e.printStackTrace();
+            MainApp.getLogger().error(e.getMessage(), e);
+        } finally {
+            try {
+                if (scanner != null) {
+                    scanner.close();
+                }
+            } catch (Exception ignored) {
+            }
         }
         return "";
     }

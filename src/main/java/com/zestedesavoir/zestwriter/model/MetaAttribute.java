@@ -1,5 +1,6 @@
 package com.zestedesavoir.zestwriter.model;
 
+import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
@@ -62,9 +63,11 @@ public class MetaAttribute implements Textual, ContentNode{
         }
         if(! base.exists()) {
             try {
-                base.createNewFile();
+                if(!base.createNewFile()) {
+                    MainApp.getLogger().error("Problème lors de la création de "+base.getAbsolutePath());
+                }
             } catch (IOException e) {
-                e.printStackTrace();
+                MainApp.getLogger().error("Problème lors de la création de "+base.getAbsolutePath(), e);
             }
         }
     }
@@ -106,6 +109,11 @@ public class MetaAttribute implements Textual, ContentNode{
             return getFilePath().equals(((MetaAttribute) obj).getFilePath());
         }
         return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
     @Override

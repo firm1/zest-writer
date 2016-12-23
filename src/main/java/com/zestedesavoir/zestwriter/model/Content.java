@@ -3,6 +3,7 @@ package com.zestedesavoir.zestwriter.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
@@ -123,13 +124,14 @@ public class Content extends Container implements ContentNode{
             writer.append(exportContentToMarkdown(0, getDepth()));
             writer.flush();
         } catch (Exception e) {
-            e.printStackTrace();
+            MainApp.getLogger().error(e.getMessage(), e);
         } finally {
             try {
                 if (writer != null) {
                     writer.close();
                 }
             } catch (Exception ignored) {
+                MainApp.getLogger().error(ignored.getMessage(), ignored);
             }
         }
     }
@@ -144,7 +146,10 @@ public class Content extends Container implements ContentNode{
         setSlug(newSlug);
         File oldDir = new File(oldPath);
         File newDir = new File(newPath);
-        oldDir.renameTo(newDir);
-        setBasePath(newPath);
+        if(oldDir.renameTo(newDir)) {
+            setBasePath(newPath);
+        } else {
+            MainApp.getLogger().error("Problème de renommage du titre du conteneur "+newTitle);
+        }
     }
 }

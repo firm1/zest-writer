@@ -1,5 +1,6 @@
 package com.zestedesavoir.zestwriter.utils;
 
+import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -151,7 +152,7 @@ public class Corrector {
             matches = langTool.check(markup);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            MainApp.getLogger().error(e.getMessage(), e);
         }
         int offset = 0;
         for (RuleMatch match : matches) {
@@ -182,7 +183,7 @@ public class Corrector {
         try {
             matches = langTool.check(markup);
         } catch (IOException e) {
-            e.printStackTrace();
+            MainApp.getLogger().error(e.getMessage(), e);
         }
 
         for (RuleMatch match : matches) {
@@ -213,7 +214,7 @@ public class Corrector {
             return matches.size();
         }
         catch (Exception e) {
-            e.printStackTrace();
+            MainApp.getLogger().error(e.getMessage(), e);
         }
         return 0;
     }
