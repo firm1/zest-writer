@@ -1,14 +1,11 @@
 package com.zestedesavoir.zestwriter.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zestedesavoir.zestwriter.model.Container;
-import com.zestedesavoir.zestwriter.model.Content;
-import com.zestedesavoir.zestwriter.model.Extract;
-import com.zestedesavoir.zestwriter.model.MetaContent;
+import com.zestedesavoir.zestwriter.model.*;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Executor;
+import org.apache.http.client.fluent.Request;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -23,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +55,6 @@ public class GithubHttp {
         String dirname = Paths.get(zipFilePath).getFileName().toString();
         dirname = dirname.substring(0, dirname.length() - 4);
         // create output directory is not exists
-        System.out.println("dirname = "+dirname);
         File folder = new File(destFolder + File.separator + dirname);
         logger.debug("Tentative de dezippage de " + zipFilePath + " dans " + folder.getAbsolutePath());
         if (!folder.exists()) {
@@ -70,18 +67,37 @@ public class GithubHttp {
         return folder;
     }
 
+    private static void generateMetadataAttributes(String file) {
+        File fileIntro = new File (file, Constant.DEFAULT_INTRODUCTION_FILENAME);
+        File fileConclu = new File (file, Constant.DEFAULT_CONCLUSION_FILENAME);
+        try {
+            if(!fileIntro.exists ()) {
+                if(!fileIntro.createNewFile ()) {
+                    logger.error("Impossible de créer le fichier d'introduction "+fileIntro.getAbsolutePath());
+                }
+            }
+            if(!fileConclu.exists ()) {
+                if(!fileConclu.createNewFile ()) {
+                    logger.error("Impossible de créer le fichier de conclusion "+fileConclu.getAbsolutePath());
+                }
+            }
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
     public static Content loadManifest(String folder, String owner, String repo) throws IOException {
         String projecUrl = "https://api.github.com/repos/"+owner+"/"+repo;
         String title = null;
         logger.debug("Tentative de connexion à l'url : "+projecUrl);
-        String github_user = System.getProperty("zw.github_user");
-        String github_token = System.getProperty("zw.github_token");
+        String githubUser = System.getProperty("zw.github_user");
+        String githubToken = System.getProperty("zw.github_token");
 
-        Executor executor = null;
-        if(github_user != null && !github_user.equals("") && github_token != null && !github_token.equals("")) {
+        Executor executor;
+        if(githubUser != null && !"".equals(githubUser) && githubToken != null && !"".equals(githubToken)) {
             executor = Executor
                     .newInstance()
-                    .auth(new HttpHost("api.github.com"), github_user, github_token);
+                    .auth(new HttpHost("api.github.com"), githubUser, githubToken);
         } else {
             executor = Executor.newInstance();
         }
@@ -92,23 +108,11 @@ public class GithubHttp {
         if(map.containsKey("description")) {
             title = (String) map.get("description");
         }
-        Content current = new Content("container", toSlug(title), title, "introduction.md", "conclusion.md", new ArrayList<>(), 2, "CC-BY", title, "TUTORIAL");
+        Content current = new Content("container", toSlug(title), title, Constant.DEFAULT_INTRODUCTION_FILENAME, Constant.DEFAULT_CONCLUSION_FILENAME, new ArrayList<>(), 2, "CC-BY", title, "TUTORIAL");
         // read all directory
         current.getChildren ().addAll (loadDirectory (folder.length () + File.separator.length (), new File(folder)));
         current.setBasePath (folder);
-        File fileIntro = new File (current.getFilePath (), "introduction.md");
-        File fileConclu = new File (current.getFilePath (), "conclusion.md");
-        try {
-            if(!fileIntro.exists ()) {
-                fileIntro.createNewFile ();
-            }
-            if(!fileConclu.exists ()) {
-                fileConclu.createNewFile ();
-            }
-        } catch (IOException e) {
-            e.printStackTrace ();
-        }
-
+        generateMetadataAttributes(current.getFilePath());
         return current;
     }
 
@@ -118,29 +122,19 @@ public class GithubHttp {
         for(File file : listF != null ? listF : new File[0]) {
             String name = file.getName();
             if(file.isDirectory ()) {
-                String intro = file.getAbsolutePath ().substring (countBase)+File.separator+"introduction.md";
-                String conclu = file.getAbsolutePath ().substring (countBase)+File.separator+"conclusion.md";
+                String intro = file.getAbsolutePath ().substring (countBase)+File.separator+Constant.DEFAULT_INTRODUCTION_FILENAME;
+                String conclu = file.getAbsolutePath ().substring (countBase)+File.separator+Constant.DEFAULT_CONCLUSION_FILENAME;
                 intro = intro.replace (File.separator, "/");
                 conclu = conclu.replace (File.separator, "/");
                 MetaContent container = new Container ("container", ZdsHttp.toSlug (name), name, intro ,conclu, new ArrayList<>());
                 ((Container)container).getChildren().addAll (loadDirectory (countBase, file));
                 metas.add(container);
-                File fileIntro = new File (file, "introduction.md");
-                File fileConclu = new File (file, "conclusion.md");
-                try {
-                    if(!fileIntro.exists ()) {
-                        fileIntro.createNewFile ();
-                    }
-                    if(!fileConclu.exists ()) {
-                        fileConclu.createNewFile ();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace ();
-                }
+                generateMetadataAttributes(file.getAbsolutePath());
             } else if(file.isFile ()) {
-                int pos = name.lastIndexOf(".");
+                int pos = name.lastIndexOf('.');
                 if (name.endsWith ("md")) {
-                    if((! name.equals ("introduction.md")) && (! name.equals ("conclusion.md")) ) {
+                    String[] meta = {Constant.DEFAULT_INTRODUCTION_FILENAME, Constant.DEFAULT_CONCLUSION_FILENAME};
+                    if(!Arrays.asList(meta).contains(name)) {
                         if (pos > 0) {
                             name = name.substring (0, pos);
                         }
