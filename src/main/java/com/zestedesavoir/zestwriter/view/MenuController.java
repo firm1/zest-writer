@@ -770,20 +770,6 @@ public class MenuController{
         checkService.start();
     }
 
-    @FXML private void handleContentsButtonAction(ActionEvent event){
-        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/ContentsDialog.fxml"));
-
-        Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.tools.external_contents"));
-        dialogStage.setResizable(false);
-        dialogStage.initOwner(MainApp.getPrimaryStage());
-
-        ContentsDialog contentsController = loader.getController();
-        contentsController.setWindow(dialogStage);
-
-        if(!MainApp.getContentsConfigPlugins().isCorrupted() && !MainApp.getContentsConfigThemes().isCorrupted())
-            dialogStage.show();
-    }
-
     public Text getLabelField(){
         return labelField;
     }

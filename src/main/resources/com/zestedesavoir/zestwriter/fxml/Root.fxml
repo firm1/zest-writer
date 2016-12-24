@@ -129,8 +129,6 @@
                </Menu>
                <MenuItem fx:id="menuFindReplace" mnemonicParsing="false" onAction="#handleFindReplaceAction"
                          text="%ui.menu.tools.find_replace" disable="true"/>
-               <MenuItem mnemonicParsing="false" onAction="#handleContentsButtonAction"
-                         text="%ui.menu.tools.external_contents" disable="true"/>
            </Menu>
            <Menu mnemonicParsing="false" text="%ui.menu.help">
                <MenuItem mnemonicParsing="false" onAction="#handleAboutButtonAction" text="%ui.menu.help.about"/>

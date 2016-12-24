@@ -1,7 +1,5 @@
 package com.zestedesavoir.zestwriter;
 
-import com.zestedesavoir.zestwriter.contents.internal.ContentsConfig;
-import com.zestedesavoir.zestwriter.contents.plugins.PluginsManager;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
@@ -15,11 +13,9 @@ import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.task.LoginService;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -59,9 +55,6 @@ public class MainApp extends Application{
     private StringBuilder key = new StringBuilder();
     private static Logger logger;
     private MenuController menuController;
-    private PluginsManager pm;
-    private static ContentsConfig contentsConfigPlugins;
-    private static ContentsConfig contentsConfigThemes;
     private static String[] args;
     protected static File defaultHome;
 
@@ -262,14 +255,6 @@ public class MainApp extends Application{
         }
     }
 
-    public static ContentsConfig getContentsConfigPlugins(){
-        return contentsConfigPlugins;
-    }
-
-    public static ContentsConfig getContentsConfigThemes(){
-        return contentsConfigThemes;
-    }
-
     public MenuController getMenuController() {
         return menuController;
     }
@@ -283,29 +268,19 @@ public class MainApp extends Application{
             menuController.gethBottomBox().getChildren().addAll(menuController.getLabelField());
             menuController.getLabelField().textProperty().bind(loginTask.messageProperty());
 
-            loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue,
-                                                   Worker.State oldValue,
-                                                   Worker.State newValue) -> {
-                Alert alert = new CustomAlert(Alert.AlertType.NONE);
+            loginTask.setOnCancelled(t -> {
+                Alert alert = new CustomAlert(Alert.AlertType.ERROR);
                 alert.setTitle(Configuration.bundle.getString("ui.dialog.auth.title"));
                 alert.setHeaderText(Configuration.bundle.getString("ui.dialog.auth.state.header"));
+                alert.setContentText(Configuration.bundle.getString("ui.dialog.auth.failed.text"));
 
+                alert.showAndWait();
+                menuController.getMenuDownload().setDisable(false);
+                menuController.gethBottomBox().getChildren().clear();
+            });
 
-                switch(newValue){
-                    case FAILED:
-                    case CANCELLED:
-                        alert.setAlertType(Alert.AlertType.ERROR);
-                        alert.setContentText(Configuration.bundle.getString("ui.dialog.auth.failed.text"));
-
-                        alert.showAndWait();
-                        menuController.getMenuDownload().setDisable(false);
-                        menuController.gethBottomBox().getChildren().clear();
-
-                        break;
-                    case SUCCEEDED:
-                        menuController.getMenuDownload().setDisable(false);
-                        break;
-                }
+            loginTask.setOnSucceeded(t -> {
+                menuController.getMenuDownload().setDisable(false);
             });
 
             loginTask.start();
