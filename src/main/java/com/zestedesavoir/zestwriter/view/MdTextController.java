@@ -216,7 +216,7 @@ public class MdTextController {
         }
     }
 
-    private TreeItem<ContentNode> selectItemOnTree(TreeItem<ContentNode> item, Textual textual) {
+    public TreeItem<ContentNode> selectItemOnTree(TreeItem<ContentNode> item, Textual textual) {
         for(TreeItem<ContentNode> node: item.getChildren()) {
             if(node.getValue().getFilePath().equals(textual.getFilePath())) {
                 return node;
@@ -285,12 +285,6 @@ public class MdTextController {
                 if(EditorList.getTabs().size() == 1) {
                     controllerConvert.addTreeSummary();
                 }
-            }
-        });
-        tab.setOnSelectionChanged(t -> {
-            TreeItem<ContentNode> selected = selectItemOnTree(Summary.getRoot(), extract);
-            if(selected != null) {
-                Summary.getSelectionModel().select(selected);
             }
         });
 

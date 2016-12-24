@@ -1,6 +1,7 @@
 package com.zestedesavoir.zestwriter.view;
 
 import com.zestedesavoir.zestwriter.MainApp;
+import com.zestedesavoir.zestwriter.model.ContentNode;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
@@ -165,6 +166,10 @@ public class MdConvertController {
         }
 
         tab.setOnSelectionChanged(t -> {
+            TreeItem<ContentNode> selected = mdBox.selectItemOnTree(mdBox.getSummary().getRoot(), extract);
+            if(selected != null) {
+                mdBox.getSummary().getSelectionModel().select(selected);
+            }
             if(tab.isSelected()) {
                 Platform.runLater(() -> {
                     SourceText.requestFocus();
@@ -702,7 +707,7 @@ public class MdConvertController {
     }
 
     @FXML private void handleFindReplaceDialog(){
-        FunctionTreeFactory.OpenFindReplaceDialog(SourceText);
+        FunctionTreeFactory.openFindReplaceDialog(SourceText);
     }
 
     /**

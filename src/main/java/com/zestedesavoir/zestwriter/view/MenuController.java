@@ -604,7 +604,7 @@ public class MenuController{
                 .getValue().getContent();
         BorderPane bPane = (BorderPane) sPane.getItems().get(0);
         StyleClassedTextArea source = (StyleClassedTextArea) bPane.getCenter();
-        FunctionTreeFactory.OpenFindReplaceDialog(source);
+        FunctionTreeFactory.openFindReplaceDialog(source);
     }
 
     @FXML private void handleAboutButtonAction(ActionEvent event){

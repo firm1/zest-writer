@@ -200,7 +200,7 @@ public class FunctionTreeFactory {
 
     }
 
-    public static void OpenFindReplaceDialog(StyleClassedTextArea sourceText) {
+    public static void openFindReplaceDialog(StyleClassedTextArea sourceText) {
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/FindReplaceDialog.fxml"));
 
         Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.dialog.find.title"));
@@ -217,18 +217,29 @@ public class FunctionTreeFactory {
 
     public static String getNumberOfTextualReadMinutes(String text) {
         Double mins = Readability.getNumberOfReadMinutes(text);
+        int[] steps = new int[]{1, 2, 5, 10, 15, 20, 30, 40, 60, 90, 120};
+        for(int step:steps) {
+            StringBuilder sb = new StringBuilder();
+            if(mins < step) {
+                if(step == steps[0]) {
+                    sb.append(Configuration.bundle.getString("ui.label.lessof"));
+                } else if(step == steps[steps.length-1]) {
+                    sb.append(Configuration.bundle.getString("ui.label.moreof"));
+                }
 
-        if(mins < 1 ) return Configuration.bundle.getString("ui.label.lessof") + " 1 " + Configuration.bundle.getString("ui.label.time.minute");
-        if(mins < 2 ) return " 2 " + Configuration.bundle.getString("ui.label.time.minute")+ "s";
-        if(mins < 5 ) return " 5 " + Configuration.bundle.getString("ui.label.time.minute")+ "s";
-        else if (mins < 10 ) return "10 " + Configuration.bundle.getString("ui.label.time.minute")+ "s";
-        else if (mins < 15 ) return "15 " + Configuration.bundle.getString("ui.label.time.minute")+ "s";
-        else if (mins < 20 ) return "20 " + Configuration.bundle.getString("ui.label.time.minute")+ "s";
-        else if (mins < 30 ) return "30 " + Configuration.bundle.getString("ui.label.time.minute")+ "s";
-        else if (mins < 40 ) return "40 " + Configuration.bundle.getString("ui.label.time.minute")+ "s";
-        else if (mins < 60 ) return "1 " + Configuration.bundle.getString("ui.label.time.hour")+ "s";
-        else if (mins < 90 ) return "1 " + Configuration.bundle.getString("ui.label.time.hour") + "s 30 " + Configuration.bundle.getString("ui.label.time.minute");
-        else if (mins < 120 ) return "2 " + Configuration.bundle.getString("ui.label.time.hour") + "s";
-        else return Configuration.bundle.getString("ui.label.moreof") + 2 + Configuration.bundle.getString("ui.label.time.hour") + "s";
+                if (step < 60) {
+                    sb.append(" ").append(step).append(" ");
+                    sb.append(Configuration.bundle.getString("ui.label.time.minute"));
+                    if (step > 1) sb.append("s");
+                } else {
+                    int value = step / 60;
+                    sb.append(" ").append(value).append(" ");
+                    sb.append(Configuration.bundle.getString("ui.label.time.hour"));
+                    if (value > 1) sb.append("s");
+                }
+                return sb.toString();
+            }
+        }
+        return "Too long";
     }
 }
