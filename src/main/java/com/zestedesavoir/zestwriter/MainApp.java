@@ -180,8 +180,8 @@ public class MainApp extends Application{
                 getPrimaryStage().setWidth(config.getDisplayWindowWidth());
                 getPrimaryStage().setHeight(config.getDisplayWindowHeight());
             }else{
-                getPrimaryStage().setWidth(Double.parseDouble(Configuration.ConfigData.displayWindowWidth.getDefaultValue()));
-                getPrimaryStage().setHeight(Double.parseDouble(Configuration.ConfigData.displayWindowHeight.getDefaultValue()));
+                getPrimaryStage().setWidth(Double.parseDouble(Configuration.ConfigData.DISPLAY_WINDOW_WIDTH.getDefaultValue()));
+                getPrimaryStage().setHeight(Double.parseDouble(Configuration.ConfigData.DISPLAY_WINDOW_HEIGHT.getDefaultValue()));
             }
             if(config.isDisplayWindowPersonnalPosition()){
                 getPrimaryStage().setX(config.getDisplayWindowPositionX());

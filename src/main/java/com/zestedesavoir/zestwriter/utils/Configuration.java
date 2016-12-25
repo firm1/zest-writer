@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Configuration class for Zest Writer App
+ */
 public class Configuration {
     private final Logger logger;
     private Properties conf;
@@ -28,6 +31,10 @@ public class Configuration {
     private Properties props;
     public static ResourceBundle bundle;
 
+    /**
+     * Class constructor
+     * @param homeDir Absolute path of home directory
+     */
     public Configuration(String homeDir) {
         logger = LoggerFactory.getLogger(Configuration.class);
         String appName = "zestwriter";
@@ -35,7 +42,7 @@ public class Configuration {
         File confDir = new File(confDirPath);
         if(!confDir.exists()){
             if(!confDir.mkdir())
-                logger.error("Le fichier de configuration n'a pas pu être créé");
+                logger.error("Le fichier de configuration n'a pas pu être crée");
         }
 
         initConf(confDirPath);
@@ -44,7 +51,7 @@ public class Configuration {
             bundle = ResourceBundle.getBundle("locales/ui", Lang.getLangFromCode(getDisplayLang()).getLocale());
         }catch(Exception e) {
             bundle = ResourceBundle.getBundle("locales/ui", Locale.FRANCE);
-            logger.error("Impossible de charger la langue "+getDisplayLang());
+            logger.error("Impossible de charger la langue "+getDisplayLang(), e);
         }
     }
 
@@ -55,9 +62,9 @@ public class Configuration {
     }
 
     public static String getLastRelease() throws IOException {
-        String projecUrlRelease = "https://api.github.com/repos/firm1/zest-writer/releases/latest";
+        String projectUrlRelease = "https://api.github.com/repos/firm1/zest-writer/releases/latest";
 
-        String json = Request.Get(projecUrlRelease).execute().returnContent().asString();
+        String json = Request.Get(projectUrlRelease).execute().returnContent().asString();
         ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
         Map map = mapper.readValue(json, Map.class);
         if(map.containsKey("tag_name")) {
@@ -95,7 +102,7 @@ public class Configuration {
         try {
             props.load(MainApp.class.getClassLoader().getResourceAsStream("config.properties"));
         } catch (IOException e) {
-            logger.error("", e);
+            logger.error(e.getMessage(), e);
         }
 
         conf = new Properties(props);
@@ -110,7 +117,7 @@ public class Configuration {
                 conf.load(new FileInputStream(confFile));
                 loadWorkspace();
             } catch (IOException e) {
-                logger.error("", e);
+                logger.error(e.getMessage(), e);
             }
         }
 
@@ -189,42 +196,42 @@ public class Configuration {
     }
 
     public double getDisplayWindowWidth(){
-        return getGenericDoubleDisplay(ConfigData.displayWindowWidth);
+        return getGenericDoubleDisplay(ConfigData.DISPLAY_WINDOW_WIDTH);
     }
 
     public void setDisplayWindowWidth(String windowWidth){
-        conf.setProperty(ConfigData.displayWindowWidth.getKey(), windowWidth);
+        conf.setProperty(ConfigData.DISPLAY_WINDOW_WIDTH.getKey(), windowWidth);
     }
 
     public double getDisplayWindowHeight(){
-        return getGenericDoubleDisplay(ConfigData.displayWindowHeight);
+        return getGenericDoubleDisplay(ConfigData.DISPLAY_WINDOW_HEIGHT);
     }
 
     public void setDisplayWindowHeight(String windowWidth){
-        conf.setProperty(ConfigData.displayWindowHeight.getKey(), windowWidth);
+        conf.setProperty(ConfigData.DISPLAY_WINDOW_HEIGHT.getKey(), windowWidth);
     }
 
     public double getDisplayWindowPositionX(){
-        return getGenericDoubleDisplay(ConfigData.displayWindowPositionX);
+        return getGenericDoubleDisplay(ConfigData.DISPLAY_WINDOW_POSITION_X);
     }
 
     public void setDisplayWindowPositionX(String windowWidth){
-        conf.setProperty(ConfigData.displayWindowPositionX.getKey(), windowWidth);
+        conf.setProperty(ConfigData.DISPLAY_WINDOW_POSITION_X.getKey(), windowWidth);
     }
 
     public double getDisplayWindowPositionY(){
-        return getGenericDoubleDisplay(ConfigData.displayWindowPositionY);
+        return getGenericDoubleDisplay(ConfigData.DISPLAY_WINDOW_POSITION_Y);
     }
 
     public void setDisplayWindowPositionY(String windowWidth){
-        conf.setProperty(ConfigData.displayWindowPositionY.getKey(), windowWidth);
+        conf.setProperty(ConfigData.DISPLAY_WINDOW_POSITION_Y.getKey(), windowWidth);
     }
 
     /*
      * Zest-Writer options
      */
     public String getWorkspacePath(){
-        String workspacePath = conf.getProperty(ConfigData.workspacePath.getKey());
+        String workspacePath = conf.getProperty(ConfigData.WORKSPACE_PATH.getKey());
 
         if(workspacePath != null && !workspacePath.isEmpty())
             return workspacePath;
@@ -233,207 +240,207 @@ public class Configuration {
     }
 
     public void setWorkspacePath(String path){
-        conf.setProperty(ConfigData.workspacePath.getKey(), path);
+        conf.setProperty(ConfigData.WORKSPACE_PATH.getKey(), path);
     }
 
     public String getContentsPath(){
-        if(conf.containsKey(ConfigData.contentsPath.getKey()))
-            return conf.getProperty(ConfigData.contentsPath.getKey());
+        if(conf.containsKey(ConfigData.CONTENTS_PATH.getKey()))
+            return conf.getProperty(ConfigData.CONTENTS_PATH.getKey());
         else
             return getWorkspacePath() + "/contents";
     }
 
     public void setContentsPath(String path){
-        conf.setProperty(ConfigData.contentsPath.getKey(), path);
+        conf.setProperty(ConfigData.CONTENTS_PATH.getKey(), path);
     }
 
     public boolean isEditorSmart(){
-        return getGenericBooleanDisplay(ConfigData.editorSmart);
+        return getGenericBooleanDisplay(ConfigData.EDITOR_SMART);
     }
 
     public void setEditorSmart(String smart){
-        conf.setProperty(ConfigData.editorSmart.getKey(), smart);
+        conf.setProperty(ConfigData.EDITOR_SMART.getKey(), smart);
     }
 
     public String getEditorFont(){
-        if(conf.containsKey(ConfigData.editorFont.getKey()))
-            return conf.getProperty(ConfigData.editorFont.getKey());
+        if(conf.containsKey(ConfigData.EDITOR_FONT.getKey()))
+            return conf.getProperty(ConfigData.EDITOR_FONT.getKey());
         else
-            return ConfigData.editorFont.getDefaultValue();
+            return ConfigData.EDITOR_FONT.getDefaultValue();
     }
 
     public void setEditorFont(String font){
-        conf.setProperty(ConfigData.editorFont.getKey(), font);
+        conf.setProperty(ConfigData.EDITOR_FONT.getKey(), font);
     }
 
     public int getEditorFontsize(){
-        return (int) Math.round(getGenericDoubleDisplay(ConfigData.editorFontSize));
+        return (int) Math.round(getGenericDoubleDisplay(ConfigData.EDITOR_FONT_SIZE));
     }
 
     public void setEditorFontSize(String fontSize){
-        conf.setProperty(ConfigData.editorFontSize.getKey(), fontSize);
+        conf.setProperty(ConfigData.EDITOR_FONT_SIZE.getKey(), fontSize);
     }
 
     public boolean isEditorToolbarView(){
-        return getGenericBooleanDisplay(ConfigData.editorToolbarView);
+        return getGenericBooleanDisplay(ConfigData.EDITOR_TOOLBAR_VIEW);
     }
 
     public void setEditorToolbarView(boolean view){
-        conf.setProperty(ConfigData.editorToolbarView.getKey(), String.valueOf(view));
+        conf.setProperty(ConfigData.EDITOR_TOOLBAR_VIEW.getKey(), String.valueOf(view));
     }
 
     public boolean isEditorLinenoView(){
-        return getGenericBooleanDisplay(ConfigData.editorLineNoView);
+        return getGenericBooleanDisplay(ConfigData.EDITOR_LINE_NO_VIEW);
     }
 
     public void setEditorLinenoView(boolean view){
-        conf.setProperty(ConfigData.editorLineNoView.getKey(), String.valueOf(view));
+        conf.setProperty(ConfigData.EDITOR_LINE_NO_VIEW.getKey(), String.valueOf(view));
     }
 
     public boolean isEditorRenderView(){
-        return getGenericBooleanDisplay(ConfigData.editorRenderView);
+        return getGenericBooleanDisplay(ConfigData.EDITOR_RENDER_VIEW);
     }
 
     public void setEditorRenderView(boolean view){
-        conf.setProperty(ConfigData.editorRenderView.getKey(), String.valueOf(view));
+        conf.setProperty(ConfigData.EDITOR_RENDER_VIEW.getKey(), String.valueOf(view));
     }
 
     public String getDisplayTheme(){
-        if(conf.containsKey(ConfigData.displayTheme.getKey())) {
-            if (Theme.getThemeFromFileName(conf.getProperty(ConfigData.displayTheme.getKey())) != null) {
-                return conf.getProperty(ConfigData.displayTheme.getKey());
+        if(conf.containsKey(ConfigData.DISPLAY_THEME.getKey())) {
+            if (Theme.getThemeFromFileName(conf.getProperty(ConfigData.DISPLAY_THEME.getKey())) != null) {
+                return conf.getProperty(ConfigData.DISPLAY_THEME.getKey());
             }
         }
-        return ConfigData.displayTheme.getDefaultValue();
+        return ConfigData.DISPLAY_THEME.getDefaultValue();
     }
 
     public String getDisplayLang(){
-        if(conf.containsKey(ConfigData.displayLang.getKey()))
-            return conf.getProperty(ConfigData.displayLang.getKey());
+        if(conf.containsKey(ConfigData.DISPLAY_LANG.getKey()))
+            return conf.getProperty(ConfigData.DISPLAY_LANG.getKey());
         else
-            return ConfigData.displayLang.getDefaultValue();
+            return ConfigData.DISPLAY_LANG.getDefaultValue();
     }
 
     public void setDisplayTheme(String displayTheme){
-        conf.setProperty(ConfigData.displayTheme.getKey(), displayTheme);
+        conf.setProperty(ConfigData.DISPLAY_THEME.getKey(), displayTheme);
     }
 
     public void setDisplayLang(String displayLang){
-        conf.setProperty(ConfigData.displayLang.getKey(), displayLang);
+        conf.setProperty(ConfigData.DISPLAY_LANG.getKey(), displayLang);
     }
 
     public boolean isDisplayWindowPersonnalDimension(){
-        return getGenericBooleanDisplay(ConfigData.displayWindowPersonnalDimension);
+        return getGenericBooleanDisplay(ConfigData.DISPLAY_WINDOW_PERSONAL_DIMENSION);
     }
 
     public void setDisplayWindowStandardDimension(String standardDimension){
-        conf.setProperty(ConfigData.displayWindowPersonnalDimension.getKey(), standardDimension);
+        conf.setProperty(ConfigData.DISPLAY_WINDOW_PERSONAL_DIMENSION.getKey(), standardDimension);
     }
 
     public boolean isDisplayWindowPersonnalPosition(){
-        return getGenericBooleanDisplay(ConfigData.displayWindowPersonnalPosition);
+        return getGenericBooleanDisplay(ConfigData.DISPLAY_WINDOW_PERSONAL_POSITION);
     }
 
     public void setDisplayWindowPersonnalPosition(String standardPosition){
-        conf.setProperty(ConfigData.displayWindowPersonnalPosition.getKey(), standardPosition);
+        conf.setProperty(ConfigData.DISPLAY_WINDOW_PERSONAL_POSITION.getKey(), standardPosition);
     }
 
     public boolean isDisplayWindowMaximize(){
-        return getGenericBooleanDisplay(ConfigData.displayWindowMaximize);
+        return getGenericBooleanDisplay(ConfigData.DISPLAY_WINDOW_MAXIMIZE);
     }
 
     public void setDisplayWindowMaximize(String maximize){
-        conf.setProperty(ConfigData.displayWindowMaximize.getKey(), maximize);
+        conf.setProperty(ConfigData.DISPLAY_WINDOW_MAXIMIZE.getKey(), maximize);
     }
 
     public String getAuthentificationUsername(){
-        if(conf.containsKey(ConfigData.authentificationUsername.getKey()))
-            return conf.getProperty(ConfigData.authentificationUsername.getKey());
+        if(conf.containsKey(ConfigData.AUTHENTICATION_USERNAME.getKey()))
+            return conf.getProperty(ConfigData.AUTHENTICATION_USERNAME.getKey());
         else
-            return ConfigData.authentificationUsername.getDefaultValue();
+            return ConfigData.AUTHENTICATION_USERNAME.getDefaultValue();
     }
 
     public void setAuthentificationUsername(String username){
-        conf.setProperty(ConfigData.authentificationUsername.getKey(), username);
+        conf.setProperty(ConfigData.AUTHENTICATION_USERNAME.getKey(), username);
     }
 
     public String getAuthentificationPassword(){
-        if(conf.containsKey(ConfigData.authentificationPassword.getKey()))
-            return conf.getProperty(ConfigData.authentificationPassword.getKey());
+        if(conf.containsKey(ConfigData.AUTHENTICATION_PASSWORD.getKey()))
+            return conf.getProperty(ConfigData.AUTHENTICATION_PASSWORD.getKey());
         else
-            return ConfigData.authentificationPassword.getDefaultValue();
+            return ConfigData.AUTHENTICATION_PASSWORD.getDefaultValue();
     }
 
     public void setAuthentificationPassword(String password){
-        conf.setProperty(ConfigData.authentificationPassword.getKey(), password);
+        conf.setProperty(ConfigData.AUTHENTICATION_PASSWORD.getKey(), password);
     }
 
     public String getAdvancedApiServerProtocol(){
-        if(conf.containsKey(ConfigData.advancedApiServerProtocol.getKey()))
-            return conf.getProperty(ConfigData.advancedApiServerProtocol.getKey());
+        if(conf.containsKey(ConfigData.ADVANCED_API_SERVER_PROTOCOL.getKey()))
+            return conf.getProperty(ConfigData.ADVANCED_API_SERVER_PROTOCOL.getKey());
         else
-            return ConfigData.advancedApiServerProtocol.getDefaultValue();
+            return ConfigData.ADVANCED_API_SERVER_PROTOCOL.getDefaultValue();
     }
 
     public void setAdvancedApiServerProtocol(String protocol){
-        conf.setProperty(ConfigData.advancedApiServerProtocol.getKey(), protocol);
+        conf.setProperty(ConfigData.ADVANCED_API_SERVER_PROTOCOL.getKey(), protocol);
     }
 
     public String getAdvancedApiServerHost(){
-        if(conf.containsKey(ConfigData.advancedApiServerHost.getKey()))
-            return conf.getProperty(ConfigData.advancedApiServerHost.getKey());
+        if(conf.containsKey(ConfigData.ADVANCED_API_SERVER_HOST.getKey()))
+            return conf.getProperty(ConfigData.ADVANCED_API_SERVER_HOST.getKey());
         else
-            return ConfigData.advancedApiServerHost.getDefaultValue();
+            return ConfigData.ADVANCED_API_SERVER_HOST.getDefaultValue();
     }
 
     public void setAdvancedApiServerHost(String host){
-        conf.setProperty(ConfigData.advancedApiServerHost.getKey(), host);
+        conf.setProperty(ConfigData.ADVANCED_API_SERVER_HOST.getKey(), host);
     }
 
     public String getAdvancedApiServerPort(){
-        if(conf.containsKey(ConfigData.advancedApiServerPort.getKey()))
-            return conf.getProperty(ConfigData.advancedApiServerPort.getKey());
+        if(conf.containsKey(ConfigData.ADVANCED_API_SERVER_PORT.getKey()))
+            return conf.getProperty(ConfigData.ADVANCED_API_SERVER_PORT.getKey());
         else
-            return ConfigData.advancedApiServerPort.getDefaultValue();
+            return ConfigData.ADVANCED_API_SERVER_PORT.getDefaultValue();
     }
 
     public void setAdvancedApiServerPort(String port){
-        conf.setProperty(ConfigData.advancedApiServerPort.getKey(), port);
+        conf.setProperty(ConfigData.ADVANCED_API_SERVER_PORT.getKey(), port);
     }
 
     public String getAdvancedServerProtocol(){
-        if(conf.containsKey(ConfigData.advancedServerProtocol.getKey()))
-            return conf.getProperty(ConfigData.advancedServerProtocol.getKey());
+        if(conf.containsKey(ConfigData.ADVANCED_SERVER_PROTOCOL.getKey()))
+            return conf.getProperty(ConfigData.ADVANCED_SERVER_PROTOCOL.getKey());
         else
-            return ConfigData.advancedServerProtocol.getDefaultValue();
+            return ConfigData.ADVANCED_SERVER_PROTOCOL.getDefaultValue();
     }
 
     public void setAdvancedServerProtocol(String protocol){
-        conf.setProperty(ConfigData.advancedServerProtocol.getKey(), protocol);
+        conf.setProperty(ConfigData.ADVANCED_SERVER_PROTOCOL.getKey(), protocol);
     }
 
     public String getAdvancedServerHost(){
-        if(conf.containsKey(ConfigData.advancedServerHost.getKey()))
-            return conf.getProperty(ConfigData.advancedServerHost.getKey());
+        if(conf.containsKey(ConfigData.ADVANCED_SERVER_HOST.getKey()))
+            return conf.getProperty(ConfigData.ADVANCED_SERVER_HOST.getKey());
         else
-            return ConfigData.advancedServerHost.getDefaultValue();
+            return ConfigData.ADVANCED_SERVER_HOST.getDefaultValue();
     }
 
     public void setAdvancedServerHost(String host){
-        conf.setProperty(ConfigData.advancedServerHost.getKey(), host);
+        conf.setProperty(ConfigData.ADVANCED_SERVER_HOST.getKey(), host);
     }
 
     public String getAdvancedServerPort(){
-        if(conf.containsKey(ConfigData.advancedServerPort.getKey())) {
-            return conf.getProperty(ConfigData.advancedServerPort.getKey());
+        if(conf.containsKey(ConfigData.ADVANCED_SERVER_PORT.getKey())) {
+            return conf.getProperty(ConfigData.ADVANCED_SERVER_PORT.getKey());
         }
         else {
-            return ConfigData.advancedServerPort.getDefaultValue();
+            return ConfigData.ADVANCED_SERVER_PORT.getDefaultValue();
         }
     }
 
     public void setAdvancedServerPort(String port){
-        conf.setProperty(ConfigData.advancedServerPort.getKey(), port);
+        conf.setProperty(ConfigData.ADVANCED_SERVER_PORT.getKey(), port);
     }
 
     public void resetAuthentification(){
@@ -455,7 +462,7 @@ public class Configuration {
     }
 
     public List<String> getActions() {
-        String value = actions.getProperty(ActionData.lastProjects.getKey());
+        String value = actions.getProperty(ActionData.LAST_PROJECTS.getKey());
         if(value != null && ! "".equals(value.trim())) {
             return Arrays.asList(value.split(","));
         } else {
@@ -463,30 +470,41 @@ public class Configuration {
         }
     }
 
+    /**
+     * Add new content config files
+     * @param projectFileName file path of content you want to add
+     */
     public void addActionProject(String projectFileName) {
-        List<String> existant = getActions();
-        List<String> recents = new ArrayList<>(existant);
-        if(recents.contains(projectFileName)) {
-            recents.remove(projectFileName);
+        List<String> existing = getActions();
+        List<String> recent = new ArrayList<>(existing);
+        if(recent.contains(projectFileName)) {
+            recent.remove(projectFileName);
         }
-        recents.add(0, projectFileName);
+        recent.add(0, projectFileName);
 
-        actions.put(ActionData.lastProjects.getKey(), recents.stream().limit(5).map(Object::toString).collect(Collectors.joining(",")));
+        actions.put(ActionData.LAST_PROJECTS.getKey(), recent.stream().limit(5).map(Object::toString).collect(Collectors.joining(",")));
         saveActionFile();
     }
 
+    /**
+     * Remove content on config files
+     * @param projectFileName file path of content you want to remove
+     */
     public void delActionProject(String projectFileName) {
-        List<String> existant = getActions();
-        List<String> recents = new ArrayList<>(existant);
-        if(recents.contains(projectFileName)) {
-            recents.remove(projectFileName);
+        List<String> existing = getActions();
+        List<String> recent = new ArrayList<>(existing);
+        if(recent.contains(projectFileName)) {
+            recent.remove(projectFileName);
         }
-        actions.put(ActionData.lastProjects.getKey(), recents.stream().limit(5).map(Object::toString).collect(Collectors.joining(",")));
+        actions.put(ActionData.LAST_PROJECTS.getKey(), recent.stream().limit(5).map(Object::toString).collect(Collectors.joining(",")));
         saveActionFile();
     }
 
+    /**
+     * Enum for manage last contents open
+     */
     public enum ActionData{
-        lastProjects("content.open", "");
+        LAST_PROJECTS("content.open", "");
         private String key;
         private String defaultValue;
 
@@ -505,33 +523,33 @@ public class Configuration {
     }
 
     public enum ConfigData{
-        displayWindowWidth("data.display.window.width", "1000"),
-        displayWindowHeight("data.display.window.height", "600"),
-        displayWindowPositionX("data.display.window.position.x", "0"),
-        displayWindowPositionY("data.display.window.position.y", "0"),
+        DISPLAY_WINDOW_WIDTH("data.display.window.width", "1000"),
+        DISPLAY_WINDOW_HEIGHT("data.display.window.height", "600"),
+        DISPLAY_WINDOW_POSITION_X("data.display.window.position.x", "0"),
+        DISPLAY_WINDOW_POSITION_Y("data.display.window.position.y", "0"),
 
-        workspacePath("options.workspace.path", ""),
-        contentsPath("options.workspace.contents.path", ""),
-        editorSmart("options.editor.smart", "true"),
-        editorFont("options.editor.font", "Fira Mono"),
-        editorFontSize("options.editor.fontSize", "14"),
-        editorToolbarView("options.editor.toolbar.view", "true"),
-        editorLineNoView("options.editor.lineno.view", "true"),
-        editorRenderView("options.editor.render.view", "true"),
-        displayTheme("options.display.theme", "light.css"),
-        displayLang("options.display.lang", Locale.FRANCE.toString()),
-        displayWindowPersonnalDimension("options.display.window.standardDimension", "true"),
-        displayWindowPersonnalPosition("options.display.window.standardPosition", "true"),
-        displayWindowMaximize("options.display.window.maximize", "false"),
-        authentificationUsername("options.authentification.username", ""),
-        authentificationPassword("options.authentification.password", ""),
-        advancedApiServerProtocol("options.advanced.protocol", "http"),
-        advancedApiServerHost("options.advanced.host", "winxaito.com"),
-        advancedApiServerUri("options.advanced.host", "api"),
-        advancedApiServerPort("options.advanced.port", "80"),
-        advancedServerProtocol("server.protocol", "https"),
-        advancedServerHost("server.host", "zestedesavoir.com"),
-        advancedServerPort("server.port", "443");
+        WORKSPACE_PATH("options.workspace.path", ""),
+        CONTENTS_PATH("options.workspace.contents.path", ""),
+        EDITOR_SMART("options.editor.smart", "true"),
+        EDITOR_FONT("options.editor.font", "Fira Mono"),
+        EDITOR_FONT_SIZE("options.editor.fontSize", "14"),
+        EDITOR_TOOLBAR_VIEW("options.editor.toolbar.view", "true"),
+        EDITOR_LINE_NO_VIEW("options.editor.lineno.view", "true"),
+        EDITOR_RENDER_VIEW("options.editor.render.view", "true"),
+        DISPLAY_THEME("options.display.theme", "light.css"),
+        DISPLAY_LANG("options.display.lang", Locale.FRANCE.toString()),
+        DISPLAY_WINDOW_PERSONAL_DIMENSION("options.display.window.standardDimension", "true"),
+        DISPLAY_WINDOW_PERSONAL_POSITION("options.display.window.standardPosition", "true"),
+        DISPLAY_WINDOW_MAXIMIZE("options.display.window.maximize", "false"),
+        AUTHENTICATION_USERNAME("options.authentification.username", ""),
+        AUTHENTICATION_PASSWORD("options.authentification.password", ""),
+        ADVANCED_API_SERVER_PROTOCOL("options.advanced.protocol", "http"),
+        ADVANCED_API_SERVER_HOST("options.advanced.host", "winxaito.com"),
+        ADVANCED_API_SERVER_URI("options.advanced.host", "api"),
+        ADVANCED_API_SERVER_PORT("options.advanced.port", "80"),
+        ADVANCED_SERVER_PROTOCOL("server.protocol", "https"),
+        ADVANCED_SERVER_HOST("server.host", "zestedesavoir.com"),
+        ADVANCED_SERVER_PORT("server.port", "443");
 
         private String key;
         private String defaultValue;
