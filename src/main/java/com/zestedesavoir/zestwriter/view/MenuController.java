@@ -67,7 +67,7 @@ public class MenuController{
     @FXML private Menu menuExport;
     @FXML private MenuItem menuQuit;
     @FXML private MenuItem menuFindReplace;
-    public BooleanPropertyBase isOnReadingTab = new SimpleBooleanProperty(true);
+    private BooleanPropertyBase isOnReadingTab = new SimpleBooleanProperty(true);
 
     public MenuController(){
         super();
@@ -721,6 +721,7 @@ public class MenuController{
                                 try {
                                     Integer.valueOf(s);
                                 } catch(Exception e) {
+                                    logger.trace(e.getMessage(), e);
                                     return true;
                                 }
                             }

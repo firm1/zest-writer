@@ -268,7 +268,7 @@ public class OptionsDialog{
             alert.showAndWait();
         });
 
-        optDisplayLang.getItems().addAll(Lang.langAvailable);
+        optDisplayLang.getItems().addAll(Lang.getLangAvailable());
         optDisplayLang.setValue(Lang.getLangFromCode(config.getDisplayLang()));
         optDisplayLang.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             Alert alert = new CustomAlert(Alert.AlertType.WARNING);

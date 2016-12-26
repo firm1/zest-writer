@@ -38,14 +38,14 @@ public final class FlipTable {
             }
         }
 
-        int emptyWidth = 3 * (columns - 1); // Account for column dividers and their spacing.
+        int emptyWd = 3 * (columns - 1); // Account for column dividers and their spacing.
         for (int columnWidth : columnWidths) {
-            emptyWidth += columnWidth;
+            emptyWd += columnWidth;
         }
-        this.emptyWidth = emptyWidth;
+        this.emptyWidth = emptyWd;
 
-        if (emptyWidth < EMPTY.length()) { // Make sure we're wide enough for the empty text.
-            columnWidths[columns - 1] += EMPTY.length() - emptyWidth;
+        if (emptyWd < EMPTY.length()) { // Make sure we're wide enough for the empty text.
+            columnWidths[columns - 1] += EMPTY.length() - emptyWd;
         }
     }
 
@@ -79,7 +79,7 @@ public final class FlipTable {
     private void printData(StringBuilder out, String[] data) {
         for (int line = 0, lines = 1; line < lines; line++) {
             for (int column = 0; column < columns; column++) {
-                out.append(column == 0 ? '|' : '|');
+                out.append('|');
                 String[] cellLines = data[column].split("\\n");
                 lines = Math.max(lines, cellLines.length);
                 String cellLine = line < cellLines.length ? cellLines[line] : "";

@@ -30,6 +30,9 @@ import static com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory.generate
 public class GithubHttp {
     static Logger logger = LoggerFactory.getLogger(GithubHttp.class);
 
+    private GithubHttp() {
+    }
+
     public static String getGithubZipball(String owner, String repo, String destFolder) throws IOException {
         CloseableHttpClient httpclient = HttpClients.custom()
                 .setRedirectStrategy(new LaxRedirectStrategy())

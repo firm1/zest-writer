@@ -57,10 +57,6 @@ public class TableController {
 
     @FXML private TableView<ZRow> tableView;
 
-    public void setEditor(MdConvertController editorController) {
-        MdConvertController editorController1 = editorController;
-    }
-
     @FXML private void initialize() {
         tableView.setItems(datas);
 
@@ -86,12 +82,10 @@ public class TableController {
         });
 
         tc.setCellFactory(TextFieldTableCell.forTableColumn());
-        tc.setOnEditCommit(new EventHandler<CellEditEvent<ZRow, String>>() {
-            @Override
-            public void handle(CellEditEvent<ZRow, String> t) {
-                List<String> row = t.getTableView().getItems().get(t.getTablePosition().getRow()).getRow();
-                row.set(t.getTablePosition().getColumn(), t.getNewValue());
-            }
+        tc.setOnEditCommit(t -> {
+            CellEditEvent<ZRow, String> evt = (CellEditEvent<ZRow, String>) t;
+            List<String> row = evt.getTableView().getItems().get(evt.getTablePosition().getRow()).getRow();
+            row.set(evt.getTablePosition().getColumn(), evt.getNewValue());
         });
         tc.setPrefWidth(150);
         TextField txf = new TextField();
@@ -121,6 +115,7 @@ public class TableController {
         }
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for(ZRow data:datas) {

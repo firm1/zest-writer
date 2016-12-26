@@ -49,7 +49,7 @@ public class Readability {
      */
     private static boolean isComplex(String w) {
         int syllables = Syllabify.syllable(w);
-        return (syllables > 2);
+        return syllables > 2;
     }
 
     /**
@@ -122,7 +122,7 @@ public class Readability {
         Integer words = getNumberOfCharacters(text);
         Integer avgReadTimePerMin = 2000;
 
-        return (new Double(words)/avgReadTimePerMin);
+        return new Double(words)/avgReadTimePerMin;
     }
 
     /**

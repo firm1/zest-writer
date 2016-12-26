@@ -140,7 +140,7 @@ public class Container extends MetaContent implements ContentNode {
 
     @Override
     public boolean canTakeContainer(Content c) {
-        return (getCountChildrenExtract() == 0 && getCountAncestorsContainer(c) < 3);
+        return getCountChildrenExtract() == 0 && getCountAncestorsContainer(c) < 3;
     }
 
     @Override
@@ -156,7 +156,7 @@ public class Container extends MetaContent implements ContentNode {
     @Override
     public boolean isMoveableIn(ContentNode receiver, Content root) {
         if(receiver instanceof MetaAttribute) {
-            if(receiver.getTitle().equalsIgnoreCase("conclusion")) {
+            if ("conclusion".equalsIgnoreCase(receiver.getTitle())) {
                 return false;
             } else {
                 return isMoveableIn(((MetaAttribute) receiver).getParent(), root);
@@ -189,9 +189,7 @@ public class Container extends MetaContent implements ContentNode {
         sb.append(" ").append(getTitle()).append("\n\n");
         sb.append(FunctionTreeFactory.changeLocationImages(FunctionTreeFactory.offsetHeaderMarkdown(getIntroduction().readMarkdown(), levelDepth))).append("\n\n");
         for(MetaContent c:getChildren()) {
-            if(c instanceof Container) {
-                sb.append(c.exportContentToMarkdown(level+1, levelDepth));
-            } else if (c instanceof Extract) {
+            if(c instanceof Container || c instanceof Extract) {
                 sb.append(c.exportContentToMarkdown(level +1, levelDepth));
             }
         }

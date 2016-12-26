@@ -32,6 +32,9 @@ import java.util.regex.Pattern;
 
 public class FunctionTreeFactory {
 
+    private FunctionTreeFactory() {
+    }
+
     public static boolean isMacOs() {
         return System.getProperty("os.name").toLowerCase().contains("mac");
     }

@@ -38,6 +38,7 @@ public class Extract extends MetaContent implements Textual, ContentNode{
         return markdown;
     }
 
+    @Override
     public void setMarkdown(String markdown) {
         this.markdown = markdown;
     }
@@ -70,7 +71,7 @@ public class Extract extends MetaContent implements Textual, ContentNode{
             }
         }
         if(receiver instanceof MetaAttribute) {
-            if(receiver.getTitle().equalsIgnoreCase("conclusion")) {
+            if("conclusion".equalsIgnoreCase(receiver.getTitle())) {
                 return false;
             }
         }

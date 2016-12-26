@@ -1,5 +1,6 @@
 package com.zestedesavoir.zestwriter.view.com;
 
+import com.kenai.jffi.Main;
 import com.zestedesavoir.zestwriter.MainApp;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,7 +19,7 @@ public class CustomStage extends Stage{
         try {
             scene = new Scene(loader.load());
         } catch (IOException e) {
-            e.printStackTrace();
+            MainApp.getLogger().error(e.getMessage(), e);
         }
         setScene(scene);
         getIcons().add(new Image(MainApp.class.getResourceAsStream("images/logo.png")));

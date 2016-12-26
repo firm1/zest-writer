@@ -11,7 +11,6 @@ import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.view.com.*;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.collections.ListChangeListener;
-import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -381,7 +380,7 @@ public class MdTextController {
 
                 treeCell.setOnDragOver(dragEvent -> {
                     if(dragObject != null && treeCell.getItem() != null) {
-                        if (!dragObject.getValue().isMoveableIn(treeCell.getItem(), ((Content)Summary.getRoot().getValue())))
+                        if (!dragObject.getValue().isMoveableIn(treeCell.getItem(), (Content)Summary.getRoot().getValue()))
                         {
                             treeCell.setGraphic(IconFactory.createDeleteIcon());
                         } else {

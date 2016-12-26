@@ -22,13 +22,16 @@ public class Syllabify {
     static String[] SubSyl = { "cial", "tia", "cius", "cious", "giu", "ion", "iou", "sia$", ".ely$" };
     static String[] AddSyl = { "ia", "riet", "dien", "iu", "io", "ii", "[aeiouym]bl$", "[aeiou]{3}", "^mc", "ism$", "[^aeiouy][^aeiouy]l$", "[^l]lien","^coa[dglx].", "[^gq]ua[^auieo]", "dnt$" };
 
+    private Syllabify() {
+    }
+
     public static int syllable(String word) {
 
         word = word.toLowerCase();
         word = word.replaceAll("'", " ");
 
-        if (word.equals("i")) return 1;
-        if (word.equals("a")) return 1;
+        if ("i".equals(word)) return 1;
+        if ("a".equals(word)) return 1;
 
         if (word.endsWith("e")) {
             word = word.substring(0, word.length() - 1);

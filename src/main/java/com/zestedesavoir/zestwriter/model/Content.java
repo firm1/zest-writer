@@ -85,6 +85,7 @@ public class Content extends Container implements ContentNode{
         return getCountDescendantContainer()+1;
     }
 
+    @Override
     public String exportContentToMarkdown(int level, int levelDepth) {
         DateFormat dateFormat = new SimpleDateFormat("dd MMMMM yyyy");
         StringBuilder sb = new StringBuilder();
@@ -102,7 +103,7 @@ public class Content extends Container implements ContentNode{
 
     @Override
     public MaterialDesignIconView buildIcon() {
-        if(getType().equals("ARTICLE")) {
+        if("ARTICLE".equals(getType())) {
             return IconFactory.createArticleIcon();
         } else {
             return IconFactory.createTutorialIcon();
@@ -110,29 +111,19 @@ public class Content extends Container implements ContentNode{
     }
 
     public boolean isArticle() {
-        return getType().equals("ARTICLE");
+        return "ARTICLE".equals(getType());
     }
 
     public boolean isTutorial() {
-        return getType().equals("TUTORIAL");
+        return "TUTORIAL".equals(getType());
     }
 
     public void saveToMarkdown(File file) {
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"))) {
             writer.append(exportContentToMarkdown(0, getDepth()));
             writer.flush();
         } catch (Exception e) {
             MainApp.getLogger().error(e.getMessage(), e);
-        } finally {
-            try {
-                if (writer != null) {
-                    writer.close();
-                }
-            } catch (Exception ignored) {
-                MainApp.getLogger().error(ignored.getMessage(), ignored);
-            }
         }
     }
 

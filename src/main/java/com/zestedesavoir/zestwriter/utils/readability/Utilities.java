@@ -4,7 +4,10 @@ import java.math.BigDecimal;
 
 public class Utilities {
 
-	public static Double round(double d, int decimalPlace) {
+    private Utilities() {
+    }
+
+    public static Double round(double d, int decimalPlace) {
 		// see the Javadoc about why we use a String in the constructor
 		// http://java.sun.com/j2se/1.5.0/docs/api/java/math/BigDecimal.html#BigDecimal(double)
 

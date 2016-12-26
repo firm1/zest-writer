@@ -40,7 +40,7 @@ public class GoogleLoginDialog extends CustomDialog<Pair<String, String>> {
                 }
             }
             if(newState == State.SUCCEEDED) {
-                if(webEngine.getLocation().equals("https://zestedesavoir.com/")) {
+                if("https://zestedesavoir.com/".equals(webEngine.getLocation())) {
                     Element elementary = webEngine.getDocument().getDocumentElement();
                     Element logbox = getLogBox(elementary);
                     String pseudo = getPseudo(logbox);
@@ -63,7 +63,7 @@ public class GoogleLoginDialog extends CustomDialog<Pair<String, String>> {
 	}
 	private Element getLogBox(Element el) {
         NodeList childNodes = el.getChildNodes();
-        if(el.getNodeName().equals("DIV")){
+        if("DIV".equals(el.getNodeName())){
             String attr = el.getAttribute("class");
             if(attr != null) {
                 if(attr.contains("my-account-dropdown")) {
@@ -86,8 +86,8 @@ public class GoogleLoginDialog extends CustomDialog<Pair<String, String>> {
         for(int i=0; i<childNodes.getLength(); i++){
             org.w3c.dom.Node item = childNodes.item(i);
             if(item instanceof Element){
-                Element find = ((Element)item);
-                if(find.getNodeName().equals("SPAN")) {
+                Element find = (Element)item;
+                if("SPAN".equals(find.getNodeName())) {
                     return find.getTextContent();
                 }
             }
@@ -100,20 +100,20 @@ public class GoogleLoginDialog extends CustomDialog<Pair<String, String>> {
         for(int i=0; i<childNodes.getLength(); i++){
             org.w3c.dom.Node item = childNodes.item(i);
             if(item instanceof Element){
-                Element ulItem = ((Element)item);
-                if(ulItem.getNodeName().equals("UL")) {
+                Element ulItem = (Element)item;
+                if("UL".equals(ulItem.getNodeName())) {
                     NodeList childUlNodes = ulItem.getChildNodes();
                     for(int j=0; j<childUlNodes.getLength(); j++){
                         org.w3c.dom.Node jtem = childUlNodes.item(j);
                         if(jtem instanceof Element){
-                            Element liItem = ((Element)jtem);
-                            if(liItem.getNodeName().equals("LI")) {
+                            Element liItem = (Element)jtem;
+                            if("LI".equals(liItem.getNodeName())) {
                                 NodeList childIlNodes = liItem.getChildNodes();
                                 for(int k=0; k<childIlNodes.getLength(); k++){
                                     org.w3c.dom.Node ktem = childIlNodes.item(k);
                                     if(ktem instanceof Element){
-                                        Element aItem = ((Element)ktem);
-                                        if(aItem.getNodeName().equals("A")) {
+                                        Element aItem = (Element)ktem;
+                                        if("A".equals(aItem.getNodeName())) {
                                             String ref = aItem.getAttribute("href");
                                             if(ref.startsWith("/contenus/tutoriels")) {
                                                 String[] splt = ref.split("/");

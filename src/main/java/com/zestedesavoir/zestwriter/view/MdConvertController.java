@@ -281,7 +281,7 @@ public class MdConvertController {
         Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.dialog.upload.img.title"));
 
         ImageInputDialog imageController = loader.getController();
-        if(mainApp.getContents().size() > 0) {
+        if(!mainApp.getContents().isEmpty()) {
             imageController.setSourceText(SourceText, MainApp.getZdsutils(), mainApp.getMenuController(), mainApp.getContents().get(0));
         } else {
             imageController.setSourceText(SourceText, MainApp.getZdsutils(), mainApp.getMenuController(), null);
@@ -350,7 +350,7 @@ public class MdConvertController {
         ChoiceDialog<String> dialog = new ChoiceDialog<>("information", choices);
         FunctionTreeFactory.addTheming(dialog.getDialogPane());
         dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(mainApp.getPrimaryStage());
+        dialog.initOwner(MainApp.getPrimaryStage());
         dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.bloc.title"));
         dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.bloc.header"));
         dialog.setContentText(Configuration.bundle.getString("ui.editor.dialog.bloc.text"));

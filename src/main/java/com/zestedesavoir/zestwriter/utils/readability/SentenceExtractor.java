@@ -40,8 +40,6 @@ public class SentenceExtractor {
             StringBuilder sb = new StringBuilder();
             for (int j = sentStartTok; j <= sentEndTok; j++) {
                 sb.append(tokens[j]).append(whites[j + 1]);
-
-                // System.out.print(tokens[j]+whites[j+1]);
             }
             result[i] = sb.toString();
             sentStartTok = sentEndTok + 1;

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public class Lang {
     private Locale locale;
-    public static List<Lang> langAvailable = Arrays.asList(new Lang(Locale.FRANCE), new Lang(Locale.ENGLISH));
+    private static List<Lang> langAvailable = Arrays.asList(new Lang(Locale.FRANCE), new Lang(Locale.ENGLISH));
 
     public Lang(Locale locale) {
         this.locale = locale;
@@ -15,6 +15,10 @@ public class Lang {
 
     public Locale getLocale() {
         return locale;
+    }
+
+    public static List<Lang> getLangAvailable() {
+        return langAvailable;
     }
 
     @Override
