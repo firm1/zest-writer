@@ -2,10 +2,7 @@ package com.zestedesavoir.zestwriter.view;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
-import com.zestedesavoir.zestwriter.model.Content;
-import com.zestedesavoir.zestwriter.model.MetaAttribute;
-import com.zestedesavoir.zestwriter.model.MetadataContent;
-import com.zestedesavoir.zestwriter.model.Textual;
+import com.zestedesavoir.zestwriter.model.*;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
@@ -250,25 +247,17 @@ public class MenuController{
             paramContent.put("slug", ZdsHttp.toSlug((String)paramContent.get("title")));
             paramContent.put("version", 2);
             paramContent.put("object", "container");
-            paramContent.put("introduction", "introduction.md");
-            paramContent.put("conclusion", "conclusion.md");
+            paramContent.put("introduction", Constant.DEFAULT_INTRODUCTION_FILENAME);
+            paramContent.put("conclusion", Constant.DEFAULT_CONCLUSION_FILENAME);
             paramContent.put("children", new ArrayList<>());
 
             try{
                 mapper.writeValue(manifest, paramContent);
                 // create introduction and conclusion
-                File intro = new File(realLocalPath + File.separator + "introduction.md");
-                File conclu = new File(realLocalPath + File.separator + "conclusion.md");
-                if(!intro.createNewFile()) {
-                    logger.error("Problème lors de la création du fichier "+intro.getAbsolutePath());
-                }
-                if(!conclu.createNewFile()) {
-                    logger.error("Problème lors de la création du fichier "+intro.getAbsolutePath());
-                }
+                FunctionTreeFactory.generateMetadataAttributes(realLocalPath + File.separator);
                 Content content = mapper.readValue(manifest, Content.class);
                 content.setRootContent(content, realLocalPath);
                 FunctionTreeFactory.switchContent(content, mainApp.getContents());
-
             }catch(IOException e){
                 logger.error(e.getMessage(), e);
             }

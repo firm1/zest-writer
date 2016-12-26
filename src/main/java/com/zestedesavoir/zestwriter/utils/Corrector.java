@@ -10,7 +10,6 @@ import org.languagetool.JLanguageTool;
 import org.languagetool.language.French;
 import org.languagetool.markup.AnnotatedText;
 import org.languagetool.markup.AnnotatedTextBuilder;
-import org.languagetool.rules.Rule;
 import org.languagetool.rules.RuleMatch;
 import org.languagetool.rules.spelling.SpellingCheckRule;
 
@@ -36,7 +35,8 @@ public class Corrector {
         AnnotatedTextBuilder builder = new AnnotatedTextBuilder();
         StringTokenizer tokenizer = new StringTokenizer(htmlText, "<>", true);
         boolean inMarkup = false;
-        int CountCode = 0, CountPre = 0;
+        int CountCode = 0;
+        int CountPre = 0;
         while (tokenizer.hasMoreTokens()) {
             String part = tokenizer.nextToken();
             if (inMarkup) {
@@ -52,6 +52,8 @@ public class Corrector {
                         break;
                     case "/pre":
                         CountPre--;
+                        break;
+                    default:
                         break;
                 }
             }
@@ -86,7 +88,10 @@ public class Corrector {
         AnnotatedTextBuilder builder = new AnnotatedTextBuilder();
         StringTokenizer tokenizer = new StringTokenizer(pseudoXml, "<>", true);
         boolean inMarkup = false;
-        int CountCode = 0, CountPre = 0, CountEm = 0, CountSup = 0;
+        int CountCode = 0;
+        int CountPre = 0;
+        int CountEm = 0;
+        int CountSup = 0;
         while (tokenizer.hasMoreTokens()) {
             String part = tokenizer.nextToken();
             if (inMarkup) {
@@ -114,6 +119,8 @@ public class Corrector {
                         break;
                     case "/sup":
                         CountSup--;
+                        break;
+                    default:
                         break;
                 }
             }
@@ -159,7 +166,7 @@ public class Corrector {
             String desc = match.getMessage();
             desc = new HtmlToPlainText().getPlainText(Jsoup.parse(desc));
 
-            if (match.getSuggestedReplacements().size() > 0) {
+            if (!match.getSuggestedReplacements().isEmpty()) {
                 desc += Configuration.bundle.getString("ui.alert.correction.tooltip.suggestion")
                         + match.getSuggestedReplacements();
             }
@@ -210,10 +217,10 @@ public class Corrector {
         langTool.getAllActiveRules().stream()
                 .filter(rule -> rule instanceof SpellingCheckRule).forEach(rule -> ((SpellingCheckRule) rule).acceptPhrases(wordsToIgnore));
         try {
-            List<RuleMatch> matches = matches = langTool.check(markup);
+            List<RuleMatch> matches = langTool.check(markup);
             return matches.size();
         }
-        catch (Exception e) {
+        catch (IOException e) {
             MainApp.getLogger().error(e.getMessage(), e);
         }
         return 0;
