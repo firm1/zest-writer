@@ -36,17 +36,13 @@ public class CorrectionService extends Service<String>{
                 Function<Textual, String> prepareValidationReport = (Textual ext) -> {
                     updateMessage(ext.getTitle());
                     String markdown = ext.readMarkdown();
-                    int i=0;
-                    while(!mdText.isPythonStarted()) {
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            MainApp.getLogger().trace(e.getMessage(), e);
-                        }
+                    if(!mdText.isPythonStarted()) {
+                        MainApp.getLogger().debug("Jython en cours de chargement mémoire");
+                        return null;
+                    } else {
+                        String htmlText = StringEscapeUtils.unescapeHtml(MenuController.markdownToHtml(mdText, markdown));
+                        return corrector.checkHtmlContentToText(htmlText, ext.getTitle());
                     }
-
-                    String htmlText = StringEscapeUtils.unescapeHtml(MenuController.markdownToHtml(mdText, markdown));
-                    return corrector.checkHtmlContentToText(htmlText, ext.getTitle());
                 };
                 Map<Textual, String> validationResult = (content.doOnTextual(prepareValidationReport));
 

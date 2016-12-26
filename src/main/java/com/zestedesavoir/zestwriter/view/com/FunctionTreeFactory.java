@@ -40,8 +40,10 @@ public class FunctionTreeFactory {
     }
 
     public static Map<String,Object> initContentDialog(Content defaultContent) {
+        EditContentDialog dialog;
+        // Create wizard
         if(defaultContent == null) {
-            defaultContent = new Content("container",
+            dialog = new EditContentDialog(new Content("container",
                     "",
                     "",
                     Constant.DEFAULT_INTRODUCTION_FILENAME,
@@ -50,10 +52,10 @@ public class FunctionTreeFactory {
                     2,
                     EditContentDialog.getLicOptions().get(6).getCode(),
                     "",
-                    EditContentDialog.getTypeOptions().get(1).getCode());
+                    EditContentDialog.getTypeOptions().get(1).getCode()));
+        } else {
+            dialog = new EditContentDialog(defaultContent);
         }
-        // Create wizard
-        EditContentDialog dialog = new EditContentDialog(defaultContent);
 
         Optional<Pair<String, Map<String, Object>>> result = dialog.showAndWait();
         if(result.isPresent()) {

@@ -60,6 +60,7 @@ public class LoginService extends Service<Void>{
                         }
                     } catch (Exception e) {
                         MainApp.getConfig().resetAuthentification();
+                        logger.debug(e.getMessage(), e);
                         cancel();
                     }
                 } else {

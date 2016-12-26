@@ -306,7 +306,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                     ((Container) getItem()).getChildren().remove(extract);
                     String oldText = extract.getText();
                     if (oldText.contains("/")) {
-                        oldText = oldText.substring(oldText.indexOf("/") + 1);
+                        oldText = oldText.substring(oldText.indexOf('/') + 1);
                     }
                     extract.setText((baseSlug + "/" + oldText).substring(baseFilePath.length() + 1));
 

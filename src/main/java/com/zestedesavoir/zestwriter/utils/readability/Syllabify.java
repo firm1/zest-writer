@@ -27,30 +27,30 @@ public class Syllabify {
 
     public static int syllable(String word) {
 
-        word = word.toLowerCase();
-        word = word.replaceAll("'", " ");
+        String currentWord = word.toLowerCase();
+        currentWord = currentWord.replaceAll("'", " ");
 
-        if ("i".equals(word)) return 1;
-        if ("a".equals(word)) return 1;
+        if ("i".equals(currentWord)) return 1;
+        if ("a".equals(currentWord)) return 1;
 
-        if (word.endsWith("e")) {
-            word = word.substring(0, word.length() - 1);
+        if (currentWord.endsWith("e")) {
+            currentWord = currentWord.substring(0, currentWord.length() - 1);
         }
 
-        String[] phonems = word.split("[^aeiouy]+");
+        String[] phonems = currentWord.split("[^aeiouy]+");
 
         int syl = 0;
         for (String syllabe : SubSyl) {
-            if (word.matches(syllabe)) {
+            if (currentWord.matches(syllabe)) {
                 syl--;
             }
         }
         for (String syllabe : AddSyl) {
-            if (word.matches(syllabe)) {
+            if (currentWord.matches(syllabe)) {
                 syl++;
             }
         }
-        if (word.length() == 1) {
+        if (currentWord.length() == 1) {
             syl++;
         }
 

@@ -79,7 +79,7 @@ public final class FlipTable {
     private void printData(StringBuilder out, String[] data) {
         for (int line = 0, lines = 1; line < lines; line++) {
             for (int column = 0; column < columns; column++) {
-                out.append(column == 0 ? '|' : '|');
+                out.append('|');
                 String[] cellLines = data[column].split("\\n");
                 lines = Math.max(lines, cellLines.length);
                 String cellLine = line < cellLines.length ? cellLines[line] : "";

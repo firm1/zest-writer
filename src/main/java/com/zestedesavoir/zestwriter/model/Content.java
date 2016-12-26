@@ -144,4 +144,12 @@ public class Content extends Container implements ContentNode{
             MainApp.getLogger().error("Problème de renommage du titre du conteneur "+newTitle);
         }
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Content) {
+            return getFilePath().equals(((Content)obj).getFilePath());
+        }
+        return super.equals(obj);
+    }
 }

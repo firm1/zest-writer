@@ -334,10 +334,10 @@ public class MdConvertController {
     }
 
     @FXML private void handleBlocButtonAction(ActionEvent event) {
-        String text = "";
+        StringBuilder text = new StringBuilder();
         String[] lines = SourceText.getSelectedText().split("\n");
         for (String line : lines) {
-            text += "| " + line + "\n";
+            text.append("| ").append(line).append("\n");
         }
 
         List<String> choices = new ArrayList<>();
@@ -358,7 +358,7 @@ public class MdConvertController {
         // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
-            SourceText.replaceText(SourceText.getSelection(), "\n[[" + result.get() + "]]\n" + text);
+            SourceText.replaceText(SourceText.getSelection(), "\n[[" + result.get() + "]]\n" + text.toString());
         }
 
         SourceText.requestFocus();
@@ -376,8 +376,6 @@ public class MdConvertController {
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/TableEditor.fxml"));
         BorderPane tableEditor = loader.load();
         TableView<ZRow> tbView = (TableView) tableEditor.getCenter();
-
-        TableController controller = loader.getController();
 
         dialog.getDialogPane().setContent(tableEditor);
 

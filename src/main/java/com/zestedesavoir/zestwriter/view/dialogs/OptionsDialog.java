@@ -77,7 +77,7 @@ public class OptionsDialog{
         config.setEditorToolbarView(optEditorToolbarView);
         config.setEditorLinenoView(optEditorLinenoView);
         config.setEditorRenderView(optEditorRenderView);
-        config.setEditorSmart(""+optSmartEditor);
+        config.setEditorSmart(Boolean.toString(optSmartEditor));
 
         config.setDisplayTheme(optDisplayTheme.getValue().getFilename());
         config.setDisplayLang(optDisplayLang.getValue().getLocale().toString());

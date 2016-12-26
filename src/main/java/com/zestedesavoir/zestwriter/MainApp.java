@@ -298,7 +298,7 @@ public class MainApp extends Application{
             @Override
             public void handle(KeyEvent t) {
                 if(key.length()>0) {
-                    if(key.toString().equals("_CONTROL_C_L_E_M")){
+                    if("_CONTROL_C_L_E_M".equals(key.toString())){
                      // Create the custom dialog.
                         Dialog<Void> dialog = new Dialog<>();
                         dialog.setTitle(Configuration.getBundle().getString("ui.menu.easteregg"));
