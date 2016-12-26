@@ -127,7 +127,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                     FunctionTreeFactory.clearContent(index.getMainApp().getExtracts(), index.getMainApp().getIndex().getEditorList(), () -> {
                         Content deleteContent = (Content) getTreeItem().getValue();
                         // delete last projects
-                        MainApp.config.delActionProject(deleteContent.getFilePath());
+                        MainApp.getConfig().delActionProject(deleteContent.getFilePath());
                         // delete physically file
                         deleteContent.delete();
                         // delete in logical tree
@@ -177,13 +177,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 ((Container)getItem()).getChildren().add(extract);
                 // create file
                 File extFile = new File(extract.getFilePath());
-                if (!extFile.exists()) {
-                    try {
-                        extFile.createNewFile();
-                    } catch (IOException e) {
-                        logger.error(e.getMessage(), e);
-                    }
-                }
+                FunctionTreeFactory.performCreateNewFile(extFile);
                 saveManifestJson();
                 index.openContent(content);
             }

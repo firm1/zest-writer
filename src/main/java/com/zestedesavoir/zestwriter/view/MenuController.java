@@ -36,6 +36,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.controlsfx.control.Rating;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.python.core.PyString;
@@ -728,10 +729,7 @@ public class MenuController{
                         } else {
                             String[] locale_tab = current.split(".");
                             for(String s:locale_tab) {
-                                try {
-                                    Integer.valueOf(s);
-                                } catch(Exception e) {
-                                    logger.trace(e.getMessage(), e);
+                                if(!StringUtils.isNumeric(s)) {
                                     return true;
                                 }
                             }

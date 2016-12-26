@@ -39,8 +39,7 @@ public class FindReplaceDialog{
     private enum FindReplaceAction{
         FIND,
         FIND_ACTION,
-        REPLACE,
-        REPLACE_ALL
+        REPLACE
     }
 
     public void setSourceText(StyleClassedTextArea sourceText){
@@ -85,7 +84,7 @@ public class FindReplaceDialog{
     }
 
     @FXML private void HandleReplaceAllButtonAction(){
-        findReplace(FindReplaceAction.REPLACE_ALL);
+        findReplaceAll();
     }
 
     private static List<Pair<Integer, Integer>> getRegionIndex(Pattern pattern, String s, int startFrom) {
@@ -145,6 +144,12 @@ public class FindReplaceDialog{
         return null;
     }
 
+    private void findReplaceAll(){
+        resetTextFill();
+        for(int k=0; k<numberIterationTotal; k++) {
+            findReplace(FindReplaceAction.REPLACE);
+        }
+    }
     private void findReplace(FindReplaceAction action){
         List<Pair<Integer, Integer>> matchers = refreshSearch();
         if(matchers != null)
@@ -169,12 +174,6 @@ public class FindReplaceDialog{
                 }
             }
         }
-        if(action == FindReplaceAction.REPLACE_ALL){
-            resetTextFill();
-            for(int k=0; k<numberIterationTotal; k++) {
-                findReplace(FindReplaceAction.REPLACE);
-            }
-        }
     }
 
     private void resetIterationNumber(){
@@ -186,7 +185,7 @@ public class FindReplaceDialog{
             sourceText.setStyleClass(start, end, "findReplace-highlightsFind");
         }else if(action == FindReplaceAction.FIND_ACTION){
             sourceText.setStyleClass(start, end, "findReplace-highlightsFindAction");
-        }else if(action == FindReplaceAction.REPLACE || action == FindReplaceAction.REPLACE_ALL){
+        }else if(action == FindReplaceAction.REPLACE){
             sourceText.setStyleClass(start, end, "findReplace-highlightsReplace");
         }
     }

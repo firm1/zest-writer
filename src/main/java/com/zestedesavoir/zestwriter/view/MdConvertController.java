@@ -112,7 +112,7 @@ public class MdConvertController {
 
         BoxEditor.setCenter(SourceText);
         SourceText.setStyle("-fx-font-family: \"" + MainApp.getConfig().getEditorFont() + "\";-fx-font-size: " + MainApp.getConfig().getEditorFontsize() + ";");
-        if(MainApp.config.isEditorRenderView()) {
+        if(MainApp.getConfig().isEditorRenderView()) {
             initRenderTask();
         } else {
             splitPane.getItems().remove(1);
@@ -224,7 +224,7 @@ public class MdConvertController {
         SourceText.getStyleClass().add("markdown-editor");
         SourceText.getStylesheets().add(MainApp.class.getResource("css/editor.css").toExternalForm());
 
-        if(MainApp.config.isEditorLinenoView())
+        if(MainApp.getConfig().isEditorLinenoView())
             SourceText.setParagraphGraphicFactory(LineNumberFactory.get(SourceText));
 
         SaveButton.disableProperty().bind(isSaved);
@@ -567,7 +567,7 @@ public class MdConvertController {
     }
 
     @FXML public void updateRender() {
-        if(MainApp.config.isEditorRenderView()) {
+        if(MainApp.getConfig().isEditorRenderView()) {
             if (renderTask != null) {
                 if (renderTask.getState().equals(State.READY)) {
                     renderTask.start();

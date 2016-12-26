@@ -5,6 +5,8 @@
  */
 package com.zestedesavoir.zestwriter.utils;
 
+import com.zestedesavoir.zestwriter.MainApp;
+
 import java.io.File;
 
 /**
@@ -14,7 +16,7 @@ import java.io.File;
 public class LocalDirectorySaver implements StorageSaver{
     private String baseDirectory;
 
-    public LocalDirectorySaver(String baseDirectory)throws RuntimeException{
+    public LocalDirectorySaver(String baseDirectory){
         this.baseDirectory = baseDirectory;
         openDirCreateIfNecessary();
     }
@@ -27,7 +29,7 @@ public class LocalDirectorySaver implements StorageSaver{
     private void openDirCreateIfNecessary(){
         File baseDirectoryDescriptor = new File(baseDirectory);
         if(!baseDirectoryDescriptor.exists() && !baseDirectoryDescriptor.mkdirs()){
-            throw new RuntimeException("Could not create " + baseDirectory);
+            MainApp.getLogger().error("Could not create " + baseDirectory);
         }
     }
 

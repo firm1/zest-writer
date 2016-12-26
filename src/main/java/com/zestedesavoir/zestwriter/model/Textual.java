@@ -13,10 +13,11 @@ public interface Textual{
 
     String getMarkdown();
     default void save() {
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getFilePath()), "UTF8"))) {
+        try (FileOutputStream fos = new FileOutputStream(getFilePath())) {
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF8"));
             writer.append(getMarkdown());
             writer.flush();
-        } catch (Exception e) {
+        } catch (IOException e) {
             MainApp.getLogger().error(e.getMessage(), e);
         }
     }

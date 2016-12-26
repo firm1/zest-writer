@@ -119,7 +119,8 @@ public class Content extends Container implements ContentNode{
     }
 
     public void saveToMarkdown(File file) {
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"))) {
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF8"));
             writer.append(exportContentToMarkdown(0, getDepth()));
             writer.flush();
         } catch (Exception e) {

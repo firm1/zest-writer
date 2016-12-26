@@ -184,32 +184,32 @@ public class ZdsHttp {
         cookieStore = new BasicCookieStore();
         context.setCookieStore(cookieStore);
 
+        SSLContextBuilder builder = new SSLContextBuilder();
+        SSLConnectionSocketFactory sslsf = null;
         try {
-            SSLContextBuilder builder = new SSLContextBuilder();
             builder.loadTrustMaterial(null, (TrustStrategy) (chain, authType) -> true);
-
-            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build());
-
-            Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder
-                    .<ConnectionSocketFactory> create()
-                    .register("https", sslsf)
-                    .register("http", new PlainConnectionSocketFactory())
-                    .build();
-            PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
-            // Increase max total connection to 200
-            cm.setMaxTotal(500);
-            // Increase default max connection per route to 20
-            cm.setDefaultMaxPerRoute(20);
-
-            client = HttpClients.custom()
-                    .setRedirectStrategy(new LaxRedirectStrategy())
-                    .setConnectionManager(cm)
-                    .setSSLSocketFactory(sslsf)
-                    .build();
-
+            sslsf = new SSLConnectionSocketFactory(builder.build());
         } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
             logger.error(e.getMessage(), e);
         }
+
+        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder
+                .<ConnectionSocketFactory> create()
+                .register("https", sslsf)
+                .register("http", new PlainConnectionSocketFactory())
+                .build();
+
+        PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+        // Increase max total connection to 200
+        cm.setMaxTotal(500);
+        // Increase default max connection per route to 20
+        cm.setDefaultMaxPerRoute(20);
+
+        client = HttpClients.custom()
+                .setRedirectStrategy(new LaxRedirectStrategy())
+                .setConnectionManager(cm)
+                .setSSLSocketFactory(sslsf)
+                .build();
         
         contentListOnline = new ArrayList<>();
 
@@ -513,7 +513,6 @@ public class ZdsHttp {
         logger.debug("Tentative de dezippage de " + zipFilePath + " dans " + folder.getAbsolutePath());
 
         byte[] buffer = new byte[1024];
-        FileOutputStream fos = null;
         if (!folder.exists()) {
             folder.mkdir();
             try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFilePath))) {
@@ -523,32 +522,26 @@ public class ZdsHttp {
                 ZipEntry ze = zis.getNextEntry();
 
                 while (ze != null) {
-
                     String fileName = ze.getName();
                     logger.trace("Traitement du fichier : " + fileName);
                     File newFile = new File(folder + File.separator + fileName);
                     new File(newFile.getParent()).mkdirs();
 
-                    fos = new FileOutputStream(newFile);
-
-                    int len;
-                    while ((len = zis.read(buffer)) > 0) {
-                        fos.write(buffer, 0, len);
+                    try(FileOutputStream fos = new FileOutputStream(newFile)) {
+                        int len;
+                        while ((len = zis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, len);
+                        }
+                        ze = zis.getNextEntry();
+                    } catch (IOException ioe) {
+                        logger.error(ioe.getMessage(), ioe);
                     }
-                    ze = zis.getNextEntry();
                 }
-
                 zis.closeEntry();
                 logger.info("Dézippage dans " + folder.getAbsolutePath() + " réalisé avec succès");
 
             } catch (IOException ex) {
                 logger.debug("Echec de dezippage dans " + zipFilePath, ex);
-            } finally {
-                try {
-                    fos.close();
-                } catch (Exception e) {
-                    logger.debug("Echec de dezippage dans " + zipFilePath, e);
-                }
             }
         } else {
             logger.debug("Le répertoire dans lequel vous souhaitez dezipper existe déjà");

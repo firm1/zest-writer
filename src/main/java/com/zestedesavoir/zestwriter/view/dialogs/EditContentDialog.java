@@ -22,11 +22,11 @@ import java.util.Locale;
 import java.util.Map;
 
 public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Object>>>{
-	public static int MAX_TITLE_LENGTH = 80;
-	public static int MAX_SUBTITLE_LENGTH = 200;
+	public static final int MAX_TITLE_LENGTH = 80;
+	public static final int MAX_SUBTITLE_LENGTH = 200;
 
-	public static ObservableList<TypeContent> typeOptions = FXCollections.observableArrayList(new TypeContent("ARTICLE", "Article"), new TypeContent("TUTORIAL","Tutoriel"));
-    public static ObservableList<License> licOptions = FXCollections.observableArrayList(
+	private static ObservableList<TypeContent> typeOptions = FXCollections.observableArrayList(new TypeContent("ARTICLE", "Article"), new TypeContent("TUTORIAL","Tutoriel"));
+    private static ObservableList<License> licOptions = FXCollections.observableArrayList(
         new License("CC BY", Configuration.getBundle().getString("ui.content.label.license.ccby")),
         new License("CC BY-SA", Configuration.getBundle().getString("ui.content.label.license.ccbysa")),
         new License("CC BY-ND", Configuration.getBundle().getString("ui.content.label.license.ccbynd")),

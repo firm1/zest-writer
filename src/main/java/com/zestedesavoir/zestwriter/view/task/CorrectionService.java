@@ -1,5 +1,6 @@
 package com.zestedesavoir.zestwriter.view.task;
 
+import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
@@ -40,7 +41,7 @@ public class CorrectionService extends Service<String>{
                         try {
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {
-
+                            MainApp.getLogger().trace(e.getMessage(), e);
                         }
                     }
 

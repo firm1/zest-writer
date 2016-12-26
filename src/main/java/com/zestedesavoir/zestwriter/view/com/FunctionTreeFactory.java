@@ -44,13 +44,13 @@ public class FunctionTreeFactory {
             defaultContent = new Content("container",
                     "",
                     "",
-                    "introduction.md",
-                    "conclusion.md",
+                    Constant.DEFAULT_INTRODUCTION_FILENAME,
+                    Constant.DEFAULT_CONCLUSION_FILENAME,
                     new ArrayList<>(),
                     2,
-                    EditContentDialog.licOptions.get(6).getCode(),
+                    EditContentDialog.getLicOptions().get(6).getCode(),
                     "",
-                    EditContentDialog.typeOptions.get(1).getCode());
+                    EditContentDialog.getTypeOptions().get(1).getCode());
         }
         // Create wizard
         EditContentDialog dialog = new EditContentDialog(defaultContent);
@@ -103,7 +103,8 @@ public class FunctionTreeFactory {
 
     public static void moveToContainer(TreeItem<ContentNode> dest, TreeItem<ContentNode> src) {
         // remove in model
-        ((Container) src.getParent().getValue()).getChildren().remove(src.getValue());
+        MetaContent srcContent = (MetaContent) src.getValue();
+        ((Container) src.getParent().getValue()).getChildren().remove(srcContent);
         // remove in ui
         src.getParent().getChildren().remove(src);
 
@@ -111,7 +112,7 @@ public class FunctionTreeFactory {
             Container destination = (Container)dest.getValue();
             int position = destination.getChildren().size();
             // update model
-            destination.getChildren().add(position, (MetaContent) src.getValue());
+            destination.getChildren().add(position, srcContent);
             //update ui
             dest.getChildren().add(position + 1, src);
 
@@ -119,7 +120,7 @@ public class FunctionTreeFactory {
             Container destParent = (Container) dest.getParent().getValue();
             int position = destParent.getChildren().indexOf(dest.getValue());
             // update model
-            destParent.getChildren().add(position + 1, (MetaContent)src.getValue());
+            destParent.getChildren().add(position + 1, srcContent);
             // update ui
             dest.getParent().getChildren().add(position + 2, src);
         }
@@ -165,7 +166,7 @@ public class FunctionTreeFactory {
     public static void addTheming(Pane pane) {
         Theme forcedTheme = Theme.getActiveTheme();
         if(forcedTheme == null ) {
-            pane.getStylesheets().add(MainApp.class.getResource("css/" + MainApp.config.getDisplayTheme()).toExternalForm());
+            pane.getStylesheets().add(MainApp.class.getResource("css/" + MainApp.getConfig().getDisplayTheme()).toExternalForm());
         } else {
             pane.getStylesheets().add(MainApp.class.getResource("css/" + forcedTheme.getFilename()).toExternalForm());
         }

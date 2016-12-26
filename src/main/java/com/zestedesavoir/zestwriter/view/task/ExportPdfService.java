@@ -70,7 +70,7 @@ public class ExportPdfService extends Service<Void>{
 
             public boolean downloadPdf() {
                 logger.debug("Tentative de téléchargement du contenu au format Pdf");
-                try {
+                try(FileOutputStream fos = new FileOutputStream(fileDest)) {
                     updateMessage(Configuration.getBundle().getString("ui.task.export.prepare.label")+" ...");
                     HttpResponse response = client.execute(post);
                     logger.debug("Début du traitement de la réponse");
@@ -78,7 +78,6 @@ public class ExportPdfService extends Service<Void>{
                         return false;
                     }
                     InputStream is = response.getEntity().getContent();
-                    FileOutputStream fos = new FileOutputStream(fileDest);
                     long max = response.getEntity().getContentLength();
                     long remain = 0;
                     updateProgress(remain, max);
@@ -91,7 +90,6 @@ public class ExportPdfService extends Service<Void>{
                     }
                     updateProgress(max, max);
                     is.close();
-                    fos.close();
                 } catch (IOException e) {
                     logger.error(e.getMessage(),e);
                     return false;

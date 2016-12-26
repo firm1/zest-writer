@@ -43,7 +43,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 
 public class MainApp extends Application{
-    public static Configuration config;
+    private static Configuration config;
     private static Stage primaryStage;
     private static ZdsHttp zdsutils;
     private static Markdown mdUtils;
@@ -154,8 +154,8 @@ public class MainApp extends Application{
 
     public static Markdown getMdUtils() { return mdUtils; }
 
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
+    public static void setPrimaryStage(Stage primaryStage) {
+        MainApp.primaryStage = primaryStage;
     }
 
     public static Logger getLogger() {
