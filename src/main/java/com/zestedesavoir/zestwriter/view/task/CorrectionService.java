@@ -30,7 +30,7 @@ public class CorrectionService extends Service<String>{
         return new Task<String>() {
             @Override
             protected String call(){
-                updateMessage(Configuration.bundle.getString("ui.task.correction.prepare.label")+" ...");
+                updateMessage(Configuration.getBundle().getString("ui.task.correction.prepare.label")+" ...");
 
                 Function<Textual, String> prepareValidationReport = (Textual ext) -> {
                     updateMessage(ext.getTitle());

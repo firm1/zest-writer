@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 public class TestLang {
     @Test
     public void testKeyLang() {
-        List<Lang> langs = Lang.langAvailable;
+        List<Lang> langs = Lang.getLangAvailable();
         List<Set<String>> keys = new ArrayList<>();
         for(Lang lang:langs) {
             ResourceBundle bundle = ResourceBundle.getBundle("locales/ui", lang.getLocale());

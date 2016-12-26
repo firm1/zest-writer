@@ -30,8 +30,8 @@ public class Container extends MetaContent implements ContentNode {
     public Container(@JsonProperty("object") String object, @JsonProperty("slug") String slug, @JsonProperty("title") String title, @JsonProperty("introduction") String introduction, @JsonProperty("conclusion") String conclusion,
             @JsonProperty("children") List<MetaContent> children) {
         super(object, slug, title);
-        this._introduction = new MetaAttribute(introduction, Configuration.bundle.getString("ui.model.intro"));
-        this._conclusion = new MetaAttribute(conclusion, Configuration.bundle.getString("ui.model.conclusion"));
+        this._introduction = new MetaAttribute(introduction, Configuration.getBundle().getString("ui.model.intro"));
+        this._conclusion = new MetaAttribute(conclusion, Configuration.getBundle().getString("ui.model.conclusion"));
         this._children = children;
     }
 

@@ -40,7 +40,7 @@ public class MdCheatSheetDialog {
 
         Matcher titleMatcher = Pattern.compile(TITLE_REGEX).matcher(cheatSheet);
         while (titleMatcher.find()) {
-            chaptersTitles.add(Configuration.bundle.getString("ui.md_cheat_sheet." + titleMatcher.group(1)));
+            chaptersTitles.add(Configuration.getBundle().getString("ui.md_cheat_sheet." + titleMatcher.group(1)));
         }
 
         String[] chaptersContents = cheatSheet.split(TITLE_REGEX);

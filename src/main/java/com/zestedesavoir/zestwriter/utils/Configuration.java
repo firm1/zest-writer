@@ -29,7 +29,7 @@ public class Configuration {
     private StorageSaver onlineSaver;
     private LocalDirectoryFactory workspaceFactory;
     private Properties props;
-    public static ResourceBundle bundle;
+    private static ResourceBundle bundle;
 
     /**
      * Class constructor
@@ -162,6 +162,10 @@ public class Configuration {
 
     public LocalDirectoryFactory getWorkspaceFactory() {
         return workspaceFactory;
+    }
+
+    public static ResourceBundle getBundle() {
+        return bundle;
     }
 
     public void loadWorkspace() {

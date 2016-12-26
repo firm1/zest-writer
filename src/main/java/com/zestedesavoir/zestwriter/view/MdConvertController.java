@@ -278,7 +278,7 @@ public class MdConvertController {
     @FXML private void handleImgButtonAction(ActionEvent event) {
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/ImageInput.fxml"));
 
-        Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.dialog.upload.img.title"));
+        Stage dialogStage = new CustomStage(loader, Configuration.getBundle().getString("ui.dialog.upload.img.title"));
 
         ImageInputDialog imageController = loader.getController();
         if(!mainApp.getContents().isEmpty()) {
@@ -351,9 +351,9 @@ public class MdConvertController {
         FunctionTreeFactory.addTheming(dialog.getDialogPane());
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(MainApp.getPrimaryStage());
-        dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.bloc.title"));
-        dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.bloc.header"));
-        dialog.setContentText(Configuration.bundle.getString("ui.editor.dialog.bloc.text"));
+        dialog.setTitle(Configuration.getBundle().getString("ui.editor.dialog.bloc.title"));
+        dialog.setHeaderText(Configuration.getBundle().getString("ui.editor.dialog.bloc.header"));
+        dialog.setContentText(Configuration.getBundle().getString("ui.editor.dialog.bloc.text"));
 
         // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
@@ -367,7 +367,7 @@ public class MdConvertController {
     @FXML private void handleTableButtonAction(ActionEvent event) throws IOException {
         // Create the custom dialog.
         Dialog<Pair<ObservableList, ObservableList<ZRow>>> dialog = new CustomDialog<>();
-        dialog.setTitle(Configuration.bundle.getString("ui.editor.button.table"));
+        dialog.setTitle(Configuration.getBundle().getString("ui.editor.button.table"));
         dialog.setHeaderText("");
 
         // Set the button types.
@@ -378,7 +378,6 @@ public class MdConvertController {
         TableView<ZRow> tbView = (TableView) tableEditor.getCenter();
 
         TableController controller = loader.getController();
-        controller.setEditor(this);
 
         dialog.getDialogPane().setContent(tableEditor);
 
@@ -416,8 +415,8 @@ public class MdConvertController {
 
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new CustomDialog<>();
-        dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.link.title"));
-        dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.link.header"));
+        dialog.setTitle(Configuration.getBundle().getString("ui.editor.dialog.link.title"));
+        dialog.setHeaderText(Configuration.getBundle().getString("ui.editor.dialog.link.header"));
 
         // Set the icon (must be included in the project).
         dialog.setGraphic(IconFactory.createLinkIcon());
@@ -435,9 +434,9 @@ public class MdConvertController {
         TextField tLabel = new TextField();
         tLabel.setText(link);
 
-        grid.add(new Label(Configuration.bundle.getString("ui.editor.dialog.link.field.url")), 0, 0);
+        grid.add(new Label(Configuration.getBundle().getString("ui.editor.dialog.link.field.url")), 0, 0);
         grid.add(tLink, 1, 0);
-        grid.add(new Label(Configuration.bundle.getString("ui.editor.dialog.link.field.label")), 0, 1);
+        grid.add(new Label(Configuration.getBundle().getString("ui.editor.dialog.link.field.label")), 0, 1);
         grid.add(tLabel, 1, 1);
 
         dialog.getDialogPane().setContent(grid);
@@ -472,8 +471,8 @@ public class MdConvertController {
 
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new CustomDialog<>();
-        dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.code.title"));
-        dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.code.header"));
+        dialog.setTitle(Configuration.getBundle().getString("ui.editor.dialog.code.title"));
+        dialog.setHeaderText(Configuration.getBundle().getString("ui.editor.dialog.code.header"));
 
         // Set the icon (must be included in the project).
         dialog.setGraphic(IconFactory.createCodeIcon());
@@ -491,9 +490,9 @@ public class MdConvertController {
         TextArea tCode = new TextArea();
         tCode.setText(code);
 
-        grid.add(new Label(Configuration.bundle.getString("ui.editor.dialog.code.field.lang")), 0, 0);
+        grid.add(new Label(Configuration.getBundle().getString("ui.editor.dialog.code.field.lang")), 0, 0);
         grid.add(tLangage, 1, 0);
-        grid.add(new Label(Configuration.bundle.getString("ui.editor.dialog.code.field.code")), 0, 1);
+        grid.add(new Label(Configuration.getBundle().getString("ui.editor.dialog.code.field.code")), 0, 1);
         grid.add(tCode, 1, 1);
 
         dialog.getDialogPane().setContent(grid);
@@ -603,7 +602,7 @@ public class MdConvertController {
     @FXML private void handleExternalButtonAction(ActionEvent event){
         splitPane.getItems().remove(1);
 
-        Stage stage = new CustomStage(Configuration.bundle.getString("ui.window.externalrender.title"));
+        Stage stage = new CustomStage(Configuration.getBundle().getString("ui.window.externalrender.title"));
         AnchorPane pane = new AnchorPane(renderView);
         AnchorPane.setTopAnchor(renderView, 0.0);
         AnchorPane.setLeftAnchor(renderView, 0.0);
@@ -630,8 +629,8 @@ public class MdConvertController {
 
     public void performStats() {
         Readability readText = new Readability(SourceText.getText());
-        countChars.setValue(Configuration.bundle.getString("ui.statusbar.stats.chars") + readText.getCharacters());
-        countWords.setValue(Configuration.bundle.getString("ui.statusbar.stats.words") + readText.getWords());
+        countChars.setValue(Configuration.getBundle().getString("ui.statusbar.stats.chars") + readText.getCharacters());
+        countWords.setValue(Configuration.getBundle().getString("ui.statusbar.stats.words") + readText.getWords());
         countTimes.setValue(FunctionTreeFactory.getNumberOfTextualReadMinutes(SourceText.getText()));
     }
 
@@ -668,9 +667,9 @@ public class MdConvertController {
 
     public void handleGoToLineAction() {
         TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle(Configuration.bundle.getString("ui.editor.dialog.goto.title"));
-        dialog.setHeaderText(Configuration.bundle.getString("ui.editor.dialog.goto.header"));
-        dialog.setContentText(Configuration.bundle.getString("ui.editor.dialog.goto.text"));
+        dialog.setTitle(Configuration.getBundle().getString("ui.editor.dialog.goto.title"));
+        dialog.setHeaderText(Configuration.getBundle().getString("ui.editor.dialog.goto.header"));
+        dialog.setContentText(Configuration.getBundle().getString("ui.editor.dialog.goto.text"));
         dialog.initOwner(MainApp.getPrimaryStage());
 
         Optional<String> result = dialog.showAndWait();

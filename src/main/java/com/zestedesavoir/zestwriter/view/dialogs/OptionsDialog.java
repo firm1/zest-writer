@@ -111,9 +111,9 @@ public class OptionsDialog{
 
     @FXML private void handleCancelButtonAction(){
         Alert alert = new CustomAlert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(Configuration.bundle.getString("ui.options.cancel.title"));
-        alert.setHeaderText(Configuration.bundle.getString("ui.options.cancel.header"));
-        alert.setContentText(Configuration.bundle.getString("ui.options.cancel.text"));
+        alert.setTitle(Configuration.getBundle().getString("ui.options.cancel.title"));
+        alert.setHeaderText(Configuration.getBundle().getString("ui.options.cancel.header"));
+        alert.setContentText(Configuration.getBundle().getString("ui.options.cancel.text"));
         alert.initOwner(optionsWindow);
 
         Optional<ButtonType> result = alert.showAndWait();
@@ -127,10 +127,10 @@ public class OptionsDialog{
 
     @FXML private void handleResetButtonAction(){
         Alert alert = new CustomAlert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(Configuration.bundle.getString("ui.options.reset.title"));
-        alert.setHeaderText(Configuration.bundle.getString("ui.options.reset.header"));
-        alert.setContentText(Configuration.bundle.getString("ui.options.reset.text"));
-        alert.getButtonTypes().setAll(new ButtonType(Configuration.bundle.getString("ui.yes"), ButtonBar.ButtonData.YES), new ButtonType(Configuration.bundle.getString("ui.no"), ButtonBar.ButtonData.NO));
+        alert.setTitle(Configuration.getBundle().getString("ui.options.reset.title"));
+        alert.setHeaderText(Configuration.getBundle().getString("ui.options.reset.header"));
+        alert.setContentText(Configuration.getBundle().getString("ui.options.reset.text"));
+        alert.getButtonTypes().setAll(new ButtonType(Configuration.getBundle().getString("ui.yes"), ButtonBar.ButtonData.YES), new ButtonType(Configuration.getBundle().getString("ui.no"), ButtonBar.ButtonData.NO));
         alert.initOwner(optionsWindow);
 
         Optional<ButtonType> result = alert.showAndWait();
@@ -144,7 +144,7 @@ public class OptionsDialog{
 
     @FXML private void handleGeneralBrowseAction(){
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle(Configuration.bundle.getString("ui.options.workspace"));
+        directoryChooser.setTitle(Configuration.getBundle().getString("ui.options.workspace"));
         directoryChooser.setInitialDirectory(mainApp.getDefaultHome());
 
         File directory = directoryChooser.showDialog(null);
@@ -244,9 +244,9 @@ public class OptionsDialog{
         optEditorRenderViewYes.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if(optEditorRenderViewYes.isSelected()){
                 Alert alert = new CustomAlert(Alert.AlertType.WARNING);
-                alert.setTitle(Configuration.bundle.getString("ui.dialog.change_render.title"));
-                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_render.header"));
-                alert.setContentText(Configuration.bundle.getString("ui.dialog.change_render.text"));
+                alert.setTitle(Configuration.getBundle().getString("ui.dialog.change_render.title"));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.change_render.header"));
+                alert.setContentText(Configuration.getBundle().getString("ui.dialog.change_render.text"));
                 alert.initOwner(optionsWindow);
 
                 alert.showAndWait();
@@ -260,9 +260,9 @@ public class OptionsDialog{
 
         optDisplayTheme.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             Alert alert = new CustomAlert(Alert.AlertType.WARNING);
-            alert.setTitle(Configuration.bundle.getString("ui.dialog.change_theme.title"));
-            alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_theme.header"));
-            alert.setContentText(Configuration.bundle.getString("ui.dialog.change_theme.text"));
+            alert.setTitle(Configuration.getBundle().getString("ui.dialog.change_theme.title"));
+            alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.change_theme.header"));
+            alert.setContentText(Configuration.getBundle().getString("ui.dialog.change_theme.text"));
             alert.initOwner(optionsWindow);
 
             alert.showAndWait();
@@ -272,9 +272,9 @@ public class OptionsDialog{
         optDisplayLang.setValue(Lang.getLangFromCode(config.getDisplayLang()));
         optDisplayLang.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             Alert alert = new CustomAlert(Alert.AlertType.WARNING);
-            alert.setTitle(Configuration.bundle.getString("ui.dialog.change_lang.title"));
-            alert.setHeaderText(Configuration.bundle.getString("ui.dialog.change_lang.header"));
-            alert.setContentText(Configuration.bundle.getString("ui.dialog.change_lang.text"));
+            alert.setTitle(Configuration.getBundle().getString("ui.dialog.change_lang.title"));
+            alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.change_lang.header"));
+            alert.setContentText(Configuration.getBundle().getString("ui.dialog.change_lang.text"));
             alert.initOwner(optionsWindow);
 
             alert.showAndWait();

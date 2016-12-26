@@ -11,7 +11,7 @@ public class CustomFXMLLoader extends FXMLLoader{
 
     public CustomFXMLLoader(URL location) {
         super(location);
-        this.setResources(Configuration.bundle);
+        this.setResources(Configuration.getBundle());
     }
 
     @Override

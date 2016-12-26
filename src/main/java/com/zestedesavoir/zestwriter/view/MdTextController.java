@@ -56,7 +56,7 @@ public class MdTextController {
 
         loadFonts();
         EditorList.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> mainApp.getMenuController().isOnReadingTab.set(! (newValue.getContent() instanceof SplitPane))
+                (observable, oldValue, newValue) -> mainApp.getMenuController().setIsOnReadingTab(! (newValue.getContent() instanceof SplitPane))
         );
     }
 
@@ -268,13 +268,13 @@ public class MdTextController {
         tab.setOnCloseRequest(t -> {
             if(!controllerConvert.isSaved()) {
                 Alert alert = new CustomAlert(AlertType.CONFIRMATION);
-                alert.setTitle(Configuration.bundle.getString("ui.alert.tab.close.title"));
-                alert.setHeaderText(Configuration.bundle.getString("ui.alert.tab.close.header")+" : "+tab.getText().substring(1));
-                alert.setContentText(Configuration.bundle.getString("ui.alert.tab.close.text"));
+                alert.setTitle(Configuration.getBundle().getString("ui.alert.tab.close.title"));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.alert.tab.close.header")+" : "+tab.getText().substring(1));
+                alert.setContentText(Configuration.getBundle().getString("ui.alert.tab.close.text"));
 
-                ButtonType buttonTypeYes = new ButtonType(Configuration.bundle.getString("ui.yes"));
-                ButtonType buttonTypeNo = new ButtonType(Configuration.bundle.getString("ui.no"));
-                ButtonType buttonTypeCancel = new ButtonType(Configuration.bundle.getString("ui.cancel"), ButtonData.CANCEL_CLOSE);
+                ButtonType buttonTypeYes = new ButtonType(Configuration.getBundle().getString("ui.yes"));
+                ButtonType buttonTypeNo = new ButtonType(Configuration.getBundle().getString("ui.no"));
+                ButtonType buttonTypeCancel = new ButtonType(Configuration.getBundle().getString("ui.cancel"), ButtonData.CANCEL_CLOSE);
 
                 alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo, buttonTypeCancel);
                 alert.setResizable(true);

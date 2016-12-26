@@ -24,9 +24,9 @@ public class MetadataContent {
         return type;
     }
 
-    public boolean isArticle() {return type.equalsIgnoreCase("article");}
+    public boolean isArticle() {return "article".equalsIgnoreCase(type);}
 
-    public boolean isTutorial() {return type.equalsIgnoreCase("tutorial");}
+    public boolean isTutorial() {return "tutorial".equalsIgnoreCase(type);}
 
     @Override
     public String toString() {

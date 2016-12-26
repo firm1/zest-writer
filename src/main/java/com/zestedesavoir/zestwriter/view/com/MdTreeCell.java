@@ -56,16 +56,16 @@ public class MdTreeCell extends TreeCell<ContentNode>{
     }
 
 	private void initContextMenu(ContentNode item) {
-        MenuItem addMenuItem1 = new MenuItem(Configuration.bundle.getString("ui.actions.add_extract.label"));
-        MenuItem addMenuItem2 = new MenuItem(Configuration.bundle.getString("ui.actions.add_container.label"));
-        MenuItem addMenuItem3 = new MenuItem(Configuration.bundle.getString("ui.actions.rename.label"));
-        MenuItem addMenuItem4 = new MenuItem(Configuration.bundle.getString("ui.actions.delete.label"));
-        MenuItem addMenuItem5 = new MenuItem(Configuration.bundle.getString("ui.actions.edit.label"));
-        MenuItem addMenuItem6 = new MenuItem(Configuration.bundle.getString("ui.actions.merge_extracts.label"));
-        Menu menuStats = new Menu(Configuration.bundle.getString("ui.actions.stats.label"));
-        MenuItem menuStatCountHisto = new MenuItem(Configuration.bundle.getString("ui.actions.stats.count.histo"));
-        MenuItem menuStatReadability = new MenuItem(Configuration.bundle.getString("ui.actions.stats.readability"));
-        MenuItem menuStatMistakes = new MenuItem(Configuration.bundle.getString("ui.actions.stats.mistake"));
+        MenuItem addMenuItem1 = new MenuItem(Configuration.getBundle().getString("ui.actions.add_extract.label"));
+        MenuItem addMenuItem2 = new MenuItem(Configuration.getBundle().getString("ui.actions.add_container.label"));
+        MenuItem addMenuItem3 = new MenuItem(Configuration.getBundle().getString("ui.actions.rename.label"));
+        MenuItem addMenuItem4 = new MenuItem(Configuration.getBundle().getString("ui.actions.delete.label"));
+        MenuItem addMenuItem5 = new MenuItem(Configuration.getBundle().getString("ui.actions.edit.label"));
+        MenuItem addMenuItem6 = new MenuItem(Configuration.getBundle().getString("ui.actions.merge_extracts.label"));
+        Menu menuStats = new Menu(Configuration.getBundle().getString("ui.actions.stats.label"));
+        MenuItem menuStatCountHisto = new MenuItem(Configuration.getBundle().getString("ui.actions.stats.count.histo"));
+        MenuItem menuStatReadability = new MenuItem(Configuration.getBundle().getString("ui.actions.stats.readability"));
+        MenuItem menuStatMistakes = new MenuItem(Configuration.getBundle().getString("ui.actions.stats.mistake"));
         menuStats.getItems().add(menuStatCountHisto);
         menuStats.getItems().add(menuStatReadability);
         menuStats.getItems().add(menuStatMistakes);
@@ -116,9 +116,9 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
         addMenuItem4.setOnAction(t -> {
             Alert alert = new CustomAlert(AlertType.CONFIRMATION);
-            alert.setTitle(Configuration.bundle.getString("ui.dialog.delete.title"));
-            alert.setHeaderText(Configuration.bundle.getString("ui.dialog.delete.header"));
-            alert.setContentText(Configuration.bundle.getString("ui.dialog.delete.text"));
+            alert.setTitle(Configuration.getBundle().getString("ui.dialog.delete.title"));
+            alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.delete.header"));
+            alert.setContentText(Configuration.getBundle().getString("ui.dialog.delete.text"));
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -161,11 +161,11 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
         addMenuItem1.setOnAction(t -> {
             logger.debug("Tentative d'ajout d'un nouvel extrait");
-            TextInputDialog dialog = new TextInputDialog(Configuration.bundle.getString("ui.dialog.add_extract"));
+            TextInputDialog dialog = new TextInputDialog(Configuration.getBundle().getString("ui.dialog.add_extract"));
             Extract extract;
-            dialog.setTitle(Configuration.bundle.getString("ui.dialog.add_extract.title"));
-            dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.add_extract.header"));
-            dialog.setContentText(Configuration.bundle.getString("ui.dialog.add_extract.text")+" :");
+            dialog.setTitle(Configuration.getBundle().getString("ui.dialog.add_extract.title"));
+            dialog.setHeaderText(Configuration.getBundle().getString("ui.dialog.add_extract.header"));
+            dialog.setContentText(Configuration.getBundle().getString("ui.dialog.add_extract.text")+" :");
 
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
@@ -191,11 +191,11 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
         addMenuItem2.setOnAction(t -> {
             logger.debug("Tentative d'ajout d'un nouveau conteneur");
-            TextInputDialog dialog = new TextInputDialog(Configuration.bundle.getString("ui.dialog.add_container"));
+            TextInputDialog dialog = new TextInputDialog(Configuration.getBundle().getString("ui.dialog.add_container"));
 
-            dialog.setTitle(Configuration.bundle.getString("ui.dialog.add_container.title"));
-            dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.add_container.header"));
-            dialog.setContentText(Configuration.bundle.getString("ui.dialog.add_container.text")+" :");
+            dialog.setTitle(Configuration.getBundle().getString("ui.dialog.add_container.title"));
+            dialog.setHeaderText(Configuration.getBundle().getString("ui.dialog.add_container.header"));
+            dialog.setContentText(Configuration.getBundle().getString("ui.dialog.add_container.text")+" :");
 
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
@@ -226,9 +226,9 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             logger.debug("Tentative de renommage d'un conteneur ou extrait");
             TreeItem<ContentNode> item1 = index.getSummary().getSelectionModel().getSelectedItem();
             TextInputDialog dialog = new TextInputDialog(item1.getValue().getTitle());
-            dialog.setTitle(Configuration.bundle.getString("ui.dialog.rename.title")+"  " + item1.getValue().getTitle());
-            dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.rename.header"));
-            dialog.setContentText(Configuration.bundle.getString("ui.dialog.rename.text")+" : ");
+            dialog.setTitle(Configuration.getBundle().getString("ui.dialog.rename.title")+"  " + item1.getValue().getTitle());
+            dialog.setHeaderText(Configuration.getBundle().getString("ui.dialog.rename.header"));
+            dialog.setContentText(Configuration.getBundle().getString("ui.dialog.rename.text")+" : ");
 
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
@@ -267,11 +267,11 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
         addMenuItem6.setOnAction(t -> {
             logger.debug("Tentative de déplacement des extraits");
-            TextInputDialog dialog = new TextInputDialog(Configuration.bundle.getString("ui.dialog.add_container"));
+            TextInputDialog dialog = new TextInputDialog(Configuration.getBundle().getString("ui.dialog.add_container"));
 
-            dialog.setTitle(Configuration.bundle.getString("ui.dialog.add_container.title"));
-            dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.add_container.header"));
-            dialog.setContentText(Configuration.bundle.getString("ui.dialog.add_container.text")+" :");
+            dialog.setTitle(Configuration.getBundle().getString("ui.dialog.add_container.title"));
+            dialog.setHeaderText(Configuration.getBundle().getString("ui.dialog.add_container.header"));
+            dialog.setContentText(Configuration.getBundle().getString("ui.dialog.add_container.text")+" :");
 
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
@@ -326,9 +326,9 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
         menuStatCountHisto.setOnAction(t -> {
             logger.debug("Tentative de calcul des statistiques de type histogramme");
-            BaseDialog dialog = new BaseDialog(Configuration.bundle.getString("ui.actions.stats.label"), Configuration.bundle.getString("ui.actions.stats.header")+" "+getItem().getTitle());
+            BaseDialog dialog = new BaseDialog(Configuration.getBundle().getString("ui.actions.stats.label"), Configuration.getBundle().getString("ui.actions.stats.header")+" "+getItem().getTitle());
             dialog.getDialogPane().setPrefSize(800, 600);
-            dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.bundle.getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
+            dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.getBundle().getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
 
             // draw
             final CategoryAxis xAxis = new CategoryAxis();
@@ -337,11 +337,11 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             barChart.setCategoryGap(5);
             barChart.setBarGap(5);
 
-            xAxis.setLabel(Configuration.bundle.getString("ui.actions.stats.xaxis"));
-            yAxis.setLabel(Configuration.bundle.getString("ui.actions.stats.yaxis"));
+            xAxis.setLabel(Configuration.getBundle().getString("ui.actions.stats.xaxis"));
+            yAxis.setLabel(Configuration.getBundle().getString("ui.actions.stats.yaxis"));
 
             XYChart.Series<String, Number> series1 = new XYChart.Series<>();
-            series1.setName(Configuration.bundle.getString("ui.actions.stats.type.histogram"));
+            series1.setName(Configuration.getBundle().getString("ui.actions.stats.type.histogram"));
             Container container = (Container) getItem();
             Function<Textual, Integer> performCount = (Textual ch) -> {
                 String md = ch.readMarkdown();
@@ -365,23 +365,23 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
         menuStatReadability.setOnAction(t -> {
             logger.debug("Tentative de calcul des statistiques de lisiblité");
-            BaseDialog dialog = new BaseDialog(Configuration.bundle.getString("ui.actions.stats.label"), Configuration.bundle.getString("ui.actions.stats.header")+" "+getItem().getTitle());
+            BaseDialog dialog = new BaseDialog(Configuration.getBundle().getString("ui.actions.stats.label"), Configuration.getBundle().getString("ui.actions.stats.header")+" "+getItem().getTitle());
             dialog.getDialogPane().setPrefSize(800, 600);
-            dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.bundle.getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
+            dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.getBundle().getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
 
             // draw
             final CategoryAxis xAxis = new CategoryAxis();
             final NumberAxis yAxis = new NumberAxis();
             final LineChart<String,Number> lineChart = new LineChart<>(xAxis, yAxis);
-            lineChart.setTitle(Configuration.bundle.getString("ui.actions.stats.readability"));
+            lineChart.setTitle(Configuration.getBundle().getString("ui.actions.stats.readability"));
 
-            xAxis.setLabel(Configuration.bundle.getString("ui.actions.stats.xaxis"));
-            yAxis.setLabel(Configuration.bundle.getString("ui.actions.readable.yaxis"));
+            xAxis.setLabel(Configuration.getBundle().getString("ui.actions.stats.xaxis"));
+            yAxis.setLabel(Configuration.getBundle().getString("ui.actions.readable.yaxis"));
 
             XYChart.Series<String, Number> series1 = new XYChart.Series();
             XYChart.Series<String, Number> series2 = new XYChart.Series();
-            series1.setName(Configuration.bundle.getString("ui.menu.edit.readable.gunning_index"));
-            series2.setName(Configuration.bundle.getString("ui.menu.edit.readable.flesch_index"));
+            series1.setName(Configuration.getBundle().getString("ui.menu.edit.readable.gunning_index"));
+            series2.setName(Configuration.getBundle().getString("ui.menu.edit.readable.flesch_index"));
             Container container = (Container) getItem();
             Function<Textual, Double> performGuning = (Textual ch) -> {
                 String md = ch.readMarkdown();
@@ -429,21 +429,21 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
         menuStatMistakes.setOnAction(t -> {
             logger.debug("Tentative de calcul du nombre de fautes");
-            BaseDialog dialog = new BaseDialog(Configuration.bundle.getString("ui.actions.stats.label"), Configuration.bundle.getString("ui.actions.stats.header")+" "+getItem().getTitle());
+            BaseDialog dialog = new BaseDialog(Configuration.getBundle().getString("ui.actions.stats.label"), Configuration.getBundle().getString("ui.actions.stats.header")+" "+getItem().getTitle());
             dialog.getDialogPane().setPrefSize(800, 600);
-            dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.bundle.getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
+            dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.getBundle().getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
 
             // draw
             final CategoryAxis xAxis = new CategoryAxis();
             final NumberAxis yAxis = new NumberAxis();
             final LineChart<String,Number> lineChart = new LineChart<>(xAxis, yAxis);
-            lineChart.setTitle(Configuration.bundle.getString("ui.actions.stats.mistake"));
+            lineChart.setTitle(Configuration.getBundle().getString("ui.actions.stats.mistake"));
 
-            xAxis.setLabel(Configuration.bundle.getString("ui.actions.stats.xaxis"));
-            yAxis.setLabel(Configuration.bundle.getString("ui.actions.stats.mistakes.yaxis"));
+            xAxis.setLabel(Configuration.getBundle().getString("ui.actions.stats.xaxis"));
+            yAxis.setLabel(Configuration.getBundle().getString("ui.actions.stats.mistakes.yaxis"));
 
             XYChart.Series<String, Number> series1 = new XYChart.Series();
-            series1.setName(Configuration.bundle.getString("ui.actions.stats.mistakes.yaxis"));
+            series1.setName(Configuration.getBundle().getString("ui.actions.stats.mistakes.yaxis"));
             Container container = (Container) getItem();
 
             Corrector corrector = new Corrector();

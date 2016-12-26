@@ -22,7 +22,7 @@ public class DownloadContentService extends Service<Void>{
                 int iterations = 0;
                 if (MainApp.getZdsutils().isAuthenticated()) {
                     for (MetadataContent meta : MainApp.getZdsutils().getContentListOnline()) {
-                        updateMessage(Configuration.bundle.getString("ui.task.download.label")+" : " + meta.getSlug());
+                        updateMessage(Configuration.getBundle().getString("ui.task.download.label")+" : " + meta.getSlug());
                         updateProgress(iterations, max);
                         MainApp.getZdsutils().downloaDraft(meta.getId(), meta.getType());
                         iterations++;
@@ -30,12 +30,12 @@ public class DownloadContentService extends Service<Void>{
 
                     iterations = 0;
                     for (MetadataContent meta : MainApp.getZdsutils().getContentListOnline()) {
-                        updateMessage(Configuration.bundle.getString("ui.task.unzip.label")+" : " + meta.getSlug());
+                        updateMessage(Configuration.getBundle().getString("ui.task.unzip.label")+" : " + meta.getSlug());
                         updateProgress(iterations, max);
                         MainApp.getZdsutils().unzipOnlineContent(MainApp.getZdsutils().getOnlineContentPathDir() + File.separator + meta.getSlug() + ".zip");
                         iterations++;
                     }
-                    updateMessage(Configuration.bundle.getString("ui.task.end.label"));
+                    updateMessage(Configuration.getBundle().getString("ui.task.end.label"));
                     updateProgress(iterations, max);
                 }
                 return null;

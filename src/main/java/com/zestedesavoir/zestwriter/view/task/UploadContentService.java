@@ -36,9 +36,9 @@ public class UploadContentService extends Service<Void>{
                     String targetSlug = result.get().getValue().getSlug();
 
                     String pathDir = content.getFilePath ();
-                    updateMessage(Configuration.bundle.getString("ui.task.zip.label")+" : "+targetSlug+" "+Configuration.bundle.getString("ui.task.pending.label")+" ...");
+                    updateMessage(Configuration.getBundle().getString("ui.task.zip.label")+" : "+targetSlug+" "+Configuration.getBundle().getString("ui.task.pending.label")+" ...");
                     ZipUtil.pack(new File(pathDir), new File(pathDir + ".zip"));
-                    updateMessage(Configuration.bundle.getString("ui.task.import.label")+" : "+targetSlug+" "+Configuration.bundle.getString("ui.task.pending.label")+" ...");
+                    updateMessage(Configuration.getBundle().getString("ui.task.import.label")+" : "+targetSlug+" "+Configuration.getBundle().getString("ui.task.pending.label")+" ...");
                     if(result.get().getValue().getType() == null) {
                         if(!MainApp.getZdsutils().importNewContent(pathDir+ ".zip", result.get().getKey())) {
                             throw new IOException();
@@ -49,7 +49,7 @@ public class UploadContentService extends Service<Void>{
                         }
                     }
 
-                    updateMessage(Configuration.bundle.getString("ui.task.content.sync")+" ...");
+                    updateMessage(Configuration.getBundle().getString("ui.task.content.sync")+" ...");
                     try {
                         MainApp.getZdsutils().getContentListOnline().clear();
                         MainApp.getZdsutils().initInfoOnlineContent("tutorial");

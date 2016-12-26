@@ -11,4 +11,8 @@ public class Constant {
     public static final String SET_COOKIE_HEADER = "Set-Cookie";
     public static final String CSRF_ZDS_KEY = "csrfmiddlewaretoken";
     public static final String CSRF_COOKIE_KEY = "csrftoken";
+
+    private Constant() {
+        throw new IllegalAccessError("Utility class");
+    }
 }

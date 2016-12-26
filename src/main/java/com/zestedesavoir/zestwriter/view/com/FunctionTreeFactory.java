@@ -207,10 +207,10 @@ public class FunctionTreeFactory {
     public static void openFindReplaceDialog(StyleClassedTextArea sourceText) {
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/FindReplaceDialog.fxml"));
 
-        Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.dialog.find.title"));
+        Stage dialogStage = new CustomStage(loader, Configuration.getBundle().getString("ui.dialog.find.title"));
         dialogStage.setAlwaysOnTop(true);
         dialogStage.initModality(Modality.NONE);
-        dialogStage.setTitle(Configuration.bundle.getString("ui.dialog.find.title"));
+        dialogStage.setTitle(Configuration.getBundle().getString("ui.dialog.find.title"));
         dialogStage.setResizable(false);
 
         FindReplaceDialog findReplaceDialog = loader.getController();
@@ -226,19 +226,19 @@ public class FunctionTreeFactory {
             StringBuilder sb = new StringBuilder();
             if(mins < step) {
                 if(step == steps[0]) {
-                    sb.append(Configuration.bundle.getString("ui.label.lessof"));
+                    sb.append(Configuration.getBundle().getString("ui.label.lessof"));
                 } else if(step == steps[steps.length-1]) {
-                    sb.append(Configuration.bundle.getString("ui.label.moreof"));
+                    sb.append(Configuration.getBundle().getString("ui.label.moreof"));
                 }
 
                 if (step < 60) {
                     sb.append(" ").append(step).append(" ");
-                    sb.append(Configuration.bundle.getString("ui.label.time.minute"));
+                    sb.append(Configuration.getBundle().getString("ui.label.time.minute"));
                     if (step > 1) sb.append("s");
                 } else {
                     int value = step / 60;
                     sb.append(" ").append(value).append(" ");
-                    sb.append(Configuration.bundle.getString("ui.label.time.hour"));
+                    sb.append(Configuration.getBundle().getString("ui.label.time.hour"));
                     if (value > 1) sb.append("s");
                 }
                 return sb.toString();
@@ -248,16 +248,16 @@ public class FunctionTreeFactory {
     }
 
     public static void generateMetadataAttributes(String file) {
-        performGenerateMetadataAttributes(new File (file, Constant.DEFAULT_INTRODUCTION_FILENAME));
-        performGenerateMetadataAttributes(new File (file, Constant.DEFAULT_CONCLUSION_FILENAME));
+        performCreateNewFile(new File (file, Constant.DEFAULT_INTRODUCTION_FILENAME));
+        performCreateNewFile(new File (file, Constant.DEFAULT_CONCLUSION_FILENAME));
     }
 
     public static void generateMetadataAttributes(Container container) {
-        performGenerateMetadataAttributes(new File (container.getIntroduction().getFilePath()));
-        performGenerateMetadataAttributes(new File (container.getConclusion().getFilePath()));
+        performCreateNewFile(new File (container.getIntroduction().getFilePath()));
+        performCreateNewFile(new File (container.getConclusion().getFilePath()));
     }
 
-    public static void performGenerateMetadataAttributes(File file) {
+    public static void performCreateNewFile(File file) {
         try {
             if(!file.exists ()) {
                 if(!file.createNewFile ()) {
