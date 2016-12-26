@@ -6,13 +6,10 @@ import com.sun.javafx.scene.control.skin.TabPaneSkin;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
-import com.zestedesavoir.zestwriter.model.MetaAttribute;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.view.com.*;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.Task;
 import javafx.event.Event;
@@ -38,7 +35,7 @@ import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
 import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
 
 public class MdTextController {
-    public static boolean pythonStarted=false;
+    private boolean pythonStarted=false;
     private final Logger logger;
     @FXML public AnchorPane treePane;
     private MainApp mainApp;
@@ -68,15 +65,15 @@ public class MdTextController {
         return EditorList;
     }
 
+    public boolean isPythonStarted() {
+        return pythonStarted;
+    }
+
+    public void setPythonStarted(boolean pythonStarted) {
+        this.pythonStarted = pythonStarted;
+    }
+
     public void loadConsolePython() {
-        Task task = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-
-                return null;
-            }
-        };
-
         new Thread(() -> {
             pyconsole = new PythonInterpreter();
             pyconsole.exec("from markdown import Markdown");
@@ -84,10 +81,13 @@ public class MdTextController {
             pyconsole.exec("from smileys_definition import smileys");
             pyconsole.exec("mk_instance = Markdown(extensions=(ZdsExtension(inline=False, emoticons=smileys, js_support=False, ping_url=None),),safe_mode = 'escape', enable_attributes = False, tab_length = 4, output_format = 'html5', smart_emphasis = True, lazy_ol = True)");
             logger.info("PYTHON STARTED");
-            pythonStarted=true;
+            setPythonStarted(true);
         }).start();
     }
 
+    /**
+     * Load fonts Merriweather and FiraMono for views
+     */
     public void loadFonts() {
         new Thread(() -> {
             Font.loadFont(MainApp.class.getResource("assets/static/fonts/Merriweather-Regular.ttf").toExternalForm(), 10);
@@ -143,6 +143,9 @@ public class MdTextController {
         refreshRecentProject();
     }
 
+    /**
+     * Refresh contents display at home with config file content
+     */
     public void refreshRecentProject() {
         contentBox.getChildren().clear();
         ObjectMapper mapper = new ObjectMapper();
@@ -155,7 +158,9 @@ public class MdTextController {
         gPane.setHgap(10);
         gPane.setVgap(10);
         gPane.setPadding(new Insets(10, 10, 10, 10));
-        int row=0, col=0, size=2;
+        int row=0;
+        int col=0;
+        int size=2;
         for(String recentFilePath: MainApp.getConfig().getActions()) {
             File manifest = new File(recentFilePath + File.separator + "manifest.json");
             if(manifest.exists()) {
@@ -178,12 +183,17 @@ public class MdTextController {
                     logger.error("Impossible de lire le contenu répertorié dans : " + recentFilePath, e);
                 }
                 col++;
-                if (col % size == 0) row++;
+                if (col % size == 0) {
+                    row++;
+                }
             }
         }
         contentBox.getChildren().add(gPane);
     }
 
+    /**
+     * Close tab on TabPane with fire close request event
+     */
     public void closeCurrentTab() {
         if (EditorList.getTabs().size() > 1) {
             Tab selectedTab = EditorList.getSelectionModel().getSelectedItem();
@@ -191,6 +201,10 @@ public class MdTextController {
         }
     }
 
+    /**
+     * Switch on new tab on TabPane
+     * @param right if true, then switch on right side, else switch on left side
+     */
     public void switchTabTo(boolean right) {
         int size = EditorList.getTabs().size();
 
@@ -216,6 +230,12 @@ public class MdTextController {
         }
     }
 
+    /**
+     * Select any item on Tree
+     * @param item from which one wants to search
+     * @param textual textual open on tab which one wants to select
+     * @return TreeItem what you want to select
+     */
     public TreeItem<ContentNode> selectItemOnTree(TreeItem<ContentNode> item, Textual textual) {
         for(TreeItem<ContentNode> node: item.getChildren()) {
             if(node.getValue().getFilePath().equals(textual.getFilePath())) {
@@ -281,10 +301,8 @@ public class MdTextController {
             EditorList.getTabs().remove(tab);
             mainApp.getExtracts().remove(extract);
             t.consume();
-            if (getSplitPane().getItems().size() <= 1) {
-                if(EditorList.getTabs().size() == 1) {
-                    controllerConvert.addTreeSummary();
-                }
+            if (getSplitPane().getItems().size() <= 1 && EditorList.getTabs().size() == 1) {
+                controllerConvert.addTreeSummary();
             }
         });
 
@@ -386,7 +404,7 @@ public class MdTextController {
         });
         MainApp.getZdsutils().setGalleryId(null);
         mainApp.getMenuController().activateButtonForOpenContent();
-        if(filePath != null && !filePath.equals("null") ) {
+        if(filePath != null && !"null".equals(filePath)) {
             MainApp.getConfig().addActionProject(filePath);
             refreshRecentProject();
         }

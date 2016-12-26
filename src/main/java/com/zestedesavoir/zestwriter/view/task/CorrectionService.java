@@ -36,7 +36,7 @@ public class CorrectionService extends Service<String>{
                     updateMessage(ext.getTitle());
                     String markdown = ext.readMarkdown();
                     int i=0;
-                    while(!MdTextController.pythonStarted) {
+                    while(!mdText.isPythonStarted()) {
                         try {
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {
