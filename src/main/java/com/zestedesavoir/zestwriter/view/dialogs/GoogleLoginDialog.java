@@ -19,7 +19,7 @@ import java.net.CookieManager;
 public class GoogleLoginDialog extends CustomDialog<Pair<String, String>> {
 	public GoogleLoginDialog(LoginDialog parent) {
         super();
-		this.setTitle(Configuration.bundle.getString("ui.dialog.auth.google.title"));
+		this.setTitle(Configuration.getBundle().getString("ui.dialog.auth.google.title"));
 
         final WebView browser = new WebView();
         final WebEngine webEngine = browser.getEngine();

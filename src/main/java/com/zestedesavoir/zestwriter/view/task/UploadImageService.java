@@ -42,11 +42,11 @@ public class UploadImageService extends Service<String>{
                     String targetSlug = find.getSlug();
 
                     if (MainApp.getZdsutils().getGalleryId() == null) {
-                        updateMessage(Configuration.bundle.getString("ui.task.gallery.init")+" : "+targetSlug);
+                        updateMessage(Configuration.getBundle().getString("ui.task.gallery.init")+" : "+targetSlug);
                         MainApp.getZdsutils().initGalleryId(targetId, targetSlug);
                     }
 
-                    updateMessage(Configuration.bundle.getString("ui.task.gallery.send_image") + " " + imageFile.getAbsolutePath() + " " + Configuration.bundle.getString("ui.task.gallery.to") + " " + MainApp.getZdsutils().getGalleryId());
+                    updateMessage(Configuration.getBundle().getString("ui.task.gallery.send_image") + " " + imageFile.getAbsolutePath() + " " + Configuration.getBundle().getString("ui.task.gallery.to") + " " + MainApp.getZdsutils().getGalleryId());
 
                     return MainApp.getZdsutils().importImage(imageFile);
                 }

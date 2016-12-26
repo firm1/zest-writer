@@ -66,9 +66,9 @@ public class ImageInputDialog{
                     case CANCELLED:
                         menuManager.gethBottomBox().getChildren().clear();
                         alert = new CustomAlert(AlertType.ERROR);
-                        alert.setTitle(Configuration.bundle.getString("ui.dialog.auth.failed.title"));
-                        alert.setHeaderText(Configuration.bundle.getString("ui.dialog.auth.failed.header"));
-                        alert.setContentText(Configuration.bundle.getString("ui.dialog.auth.failed.text"));
+                        alert.setTitle(Configuration.getBundle().getString("ui.dialog.auth.failed.title"));
+                        alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.auth.failed.header"));
+                        alert.setContentText(Configuration.getBundle().getString("ui.dialog.auth.failed.text"));
 
                         alert.showAndWait();
                         break;
@@ -91,9 +91,9 @@ public class ImageInputDialog{
             UploadImageService uploadImageTask = new UploadImageService(content, selectedFile.getAbsoluteFile());
             uploadImageTask.setOnFailed( t -> {
                 Alert alert = new CustomAlert(AlertType.ERROR);
-                alert.setTitle(Configuration.bundle.getString("ui.dialog.upload.img.failed.title"));
-                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.upload.img.failed.header"));
-                alert.setContentText(Configuration.bundle.getString("ui.dialog.upload.img.failed.text"));
+                alert.setTitle(Configuration.getBundle().getString("ui.dialog.upload.img.failed.title"));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.upload.img.failed.header"));
+                alert.setContentText(Configuration.getBundle().getString("ui.dialog.upload.img.failed.text"));
                 alert.showAndWait();
             });
             uploadImageTask.setOnSucceeded(t -> link.setText(uploadImageTask.getValue()));

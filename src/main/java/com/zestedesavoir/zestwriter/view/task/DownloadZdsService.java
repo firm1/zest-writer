@@ -38,9 +38,9 @@ public class DownloadZdsService extends Service<Content>{
                     logger.debug ("type : " + type);
                     logger.debug ("id : " + id);
                     logger.debug ("slug : " + slug);
-                    updateMessage (Configuration.bundle.getString("ui.dialog.download.zds.message.downloading"));
+                    updateMessage (Configuration.getBundle().getString("ui.dialog.download.zds.message.downloading"));
                     String filePath = ZdsHttp.getZdsZipball (id, slug, type, onlineFolder);
-                    updateMessage (Configuration.bundle.getString("ui.dialog.download.zds.message.unpacking"));
+                    updateMessage (Configuration.getBundle().getString("ui.dialog.download.zds.message.unpacking"));
                     File folder = ZdsHttp.unzipOnlineContent (filePath, offlineFolder);
                     // get folder in unzip folder
                     if (folder.isDirectory()) {
@@ -49,7 +49,7 @@ public class DownloadZdsService extends Service<Content>{
                         File manifest = new File(folder.getAbsolutePath() + File.separator + "manifest.json");
                         Content c = mapper.readValue(manifest, Content.class);
                         c.setBasePath(folder.getAbsolutePath());
-                        updateMessage (Configuration.bundle.getString("ui.dialog.download.zds.message.done"));
+                        updateMessage (Configuration.getBundle().getString("ui.dialog.download.zds.message.done"));
                         return c;
                     }
                 }

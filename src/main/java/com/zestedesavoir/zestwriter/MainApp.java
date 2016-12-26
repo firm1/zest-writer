@@ -165,7 +165,7 @@ public class MainApp extends Application{
     @Override
     public void start(Stage primaryStage) {
         setPrimaryStage(primaryStage);
-        getPrimaryStage().setTitle(Configuration.bundle.getString("ui.app_name.text"));
+        getPrimaryStage().setTitle(Configuration.getBundle().getString("ui.app_name.text"));
         getPrimaryStage().getIcons().add(new Image(getClass().getResourceAsStream("images/logo.png")));
         getPrimaryStage().setMinWidth(400);
         getPrimaryStage().setMinHeight(400);
@@ -270,9 +270,9 @@ public class MainApp extends Application{
 
             loginTask.setOnCancelled(t -> {
                 Alert alert = new CustomAlert(Alert.AlertType.ERROR);
-                alert.setTitle(Configuration.bundle.getString("ui.dialog.auth.title"));
-                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.auth.state.header"));
-                alert.setContentText(Configuration.bundle.getString("ui.dialog.auth.failed.text"));
+                alert.setTitle(Configuration.getBundle().getString("ui.dialog.auth.title"));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.auth.state.header"));
+                alert.setContentText(Configuration.getBundle().getString("ui.dialog.auth.failed.text"));
 
                 alert.showAndWait();
                 menuController.getMenuDownload().setDisable(false);
@@ -301,7 +301,7 @@ public class MainApp extends Application{
                     if(key.toString().equals("_CONTROL_C_L_E_M")){
                      // Create the custom dialog.
                         Dialog<Void> dialog = new Dialog<>();
-                        dialog.setTitle(Configuration.bundle.getString("ui.menu.easteregg"));
+                        dialog.setTitle(Configuration.getBundle().getString("ui.menu.easteregg"));
                         dialog.setHeaderText(null);
                         dialog.setContentText(null);
 

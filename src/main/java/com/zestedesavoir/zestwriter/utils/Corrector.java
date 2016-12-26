@@ -167,7 +167,7 @@ public class Corrector {
             desc = new HtmlToPlainText().getPlainText(Jsoup.parse(desc));
 
             if (!match.getSuggestedReplacements().isEmpty()) {
-                desc += Configuration.bundle.getString("ui.alert.correction.tooltip.suggestion")
+                desc += Configuration.getBundle().getString("ui.alert.correction.tooltip.suggestion")
                         + match.getSuggestedReplacements();
             }
             String before = "<span class=\"error-french\" title=\"" + desc + "\">";
@@ -199,7 +199,7 @@ public class Corrector {
             bf.append("> ");
             bf.append(markup.getPlainText().split("[\n|\r]")[match.getLine()].replace(txt, "**" + txt + "**"));
             bf.append("\n");
-            bf.append(Configuration.bundle.getString("ui.alert.correction.source")).append(source);
+            bf.append(Configuration.getBundle().getString("ui.alert.correction.source")).append(source);
             bf.append("\n\n");
             bf.append(match.getRule().getDescription());
             bf.append("\n\n");

@@ -47,13 +47,13 @@ public class LoginService extends Service<Void>{
             protected Void call() {
                 if(getUsername() != null) {
                     try {
-                        updateMessage(Configuration.bundle.getString("ui.task.auth.prepare.label")+" ...");
+                        updateMessage(Configuration.getBundle().getString("ui.task.auth.prepare.label")+" ...");
                         if(MainApp.getZdsutils().login(getUsername(), getPassword())) {
-                            updateMessage(Configuration.bundle.getString("ui.task.auth.init_content")+" ...");
+                            updateMessage(Configuration.getBundle().getString("ui.task.auth.init_content")+" ...");
                             MainApp.getZdsutils().getContentListOnline().clear();
                             MainApp.getZdsutils().initInfoOnlineContent("tutorial");
                             MainApp.getZdsutils().initInfoOnlineContent("article");
-                            updateMessage(Configuration.bundle.getString("ui.task.auth.success.text"));
+                            updateMessage(Configuration.getBundle().getString("ui.task.auth.success.text"));
                         } else {
                             MainApp.getConfig().resetAuthentification();
                             cancel();
@@ -64,7 +64,7 @@ public class LoginService extends Service<Void>{
                     }
                 } else {
                     if(MainApp.getZdsutils().isAuthenticated()) {
-                        updateMessage(Configuration.bundle.getString("ui.task.auth.init_content")+" ...");
+                        updateMessage(Configuration.getBundle().getString("ui.task.auth.init_content")+" ...");
                         try {
                             MainApp.getZdsutils().getContentListOnline().clear();
                             MainApp.getZdsutils().initInfoOnlineContent("tutorial");
@@ -72,7 +72,7 @@ public class LoginService extends Service<Void>{
                         } catch (IOException e) {
                             logger.error("Echec de téléchargement des metadonnés des contenus en ligne", e);
                         }
-                        updateMessage(Configuration.bundle.getString("ui.task.auth.success.text"));
+                        updateMessage(Configuration.getBundle().getString("ui.task.auth.success.text"));
                     } else {
                         MainApp.getConfig().resetAuthentification();
                         cancel();

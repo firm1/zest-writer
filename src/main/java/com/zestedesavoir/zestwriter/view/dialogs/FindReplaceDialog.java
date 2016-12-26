@@ -136,9 +136,9 @@ public class FindReplaceDialog{
             }
 
             if(numberIterationTotal > 0){
-                iterations.setText(numberIterationTotal +" "+Configuration.bundle.getString("ui.dialog.find.plural"));
+                iterations.setText(numberIterationTotal +" "+Configuration.getBundle().getString("ui.dialog.find.plural"));
             }else{
-                iterations.setText(Configuration.bundle.getString("ui.dialog.find.empty"));
+                iterations.setText(Configuration.getBundle().getString("ui.dialog.find.empty"));
             }
             return matchers;
         }
@@ -178,7 +178,7 @@ public class FindReplaceDialog{
     }
 
     private void resetIterationNumber(){
-        iterations.setText(Configuration.bundle.getString("ui.dialog.find.empty"));
+        iterations.setText(Configuration.getBundle().getString("ui.dialog.find.empty"));
     }
 
     private void textFill(int start, int end, FindReplaceAction action){

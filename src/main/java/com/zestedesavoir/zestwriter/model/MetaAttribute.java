@@ -38,6 +38,7 @@ public class MetaAttribute implements Textual, ContentNode{
         return title;
     }
 
+    @Override
     public void setTitle(String title) {
         this.title = title;
     }
@@ -54,6 +55,7 @@ public class MetaAttribute implements Textual, ContentNode{
         return basePath;
     }
 
+    @Override
     public void setBasePath(String basePath) {
         this.basePath = basePath;
         File base = new File(getFilePath());

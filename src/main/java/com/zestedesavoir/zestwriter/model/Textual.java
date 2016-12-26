@@ -13,43 +13,24 @@ public interface Textual{
 
     String getMarkdown();
     default void save() {
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getFilePath()), "UTF8"));
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getFilePath()), "UTF8"))) {
             writer.append(getMarkdown());
             writer.flush();
         } catch (Exception e) {
             MainApp.getLogger().error(e.getMessage(), e);
-        } finally {
-            try {
-                if (writer != null) {
-                    writer.close();
-                }
-            } catch (Exception ignored) {
-            }
         }
     }
     default String readMarkdown() {
         Path path = Paths.get(this.getFilePath());
-        Scanner scanner = null;
         StringBuilder bfString = new StringBuilder();
-        try {
-            scanner = new Scanner(path, StandardCharsets.UTF_8.name());
+        try(Scanner scanner = new Scanner(path, StandardCharsets.UTF_8.name())) {
             while (scanner.hasNextLine()) {
                 bfString.append(scanner.nextLine());
                 bfString.append("\n");
             }
-            scanner.close();
             return bfString.toString();
         } catch (IOException e) {
             MainApp.getLogger().error(e.getMessage(), e);
-        } finally {
-            try {
-                if (scanner != null) {
-                    scanner.close();
-                }
-            } catch (Exception ignored) {
-            }
         }
         return "";
     }

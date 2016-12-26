@@ -71,7 +71,7 @@ public class ExportPdfService extends Service<Void>{
             public boolean downloadPdf() {
                 logger.debug("Tentative de téléchargement du contenu au format Pdf");
                 try {
-                    updateMessage(Configuration.bundle.getString("ui.task.export.prepare.label")+" ...");
+                    updateMessage(Configuration.getBundle().getString("ui.task.export.prepare.label")+" ...");
                     HttpResponse response = client.execute(post);
                     logger.debug("Début du traitement de la réponse");
                     if(response.getStatusLine().getStatusCode() >= 400) {
@@ -83,7 +83,7 @@ public class ExportPdfService extends Service<Void>{
                     long remain = 0;
                     updateProgress(remain, max);
                     int inByte;
-                    updateMessage(Configuration.bundle.getString("ui.task.export.build.label"));
+                    updateMessage(Configuration.getBundle().getString("ui.task.export.build.label"));
                     while ((inByte = is.read()) != -1) {
                         fos.write(inByte);
                         remain++;
@@ -106,12 +106,12 @@ public class ExportPdfService extends Service<Void>{
 
             @Override
             protected Void call() throws Exception {
-                updateMessage(Configuration.bundle.getString("ui.task.export.assemble.label"));
+                updateMessage(Configuration.getBundle().getString("ui.task.export.assemble.label"));
                 content.saveToMarkdown(markdownFile);
 
-                updateMessage(Configuration.bundle.getString("ui.task.export.label"));
+                updateMessage(Configuration.getBundle().getString("ui.task.export.label"));
                 if(!downloadPdf()) {
-                    updateMessage(Configuration.bundle.getString("ui.task.export.error"));
+                    updateMessage(Configuration.getBundle().getString("ui.task.export.error"));
                     throw new IOException();
                 }
                 return null;

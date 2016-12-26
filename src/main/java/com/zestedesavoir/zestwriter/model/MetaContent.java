@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.zestedesavoir.zestwriter.MainApp;
+import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -38,7 +37,7 @@ public abstract class MetaContent{
         setBasePath(basePath);
         this.rootContent = rootContent;
         if(this instanceof Container) {
-            Container c = ((Container) this);
+            Container c = (Container) this;
             c.getIntroduction().setRootContent(rootContent, basePath);
             c.getConclusion().setRootContent(rootContent, basePath);
             for(MetaContent meta: c.getChildren()) {
@@ -87,22 +86,14 @@ public abstract class MetaContent{
             if(! base.exists()) {
                 base.mkdirs();
             }
-            Container c = ((Container) this);
+            Container c = (Container) this;
             c.getIntroduction().setBasePath(basePath);
             c.getConclusion().setBasePath(basePath);
             for(MetaContent meta: c.getChildren()) {
                 meta.setBasePath(basePath);
             }
         } else {
-            if(! base.exists()) {
-                try {
-                    if(!base.createNewFile()) {
-                        MainApp.getLogger().error("Problème lors de la création de "+base.getAbsolutePath());
-                    }
-                } catch (IOException e) {
-                    MainApp.getLogger().error("Problème lors de la création de "+base.getAbsolutePath(), e);
-                }
-            }
+            FunctionTreeFactory.performCreateNewFile(base);
         }
     }
 

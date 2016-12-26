@@ -162,8 +162,8 @@ public class MenuController{
         };
 
         handleIndex(calFlesh,
-                Configuration.bundle.getString("ui.menu.edit.readable.flesch_index"),
-                Configuration.bundle.getString("ui.menu.edit.readable.flesch_index.header"));
+                Configuration.getBundle().getString("ui.menu.edit.readable.flesch_index"),
+                Configuration.getBundle().getString("ui.menu.edit.readable.flesch_index.header"));
     }
 
     @FXML private void handleGunningButtonAction(ActionEvent event){
@@ -178,8 +178,8 @@ public class MenuController{
             }
         };
         handleIndex(calGuning,
-                Configuration.bundle.getString("ui.menu.edit.readable.gunning_index"),
-                Configuration.bundle.getString("ui.menu.edit.readable.gunning_index.header"));
+                Configuration.getBundle().getString("ui.menu.edit.readable.gunning_index"),
+                Configuration.getBundle().getString("ui.menu.edit.readable.gunning_index.header"));
     }
 
     @FXML private void handleReportWithoutTypoButtonAction(ActionEvent event){
@@ -194,7 +194,7 @@ public class MenuController{
 
         GridPane expContent = new GridPane();
         expContent.setMaxWidth(Double.MAX_VALUE);
-        expContent.add(new Label(Configuration.bundle.getString("ui.menu.edit.correction")), 0, 0);
+        expContent.add(new Label(Configuration.getBundle().getString("ui.menu.edit.correction")), 0, 0);
         expContent.add(textArea, 0, 1);
 
         hBottomBox.getChildren().addAll(labelField);
@@ -203,17 +203,17 @@ public class MenuController{
         textArea.textProperty().bind(correctTask.valueProperty());
         correctTask.setOnFailed(t -> {
             Alert alert = new CustomAlert(AlertType.ERROR);
-            alert.setTitle(Configuration.bundle.getString("ui.alert.correction.failed.title"));
-            alert.setHeaderText(Configuration.bundle.getString("ui.alert.correction.failed.header"));
-            alert.setContentText(Configuration.bundle.getString("ui.alert.correction.failed.text"));
+            alert.setTitle(Configuration.getBundle().getString("ui.alert.correction.failed.title"));
+            alert.setHeaderText(Configuration.getBundle().getString("ui.alert.correction.failed.header"));
+            alert.setContentText(Configuration.getBundle().getString("ui.alert.correction.failed.text"));
 
             alert.showAndWait();
             hBottomBox.getChildren().clear();
         });
         correctTask.setOnSucceeded(t -> {
             Alert alert = new CustomAlert(AlertType.INFORMATION);
-            alert.setTitle(Configuration.bundle.getString("ui.alert.correction.success.title"));
-            alert.setHeaderText(Configuration.bundle.getString("ui.alert.correction.success.header"));
+            alert.setTitle(Configuration.getBundle().getString("ui.alert.correction.success.title"));
+            alert.setHeaderText(Configuration.getBundle().getString("ui.alert.correction.success.header"));
 
             // Set expandable Exception into the dialog pane.
             alert.getDialogPane().setExpandableContent(expContent);
@@ -266,7 +266,7 @@ public class MenuController{
 
     @FXML private void handleOpenButtonAction(ActionEvent event){
         DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle(Configuration.bundle.getString("ui.menu.dialog.open.title"));
+        chooser.setTitle(Configuration.getBundle().getString("ui.menu.dialog.open.title"));
         File defaultDirectory;
 
         if(MainApp.getConfig().getWorkspaceFactory() == null){
@@ -299,7 +299,7 @@ public class MenuController{
 
     @FXML public Service<Void> handleLoginButtonAction(ActionEvent event){
         // Button for google
-        Button googleAuth = new Button(Configuration.bundle.getString("ui.dialog.auth.google.title"), IconFactory.createGoogleIcon());
+        Button googleAuth = new Button(Configuration.getBundle().getString("ui.dialog.auth.google.title"), IconFactory.createGoogleIcon());
         LoginDialog dialog = new LoginDialog(googleAuth);
         googleAuth.setOnAction(t -> {
             GoogleLoginDialog googleDialog = new GoogleLoginDialog(dialog);
@@ -328,9 +328,9 @@ public class MenuController{
         pb.progressProperty().bind(downloadContentTask.progressProperty());
         downloadContentTask.setOnSucceeded(t -> {
             Alert alert = new CustomAlert(AlertType.INFORMATION);
-            alert.setTitle(Configuration.bundle.getString("ui.alert.download.success.title"));
-            alert.setHeaderText(Configuration.bundle.getString("ui.alert.download.success.header"));
-            alert.setContentText(Configuration.bundle.getString("ui.alert.download.success.text"));
+            alert.setTitle(Configuration.getBundle().getString("ui.alert.download.success.title"));
+            alert.setHeaderText(Configuration.getBundle().getString("ui.alert.download.success.header"));
+            alert.setContentText(Configuration.getBundle().getString("ui.alert.download.success.text"));
             alert.showAndWait();
             hBottomBox.getChildren().clear();
 
@@ -351,9 +351,9 @@ public class MenuController{
             loginTask.setOnCancelled(t -> {
                 hBottomBox.getChildren().clear();
                 Alert alert = new CustomAlert(AlertType.ERROR);
-                alert.setTitle(Configuration.bundle.getString("ui.dialog.auth.failed.title"));
-                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.auth.failed.header"));
-                alert.setContentText(Configuration.bundle.getString("ui.dialog.auth.failed.text"));
+                alert.setTitle(Configuration.getBundle().getString("ui.dialog.auth.failed.title"));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.auth.failed.header"));
+                alert.setContentText(Configuration.getBundle().getString("ui.dialog.auth.failed.text"));
 
                 alert.showAndWait();
             });
@@ -389,7 +389,7 @@ public class MenuController{
 
 
         List<MetadataContent> contents = new ArrayList<>();
-        contents.add(new MetadataContent(null, "---"+Configuration.bundle.getString("ui.content.new.title")+"---", null));
+        contents.add(new MetadataContent(null, "---"+Configuration.getBundle().getString("ui.content.new.title")+"---", null));
         List<MetadataContent> possibleContent;
         if(mainApp.getContents ().get (0).isArticle()) {
             possibleContent = MainApp.getZdsutils().getContentListOnline().stream()
@@ -403,9 +403,9 @@ public class MenuController{
         contents.addAll(possibleContent);
 
         Dialog<Pair<String, MetadataContent>> dialog = new CustomDialog<>();
-        dialog.setTitle(Configuration.bundle.getString("ui.content.select.title"));
-        dialog.setHeaderText(Configuration.bundle.getString("ui.content.select.header"));
-        ButtonType loginButtonType = new ButtonType(Configuration.bundle.getString("ui.content.select.button.send"), ButtonData.OK_DONE);
+        dialog.setTitle(Configuration.getBundle().getString("ui.content.select.title"));
+        dialog.setHeaderText(Configuration.getBundle().getString("ui.content.select.header"));
+        ButtonType loginButtonType = new ButtonType(Configuration.getBundle().getString("ui.content.select.button.send"), ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
         GridPane grid = new GridPane();
@@ -414,13 +414,13 @@ public class MenuController{
         grid.setPadding(new Insets(20, 150, 10, 10));
 
         TextArea msg = new TextArea();
-        msg.setText(Configuration.bundle.getString("ui.content.select.placeholder.commit_msg"));
+        msg.setText(Configuration.getBundle().getString("ui.content.select.placeholder.commit_msg"));
         ChoiceBox<MetadataContent> contenus = new ChoiceBox<>();
         contenus.setItems(FXCollections.observableArrayList(contents));
 
-        grid.add(new Label(Configuration.bundle.getString("ui.content.select.field.slug")+" : "), 0, 0);
+        grid.add(new Label(Configuration.getBundle().getString("ui.content.select.field.slug")+" : "), 0, 0);
         grid.add(contenus, 1, 0);
-        grid.add(new Label(Configuration.bundle.getString("ui.content.select.field.commit_msg")+" : "), 0, 1);
+        grid.add(new Label(Configuration.getBundle().getString("ui.content.select.field.commit_msg")+" : "), 0, 1);
         grid.add(msg, 1, 1);
 
         dialog.getDialogPane().setContent(grid);
@@ -436,17 +436,17 @@ public class MenuController{
         labelField.textProperty().bind(uploadContentTask.messageProperty());
         uploadContentTask.setOnSucceeded(t -> {
             Alert alert = new CustomAlert(AlertType.INFORMATION);
-            alert.setTitle(Configuration.bundle.getString("ui.dialog.upload.content.success.title"));
-            alert.setHeaderText(Configuration.bundle.getString("ui.dialog.upload.content.success.header"));
-            alert.setContentText(Configuration.bundle.getString("ui.dialog.upload.content.success.text"));
+            alert.setTitle(Configuration.getBundle().getString("ui.dialog.upload.content.success.title"));
+            alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.upload.content.success.header"));
+            alert.setContentText(Configuration.getBundle().getString("ui.dialog.upload.content.success.text"));
             alert.showAndWait();
             hBottomBox.getChildren().clear();
         });
         uploadContentTask.setOnFailed(t -> {
             Alert alert = new CustomAlert(AlertType.ERROR);
-            alert.setTitle(Configuration.bundle.getString("ui.dialog.upload.content.failed.title"));
-            alert.setHeaderText(Configuration.bundle.getString("ui.dialog.upload.content.failed.header"));
-            alert.setContentText(Configuration.bundle.getString("ui.dialog.upload.content.failed.text"));
+            alert.setTitle(Configuration.getBundle().getString("ui.dialog.upload.content.failed.title"));
+            alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.upload.content.failed.header"));
+            alert.setContentText(Configuration.getBundle().getString("ui.dialog.upload.content.failed.text"));
             alert.showAndWait();
         });
         if(result.isPresent()){
@@ -460,9 +460,9 @@ public class MenuController{
             }
             else {
                 Alert alert = new CustomAlert(AlertType.ERROR);
-                alert.setTitle(Configuration.bundle.getString("ui.dialog.upload.content.failed.title"));
-                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.upload.content.failed.header"));
-                alert.setContentText(Configuration.bundle.getString("ui.dialog.upload.content.failed.text.nofile"));
+                alert.setTitle(Configuration.getBundle().getString("ui.dialog.upload.content.failed.title"));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.upload.content.failed.header"));
+                alert.setContentText(Configuration.getBundle().getString("ui.dialog.upload.content.failed.text.nofile"));
                 alert.showAndWait();
             }
         }
@@ -474,9 +474,9 @@ public class MenuController{
             loginTask.setOnCancelled(t -> {
                 hBottomBox.getChildren().clear();
                 Alert alert = new CustomAlert(AlertType.ERROR);
-                alert.setTitle(Configuration.bundle.getString("ui.dialog.upload.content.failed.title"));
-                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.upload.content.failed.header"));
-                alert.setContentText(Configuration.bundle.getString("ui.dialog.upload.content.failed.text"));
+                alert.setTitle(Configuration.getBundle().getString("ui.dialog.upload.content.failed.title"));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.upload.content.failed.header"));
+                alert.setContentText(Configuration.getBundle().getString("ui.dialog.upload.content.failed.text"));
 
                 alert.showAndWait();
             });
@@ -495,16 +495,16 @@ public class MenuController{
     @FXML private void handleSwitchWorkspaceAction(ActionEvent event) throws IOException{
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setInitialDirectory(MainApp.getDefaultHome());
-        fileChooser.setTitle(Configuration.bundle.getString("ui.dialog.switchworkspace"));
+        fileChooser.setTitle(Configuration.getBundle().getString("ui.dialog.switchworkspace"));
         File selectedDirectory = fileChooser.showDialog(MainApp.getPrimaryStage());
         if(selectedDirectory!=null) {
             MainApp.getConfig().setWorkspacePath(selectedDirectory.getAbsolutePath());
             MainApp.getConfig().loadWorkspace();
 
             Alert alert = new CustomAlert(AlertType.INFORMATION);
-            alert.setTitle(Configuration.bundle.getString("ui.options.workspace"));
-            alert.setHeaderText(Configuration.bundle.getString("ui.dialog.workspace.header"));
-            alert.setContentText(Configuration.bundle.getString("ui.dialog.workspace.text") + " " + MainApp.getConfig().getWorkspacePath());
+            alert.setTitle(Configuration.getBundle().getString("ui.options.workspace"));
+            alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.workspace.header"));
+            alert.setContentText(Configuration.getBundle().getString("ui.dialog.workspace.text") + " " + MainApp.getConfig().getWorkspacePath());
             alert.setResizable(true);
 
             alert.showAndWait();
@@ -515,7 +515,7 @@ public class MenuController{
         Content content = mainApp.getContents().get(0);
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setInitialDirectory(MainApp.getDefaultHome());
-        fileChooser.setTitle(Configuration.bundle.getString("ui.dialog.export.dir.title"));
+        fileChooser.setTitle(Configuration.getBundle().getString("ui.dialog.export.dir.title"));
         File selectedDirectory = fileChooser.showDialog(MainApp.getPrimaryStage());
         File selectedFile = new File(selectedDirectory, ZdsHttp.toSlug(content.getTitle()) + ".md");
         logger.debug("Tentative d'export vers le fichier " + selectedFile.getAbsolutePath());
@@ -526,9 +526,9 @@ public class MenuController{
             logger.debug("Export réussi vers " + selectedFile.getAbsolutePath());
 
             Alert alert = new CustomAlert(AlertType.INFORMATION);
-            alert.setTitle(Configuration.bundle.getString("ui.dialog.export.success.title"));
-            alert.setHeaderText(Configuration.bundle.getString("ui.dialog.export.success.header"));
-            alert.setContentText(Configuration.bundle.getString("ui.dialog.export.success.text")+" \"" + selectedFile.getAbsolutePath() + "\"");
+            alert.setTitle(Configuration.getBundle().getString("ui.dialog.export.success.title"));
+            alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.export.success.header"));
+            alert.setContentText(Configuration.getBundle().getString("ui.dialog.export.success.text")+" \"" + selectedFile.getAbsolutePath() + "\"");
             alert.setResizable(true);
 
             alert.showAndWait();
@@ -539,7 +539,7 @@ public class MenuController{
         Content content = mainApp.getContents().get(0);
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setInitialDirectory(MainApp.getDefaultHome());
-        fileChooser.setTitle(Configuration.bundle.getString("ui.dialog.export.dir.title"));
+        fileChooser.setTitle(Configuration.getBundle().getString("ui.dialog.export.dir.title"));
         File selectedDirectory = fileChooser.showDialog(MainApp.getPrimaryStage());
         File selectedFile = new File(selectedDirectory, ZdsHttp.toSlug(content.getTitle()) + ".pdf");
         logger.debug("Tentative d'export vers le fichier " + selectedFile.getAbsolutePath());
@@ -554,18 +554,18 @@ public class MenuController{
             Alert alert = new CustomAlert(AlertType.NONE);
             exportPdfTask.setOnFailed((WorkerStateEvent ev) -> {
                 alert.setAlertType(AlertType.ERROR);
-                alert.setTitle(Configuration.bundle.getString("ui.dialog.export.failed.title"));
-                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.export.failed.header"));
-                alert.setContentText(Configuration.bundle.getString("ui.dialog.export.failed.text"));
+                alert.setTitle(Configuration.getBundle().getString("ui.dialog.export.failed.title"));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.export.failed.header"));
+                alert.setContentText(Configuration.getBundle().getString("ui.dialog.export.failed.text"));
                 alert.showAndWait();
                 hBottomBox.getChildren().clear();
             });
 
             exportPdfTask.setOnSucceeded((WorkerStateEvent ev) -> {
                 alert.setAlertType(AlertType.INFORMATION);
-                alert.setTitle(Configuration.bundle.getString("ui.dialog.export.success.title"));
-                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.export.success.header"));
-                alert.setContentText(Configuration.bundle.getString("ui.dialog.export.success.text")+" \"" + selectedFile.getAbsolutePath() + "\"");
+                alert.setTitle(Configuration.getBundle().getString("ui.dialog.export.success.title"));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.export.success.header"));
+                alert.setContentText(Configuration.getBundle().getString("ui.dialog.export.success.text")+" \"" + selectedFile.getAbsolutePath() + "\"");
                 alert.showAndWait();
                 hBottomBox.getChildren().clear();
             });
@@ -576,7 +576,7 @@ public class MenuController{
     @FXML private void handleMdCheatSheetButtonAction(ActionEvent event){
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/MdCheatSheetDialog.fxml"));
 
-        Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.help.md_cheat_sheet"));
+        Stage dialogStage = new CustomStage(loader, Configuration.getBundle().getString("ui.menu.help.md_cheat_sheet"));
 
         loader.getController();
 
@@ -599,7 +599,7 @@ public class MenuController{
     @FXML private void handleAboutButtonAction(ActionEvent event){
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/AboutDialog.fxml"));
 
-        Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.help.about"));
+        Stage dialogStage = new CustomStage(loader, Configuration.getBundle().getString("ui.menu.help.about"));
         dialogStage.setResizable(false);
 
         AboutDialog aboutController = loader.getController();
@@ -611,7 +611,7 @@ public class MenuController{
     @FXML private void handleOptionsButtonAction(ActionEvent event){
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/OptionsDialog.fxml"));
 
-        Stage dialogStage = new CustomStage(loader, Configuration.bundle.getString("ui.menu.options"));
+        Stage dialogStage = new CustomStage(loader, Configuration.getBundle().getString("ui.menu.options"));
         dialogStage.setResizable(false);
 
 
@@ -624,9 +624,9 @@ public class MenuController{
 
     @FXML private void handleImportGithubButtonAction() {
         TextInputDialog dialog = new TextInputDialog("https://github.com/");
-        dialog.setTitle(Configuration.bundle.getString("ui.dialog.import.github.title"));
-        dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.import.github.header"));
-        dialog.setContentText(Configuration.bundle.getString("ui.dialog.import.github.text")+" :");
+        dialog.setTitle(Configuration.getBundle().getString("ui.dialog.import.github.title"));
+        dialog.setHeaderText(Configuration.getBundle().getString("ui.dialog.import.github.header"));
+        dialog.setContentText(Configuration.getBundle().getString("ui.dialog.import.github.text")+" :");
         dialog.getEditor().setPrefWidth(500);
         dialog.initOwner(MainApp.getPrimaryStage());
 
@@ -641,18 +641,18 @@ public class MenuController{
             Alert alert = new CustomAlert(AlertType.NONE);
             downloadGithubTask.setOnFailed (t -> {
                 alert.setAlertType(AlertType.ERROR);
-                alert.setTitle(Configuration.bundle.getString("ui.dialog.download.github.failed.title"));
-                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.download.github.failed.header"));
-                alert.setContentText(Configuration.bundle.getString("ui.dialog.download.github.failed.text"));
+                alert.setTitle(Configuration.getBundle().getString("ui.dialog.download.github.failed.title"));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.download.github.failed.header"));
+                alert.setContentText(Configuration.getBundle().getString("ui.dialog.download.github.failed.text"));
                 alert.showAndWait();
                 hBottomBox.getChildren().clear();
             });
             downloadGithubTask.setOnSucceeded (t -> {
                 FunctionTreeFactory.switchContent (downloadGithubTask.getValue (), mainApp.getContents ());
                 alert.setAlertType(AlertType.INFORMATION);
-                alert.setTitle(Configuration.bundle.getString("ui.dialog.download.github.success.title"));
-                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.download.github.success.header"));
-                alert.setContentText(Configuration.bundle.getString("ui.dialog.download.github.success.text"));
+                alert.setTitle(Configuration.getBundle().getString("ui.dialog.download.github.success.title"));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.download.github.success.header"));
+                alert.setContentText(Configuration.getBundle().getString("ui.dialog.download.github.success.text"));
                 alert.showAndWait();
                 hBottomBox.getChildren().clear();
             });
@@ -665,9 +665,9 @@ public class MenuController{
 
     @FXML private void handleImportZdsButtonAction() {
         TextInputDialog dialog = new TextInputDialog("https://zestedesavoir.com/");
-        dialog.setTitle(Configuration.bundle.getString("ui.dialog.import.zds.title"));
-        dialog.setHeaderText(Configuration.bundle.getString("ui.dialog.import.zds.header"));
-        dialog.setContentText(Configuration.bundle.getString("ui.dialog.import.zds.text")+" :");
+        dialog.setTitle(Configuration.getBundle().getString("ui.dialog.import.zds.title"));
+        dialog.setHeaderText(Configuration.getBundle().getString("ui.dialog.import.zds.header"));
+        dialog.setContentText(Configuration.getBundle().getString("ui.dialog.import.zds.text")+" :");
         dialog.getEditor().setPrefWidth(500);
         dialog.initOwner(MainApp.getPrimaryStage());
 
@@ -682,18 +682,18 @@ public class MenuController{
             Alert alert = new CustomAlert(AlertType.NONE);
             downloadZdsTask.setOnFailed (t -> {
                 alert.setAlertType(AlertType.ERROR);
-                alert.setTitle(Configuration.bundle.getString("ui.dialog.download.zds.failed.title"));
-                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.download.zds.failed.header"));
-                alert.setContentText(Configuration.bundle.getString("ui.dialog.download.zds.failed.text"));
+                alert.setTitle(Configuration.getBundle().getString("ui.dialog.download.zds.failed.title"));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.download.zds.failed.header"));
+                alert.setContentText(Configuration.getBundle().getString("ui.dialog.download.zds.failed.text"));
                 alert.showAndWait();
                 hBottomBox.getChildren().clear();
             });
             downloadZdsTask.setOnSucceeded (t -> {
                 FunctionTreeFactory.switchContent (downloadZdsTask.getValue (), mainApp.getContents ());
                 alert.setAlertType(AlertType.INFORMATION);
-                alert.setTitle(Configuration.bundle.getString("ui.dialog.download.zds.success.title"));
-                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.download.zds.success.header"));
-                alert.setContentText(Configuration.bundle.getString("ui.dialog.download.zds.success.text"));
+                alert.setTitle(Configuration.getBundle().getString("ui.dialog.download.zds.success.title"));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.download.zds.success.header"));
+                alert.setContentText(Configuration.getBundle().getString("ui.dialog.download.zds.success.text"));
                 alert.showAndWait();
                 hBottomBox.getChildren().clear();
             });
@@ -711,7 +711,7 @@ public class MenuController{
                 return new Task<Boolean>() {
                     @Override
                     protected Boolean call() throws Exception {
-                        String current = MainApp.getConfig().getProps().getProperty("version", Configuration.bundle.getString("ui.version.label.unknown"));
+                        String current = MainApp.getConfig().getProps().getProperty("version", Configuration.getBundle().getString("ui.version.label.unknown"));
                         String versionOnline = Configuration.getLastRelease();
                         if(versionOnline == null) {
                             throw new IOException();
@@ -733,24 +733,24 @@ public class MenuController{
 
         checkService.setOnFailed(t -> {
             Alert alert = new CustomAlert(AlertType.ERROR);
-            alert.setTitle(Configuration.bundle.getString("ui.dialog.check_update.failed.title"));
-            alert.setHeaderText(Configuration.bundle.getString("ui.dialog.check_update.failed.header"));
-            alert.setContentText(Configuration.bundle.getString("ui.dialog.check_update.failed.text"));
+            alert.setTitle(Configuration.getBundle().getString("ui.dialog.check_update.failed.title"));
+            alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.check_update.failed.header"));
+            alert.setContentText(Configuration.getBundle().getString("ui.dialog.check_update.failed.text"));
             alert.showAndWait();
         });
 
         checkService.setOnSucceeded(t -> {
             Alert alert = new CustomAlert(AlertType.NONE);
-            alert.setTitle(Configuration.bundle.getString("ui.dialog.check_update.success.title"));
+            alert.setTitle(Configuration.getBundle().getString("ui.dialog.check_update.success.title"));
 
             if(!checkService.getValue()){
                 alert.setAlertType(AlertType.WARNING);
-                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.check_update.warn.header"));
-                alert.setContentText(Configuration.bundle.getString("ui.dialog.check_update.warn.text"));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.check_update.warn.header"));
+                alert.setContentText(Configuration.getBundle().getString("ui.dialog.check_update.warn.text"));
             }else{
                 alert.setAlertType(AlertType.INFORMATION);
-                alert.setHeaderText(Configuration.bundle.getString("ui.dialog.check_update.success.header"));
-                alert.setContentText(Configuration.bundle.getString("ui.dialog.check_update.success.text"));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.check_update.success.header"));
+                alert.setContentText(Configuration.getBundle().getString("ui.dialog.check_update.success.text"));
             }
 
             alert.showAndWait();

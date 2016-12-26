@@ -14,25 +14,25 @@ public class LoginDialog extends BaseDialog<Pair<String, String>> {
     private Configuration config;
 
 	public LoginDialog(Button googleButton) {
-		super(Configuration.bundle.getString("ui.dialog.auth.title"), Configuration.bundle.getString("ui.dialog.auth.header"));
+		super(Configuration.getBundle().getString("ui.dialog.auth.title"), Configuration.getBundle().getString("ui.dialog.auth.header"));
         this.config = MainApp.getConfig();
 
         this.setGraphic(IconFactory.createLoginIcon());
 
         // Set the button types.
-        ButtonType loginButtonType = new ButtonType(Configuration.bundle.getString("ui.dialog.auth.button"), ButtonData.OK_DONE);
+        ButtonType loginButtonType = new ButtonType(Configuration.getBundle().getString("ui.dialog.auth.button"), ButtonData.OK_DONE);
         this.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
         TextField username = new TextField();
         username.setPromptText("username");
         PasswordField password = new PasswordField();
         password.setPromptText("password");
-        CheckBox keepConnection = new CheckBox(Configuration.bundle.getString("ui.dialog.auth.stay"));
+        CheckBox keepConnection = new CheckBox(Configuration.getBundle().getString("ui.dialog.auth.stay"));
 
         getGridPane().add(googleButton, 0, 0, 1, 2);
-        getGridPane().add(new Label(Configuration.bundle.getString("ui.dialog.auth.username")+":"), 1, 0);
+        getGridPane().add(new Label(Configuration.getBundle().getString("ui.dialog.auth.username")+":"), 1, 0);
         getGridPane().add(username, 2, 0);
-        getGridPane().add(new Label(Configuration.bundle.getString("ui.dialog.auth.password")+":"), 1, 1);
+        getGridPane().add(new Label(Configuration.getBundle().getString("ui.dialog.auth.password")+":"), 1, 1);
         getGridPane().add(password, 2, 1);
         getGridPane().add(keepConnection, 2, 2);
 
@@ -43,8 +43,8 @@ public class LoginDialog extends BaseDialog<Pair<String, String>> {
         keepConnection.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if(keepConnection.isSelected()){
                 Alert alert = new CustomAlert(Alert.AlertType.WARNING);
-                alert.setTitle(Configuration.bundle.getString("ui.dialog.warning.title"));
-                alert.setContentText(Configuration.bundle.getString("ui.dialog.auth.warning"));
+                alert.setTitle(Configuration.getBundle().getString("ui.dialog.warning.title"));
+                alert.setContentText(Configuration.getBundle().getString("ui.dialog.auth.warning"));
 
                 alert.showAndWait();
             }

@@ -20,12 +20,9 @@ public class License {
         this.code = code;
     }
 
-
-
     public String getLabel() {
         return label;
     }
-
 
     public void setLabel(String label) {
         this.label = label;

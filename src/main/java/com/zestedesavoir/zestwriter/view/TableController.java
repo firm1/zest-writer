@@ -96,7 +96,7 @@ public class TableController {
         tc.setPrefWidth(150);
         TextField txf = new TextField();
         txf.setPrefWidth(150);
-        txf.setPromptText(Configuration.bundle.getString("ui.dialog.table_editor.colon") +
+        txf.setPromptText(Configuration.getBundle().getString("ui.dialog.table_editor.colon") +
                 (tableView.getColumns().size()+1));
         tc.setGraphic(txf);
         tableView.getColumns().addAll(tc);
