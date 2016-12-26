@@ -12,10 +12,7 @@ import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="type", visible=true)
@@ -74,6 +71,7 @@ public class Container extends MetaContent implements ContentNode {
         this._children = children;
     }
 
+    @Override
     public String getFilePath() {
         Path path = Paths.get(getIntroduction().getFilePath());
         path = path.getParent();
@@ -180,6 +178,11 @@ public class Container extends MetaContent implements ContentNode {
             return getFilePath().equals(((Container)obj).getFilePath());
         }
         return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getFilePath());
     }
 
     @Override

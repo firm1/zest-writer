@@ -38,14 +38,14 @@ public final class FlipTable {
             }
         }
 
-        int emptyWidth = 3 * (columns - 1); // Account for column dividers and their spacing.
+        int emptyWd = 3 * (columns - 1); // Account for column dividers and their spacing.
         for (int columnWidth : columnWidths) {
-            emptyWidth += columnWidth;
+            emptyWd += columnWidth;
         }
-        this.emptyWidth = emptyWidth;
+        this.emptyWidth = emptyWd;
 
-        if (emptyWidth < EMPTY.length()) { // Make sure we're wide enough for the empty text.
-            columnWidths[columns - 1] += EMPTY.length() - emptyWidth;
+        if (emptyWd < EMPTY.length()) { // Make sure we're wide enough for the empty text.
+            columnWidths[columns - 1] += EMPTY.length() - emptyWd;
         }
     }
 

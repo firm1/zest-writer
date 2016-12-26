@@ -10,6 +10,9 @@ import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 public class IconFactory {
+    private IconFactory() {
+    }
+
     /**
      * Create icon for whatever, sized for zest writer menu
      * @param type code name of material design icon

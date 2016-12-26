@@ -56,7 +56,7 @@ public class MainApp extends Application{
     private static Logger logger;
     private MenuController menuController;
     private static String[] args;
-    protected static File defaultHome;
+    private static File defaultHome;
 
     public MainApp() {
         super();
@@ -114,7 +114,9 @@ public class MainApp extends Application{
         File dir = new File(logDir.toString());
         File log = new File(logPath.toString());
         if(! dir.exists()) {
-            dir.mkdirs();
+            if(!dir.mkdirs()) {
+                logger.error("Impossible de créer le répertoire "+dir.getAbsolutePath());
+            };
         }
         System.setProperty("zw.logPath", log.getAbsolutePath());
     }
@@ -221,7 +223,7 @@ public class MainApp extends Application{
         });
     }
 
-    public void initRootLayout() {
+    private void initRootLayout() {
         try {
             // Load root layout from fxml file.
             FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Root.fxml"));
@@ -239,7 +241,7 @@ public class MainApp extends Application{
         }
     }
 
-    public void showWriter() {
+    private void showWriter() {
         try {
             FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Index.fxml"));
             AnchorPane writerLayout = loader.load();
@@ -259,7 +261,7 @@ public class MainApp extends Application{
         return menuController;
     }
 
-    public void initConnection(){
+    private void initConnection(){
         if(!config.getAuthentificationUsername().isEmpty() && !config.getAuthentificationPassword().isEmpty()){
             LoginService loginTask = new LoginService(config.getAuthentificationUsername(), config.getAuthentificationPassword());
 
@@ -279,9 +281,7 @@ public class MainApp extends Application{
                 menuController.gethBottomBox().getChildren().clear();
             });
 
-            loginTask.setOnSucceeded(t -> {
-                menuController.getMenuDownload().setDisable(false);
-            });
+            loginTask.setOnSucceeded(t -> menuController.getMenuDownload().setDisable(false));
 
             loginTask.start();
         }
@@ -294,25 +294,19 @@ public class MainApp extends Application{
                  key.append("_").append(codeStr);
             }
         });
-        scene.addEventFilter(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent t) {
-                if(key.length()>0) {
-                    if("_CONTROL_C_L_E_M".equals(key.toString())){
-                     // Create the custom dialog.
-                        Dialog<Void> dialog = new Dialog<>();
-                        dialog.setTitle(Configuration.getBundle().getString("ui.menu.easteregg"));
-                        dialog.setHeaderText(null);
-                        dialog.setContentText(null);
-
-                        dialog.setGraphic(new ImageView(this.getClass().getResource("images/goal.gif").toString()));
-                        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK);
-
-                        dialog.showAndWait();
-                    }
-                    key = new StringBuilder();
+        scene.addEventFilter(KeyEvent.KEY_RELEASED, t -> {
+            if(key.length()>0) {
+                if("_CONTROL_C_L_E_M".equals(key.toString())){
+                 // Create the custom dialog.
+                    Dialog<Void> dialog = new Dialog<>();
+                    dialog.setTitle(Configuration.getBundle().getString("ui.menu.easteregg"));
+                    dialog.setHeaderText(null);
+                    dialog.setContentText(null);
+                    dialog.setGraphic(new ImageView(this.getClass().getResource("images/goal.gif").toString()));
+                    dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK);
+                    dialog.showAndWait();
                 }
-
+                key = new StringBuilder();
             }
         });
     }

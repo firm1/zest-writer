@@ -44,7 +44,7 @@ public class CorrectionService extends Service<String>{
                         return corrector.checkHtmlContentToText(htmlText, ext.getTitle());
                     }
                 };
-                Map<Textual, String> validationResult = (content.doOnTextual(prepareValidationReport));
+                Map<Textual, String> validationResult = content.doOnTextual(prepareValidationReport);
 
                 StringBuilder resultCorrect = new StringBuilder();
                 for (Entry<Textual, String> entry : validationResult.entrySet()) {

@@ -627,7 +627,6 @@ public class MenuController{
 
 
         OptionsDialog optionsController = loader.getController();
-        optionsController.setMainApp(mainApp);
         optionsController.setWindow(dialogStage);
 
         dialogStage.show();

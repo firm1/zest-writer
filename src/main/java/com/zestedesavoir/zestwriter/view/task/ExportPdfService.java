@@ -90,10 +90,7 @@ public class ExportPdfService extends Service<Void>{
                     }
                     updateProgress(max, max);
                     is.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage(),e);
-                    return false;
-                } catch (UnsupportedOperationException e) {
+                } catch (IOException | UnsupportedOperationException e) {
                     logger.error(e.getMessage(),e);
                     return false;
                 }

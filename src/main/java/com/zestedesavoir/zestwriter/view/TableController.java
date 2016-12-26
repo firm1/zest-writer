@@ -75,10 +75,9 @@ public class TableController {
     private void addCol() {
         TableColumn tc = new TableColumn();
         tc.setEditable(true);
-        tc.setCellValueFactory(new Callback<CellDataFeatures<ZRow, String>, ObservableValue<String>>() {
-            public ObservableValue<String> call(CellDataFeatures<ZRow, String> param) {
-                return new SimpleStringProperty(param.getValue().getRow().get(0));
-            }
+        tc.setCellValueFactory(param -> {
+            CellDataFeatures<ZRow, String> dtf = (CellDataFeatures<ZRow, String>) param;
+            return new SimpleStringProperty(dtf.getValue().getRow().get(0));
         });
 
         tc.setCellFactory(TextFieldTableCell.forTableColumn());

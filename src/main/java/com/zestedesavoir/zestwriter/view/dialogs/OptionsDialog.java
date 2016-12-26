@@ -17,9 +17,7 @@ import java.io.File;
 import java.util.Optional;
 
 public class OptionsDialog{
-    private MainApp mainApp;
     private Stage optionsWindow;
-    private Configuration config;
 
     private String optEditorFont;
     private double optEditorFontSize;
@@ -52,19 +50,13 @@ public class OptionsDialog{
     @FXML private TextField optAdvancedPort;
     @FXML private Label workspacepath;
 
-
-    public void setMainApp(MainApp mainApp){
-        this.mainApp = mainApp;
-        this.config = MainApp.getConfig();
-
-        setGeneralOptions();
+    public OptionsDialog() {
         setEditorOptions();
         setDisplayOptions();
-        setShortcutOptions();
         setAuthentificationOptions();
         setAdvancedOptions();
 
-        workspacepath.setText(config.getWorkspacePath());
+        workspacepath.setText(MainApp.getConfig().getWorkspacePath());
     }
 
     public void setWindow(Stage window){
@@ -72,40 +64,40 @@ public class OptionsDialog{
     }
 
     @FXML private void handleSaveButtonAction(){
-        config.setEditorFont(optEditorFont);
-        config.setEditorFontSize(String.valueOf(optEditorFontSize));
-        config.setEditorToolbarView(optEditorToolbarView);
-        config.setEditorLinenoView(optEditorLinenoView);
-        config.setEditorRenderView(optEditorRenderView);
-        config.setEditorSmart(Boolean.toString(optSmartEditor));
+        MainApp.getConfig().setEditorFont(optEditorFont);
+        MainApp.getConfig().setEditorFontSize(String.valueOf(optEditorFontSize));
+        MainApp.getConfig().setEditorToolbarView(optEditorToolbarView);
+        MainApp.getConfig().setEditorLinenoView(optEditorLinenoView);
+        MainApp.getConfig().setEditorRenderView(optEditorRenderView);
+        MainApp.getConfig().setEditorSmart(Boolean.toString(optSmartEditor));
 
-        config.setDisplayTheme(optDisplayTheme.getValue().getFilename());
-        config.setDisplayLang(optDisplayLang.getValue().getLocale().toString());
+        MainApp.getConfig().setDisplayTheme(optDisplayTheme.getValue().getFilename());
+        MainApp.getConfig().setDisplayLang(optDisplayLang.getValue().getLocale().toString());
 
         if(optDisplayWindowMaximizeYes.isSelected())
-            config.setDisplayWindowMaximize("true");
+            MainApp.getConfig().setDisplayWindowMaximize("true");
         else
-            config.setDisplayWindowMaximize("false");
+            MainApp.getConfig().setDisplayWindowMaximize("false");
 
         if(optDisplayWindowDimensionYes.isSelected())
-            config.setDisplayWindowStandardDimension("true");
+            MainApp.getConfig().setDisplayWindowStandardDimension("true");
         else
-            config.setDisplayWindowStandardDimension("false");
+            MainApp.getConfig().setDisplayWindowStandardDimension("false");
 
         if(optDisplayWindowPositionYes.isSelected())
-            config.setDisplayWindowPersonnalPosition("true");
+            MainApp.getConfig().setDisplayWindowPersonnalPosition("true");
         else
-            config.setDisplayWindowPersonnalPosition("false");
+            MainApp.getConfig().setDisplayWindowPersonnalPosition("false");
 
-        config.setAuthentificationUsername(optAuthentificationUsername.getText());
-        config.setAuthentificationPassword(optAuthentificationPassword.getText());
+        MainApp.getConfig().setAuthentificationUsername(optAuthentificationUsername.getText());
+        MainApp.getConfig().setAuthentificationPassword(optAuthentificationPassword.getText());
 
-        config.setAdvancedServerProtocol(optAdvancedProtocol.getValue());
-        config.setAdvancedServerHost(optAdvancedHost.getText());
-        config.setAdvancedServerPort(optAdvancedPort.getText());
+        MainApp.getConfig().setAdvancedServerProtocol(optAdvancedProtocol.getValue());
+        MainApp.getConfig().setAdvancedServerHost(optAdvancedHost.getText());
+        MainApp.getConfig().setAdvancedServerPort(optAdvancedPort.getText());
 
-        config.saveConfFile();
-        config.loadWorkspace();
+        MainApp.getConfig().saveConfFile();
+        MainApp.getConfig().loadWorkspace();
         optionsWindow.close();
     }
 
@@ -145,18 +137,18 @@ public class OptionsDialog{
     @FXML private void handleGeneralBrowseAction(){
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle(Configuration.getBundle().getString("ui.options.workspace"));
-        directoryChooser.setInitialDirectory(mainApp.getDefaultHome());
+        directoryChooser.setInitialDirectory(MainApp.getDefaultHome());
 
         File directory = directoryChooser.showDialog(null);
 
         if(directory != null && directory.exists()){
-            config.setWorkspacePath(directory.getAbsolutePath());
+            MainApp.getConfig().setWorkspacePath(directory.getAbsolutePath());
             workspacepath.setText(directory.getAbsolutePath());
         }
     }
 
     @FXML private void handleEditorFontChoice(){
-        Dialog<Font> fontSelector = new FontSelectorDialog(new Font(config.getEditorFont(), config.getEditorFontsize()));
+        Dialog<Font> fontSelector = new FontSelectorDialog(new Font(MainApp.getConfig().getEditorFont(), MainApp.getConfig().getEditorFontsize()));
         Optional<Font> result = fontSelector.showAndWait();
 
         if(result.isPresent()){
@@ -214,18 +206,15 @@ public class OptionsDialog{
         optSmartEditor = false;
     }
 
-    private void setGeneralOptions(){
-    }
-
     private void setEditorOptions(){
-        optEditorFontButton.setText(config.getEditorFont() + " - " + config.getEditorFontsize());
+        optEditorFontButton.setText(MainApp.getConfig().getEditorFont() + " - " + MainApp.getConfig().getEditorFontsize());
 
-        optEditorFont = config.getEditorFont();
-        optEditorFontSize = config.getEditorFontsize();
-        optEditorToolbarView = config.isEditorToolbarView();
-        optEditorLinenoView = config.isEditorLinenoView();
-        optEditorRenderView = config.isEditorRenderView();
-        optSmartEditor = config.isEditorSmart();
+        optEditorFont = MainApp.getConfig().getEditorFont();
+        optEditorFontSize = MainApp.getConfig().getEditorFontsize();
+        optEditorToolbarView = MainApp.getConfig().isEditorToolbarView();
+        optEditorLinenoView = MainApp.getConfig().isEditorLinenoView();
+        optEditorRenderView = MainApp.getConfig().isEditorRenderView();
+        optSmartEditor = MainApp.getConfig().isEditorSmart();
 
         optEditorToolbarViewYes.setSelected(optEditorToolbarView);
         optEditorToolbarViewNo.setSelected(!optEditorToolbarView);
@@ -256,7 +245,7 @@ public class OptionsDialog{
 
     private void setDisplayOptions(){
         optDisplayTheme.getItems().addAll(Theme.getThemeAvailable());
-        optDisplayTheme.setValue(Theme.getThemeFromFileName(config.getDisplayTheme()));
+        optDisplayTheme.setValue(Theme.getThemeFromFileName(MainApp.getConfig().getDisplayTheme()));
 
         optDisplayTheme.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             Alert alert = new CustomAlert(Alert.AlertType.WARNING);
@@ -269,7 +258,7 @@ public class OptionsDialog{
         });
 
         optDisplayLang.getItems().addAll(Lang.getLangAvailable());
-        optDisplayLang.setValue(Lang.getLangFromCode(config.getDisplayLang()));
+        optDisplayLang.setValue(Lang.getLangFromCode(MainApp.getConfig().getDisplayLang()));
         optDisplayLang.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             Alert alert = new CustomAlert(Alert.AlertType.WARNING);
             alert.setTitle(Configuration.getBundle().getString("ui.dialog.change_lang.title"));
@@ -280,23 +269,23 @@ public class OptionsDialog{
             alert.showAndWait();
         });
 
-        if(config.isDisplayWindowMaximize())
+        if(MainApp.getConfig().isDisplayWindowMaximize())
             optDisplayWindowMaximizeYes.setSelected(true);
         else
             optDisplayWindowMaximizeNo.setSelected(true);
 
-        if(config.isDisplayWindowPersonnalDimension())
+        if(MainApp.getConfig().isDisplayWindowPersonnalDimension())
             optDisplayWindowDimensionYes.setSelected(true);
         else
             optDisplayWindowDimensionNo.setSelected(true);
 
-        if(config.isDisplayWindowPersonnalPosition())
+        if(MainApp.getConfig().isDisplayWindowPersonnalPosition())
             optDisplayWindowPositionYes.setSelected(true);
         else
             optDisplayWindowPositionNo.setSelected(true);
 
 
-        if(config.isDisplayWindowMaximize()){
+        if(MainApp.getConfig().isDisplayWindowMaximize()){
             optDisplayWindowDimensionYes.setDisable(true);
             optDisplayWindowDimensionNo.setDisable(true);
             optDisplayWindowPositionYes.setDisable(true);
@@ -304,29 +293,22 @@ public class OptionsDialog{
         }
     }
 
-    private void setShortcutOptions(){
-
-    }
-
     private void setAuthentificationOptions(){
-        optAuthentificationUsername.setText(config.getAuthentificationUsername());
-        optAuthentificationPassword.setText(config.getAuthentificationPassword());
+        optAuthentificationUsername.setText(MainApp.getConfig().getAuthentificationUsername());
+        optAuthentificationPassword.setText(MainApp.getConfig().getAuthentificationPassword());
     }
 
     private void setAdvancedOptions(){
         optAdvancedProtocol.getItems().addAll("https", "http");
-        optAdvancedProtocol.setValue(config.getAdvancedServerProtocol());
-        optAdvancedHost.setText(config.getAdvancedServerHost());
-        optAdvancedPort.setText(config.getAdvancedServerPort());
+        optAdvancedProtocol.setValue(MainApp.getConfig().getAdvancedServerProtocol());
+        optAdvancedHost.setText(MainApp.getConfig().getAdvancedServerHost());
+        optAdvancedPort.setText(MainApp.getConfig().getAdvancedServerPort());
     }
 
     private void resetOptions(){
-        config.resetAllOptions();
-
-        setGeneralOptions();
+        MainApp.getConfig().resetAllOptions();
         setEditorOptions();
         setDisplayOptions();
-        setShortcutOptions();
         setAuthentificationOptions();
         setAdvancedOptions();
     }

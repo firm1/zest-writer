@@ -19,6 +19,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @JsonIgnoreProperties({"basePath", "filePath", "editable", "countChildrenExtract", "countDescendantContainer" ,"rootContent", "depth", "tutorial", "article"})
 public class Content extends Container implements ContentNode{
@@ -151,5 +152,10 @@ public class Content extends Container implements ContentNode{
             return getFilePath().equals(((Content)obj).getFilePath());
         }
         return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getFilePath());
     }
 }

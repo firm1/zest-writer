@@ -57,25 +57,15 @@ public class ImageInputDialog{
     @FXML private void handleSelectFileAction(){
         if(! zdsUtils.isAuthenticated()){
             Service<Void> loginTask = menuManager.handleLoginButtonAction(null);
+            loginTask.setOnSucceeded(t -> selectAndUploadImage());
+            loginTask.setOnCancelled(t -> {
+                menuManager.gethBottomBox().getChildren().clear();
+                Alert alert = new CustomAlert(AlertType.ERROR);
+                alert.setTitle(Configuration.getBundle().getString("ui.dialog.auth.failed.title"));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.auth.failed.header"));
+                alert.setContentText(Configuration.getBundle().getString("ui.dialog.auth.failed.text"));
 
-            loginTask.stateProperty().addListener((ObservableValue<? extends Worker.State> observableValue, Worker.State oldValue, Worker.State newValue) -> {
-                Alert alert;
-                switch(newValue){
-                    case FAILED:
-                        break;
-                    case CANCELLED:
-                        menuManager.gethBottomBox().getChildren().clear();
-                        alert = new CustomAlert(AlertType.ERROR);
-                        alert.setTitle(Configuration.getBundle().getString("ui.dialog.auth.failed.title"));
-                        alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.auth.failed.header"));
-                        alert.setContentText(Configuration.getBundle().getString("ui.dialog.auth.failed.text"));
-
-                        alert.showAndWait();
-                        break;
-                    case SUCCEEDED:
-                        selectAndUploadImage();
-                        break;
-                }
+                alert.showAndWait();
             });
             loginTask.start();
         }else{
@@ -85,7 +75,7 @@ public class ImageInputDialog{
 
     private void selectAndUploadImage() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(menuManager.getMainApp().getDefaultHome());
+        fileChooser.setInitialDirectory(MainApp.getDefaultHome());
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             UploadImageService uploadImageTask = new UploadImageService(content, selectedFile.getAbsoluteFile());
