@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.zestedesavoir.zestwriter.utils.ZdsHttp.toSlug;
+import static com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory.generateMetadataAttributes;
 
 public class GithubHttp {
     static Logger logger = LoggerFactory.getLogger(GithubHttp.class);
@@ -65,25 +66,6 @@ public class GithubHttp {
         }
         ZipUtil.unpack(new File(zipFilePath), folder);
         return folder;
-    }
-
-    private static void generateMetadataAttributes(String file) {
-        File fileIntro = new File (file, Constant.DEFAULT_INTRODUCTION_FILENAME);
-        File fileConclu = new File (file, Constant.DEFAULT_CONCLUSION_FILENAME);
-        try {
-            if(!fileIntro.exists ()) {
-                if(!fileIntro.createNewFile ()) {
-                    logger.error("Impossible de créer le fichier d'introduction "+fileIntro.getAbsolutePath());
-                }
-            }
-            if(!fileConclu.exists ()) {
-                if(!fileConclu.createNewFile ()) {
-                    logger.error("Impossible de créer le fichier de conclusion "+fileConclu.getAbsolutePath());
-                }
-            }
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-        }
     }
 
     public static Content loadManifest(String folder, String owner, String repo) throws IOException {

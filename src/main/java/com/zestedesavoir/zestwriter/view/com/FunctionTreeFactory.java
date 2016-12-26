@@ -22,6 +22,7 @@ import javafx.util.Pair;
 import org.fxmisc.richtext.StyleClassedTextArea;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -242,4 +243,27 @@ public class FunctionTreeFactory {
         }
         return "Too long";
     }
+
+    public static void generateMetadataAttributes(String file) {
+        performGenerateMetadataAttributes(new File (file, Constant.DEFAULT_INTRODUCTION_FILENAME));
+        performGenerateMetadataAttributes(new File (file, Constant.DEFAULT_CONCLUSION_FILENAME));
+    }
+
+    public static void generateMetadataAttributes(Container container) {
+        performGenerateMetadataAttributes(new File (container.getIntroduction().getFilePath()));
+        performGenerateMetadataAttributes(new File (container.getConclusion().getFilePath()));
+    }
+
+    public static void performGenerateMetadataAttributes(File file) {
+        try {
+            if(!file.exists ()) {
+                if(!file.createNewFile ()) {
+                    MainApp.getLogger().error("Impossible de créer le fichier "+file.getAbsolutePath());
+                }
+            }
+        } catch (IOException e) {
+            MainApp.getLogger().error(e.getMessage(), e);
+        }
+    }
+
 }

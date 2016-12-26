@@ -84,7 +84,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         if(item instanceof Container) {
             addMenu.getItems().add(addMenuItem1);
             addMenu.getItems().add(addMenuItem2);
-            if (!item.canTakeContainer(((Content) index.getSummary().getRoot().getValue()))) {
+            if (!item.canTakeContainer((Content) index.getSummary().getRoot().getValue())) {
                 addMenuItem2.setDisable(true);
             }
             if (!item.canTakeExtract()) {
@@ -148,7 +148,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                     }
                     // delete in logical tree
                     Container parentContainer = (Container) getTreeItem().getParent().getValue();
-                    parentContainer.getChildren().remove(getItem());
+                    parentContainer.getChildren().remove((MetaContent) getItem());
                     // delete in gui tree
                     getTreeItem().getParent().getChildren().remove(getTreeItem());
                     // delete physically file
@@ -204,37 +204,18 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 Container container = new Container("container",
                         slug,
                         result.get(),
-                        (baseSlug + "/" + "introduction.md").substring(baseFilePath.length()+1),
-                        (baseSlug + "/" + "conclusion.md").substring(baseFilePath.length()+1),
+                        (baseSlug + "/" + Constant.DEFAULT_INTRODUCTION_FILENAME).substring(baseFilePath.length()+1),
+                        (baseSlug + "/" + Constant.DEFAULT_CONCLUSION_FILENAME).substring(baseFilePath.length()+1),
                         new ArrayList<>());
                 container.setBasePath(baseFilePath);
                 ((Container)getItem()).getChildren().add(container);
 
                 // create files
                 File dirFile = new File(container.getFilePath());
-                File introFile = new File(container.getIntroduction().getFilePath());
-                File concluFile = new File(container.getConclusion().getFilePath());
+                FunctionTreeFactory.generateMetadataAttributes(container);
 
                 if (!dirFile.exists() && !dirFile.isDirectory()) {
                     dirFile.mkdir();
-                }
-                try {
-                    if (!introFile.exists()) {
-                        if(!introFile.createNewFile()) {
-                            logger.trace("Problème de création du fichier "+introFile.getAbsolutePath());
-                        }
-                    }
-                } catch (IOException e) {
-                    logger.error("Erreur lors de la créeation de "+introFile.getAbsolutePath(), e);
-                }
-                try {
-                    if (!concluFile.exists()) {
-                        if(!concluFile.createNewFile()) {
-                            logger.trace("Problème de création du fichier "+concluFile.getAbsolutePath());
-                        }
-                    }
-                } catch (IOException e) {
-                    logger.error("Erreur lors de la créeation de "+concluFile.getAbsolutePath(), e);
                 }
                 saveManifestJson();
                 index.openContent(content);
@@ -251,7 +232,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
-                if (!result.get().trim().equals("")) {
+                if (!"".equals(result.get().trim())) {
                     for(Map.Entry<Textual, Tab> entry:index.getMainApp().getExtracts().entrySet()) {
                         if(entry.getKey().equals(item1.getValue())) {
                             entry.getValue().setText(result.get());
@@ -304,33 +285,18 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 Container container = new Container("container",
                         slug,
                         result.get(),
-                        (baseSlug + "/" + "introduction.md").substring(baseFilePath.length()+1),
-                        (baseSlug + "/" + "conclusion.md").substring(baseFilePath.length()+1),
+                        (baseSlug + "/" + Constant.DEFAULT_INTRODUCTION_FILENAME).substring(baseFilePath.length()+1),
+                        (baseSlug + "/" + Constant.DEFAULT_CONCLUSION_FILENAME).substring(baseFilePath.length()+1),
                         new ArrayList<>());
                 container.setBasePath(baseFilePath);
                 ((Container)getItem()).getChildren().add(container);
 
                 // create files
                 File dirFile = new File(container.getFilePath());
-                File introFile = new File(container.getIntroduction().getFilePath());
-                File concluFile = new File(container.getConclusion().getFilePath());
+                FunctionTreeFactory.generateMetadataAttributes(container);
 
                 if (!dirFile.exists() && !dirFile.isDirectory()) {
                     dirFile.mkdir();
-                }
-                try {
-                    if (!introFile.exists()) {
-                        introFile.createNewFile();
-                    }
-                } catch (IOException e) {
-                    logger.error("Erreur lors de la création de "+introFile.getAbsolutePath(), e);
-                }
-                try {
-                    if (!concluFile.exists()) {
-                        concluFile.createNewFile();
-                    }
-                } catch (IOException e) {
-                    logger.error("Erreur lors de la créeation de "+concluFile.getAbsolutePath(), e);
                 }
 
                 // move physical file to new directory
