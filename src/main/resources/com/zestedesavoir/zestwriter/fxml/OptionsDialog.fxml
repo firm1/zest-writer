@@ -18,7 +18,11 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zestedesavoir.zestwriter.view.dialogs.OptionsDialog">
+<BorderPane prefHeight="400.0"
+            prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/8.0.60"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.zestedesavoir.zestwriter.view.dialogs.OptionsDialog">
    <center>
        <TabPane tabClosingPolicy="UNAVAILABLE">
            <Tab text="%ui.options.general">

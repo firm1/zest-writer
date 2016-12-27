@@ -50,7 +50,7 @@ public class OptionsDialog{
     @FXML private TextField optAdvancedPort;
     @FXML private Label workspacepath;
 
-    public OptionsDialog() {
+    @FXML public void initialize() {
         setEditorOptions();
         setDisplayOptions();
         setAuthentificationOptions();
