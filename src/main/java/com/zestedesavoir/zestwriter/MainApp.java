@@ -167,6 +167,10 @@ public class MainApp extends Application{
         return logger;
     }
 
+    public static void setLogger(Logger logger) {
+        MainApp.logger = logger;
+    }
+
     @Override
     public void start(Stage primaryStage) {
         setPrimaryStage(primaryStage);

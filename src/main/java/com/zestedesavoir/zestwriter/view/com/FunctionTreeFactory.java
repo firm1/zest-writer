@@ -89,10 +89,10 @@ public class FunctionTreeFactory {
             Container container = (Container) node.getValue();
             TreeItem<ContentNode> itemIntro = new TreeItem<>((ContentNode) container.getIntroduction());
             node.getChildren().add(itemIntro);
-            for(MetaContent child:container.getChildren()) {
-                TreeItem<ContentNode> itemChild = new TreeItem<>((ContentNode) child);
-                node.getChildren().add(buildChild(itemChild));
-            }
+            container.getChildren().stream()
+                    .map(x -> (ContentNode) x)
+                    .map(y -> new TreeItem<>(y))
+                    .forEach(x -> node.getChildren().add(buildChild(x)));
             TreeItem<ContentNode> itemConclu = new TreeItem<>((ContentNode) container.getConclusion());
             node.getChildren().add(itemConclu);
         }
@@ -153,15 +153,18 @@ public class FunctionTreeFactory {
         if(meta.equals(c.getIntroduction()) || meta.equals(c.getConclusion())) {
             return c;
         } else {
-            for(MetaContent ch:c.getChildren()) {
-                if(ch instanceof Container) {
-                    Container result = getContainerOfMetaAttribute((Container) ch, meta);
-                    if(result != null) {
-                        return result;
-                    }
-                }
+            Optional<Container> optContainer = c.getChildren()
+                    .stream()
+                    .filter(x -> x instanceof Container)
+                    .map(x -> (Container) x)
+                    .map(x -> getContainerOfMetaAttribute(x, meta))
+                    .filter(x -> x != null)
+                    .findFirst();
+            if(optContainer.isPresent()) {
+                return optContainer.get();
+            } else {
+                return null;
             }
-            return null;
         }
     }
 
@@ -222,6 +225,14 @@ public class FunctionTreeFactory {
         dialogStage.show();
     }
 
+    private static StringBuilder getLogarithmTime(StringBuilder sb, int value, String label) {
+        sb.append(" ").append(value).append(" ");
+        sb.append(label);
+        if (value > 1) {
+            sb.append("s");
+        }
+        return sb;
+    }
     public static String getNumberOfTextualReadMinutes(String text) {
         Double mins = Readability.getNumberOfReadMinutes(text);
         int[] steps = new int[]{1, 2, 5, 10, 15, 20, 30, 40, 60, 90, 120};
@@ -235,18 +246,9 @@ public class FunctionTreeFactory {
                 }
 
                 if (step < 60) {
-                    sb.append(" ").append(step).append(" ");
-                    sb.append(Configuration.getBundle().getString("ui.label.time.minute"));
-                    if (step > 1) {
-                        sb.append("s");
-                    }
+                    sb.append(getLogarithmTime(sb, step, Configuration.getBundle().getString("ui.label.time.minute")));
                 } else {
-                    int value = step / 60;
-                    sb.append(" ").append(value).append(" ");
-                    sb.append(Configuration.getBundle().getString("ui.label.time.hour"));
-                    if (value > 1) {
-                        sb.append("s");
-                    }
+                    sb.append(getLogarithmTime(sb, step / 60, Configuration.getBundle().getString("ui.label.time.hour")));
                 }
                 return sb.toString();
             }
@@ -269,6 +271,8 @@ public class FunctionTreeFactory {
             if(!file.exists ()) {
                 if(!file.createNewFile ()) {
                     MainApp.getLogger().error("Impossible de créer le fichier "+file.getAbsolutePath());
+                } else {
+                    MainApp.getLogger().info("Le fichier "+file.getAbsolutePath()+ " a été crée avec succès");
                 }
             }
         } catch (IOException e) {

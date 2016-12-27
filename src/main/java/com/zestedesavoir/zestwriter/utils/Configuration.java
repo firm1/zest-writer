@@ -41,8 +41,11 @@ public class Configuration {
         String confDirPath = homeDir + File.separator + "." + appName;
         File confDir = new File(confDirPath);
         if(!confDir.exists()){
-            if(!confDir.mkdir())
-                logger.error("Le fichier de configuration n'a pas pu être crée");
+            if(!confDir.mkdir()) {
+                logger.error("Le répertoire de configuration n'a pas pu être crée");
+            } else {
+                logger.info("Le répertoire de configuration a été crée avec succès");
+            }
         }
 
         initConf(confDirPath);

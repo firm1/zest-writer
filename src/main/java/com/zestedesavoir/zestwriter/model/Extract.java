@@ -67,14 +67,9 @@ public class Extract extends MetaContent implements Textual, ContentNode{
             return false;
         }
         if(receiver instanceof Container) {
-            if(((Container)receiver).getCountDescendantContainer() > 0 || receiver.getFilePath().equals(getFilePath())) {
-                return false;
-            }
-        }
-        if(receiver instanceof MetaAttribute) {
-            if("conclusion".equalsIgnoreCase(receiver.getTitle())) {
-                return false;
-            }
+            return ((Container)receiver).getCountDescendantContainer() == 0;
+        } else if(receiver instanceof MetaAttribute) {
+            return !"conclusion".equalsIgnoreCase(receiver.getTitle());
         }
         return true;
     }

@@ -64,10 +64,8 @@ public class GoogleLoginDialog extends CustomDialog<Pair<String, String>> {
         NodeList childNodes = el.getChildNodes();
         if("DIV".equals(el.getNodeName())){
             String attr = el.getAttribute("class");
-            if(attr != null) {
-                if(attr.contains("my-account-dropdown")) {
-                    return el;
-                }
+            if(attr != null && attr.contains("my-account-dropdown")) {
+                return el;
             }
         }
         for(int i=0; i<childNodes.getLength(); i++){

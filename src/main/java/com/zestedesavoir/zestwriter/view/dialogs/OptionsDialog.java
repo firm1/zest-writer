@@ -110,10 +110,8 @@ public class OptionsDialog{
 
         Optional<ButtonType> result = alert.showAndWait();
 
-        if(result.isPresent()){
-            if(result.get() == ButtonType.OK){
-                optionsWindow.close();
-            }
+        if(result.isPresent() && result.get() == ButtonType.OK){
+            optionsWindow.close();
         }
     }
 
@@ -127,10 +125,8 @@ public class OptionsDialog{
 
         Optional<ButtonType> result = alert.showAndWait();
 
-        if(result.isPresent()){
-            if(result.get().getButtonData() == ButtonBar.ButtonData.YES){
-                resetOptions();
-            }
+        if(result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.YES){
+            resetOptions();
         }
     }
 

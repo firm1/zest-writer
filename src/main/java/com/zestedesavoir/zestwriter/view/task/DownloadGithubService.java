@@ -54,6 +54,8 @@ public class DownloadGithubService extends Service<Content>{
                             mapper.writerWithDefaultPrettyPrinter ().writeValue (manifest, c);
                             updateMessage (Configuration.getBundle().getString("ui.dialog.download.github.message.done"));
                             return c;
+                        } else {
+                            logger.error("Problème de decompression de l'archive téléchargée");
                         }
                     }
                 }
