@@ -41,6 +41,9 @@ public final class FlipTable {
 
     /**
      * Create a new table with the specified headers and row data.
+     * @param headers tab of headers on two dimensions
+     * @param data tab of data on two dimensions
+     * @return table on ascii
      */
     public static String of(String[] headers, String[][] data) {
         if (headers == null) {
@@ -62,7 +65,7 @@ public final class FlipTable {
         printData(builder, headers);
         if (data.length == 0) {
             printDivider(builder, "+=+=+");
-            builder.append('|').append(pad(emptyWidth, EMPTY)).append("|\n");
+            builder.append("|").append(pad(emptyWidth, EMPTY)).append("|\n");
             printDivider(builder, "+===+");
         } else {
             for (int row = 0; row < data.length; row++) {

@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public class Markdown {
     private String htmlTemplate;
     private static Logger logger;
-    private final static String CONTENT_KEYWORD = "<!--content-->";
+    private static final String CONTENT_KEYWORD = "<!--content-->";
 
     public Markdown() {
         logger = LoggerFactory.getLogger(Markdown.class);

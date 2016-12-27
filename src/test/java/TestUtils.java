@@ -73,4 +73,27 @@ public class TestUtils {
         String res = FlipTable.of(headers, data);
         assertEquals(expected, res);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testFlipTableWithNoData() {
+        String[] headers = {"H1", "H2", "H3"};
+        String[] emptyHeaders = {};
+        String[][] data = {};
+        String expected = "+----+----+----+\n"
+                        +"| H1 | H2 | H3 |\n"
+                        +"+====+====+====+\n"
+                        +"| (empty)      |\n"
+                        +"+==============+\n";
+        String res = FlipTable.of(headers, data);
+        assertEquals(expected, res);
+        FlipTable.of(emptyHeaders, data);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testFlipTableNullValues() {
+        String[] headers = {"H1", "H2", "H3"};
+        String[][] data = {};
+        FlipTable.of(headers, null);
+        FlipTable.of(null, data);
+    }
 }
