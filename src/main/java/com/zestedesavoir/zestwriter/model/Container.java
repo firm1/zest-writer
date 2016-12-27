@@ -152,12 +152,12 @@ public class Container extends MetaContent implements ContentNode {
     }
 
     @Override
-    public boolean isMoveableIn(ContentNode receiver, Content root) {
+    public boolean isMovableIn(ContentNode receiver, Content root) {
         if(receiver instanceof MetaAttribute) {
             if ("conclusion".equalsIgnoreCase(receiver.getTitle())) {
                 return false;
             } else {
-                return isMoveableIn(((MetaAttribute) receiver).getParent(), root);
+                return isMovableIn(((MetaAttribute) receiver).getParent(), root);
             }
         }
         if(receiver instanceof Container) {

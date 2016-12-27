@@ -17,11 +17,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MdCheatSheetDialog {
-    private final static String CHEAT_SHEET_LOCATION = "assets/static/html/zMdCheatSheet.html";
-    private final static String TITLE_REGEX = "(?m)^<!--(.*)-->$";
-
     @FXML private TabPane cheatSheetTabPane;
     private Logger logger;
+    private final static String CHEAT_SHEET_LOCATION = "assets/static/html/zMdCheatSheet.html";
+    private final static String TITLE_REGEX = "(?m)^<!--(.*)-->$";
 
     public MdCheatSheetDialog() {
         logger = LoggerFactory.getLogger(getClass ());

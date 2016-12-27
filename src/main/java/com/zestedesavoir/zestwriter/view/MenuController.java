@@ -163,7 +163,7 @@ public class MenuController{
     @FXML private void handleFleshButtonAction(ActionEvent event){
         Function<Textual, Double> calFlesh = (Textual ch) -> {
             String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
-            String plainText = Corrector.HtmlToTextWithoutCode(htmlText);
+            String plainText = Corrector.htmlToTextWithoutCode(htmlText);
             if("".equals(plainText.trim())){
                 return 100.0;
             }else{
@@ -180,7 +180,7 @@ public class MenuController{
     @FXML private void handleGunningButtonAction(ActionEvent event){
         Function<Textual, Double> calGuning = (Textual ch) -> {
             String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
-            String plainText = Corrector.HtmlToTextWithoutCode(htmlText);
+            String plainText = Corrector.htmlToTextWithoutCode(htmlText);
             if("".equals(plainText.trim())){
                 return 100.0;
             }else{
@@ -726,8 +726,8 @@ public class MenuController{
                         if(versionOnline == null) {
                             throw new IOException();
                         } else {
-                            String[] locale_tab = current.split(".");
-                            for(String s:locale_tab) {
+                            String[] localeTab = current.split(".");
+                            for(String s:localeTab) {
                                 if(!StringUtils.isNumeric(s)) {
                                     return true;
                                 }

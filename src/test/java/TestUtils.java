@@ -47,7 +47,7 @@ public class TestUtils {
                     +"</pre></div>"
                     +"</td></tr></tbody></table>";
         String expected_text = "En java on utilise  de cette façon :";
-        String res = Corrector.HtmlToTextWithoutCode(text);
+        String res = Corrector.htmlToTextWithoutCode(text);
         assertEquals(expected_text, res.trim());
 
         Corrector corrector = new Corrector();

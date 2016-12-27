@@ -11,12 +11,12 @@
               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
               AnchorPane.topAnchor="0.0">
       <AnchorPane fx:id="treePane" SplitPane.resizableWithParent="false">
-         <TreeView fx:id="Summary" editable="true" prefHeight="400.0" prefWidth="380.0"
+         <TreeView fx:id="summary" editable="true" prefHeight="400.0" prefWidth="380.0"
                    AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
                    AnchorPane.topAnchor="0"/>
       </AnchorPane>
       <AnchorPane>
-         <TabPane fx:id="EditorList" minWidth="400.0" prefHeight="410.0" prefWidth="422.0"
+         <TabPane fx:id="editorList" minWidth="400.0" prefHeight="410.0" prefWidth="422.0"
                   tabClosingPolicy="ALL_TABS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Tab fx:id="Home" closable="false" text="%ui.home">

@@ -6,8 +6,6 @@ import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +34,9 @@ public class UploadImageService extends Service<String>{
             protected String call() throws Exception {
                 if (MainApp.getZdsutils().isAuthenticated()) {
                     MetadataContent find = getContentFromSlug();
-                    if(find == null ) throw new IOException();
+                    if(find == null ) {
+                        throw new IOException();
+                    }
 
                     String targetId = find.getId();
                     String targetSlug = find.getSlug();

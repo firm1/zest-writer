@@ -2,17 +2,7 @@ package com.zestedesavoir.zestwriter.utils;
 
 public final class FlipTable {
     private static final String EMPTY = "(empty)";
-
-    /**
-     * Create a new table with the specified headers and row data.
-     */
-    public static String of(String[] headers, String[][] data) {
-        if (headers == null) throw new NullPointerException("headers == null");
-        if (headers.length == 0) throw new IllegalArgumentException("Headers must not be empty.");
-        if (data == null) throw new NullPointerException("data == null");
-        return new FlipTable(headers, data).toString();
-    }
-
+    private static final String LINE_NORMAL = "+-+-+";
     private final String[] headers;
     private final String[][] data;
     private final int columns;
@@ -49,10 +39,26 @@ public final class FlipTable {
         }
     }
 
+    /**
+     * Create a new table with the specified headers and row data.
+     */
+    public static String of(String[] headers, String[][] data) {
+        if (headers == null) {
+            throw new NullPointerException("headers == null");
+        }
+        if (headers.length == 0) {
+            throw new IllegalArgumentException("Headers must not be empty.");
+        }
+        if (data == null) {
+            throw new NullPointerException("data == null");
+        }
+        return new FlipTable(headers, data).toString();
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        printDivider(builder, "+-+-+");
+        printDivider(builder, LINE_NORMAL);
         printData(builder, headers);
         if (data.length == 0) {
             printDivider(builder, "+=+=+");
@@ -60,10 +66,10 @@ public final class FlipTable {
             printDivider(builder, "+===+");
         } else {
             for (int row = 0; row < data.length; row++) {
-                printDivider(builder, row == 0 ? "+=+=+" : "+-+-+");
+                printDivider(builder, row == 0 ? "+=+=+" : LINE_NORMAL);
                 printData(builder, data[row]);
             }
-            printDivider(builder, "+-+-+");
+            printDivider(builder, LINE_NORMAL);
         }
         return builder.toString();
     }

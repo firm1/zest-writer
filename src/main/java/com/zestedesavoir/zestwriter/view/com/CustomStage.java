@@ -1,6 +1,5 @@
 package com.zestedesavoir.zestwriter.view.com;
 
-import com.kenai.jffi.Main;
 import com.zestedesavoir.zestwriter.MainApp;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

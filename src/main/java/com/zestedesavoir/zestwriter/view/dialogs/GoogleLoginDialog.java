@@ -2,7 +2,6 @@ package com.zestedesavoir.zestwriter.view.dialogs;
 
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.com.CustomDialog;
 import javafx.concurrent.Worker.State;
 import javafx.scene.control.ButtonType;
@@ -75,7 +74,9 @@ public class GoogleLoginDialog extends CustomDialog<Pair<String, String>> {
             org.w3c.dom.Node item = childNodes.item(i);
             if(item instanceof Element){
                 Element res = getLogBox((Element)item);
-                if(res != null) return res;
+                if(res != null) {
+                    return res;
+                }
             }
         }
         return null;

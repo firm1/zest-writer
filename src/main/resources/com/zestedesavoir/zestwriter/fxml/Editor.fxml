@@ -12,10 +12,10 @@
 <SplitPane fx:id="splitPane" dividerPositions="0.5" prefHeight="633.0" prefWidth="773.0"
            xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.zestedesavoir.zestwriter.view.MdConvertController">
-    <BorderPane fx:id="BoxEditor">
+    <BorderPane fx:id="boxEditor">
         <top>
             <ToolBar fx:id="editorToolBar" BorderPane.alignment="CENTER">
-                <Button fx:id="SaveButton" mnemonicParsing="false" onAction="#handleSaveButtonAction">
+                <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonAction">
                     <tooltip>
                         <Tooltip text="%ui.editor.button.save"/>
                     </tooltip>
@@ -170,7 +170,7 @@
 
         </center>
     </BorderPane>
-    <BorderPane fx:id="BoxRender" prefHeight="200.0" prefWidth="200.0">
+    <BorderPane fx:id="boxRender" prefHeight="200.0" prefWidth="200.0">
         <center>
           <WebView fx:id="renderView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER"/>
         </center>

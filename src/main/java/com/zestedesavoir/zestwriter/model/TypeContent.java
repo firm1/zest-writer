@@ -1,5 +1,7 @@
 package com.zestedesavoir.zestwriter.model;
 
+import java.util.Objects;
+
 public class TypeContent {
     private String code;
     private String label;
@@ -35,7 +37,7 @@ public class TypeContent {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return Objects.hash(code, label);
     }
 
 }

@@ -74,18 +74,18 @@ public class MdConvertController {
     private BooleanPropertyBase isSaved = new SimpleBooleanProperty(true);
 
     @FXML private WebView renderView;
-    @FXML private Button SaveButton;
+    @FXML private Button saveButton;
     @FXML private SplitPane splitPane;
-    @FXML private BorderPane BoxEditor;
-    @FXML private BorderPane BoxRender;
-    private CustomStyledClassedTextArea SourceText;
+    @FXML private BorderPane boxEditor;
+    @FXML private BorderPane boxRender;
+    private CustomStyledClassedTextArea sourceText;
     public static final Pattern recognizeNumber = Pattern.compile("^(\\s*)([\\d][\\.]) (\\s*)(.*)");
     public static final Pattern recognizeBullet = Pattern.compile("^(\\s*)([*|-]) (\\s*)(.*)");
 
     public MdConvertController() {
         super();
         logger = LoggerFactory.getLogger(MdConvertController.class);
-        SourceText = new CustomStyledClassedTextArea();
+        sourceText = new CustomStyledClassedTextArea();
     }
 
     public MdTextController getMdBox() {
@@ -93,7 +93,7 @@ public class MdConvertController {
     }
 
     public StyleClassedTextArea getSourceText(){
-        return SourceText;
+        return sourceText;
     }
 
     public void setMdBox(MdTextController mdBox, Textual extract, Tab tab) throws IOException {
@@ -106,62 +106,62 @@ public class MdConvertController {
         loader.load();
 
         if(!MainApp.getConfig().isEditorToolbarView()){
-            BoxEditor.setTop(null);
-            BoxRender.setTop(null);
+            boxEditor.setTop(null);
+            boxRender.setTop(null);
         }
 
-        BoxEditor.setCenter(SourceText);
-        SourceText.setStyle("-fx-font-family: \"" + MainApp.getConfig().getEditorFont() + "\";-fx-font-size: " + MainApp.getConfig().getEditorFontsize() + ";");
+        boxEditor.setCenter(sourceText);
+        sourceText.setStyle("-fx-font-family: \"" + MainApp.getConfig().getEditorFont() + "\";-fx-font-size: " + MainApp.getConfig().getEditorFontsize() + ";");
         if(MainApp.getConfig().isEditorRenderView()) {
             initRenderTask();
         } else {
             splitPane.getItems().remove(1);
         }
         Platform.runLater(() -> {
-            SourceText.replaceText(extract.getMarkdown());
+            sourceText.replaceText(extract.getMarkdown());
             initStats();
-            SourceText.getUndoManager().forgetHistory();
-            SourceText.textProperty().addListener((observableValue, s, s2) -> {
+            sourceText.getUndoManager().forgetHistory();
+            sourceText.textProperty().addListener((observableValue, s, s2) -> {
                 tab.setText("! " + extract.getTitle());
                 this.isSaved.setValue(false);
-                SourceText.getUndoManager().mark();
+                sourceText.getUndoManager().mark();
                 updateRender();
             });
             updateRender();
         });
 
-        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+        EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                 EventHandlerHelper.on(keyPressed(KeyCode.S, SHORTCUT_DOWN)).act( ev -> handleSaveButtonAction(null)).create());
-        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+        EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                 EventHandlerHelper.on(keyPressed(KeyCode.G, SHORTCUT_DOWN)).act( ev -> handleBoldButtonAction(null)).create());
-        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+        EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                 EventHandlerHelper.on(keyPressed(KeyCode.I, SHORTCUT_DOWN)).act( ev -> handleItalicButtonAction(null)).create());
-        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+        EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                 EventHandlerHelper.on(keyPressed(KeyCode.B, SHORTCUT_DOWN)).act( ev -> handleBarredButtonAction(null)).create());
-        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+        EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                 EventHandlerHelper.on(keyPressed(KeyCode.K, SHORTCUT_DOWN)).act( ev -> handleTouchButtonAction(null)).create());
-        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+        EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                 EventHandlerHelper.on(keyPressed(KeyCode.PLUS, SHORTCUT_DOWN)).act( ev -> handleExpButtonAction(null)).create());
-        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+        EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                 EventHandlerHelper.on(keyPressed(KeyCode.EQUALS, SHORTCUT_DOWN)).act( ev -> handleIndButtonAction(null)).create());
-        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+        EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                 EventHandlerHelper.on(keyPressed(KeyCode.E, SHORTCUT_DOWN)).act( ev -> handleCenterButtonAction(null)).create());
-        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+        EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                 EventHandlerHelper.on(keyPressed(KeyCode.D, SHIFT_DOWN, SHORTCUT_DOWN)).act( ev -> handleRightButtonAction(null)).create());
-        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+        EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                 EventHandlerHelper.on(keyPressed(KeyCode.SPACE, SHORTCUT_DOWN)).act( ev -> handleUnbreakableAction(null)).create());
-        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+        EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                 EventHandlerHelper.on(keyPressed(KeyCode.L, SHORTCUT_DOWN)).act( ev -> handleGoToLineAction()).create());
-        EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
+        EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                 EventHandlerHelper.on(keyPressed(KeyCode.F, SHORTCUT_DOWN)).act( ev -> handleFindReplaceDialog()).create());
         if(FunctionTreeFactory.isMacOs()) {
-            EventHandlerHelper.install(SourceText.onKeyPressedProperty(),
-                    EventHandlerHelper.on(keyPressed(KeyCode.Q, SHORTCUT_DOWN)).act( ev -> SourceText.selectAll()).create());
+            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
+                    EventHandlerHelper.on(keyPressed(KeyCode.Q, SHORTCUT_DOWN)).act( ev -> sourceText.selectAll()).create());
         }
         if(MainApp.getConfig().isEditorSmart()) {
-            EventHandlerHelper.install(SourceText.onKeyReleasedProperty(),
+            EventHandlerHelper.install(sourceText.onKeyReleasedProperty(),
                     EventHandlerHelper.on(keyReleased(KeyCode.TAB)).act(ev -> handleSmartTab()).create());
-            EventHandlerHelper.install(SourceText.onKeyReleasedProperty(),
+            EventHandlerHelper.install(sourceText.onKeyReleasedProperty(),
                     EventHandlerHelper.on(keyReleased(KeyCode.ENTER)).act(ev -> handleSmartEnter()).create());
         }
 
@@ -172,62 +172,62 @@ public class MdConvertController {
             }
             if(tab.isSelected()) {
                 Platform.runLater(() -> {
-                    SourceText.requestFocus();
+                    sourceText.requestFocus();
                     initStats();
                 });
             }
         });
 
-        Platform.runLater(SourceText::requestFocus);
+        Platform.runLater(sourceText::requestFocus);
     }
 
 
     private void handleSmartEnter() {
-        int precLine = SourceText.getCurrentParagraph() - 1;
+        int precLine = sourceText.getCurrentParagraph() - 1;
         if(precLine >= 0) {
-            String line = SourceText.getParagraph(precLine).toString();
+            String line = sourceText.getParagraph(precLine).toString();
             Matcher matcher = recognizeBullet.matcher(line);
-            //TODO : find how combine recognize bullet and number together for breaking following if
+            //TODO: find how combine recognize bullet and number together for breaking following if
             if(!matcher.matches()) {
                 matcher = recognizeNumber.matcher(line);
             }
             if(matcher.matches()) {
                 if("".equals(matcher.group(4).trim())) {
-                    int positionCaret = SourceText.getCaretPosition();
-                    SourceText.deleteText(positionCaret-line.length() - 1, positionCaret);
+                    int positionCaret = sourceText.getCaretPosition();
+                    sourceText.deleteText(positionCaret-line.length() - 1, positionCaret);
                 } else {
-                    SourceText.replaceSelection(matcher.group(1)+matcher.group(2)+" ");
+                    sourceText.replaceSelection(matcher.group(1)+matcher.group(2)+" ");
                 }
             }
         }
     }
 
     private void handleSmartTab() {
-        int caseLine = SourceText.getCurrentParagraph();
+        int caseLine = sourceText.getCurrentParagraph();
         if(caseLine >= 0) {
-            String line = SourceText.getParagraph(caseLine).toString();
+            String line = sourceText.getParagraph(caseLine).toString();
             Matcher matcher = recognizeBullet.matcher(line);
-            //TODO : find how combine recognize bullet and number together for breaking following if
+            //TODO: find how combine recognize bullet and number together for breaking following if
             if(!matcher.matches()) {
                 matcher = recognizeNumber.matcher(line);
             }
             if(matcher.matches()) {
-                int positionCaret = SourceText.getCaretPosition();
+                int positionCaret = sourceText.getCaretPosition();
                 int delta = matcher.group(1).length() + matcher.group(2).length() + matcher.group(3).length() + 1;
-                SourceText.replaceText(positionCaret-delta, positionCaret, "    "+matcher.group(2)+" "+matcher.group(4));
+                sourceText.replaceText(positionCaret-delta, positionCaret, "    "+matcher.group(2)+" "+matcher.group(4));
             }
         }
     }
 
 
     @FXML private void initialize() {
-        SourceText.getStyleClass().add("markdown-editor");
-        SourceText.getStylesheets().add(MainApp.class.getResource("css/editor.css").toExternalForm());
+        sourceText.getStyleClass().add("markdown-editor");
+        sourceText.getStylesheets().add(MainApp.class.getResource("css/editor.css").toExternalForm());
 
         if(MainApp.getConfig().isEditorLinenoView())
-            SourceText.setParagraphGraphicFactory(LineNumberFactory.get(SourceText));
+            sourceText.setParagraphGraphicFactory(LineNumberFactory.get(sourceText));
 
-        SaveButton.disableProperty().bind(isSaved);
+        saveButton.disableProperty().bind(isSaved);
     }
 
     /*
@@ -235,12 +235,12 @@ public class MdConvertController {
      */
 
     @FXML public void handleSaveButtonAction(ActionEvent event) {
-        extract.setMarkdown(SourceText.getText());
+        extract.setMarkdown(sourceText.getText());
         extract.save();
         tab.setText(extract.getTitle());
         this.isSaved.setValue(true);
 
-        SourceText.requestFocus();
+        sourceText.requestFocus();
     }
 
     @FXML private void handleBoldButtonAction(ActionEvent event) {
@@ -282,51 +282,51 @@ public class MdConvertController {
 
         ImageInputDialog imageController = loader.getController();
         if(!mainApp.getContents().isEmpty()) {
-            imageController.setSourceText(SourceText, MainApp.getZdsutils(), mainApp.getMenuController(), mainApp.getContents().get(0));
+            imageController.setSourceText(sourceText, MainApp.getZdsutils(), mainApp.getMenuController(), mainApp.getContents().get(0));
         } else {
-            imageController.setSourceText(SourceText, MainApp.getZdsutils(), mainApp.getMenuController(), null);
+            imageController.setSourceText(sourceText, MainApp.getZdsutils(), mainApp.getMenuController(), null);
         }
         imageController.setStage(dialogStage);
 
         dialogStage.show();
     }
     @FXML private void handleBulletButtonAction(ActionEvent event) {
-        if(SourceText.getSelectedText().isEmpty()){
-            SourceText.replaceText(SourceText.getSelection(), "- ");
+        if(sourceText.getSelectedText().isEmpty()){
+            sourceText.replaceText(sourceText.getSelection(), "- ");
         }else{
             StringBuilder sb = new StringBuilder();
-            String[] lines = SourceText.getSelectedText().split("\n");
+            String[] lines = sourceText.getSelectedText().split("\n");
             for(String line : lines){
                 sb.append("- ").append(line).append("\n");
             }
 
-            SourceText.replaceText(SourceText.getSelection(), sb.toString());
+            sourceText.replaceText(sourceText.getSelection(), sb.toString());
         }
 
-        SourceText.requestFocus();
+        sourceText.requestFocus();
     }
 
     @FXML private void handleNumberedButtonAction(ActionEvent event) {
-        if(SourceText.getSelectedText().isEmpty()){
-            SourceText.replaceText(SourceText.getSelection(), "1. ");
+        if(sourceText.getSelectedText().isEmpty()){
+            sourceText.replaceText(sourceText.getSelection(), "1. ");
         }else{
             StringBuilder sb = new StringBuilder();
-            String[] lines = SourceText.getSelectedText().split("\n");
+            String[] lines = sourceText.getSelectedText().split("\n");
             int i = 1;
             for(String line : lines){
                 sb.append(i).append(". ").append(line).append("\n");
                 i++;
             }
 
-            SourceText.replaceText(SourceText.getSelection(), sb.toString());
+            sourceText.replaceText(sourceText.getSelection(), sb.toString());
         }
 
-        SourceText.requestFocus();
+        sourceText.requestFocus();
     }
 
     @FXML private void handleHeaderButtonAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), "# " + SourceText.getSelectedText());
-        SourceText.requestFocus();
+        sourceText.replaceText(sourceText.getSelection(), "# " + sourceText.getSelectedText());
+        sourceText.requestFocus();
     }
 
     @FXML private void handleQuoteButtonAction(ActionEvent event) {
@@ -335,7 +335,7 @@ public class MdConvertController {
 
     @FXML private void handleBlocButtonAction(ActionEvent event) {
         StringBuilder text = new StringBuilder();
-        String[] lines = SourceText.getSelectedText().split("\n");
+        String[] lines = sourceText.getSelectedText().split("\n");
         for (String line : lines) {
             text.append("| ").append(line).append("\n");
         }
@@ -358,10 +358,10 @@ public class MdConvertController {
         // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
-            SourceText.replaceText(SourceText.getSelection(), "\n[[" + result.get() + "]]\n" + text.toString());
+            sourceText.replaceText(sourceText.getSelection(), "\n[[" + result.get() + "]]\n" + text.toString());
         }
 
-        SourceText.requestFocus();
+        sourceText.requestFocus();
     }
 
     @FXML private void handleTableButtonAction(ActionEvent event) throws IOException {
@@ -403,13 +403,13 @@ public class MdConvertController {
                 }
             }
             String tablestring = FlipTable.of(headers, data);
-            SourceText.replaceText(SourceText.getSelection(), "\n\n" + tablestring + "\n\n");
-            SourceText.requestFocus();
+            sourceText.replaceText(sourceText.getSelection(), "\n\n" + tablestring + "\n\n");
+            sourceText.requestFocus();
         });
     }
 
     @FXML private void handleLinkButtonAction(ActionEvent event) {
-        String link = SourceText.getSelectedText();
+        String link = sourceText.getSelectedText();
 
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new CustomDialog<>();
@@ -453,14 +453,14 @@ public class MdConvertController {
 
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
-        result.ifPresent(tLinkTLabel -> SourceText.replaceText(SourceText.getSelection(),
+        result.ifPresent(tLinkTLabel -> sourceText.replaceText(sourceText.getSelection(),
                 "[" + tLinkTLabel.getValue() + "](" + tLinkTLabel.getKey() + ")"));
 
-        SourceText.requestFocus();
+        sourceText.requestFocus();
     }
 
     @FXML private void handleCodeButtonAction(ActionEvent event) {
-        String code = SourceText.getSelectedText();
+        String code = sourceText.getSelectedText();
         if (code.trim().startsWith("```") && code.trim().endsWith("```")) {
             int start = code.trim().indexOf('\n') + 1;
             int end = code.trim().lastIndexOf('\n');
@@ -509,10 +509,10 @@ public class MdConvertController {
 
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
-        result.ifPresent(tLangageTCode -> SourceText.replaceText(SourceText.getSelection(),
+        result.ifPresent(tLangageTCode -> sourceText.replaceText(sourceText.getSelection(),
                 "\n```" + tLangageTCode.getKey() + "\n" + tLangageTCode.getValue() + "\n```\n"));
 
-        SourceText.requestFocus();
+        sourceText.requestFocus();
     }
 
     /*
@@ -540,7 +540,7 @@ public class MdConvertController {
                 return new Task<String>() {
                     @Override
                     protected String call() throws Exception {
-                        String html = markdownToHtml(SourceText.getText());
+                        String html = markdownToHtml(sourceText.getText());
                         if (html != null) {
                             return MainApp.getMdUtils().addHeaderAndFooter(html);
                         } else {
@@ -582,7 +582,7 @@ public class MdConvertController {
     }
 
     @FXML private void handleValidateButtonAction(ActionEvent event) {
-        String s = StringEscapeUtils.unescapeHtml(markdownToHtml(SourceText.getText()));
+        String s = StringEscapeUtils.unescapeHtml(markdownToHtml(sourceText.getText()));
         if(corrector == null) {
         	corrector = new Corrector();
         }
@@ -614,22 +614,22 @@ public class MdConvertController {
         stage.show();
 
         stage.setOnCloseRequest(e -> {
-            BoxRender.setCenter(renderView);
-            splitPane.getItems().add(1, BoxRender);
+            boxRender.setCenter(renderView);
+            splitPane.getItems().add(1, boxRender);
             splitPane.setDividerPositions(0.5);
         });
     }
 
     @FXML private void handleUnbreakableAction(ActionEvent event) {
-        SourceText.replaceText(SourceText.getSelection(), SourceText.getSelectedText() + "\u00a0");
-        SourceText.requestFocus();
+        sourceText.replaceText(sourceText.getSelection(), sourceText.getSelectedText() + "\u00a0");
+        sourceText.requestFocus();
     }
 
     public void performStats() {
-        Readability readText = new Readability(SourceText.getText());
+        Readability readText = new Readability(sourceText.getText());
         countChars.setValue(Configuration.getBundle().getString("ui.statusbar.stats.chars") + readText.getCharacters());
         countWords.setValue(Configuration.getBundle().getString("ui.statusbar.stats.words") + readText.getWords());
-        countTimes.setValue(FunctionTreeFactory.getNumberOfTextualReadMinutes(SourceText.getText()));
+        countTimes.setValue(FunctionTreeFactory.getNumberOfTextualReadMinutes(sourceText.getText()));
     }
 
     public void initStats() {
@@ -671,7 +671,7 @@ public class MdConvertController {
         dialog.initOwner(MainApp.getPrimaryStage());
 
         Optional<String> result = dialog.showAndWait();
-        result.ifPresent(line -> SourceText.positionCaret(SourceText.position(Integer.parseInt(line)-1, 0).toOffset()));
+        result.ifPresent(line -> sourceText.positionCaret(sourceText.position(Integer.parseInt(line)-1, 0).toOffset()));
     }
 
 
@@ -689,14 +689,14 @@ public class MdConvertController {
     }
 
     private void replaceAction(String defaultString, int defaultOffsetCaret, String beforeString, String afterString) {
-        if(SourceText.getSelectedText().isEmpty()){
-            SourceText.replaceText(SourceText.getSelection(), defaultString);
-            SourceText.moveTo(SourceText.getCaretPosition() - defaultOffsetCaret);
+        if(sourceText.getSelectedText().isEmpty()){
+            sourceText.replaceText(sourceText.getSelection(), defaultString);
+            sourceText.moveTo(sourceText.getCaretPosition() - defaultOffsetCaret);
         }else{
-            SourceText.replaceText(SourceText.getSelection(), beforeString + SourceText.getSelectedText() + afterString);
+            sourceText.replaceText(sourceText.getSelection(), beforeString + sourceText.getSelectedText() + afterString);
         }
 
-        Platform.runLater(SourceText::requestFocus);
+        Platform.runLater(sourceText::requestFocus);
     }
 
     public boolean isSaved() {
@@ -704,7 +704,7 @@ public class MdConvertController {
     }
 
     @FXML private void handleFindReplaceDialog(){
-        FunctionTreeFactory.openFindReplaceDialog(SourceText);
+        FunctionTreeFactory.openFindReplaceDialog(sourceText);
     }
 
     /**

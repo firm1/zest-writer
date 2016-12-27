@@ -1,5 +1,6 @@
 package com.zestedesavoir.zestwriter;
 
+import com.zestedesavoir.zestwriter.model.Constant;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
@@ -17,7 +18,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -58,6 +58,9 @@ public class MainApp extends Application{
     private static String[] args;
     private static File defaultHome;
 
+    /**
+     * Public Main App constructor
+     */
     public MainApp() {
         super();
 
@@ -73,7 +76,7 @@ public class MainApp extends Application{
         if(args.length > 0) {
             config = new Configuration(args[0]);
         } else {
-            File sample = new File(System.getProperty("user.home"));
+            File sample = new File(System.getProperty(Constant.JVM_KEY_USER_HOME));
             if(sample.canWrite()) {
                 defaultHome = sample;
             } else {
@@ -99,16 +102,16 @@ public class MainApp extends Application{
         String appName = "zest-writer";
         String os = System.getProperty("os.name").toLowerCase();
         if(os.contains("nix") || os.contains("nux") || os.contains("aix")) {
-            logPath = Paths.get(System.getProperty("user.home"), ".config", appName, appName+".log");
+            logPath = Paths.get(System.getProperty(Constant.JVM_KEY_USER_HOME), ".config", appName, appName+".log");
             logDir = logPath.getParent();
         } else if(os.contains("win")) {
-            logPath = Paths.get(System.getProperty("user.home"), "AppData", "Local", appName,  appName+".log");
+            logPath = Paths.get(System.getProperty(Constant.JVM_KEY_USER_HOME), "AppData", "Local", appName,  appName+".log");
             logDir = logPath.getParent();
         } else if(os.contains("mac")) {
-            logPath = Paths.get(System.getProperty("user.home"), "Library", "Application Support", appName, appName+".log");
+            logPath = Paths.get(System.getProperty(Constant.JVM_KEY_USER_HOME), "Library", "Application Support", appName, appName+".log");
             logDir = logPath.getParent();
         } else {
-            logPath = Paths.get(System.getProperty("user.home"), appName+".log");
+            logPath = Paths.get(System.getProperty(Constant.JVM_KEY_USER_HOME), appName+".log");
             logDir = logPath.getParent();
         }
         File dir = new File(logDir.toString());
@@ -116,7 +119,7 @@ public class MainApp extends Application{
         if(! dir.exists()) {
             if(!dir.mkdirs()) {
                 logger.error("Impossible de créer le répertoire "+dir.getAbsolutePath());
-            };
+            }
         }
         System.setProperty("zw.logPath", log.getAbsolutePath());
     }

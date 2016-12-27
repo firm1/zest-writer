@@ -31,27 +31,27 @@ public class Corrector {
     }
 
 
-    public static String HtmlToTextWithoutCode(String htmlText) {
+    public static String htmlToTextWithoutCode(String htmlText) {
         AnnotatedTextBuilder builder = new AnnotatedTextBuilder();
         StringTokenizer tokenizer = new StringTokenizer(htmlText, "<>", true);
         boolean inMarkup = false;
-        int CountCode = 0;
-        int CountPre = 0;
+        int countCode = 0;
+        int countPre = 0;
         while (tokenizer.hasMoreTokens()) {
             String part = tokenizer.nextToken();
             if (inMarkup) {
                 switch (part) {
                     case "code":
-                        CountCode++;
+                        countCode++;
                         break;
                     case "pre":
-                        CountPre++;
+                        countPre++;
                         break;
                     case "/code":
-                        CountCode--;
+                        countCode--;
                         break;
                     case "/pre":
-                        CountPre--;
+                        countPre--;
                         break;
                     default:
                         break;
@@ -67,7 +67,7 @@ public class Corrector {
                 if (inMarkup) {
                     builder.addMarkup(part);
                 } else {
-                    if (CountPre == 0 && CountCode == 0) {
+                    if (countPre == 0 && countCode == 0) {
                         builder.addText(part);
                     }
                 }
@@ -88,37 +88,37 @@ public class Corrector {
         AnnotatedTextBuilder builder = new AnnotatedTextBuilder();
         StringTokenizer tokenizer = new StringTokenizer(pseudoXml, "<>", true);
         boolean inMarkup = false;
-        int CountCode = 0;
-        int CountPre = 0;
-        int CountEm = 0;
-        int CountSup = 0;
+        int countCode = 0;
+        int countPre = 0;
+        int countEm = 0;
+        int countSup = 0;
         while (tokenizer.hasMoreTokens()) {
             String part = tokenizer.nextToken();
             if (inMarkup) {
                 switch (part) {
                     case "code":
-                        CountCode++;
+                        countCode++;
                         break;
                     case "pre":
-                        CountPre++;
+                        countPre++;
                         break;
                     case "em":
-                        CountEm++;
+                        countEm++;
                         break;
                     case "sup":
-                        CountSup++;
+                        countSup++;
                         break;
                     case "/code":
-                        CountCode--;
+                        countCode--;
                         break;
                     case "/pre":
-                        CountPre--;
+                        countPre--;
                         break;
                     case "/em":
-                        CountEm--;
+                        countEm--;
                         break;
                     case "/sup":
-                        CountSup--;
+                        countSup--;
                         break;
                     default:
                         break;
@@ -134,9 +134,9 @@ public class Corrector {
                 if (inMarkup) {
                     builder.addMarkup(part);
                 } else {
-                    if (CountPre == 0 && CountSup == 0) { // if we aren't in inline code or not in footnote
+                    if (countPre == 0 && countSup == 0) { // if we aren't in inline code or not in footnote
                         builder.addText(part);
-                        if (CountCode > 0 || CountEm > 0) { // ignore code or italic
+                        if (countCode > 0 || countEm > 0) { // ignore code or italic
                             wordsToIgnore.add(part);
                         }
                     } else {

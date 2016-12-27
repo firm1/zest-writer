@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 public class MetaAttribute implements Textual, ContentNode{
     private String basePath;
@@ -115,7 +116,7 @@ public class MetaAttribute implements Textual, ContentNode{
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return Objects.hash(getFilePath());
     }
 
     @Override

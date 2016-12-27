@@ -9,14 +9,14 @@
       <TableView fx:id="tableView" editable="true" prefHeight="300.0" prefWidth="400.0" BorderPane.alignment="CENTER" />
    </center>
    <right>
-      <Button mnemonicParsing="false" onAction="#HandleAddColumnButtonAction" BorderPane.alignment="TOP_RIGHT">
+      <Button mnemonicParsing="false" onAction="#handleAddColumnButtonAction" BorderPane.alignment="TOP_RIGHT">
         <graphic>
            <MaterialDesignIconView fill="#084561" glyphName="PLUS" size="1.6em" />
         </graphic>
       </Button>
    </right>
    <bottom>
-      <Button mnemonicParsing="false" onAction="#HandleAddRowButtonAction" BorderPane.alignment="BOTTOM_LEFT">
+      <Button mnemonicParsing="false" onAction="#handleAddRowButtonAction" BorderPane.alignment="BOTTOM_LEFT">
         <graphic>
            <MaterialDesignIconView fill="#084561" glyphName="PLUS" size="1.6em" />
         </graphic>

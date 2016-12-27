@@ -29,6 +29,19 @@ public class Content extends Container implements ContentNode{
     private String _type;
 
 
+    /**
+     * Content constructor
+     * @param object container or extract, in this case it's container
+     * @param slug slug of content
+     * @param title title of content
+     * @param introduction filepath of content introduction
+     * @param conclusion filepath of content conclusion
+     * @param children container or extracts children
+     * @param version content version
+     * @param licence content license
+     * @param description description of content
+     * @param type content type (tutorial or article)
+     */
     @JsonCreator
     public Content(@JsonProperty("object") String object, @JsonProperty("slug") String slug, @JsonProperty("title") String title, @JsonProperty("introduction") String introduction, @JsonProperty("conclusion") String conclusion,
             @JsonProperty("children") List<MetaContent> children, @JsonProperty("version") int version, @JsonProperty("licence") String licence, @JsonProperty("description") String description, @JsonProperty("type") String type) {

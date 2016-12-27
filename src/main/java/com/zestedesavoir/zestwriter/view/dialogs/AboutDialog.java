@@ -15,15 +15,15 @@ public class AboutDialog{
         version.setText(MainApp.getConfig().getProps().getProperty("version", Configuration.getBundle().getString("ui.version.label.unknown")));
     }
 
-    @FXML private void HandleGplHyperlinkAction(){
+    @FXML private void handleGplHyperlinkAction(){
         mainApp.getHostServices().showDocument("https://github.com/firm1/zest-writer/blob/master/LICENSE");
     }
 
-    @FXML private void HandleSourceHyperlinkAction(){
+    @FXML private void handleSourceHyperlinkAction(){
         mainApp.getHostServices().showDocument("https://github.com/firm1/zest-writer");
     }
 
-    @FXML private void HandleZdsHyperlinkAction(){
+    @FXML private void handleZdsHyperlinkAction(){
         mainApp.getHostServices().showDocument("https://zestedesavoir.com/");
     }
 }

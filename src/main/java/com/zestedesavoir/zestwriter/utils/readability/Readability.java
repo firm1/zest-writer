@@ -16,6 +16,15 @@ public class Readability {
     Integer syllables;
     Integer characters;
 
+    public Readability(String text) {
+
+        this.sentences = getNumberOfSentences(text);
+        this.complex = getNumberOfComplexWords(text);
+        this.words = getNumberOfWords(text);
+        this.syllables = getNumberOfSyllables(text);
+        this.characters = getNumberOfCharacters(text);
+    }
+
     public Integer getCharacters() {
         return characters;
     }
@@ -30,15 +39,6 @@ public class Readability {
 
     public Integer getWords() {
         return words;
-    }
-
-    public Readability(String text) {
-
-        this.sentences = getNumberOfSentences(text);
-        this.complex = getNumberOfComplexWords(text);
-        this.words = getNumberOfWords(text);
-        this.syllables = getNumberOfSyllables(text);
-        this.characters = getNumberOfCharacters(text);
     }
 
     /**
@@ -79,7 +79,9 @@ public class Readability {
         String[] words  = cleanText.split(" ");
         int complex = 0;
         for (String w : words) {
-            if (isComplex(w)) complex++;
+            if (isComplex(w)) {
+                complex++;
+            }
         }
         return complex;
     }
@@ -89,7 +91,9 @@ public class Readability {
         String[] word  = cleanText.split(" ");
         int words = 0;
         for (String w : word) {
-           if (w.length()>0) words ++;
+           if (w.length()>0) {
+               words ++;
+           }
         }
         return words;
     }
@@ -113,8 +117,12 @@ public class Readability {
 
     private static Integer getNumberOfSentences(String text) {
         int l = se.getSentences(text).length;
-        if (l>0) return l;
-        else if (text.length()>0) return 1;
+        if (l>0) {
+            return l;
+        }
+        else if (text.length()>0) {
+            return 1;
+        }
         else return 0;
     }
 

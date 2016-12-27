@@ -1,9 +1,7 @@
 package com.zestedesavoir.zestwriter.view.task;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
-import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.GithubHttp;
 import javafx.concurrent.Service;

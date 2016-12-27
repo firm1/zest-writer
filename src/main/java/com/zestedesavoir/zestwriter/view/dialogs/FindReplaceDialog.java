@@ -1,14 +1,12 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
 
-import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.fxmisc.richtext.StyleClassedTextArea;
 
@@ -59,7 +57,7 @@ public class FindReplaceDialog{
         selectionOnly.selectedProperty().addListener((observable, oldValue, newValue) -> refreshSearch());
     }
 
-    @FXML private void HandleSearchFieldChange(){
+    @FXML private void handleSearchFieldChange(){
         replaceIndex = 0;
         findIndex = 0;
         resetTextFill();
@@ -71,19 +69,19 @@ public class FindReplaceDialog{
 
     }
 
-    @FXML private void HandleReplaceFieldChange(){
+    @FXML private void handleReplaceFieldChange(){
         replaceIndex = 0;
     }
 
-    @FXML private void HandleSearchButtonAction(){
+    @FXML private void handleSearchButtonAction(){
         findReplace(FindReplaceAction.FIND_ACTION);
     }
 
-    @FXML private void HandleReplaceButtonAction(){
+    @FXML private void handleReplaceButtonAction(){
         findReplace(FindReplaceAction.REPLACE);
     }
 
-    @FXML private void HandleReplaceAllButtonAction(){
+    @FXML private void handleReplaceAllButtonAction(){
         findReplaceAll();
     }
 
@@ -91,7 +89,8 @@ public class FindReplaceDialog{
         List<Pair<Integer, Integer>> matches = new ArrayList<>();
         Matcher m = pattern.matcher(s);
         while(m.find()) {
-            int left=0, right=0;
+            int left=0;
+            int right=0;
             if(m.groupCount() != 0) {
                 left=m.group(1).length();
                 right = m.group(2).length();

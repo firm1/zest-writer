@@ -11,9 +11,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Markdown {
+    private String htmlTemplate;
     private static Logger logger;
     private final static String CONTENT_KEYWORD = "<!--content-->";
-    private String htmlTemplate;
 
     public Markdown() {
         logger = LoggerFactory.getLogger(Markdown.class);
@@ -21,9 +21,8 @@ public class Markdown {
 
     private String getHTMLTemplate() {
         if(htmlTemplate == null) {
-            final String HTML_TEMPLATE_LOCATION = "assets/static/html/template.html";
-
-            InputStream is = MainApp.class.getResourceAsStream(HTML_TEMPLATE_LOCATION);
+            final String htmlTemplateLocation = "assets/static/html/template.html";
+            InputStream is = MainApp.class.getResourceAsStream(htmlTemplateLocation);
 
             String template = "";
             try {

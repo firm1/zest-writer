@@ -41,8 +41,8 @@ public class MdTextController {
     private PythonInterpreter pyconsole;
     private MdConvertController controllerConvert;
     @FXML private VBox contentBox;
-    @FXML private TabPane EditorList;
-    @FXML private TreeView<ContentNode> Summary;
+    @FXML private TabPane editorList;
+    @FXML private TreeView<ContentNode> summary;
     @FXML private SplitPane splitPane;
 
     public MdTextController() {
@@ -55,13 +55,13 @@ public class MdTextController {
             loadConsolePython();
 
         loadFonts();
-        EditorList.getSelectionModel().selectedItemProperty().addListener(
+        editorList.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> mainApp.getMenuController().setIsOnReadingTab(! (newValue.getContent() instanceof SplitPane))
         );
     }
 
     public TabPane getEditorList() {
-        return EditorList;
+        return editorList;
     }
 
     public boolean isPythonStarted() {
@@ -115,7 +115,7 @@ public class MdTextController {
     }
 
     public TreeView<ContentNode> getSummary() {
-        return Summary;
+        return summary;
     }
 
     public MainApp getMainApp() {
@@ -125,8 +125,8 @@ public class MdTextController {
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
 
-        mainApp.getContents().addListener((ListChangeListener<Content>) change -> FunctionTreeFactory.clearContent(mainApp.getExtracts(), EditorList, () -> {
-            Summary.setRoot(null);
+        mainApp.getContents().addListener((ListChangeListener<Content>) change -> FunctionTreeFactory.clearContent(mainApp.getExtracts(), editorList, () -> {
+            summary.setRoot(null);
             mainApp.getContents().forEach(this::openContent);
             return null;
         }));
@@ -194,8 +194,8 @@ public class MdTextController {
      * Close tab on TabPane with fire close request event
      */
     public void closeCurrentTab() {
-        if (EditorList.getTabs().size() > 1) {
-            Tab selectedTab = EditorList.getSelectionModel().getSelectedItem();
+        if (editorList.getTabs().size() > 1) {
+            Tab selectedTab = editorList.getSelectionModel().getSelectedItem();
             Event.fireEvent(selectedTab, new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
         }
     }
@@ -205,25 +205,25 @@ public class MdTextController {
      * @param right if true, then switch on right side, else switch on left side
      */
     public void switchTabTo(boolean right) {
-        int size = EditorList.getTabs().size();
+        int size = editorList.getTabs().size();
 
         if (size > 0) {
-            TabPaneSkin skin = (TabPaneSkin) EditorList.getSkin();
+            TabPaneSkin skin = (TabPaneSkin) editorList.getSkin();
             TabPaneBehavior tabPaneBehavior = skin.getBehavior();
 
-            int selectedIndex = EditorList.getSelectionModel().getSelectedIndex();
+            int selectedIndex = editorList.getSelectionModel().getSelectedIndex();
 
             if (right) {
                 if (selectedIndex < size -1) {
                     tabPaneBehavior.selectNextTab();
                 } else {
-                    tabPaneBehavior.selectTab(EditorList.getTabs().get(0));
+                    tabPaneBehavior.selectTab(editorList.getTabs().get(0));
                 }
             } else {
                 if (selectedIndex > 0) {
                     tabPaneBehavior.selectPreviousTab();
                 } else {
-                    tabPaneBehavior.selectTab(EditorList.getTabs().get(size - 1));
+                    tabPaneBehavior.selectTab(editorList.getTabs().get(size - 1));
                 }
             }
         }
@@ -259,8 +259,8 @@ public class MdTextController {
         Tab tab = new Tab();
         tab.setText(extract.getTitle());
         tab.setContent(writer);
-        EditorList.getTabs().add(tab);
-        EditorList.getSelectionModel().select(tab);
+        editorList.getTabs().add(tab);
+        editorList.getSelectionModel().select(tab);
 
         controllerConvert = loader.getController();
         controllerConvert.setMdBox(this, extract, tab);
@@ -297,15 +297,15 @@ public class MdTextController {
         });
 
         tab.setOnClosed(t -> {
-            EditorList.getTabs().remove(tab);
+            editorList.getTabs().remove(tab);
             mainApp.getExtracts().remove(extract);
             t.consume();
-            if (getSplitPane().getItems().size() <= 1 && EditorList.getTabs().size() == 1) {
+            if (getSplitPane().getItems().size() <= 1 && editorList.getTabs().size() == 1) {
                 controllerConvert.addTreeSummary();
             }
         });
 
-        Summary.getSelectionModel().select(selectItemOnTree(Summary.getRoot(), extract));
+        summary.getSelectionModel().select(selectItemOnTree(summary.getRoot(), extract));
 
         mainApp.getExtracts().put(extract, tab);
         logger.info("Nouvel onglet crée pour "+extract.getTitle());
@@ -324,12 +324,12 @@ public class MdTextController {
         MainApp.getZdsutils().setLocalSlug(content.getSlug());
         TreeItem<ContentNode> rootItem = new TreeItem<>(content);
         rootItem.setExpanded(true);
-        Summary.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        summary.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         rootItem = FunctionTreeFactory.buildChild(rootItem);
-        Summary.setRoot(rootItem);
-        Summary.setOnMouseClicked(mouseEvent -> {
+        summary.setRoot(rootItem);
+        summary.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 2) {
-                TreeItem<ContentNode> item = Summary.getSelectionModel().getSelectedItem();
+                TreeItem<ContentNode> item = summary.getSelectionModel().getSelectedItem();
 
                 if(item.getValue() instanceof Textual) {
                     if (item.getValue().getFilePath() != null) {
@@ -340,7 +340,7 @@ public class MdTextController {
                                 logger.error("Problème lors de la création de l'extrait", e);
                             }
                         } else {
-                            TabPaneSkin skin = (TabPaneSkin) EditorList.getSkin();
+                            TabPaneSkin skin = (TabPaneSkin) editorList.getSkin();
                             TabPaneBehavior tabPaneBehavior = skin.getBehavior();
                             tabPaneBehavior.selectTab(mainApp.getExtracts().get(item.getValue()));
                         }
@@ -348,7 +348,7 @@ public class MdTextController {
                 }
             }
         });
-        Summary.setCellFactory(new Callback<TreeView<ContentNode>, TreeCell<ContentNode>>() {
+        summary.setCellFactory(new Callback<TreeView<ContentNode>, TreeCell<ContentNode>>() {
             TreeItem<ContentNode> dragObject;
 
             @Override
@@ -380,7 +380,7 @@ public class MdTextController {
 
                 treeCell.setOnDragOver(dragEvent -> {
                     if(dragObject != null && treeCell.getItem() != null) {
-                        if (!dragObject.getValue().isMoveableIn(treeCell.getItem(), (Content)Summary.getRoot().getValue()))
+                        if (!dragObject.getValue().isMovableIn(treeCell.getItem(), (Content) summary.getRoot().getValue()))
                         {
                             treeCell.setGraphic(IconFactory.createDeleteIcon());
                         } else {

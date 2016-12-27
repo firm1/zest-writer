@@ -9,9 +9,7 @@ import com.zestedesavoir.zestwriter.view.MenuController;
 import com.zestedesavoir.zestwriter.view.com.CustomAlert;
 import com.zestedesavoir.zestwriter.view.com.CustomStyledClassedTextArea;
 import com.zestedesavoir.zestwriter.view.task.UploadImageService;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Service;
-import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -23,7 +21,7 @@ import javafx.stage.Stage;
 import java.io.File;
 
 public class ImageInputDialog{
-    private CustomStyledClassedTextArea SourceText;
+    private CustomStyledClassedTextArea sourceText;
     private ZdsHttp zdsUtils;
     private MenuController menuManager;
     private Content content;
@@ -32,15 +30,15 @@ public class ImageInputDialog{
     @FXML private TextField link;
     @FXML private TextField title;
 
-    public void setSourceText(CustomStyledClassedTextArea SourceText, ZdsHttp zdsUtils, MenuController menuManager, Content content){
-        this.SourceText = SourceText;
+    public void setSourceText(CustomStyledClassedTextArea sourceText, ZdsHttp zdsUtils, MenuController menuManager, Content content){
+        this.sourceText = sourceText;
         this.zdsUtils = zdsUtils;
         this.menuManager = menuManager;
         this.content = content;
         if(content == null ) {
             selectButton.setDisable(true);
         }
-        title.setText(SourceText.getSelectedText());
+        title.setText(sourceText.getSelectedText());
     }
 
 
@@ -50,7 +48,7 @@ public class ImageInputDialog{
 
 
     @FXML private void handleInsertAction(){
-        SourceText.replaceText(SourceText.getSelection(),"![" + title.getText() + "](" + link.getText() + ")");
+        sourceText.replaceText(sourceText.getSelection(),"![" + title.getText() + "](" + link.getText() + ")");
         stage.close();
     }
 

@@ -4,8 +4,6 @@ import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.GithubHttp;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
-import com.zestedesavoir.zestwriter.view.task.DownloadGithubService;
-import javafx.concurrent.Service;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.http.client.HttpResponseException;
@@ -102,29 +100,29 @@ public class TestModel {
     public void testMoves() {
         loadParts();
         loadChapters();
-        assertEquals("Un chapitre ne peut pas être déplacé dans lui même", chapter11.isMoveableIn(chapter11, content), false);
-        assertEquals("Un chapitre ne peut pas être déplacé dans un conteneur qui a déjà des extraits", chapter11.isMoveableIn(chapter12, content), false);
-        assertEquals("Un chapitre (niveau 3) ne peut pas aller dans un autre chapitre", chapter11.isMoveableIn(chapter12, content), false);
-        assertEquals("Un chapitre (niveau 3) ne peut pas aller dans un autre chapitre", chapter11.isMoveableIn(chapter16, content), false);
-        assertEquals("Le chapitre 1.1 (niveau 3) est déplaceable dans une partie (niveau2)", chapter11.isMoveableIn(part2, content), true);
-        assertEquals("Le chapitre 1.1 est déplaceable dans sa propre partie", chapter11.isMoveableIn(part1, content), true);
-        assertEquals("Le chapitre 1.2 est déplaceable après l'introduction de la partie 1", chapter12.isMoveableIn((MetaAttribute) part1.getIntroduction(), content), true);
-        assertEquals("Le chapitre 1.2 n'est pas déplaceable après la conclusion de la partie 1", chapter12.isMoveableIn((MetaAttribute) part1.getConclusion(), content), false);
-        assertEquals("Le chapitre 1.2 n'est pas déplaceable après l'introduction du chapitre 1.1", chapter12.isMoveableIn((MetaAttribute) chapter11.getIntroduction(), content), false);
-        assertEquals("Le chapitre 1.2 n'est pas déplaceable après la conclusion du chapitre 1.1", chapter12.isMoveableIn((MetaAttribute) chapter11.getConclusion(), content), false);
+        assertEquals("Un chapitre ne peut pas être déplacé dans lui même", chapter11.isMovableIn(chapter11, content), false);
+        assertEquals("Un chapitre ne peut pas être déplacé dans un conteneur qui a déjà des extraits", chapter11.isMovableIn(chapter12, content), false);
+        assertEquals("Un chapitre (niveau 3) ne peut pas aller dans un autre chapitre", chapter11.isMovableIn(chapter12, content), false);
+        assertEquals("Un chapitre (niveau 3) ne peut pas aller dans un autre chapitre", chapter11.isMovableIn(chapter16, content), false);
+        assertEquals("Le chapitre 1.1 (niveau 3) est déplaceable dans une partie (niveau2)", chapter11.isMovableIn(part2, content), true);
+        assertEquals("Le chapitre 1.1 est déplaceable dans sa propre partie", chapter11.isMovableIn(part1, content), true);
+        assertEquals("Le chapitre 1.2 est déplaceable après l'introduction de la partie 1", chapter12.isMovableIn((MetaAttribute) part1.getIntroduction(), content), true);
+        assertEquals("Le chapitre 1.2 n'est pas déplaceable après la conclusion de la partie 1", chapter12.isMovableIn((MetaAttribute) part1.getConclusion(), content), false);
+        assertEquals("Le chapitre 1.2 n'est pas déplaceable après l'introduction du chapitre 1.1", chapter12.isMovableIn((MetaAttribute) chapter11.getIntroduction(), content), false);
+        assertEquals("Le chapitre 1.2 n'est pas déplaceable après la conclusion du chapitre 1.1", chapter12.isMovableIn((MetaAttribute) chapter11.getConclusion(), content), false);
         assertEquals("Un chapitre ne peut pas prendre un autre conteneur", chapter11.canTakeContainer(content), false);
         assertEquals("Un chapitre ne peut pas prendre un autre conteneur", chapter16.canTakeContainer(content), false);
         assertEquals("Une partie peut recevoir un conteneur", part1.canTakeContainer(content), true);
         assertEquals("Un tutoriel peut recevoir un conteneur", content.canTakeContainer(content), true);
-        assertEquals("Un extrait n'est pas déplaceable à la racine dans un big tuto", extract111.isMoveableIn(content, content), false);
-        assertEquals("Un extrait est déplaceable dans un autre chapitre", extract111.isMoveableIn(chapter12, content), true);
-        assertEquals("Un extrait est déplaceable dans le même chapitre", extract111.isMoveableIn(chapter11, content), true);
-        assertEquals("Un extrait est déplaceable après un extrait du même chapitre", extract111.isMoveableIn(extract112, content), true);
-        assertEquals("Un extrait est déplaceable après un extrait d'un autre chapitre", extract111.isMoveableIn(extract211, content), true);
-        assertEquals("Un extrait est déplaceable après une introduction", extract111.isMoveableIn((MetaAttribute)chapter11.getIntroduction(), content), true);
-        assertEquals("Un extrait n'est pas déplaceable après une conclusion", extract111.isMoveableIn((MetaAttribute)chapter11.getConclusion(), content), false);
-        assertEquals("Une conclusion ne peut pas être déplacée", ((MetaAttribute) chapter11.getConclusion()).isMoveableIn(chapter12, content), false);
-        assertEquals("Une introduction ne peut pas être déplacée", ((MetaAttribute) chapter11.getIntroduction()).isMoveableIn(chapter12, content), false);
+        assertEquals("Un extrait n'est pas déplaceable à la racine dans un big tuto", extract111.isMovableIn(content, content), false);
+        assertEquals("Un extrait est déplaceable dans un autre chapitre", extract111.isMovableIn(chapter12, content), true);
+        assertEquals("Un extrait est déplaceable dans le même chapitre", extract111.isMovableIn(chapter11, content), true);
+        assertEquals("Un extrait est déplaceable après un extrait du même chapitre", extract111.isMovableIn(extract112, content), true);
+        assertEquals("Un extrait est déplaceable après un extrait d'un autre chapitre", extract111.isMovableIn(extract211, content), true);
+        assertEquals("Un extrait est déplaceable après une introduction", extract111.isMovableIn((MetaAttribute)chapter11.getIntroduction(), content), true);
+        assertEquals("Un extrait n'est pas déplaceable après une conclusion", extract111.isMovableIn((MetaAttribute)chapter11.getConclusion(), content), false);
+        assertEquals("Une conclusion ne peut pas être déplacée", ((MetaAttribute) chapter11.getConclusion()).isMovableIn(chapter12, content), false);
+        assertEquals("Une introduction ne peut pas être déplacée", ((MetaAttribute) chapter11.getIntroduction()).isMovableIn(chapter12, content), false);
     }
 
     @Test

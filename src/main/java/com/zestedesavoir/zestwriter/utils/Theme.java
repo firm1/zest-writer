@@ -1,8 +1,9 @@
 package com.zestedesavoir.zestwriter.utils;
 
-import javafx.util.Pair;
-
-import java.util.*;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Optional;
 
 public class Theme {
     private String filename;
@@ -69,7 +70,9 @@ public class Theme {
 
     public static Theme getThemeFromFileName(String filename) {
         Optional<Theme> t = themeAvailable.stream().filter(p -> p.getFilename().equals(filename)).findFirst();
-        if(t.isPresent()) return t.get();
+        if(t.isPresent()) {
+            return t.get();
+        }
         return null;
     }
 

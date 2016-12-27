@@ -33,8 +33,8 @@
             </VBox.margin>
             <Label text="%ui.dialog.find.label"/>
             <Label text="%ui.dialog.replace.label.by" GridPane.rowIndex="1"/>
-            <TextField fx:id="searchField" onKeyReleased="#HandleSearchFieldChange" GridPane.columnIndex="1"/>
-            <TextField fx:id="replaceField" onKeyReleased="#HandleReplaceFieldChange" GridPane.columnIndex="1"
+            <TextField fx:id="searchField" onKeyReleased="#handleSearchFieldChange" GridPane.columnIndex="1"/>
+            <TextField fx:id="replaceField" onKeyReleased="#handleReplaceFieldChange" GridPane.columnIndex="1"
                        GridPane.rowIndex="1"/>
         </GridPane>
         <HBox>
@@ -61,19 +61,19 @@
                 </CheckBox>
             </VBox>
             <VBox alignment="CENTER_LEFT" prefHeight="10.0" prefWidth="300.0">
-                <Button fx:id="searchButton" mnemonicParsing="false" onAction="#HandleSearchButtonAction"
+                <Button fx:id="searchButton" mnemonicParsing="false" onAction="#handleSearchButtonAction"
                         prefHeight="25.0" prefWidth="284.0" text="%ui.dialog.find.label">
                     <VBox.margin>
                         <Insets bottom="5.0" top="5.0"/>
                     </VBox.margin>
                 </Button>
-                <Button fx:id="replaceButton" mnemonicParsing="false" onAction="#HandleReplaceButtonAction"
+                <Button fx:id="replaceButton" mnemonicParsing="false" onAction="#handleReplaceButtonAction"
                         prefHeight="25.0" prefWidth="404.0" text="%ui.dialog.replace.label">
                     <VBox.margin>
                         <Insets bottom="5.0" top="5.0"/>
                     </VBox.margin>
                 </Button>
-                <Button fx:id="replaceAllButton" mnemonicParsing="false" onAction="#HandleReplaceAllButtonAction"
+                <Button fx:id="replaceAllButton" mnemonicParsing="false" onAction="#handleReplaceAllButtonAction"
                         prefHeight="25.0" prefWidth="323.0" text="%ui.dialog.replace.label.all">
                     <VBox.margin>
                         <Insets bottom="5.0" top="5.0"/>

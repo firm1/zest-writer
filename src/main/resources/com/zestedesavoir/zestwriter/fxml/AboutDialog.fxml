@@ -70,7 +70,7 @@
                     <Insets bottom="3.0" left="3.0" right="3.0" top="3.0"/>
                 </padding>
             </Label>
-            <Hyperlink onAction="#HandleGplHyperlinkAction" style="-fx-border-width: 0;"
+            <Hyperlink onAction="#handleGplHyperlinkAction" style="-fx-border-width: 0;"
                        text="%ui.licence.label.short" textFill="#656565" GridPane.columnIndex="1"
                        GridPane.rowIndex="1">
                 <font>
@@ -85,7 +85,7 @@
                     <Insets bottom="3.0" left="3.0" right="3.0" top="3.0"/>
                 </padding>
             </Label>
-            <Hyperlink onAction="#HandleSourceHyperlinkAction" style="-fx-border-width: 0;"
+            <Hyperlink onAction="#handleSourceHyperlinkAction" style="-fx-border-width: 0;"
                        text="%ui.source.repository.platform" textFill="#656565" GridPane.columnIndex="1"
                        GridPane.rowIndex="2">
                 <font>
@@ -104,7 +104,7 @@
                 <Insets top="20.0"/>
             </VBox.margin>
         </Label>
-        <Hyperlink onAction="#HandleZdsHyperlinkAction" style="-fx-border-width: 0;"
+        <Hyperlink onAction="#handleZdsHyperlinkAction" style="-fx-border-width: 0;"
                    text="%ui.app_name.go_to_website" textFill="#656565">
             <font>
                 <Font name="Calibri" size="16.0"/>

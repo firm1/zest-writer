@@ -11,21 +11,21 @@ import java.util.ArrayList;
 /** Use SentenceModel to find sentence boundaries in text */
 public class SentenceExtractor {
 
-    final TokenizerFactory TOKENIZER_FACTORY = new IndoEuropeanTokenizerFactory();
-    final SentenceModel SENTENCE_MODEL = new IndoEuropeanSentenceModel();
+    final TokenizerFactory tokenizerFactory = new IndoEuropeanTokenizerFactory();
+    final SentenceModel sentenceModel = new IndoEuropeanSentenceModel();
 
     public String[] getSentences(String text) {
 
         ArrayList<String> tokenList = new ArrayList<>();
         ArrayList<String> whiteList = new ArrayList<>();
-        Tokenizer tokenizer = TOKENIZER_FACTORY.tokenizer(text.toCharArray(), 0, text.length());
+        Tokenizer tokenizer = tokenizerFactory.tokenizer(text.toCharArray(), 0, text.length());
         tokenizer.tokenize(tokenList, whiteList);
 
         String[] tokens = new String[tokenList.size()];
         String[] whites = new String[whiteList.size()];
         tokenList.toArray(tokens);
         whiteList.toArray(whites);
-        int[] sentenceBoundaries = SENTENCE_MODEL.boundaryIndices(tokens, whites);
+        int[] sentenceBoundaries = sentenceModel.boundaryIndices(tokens, whites);
 
         if (sentenceBoundaries.length < 1) {
             return new String[0];

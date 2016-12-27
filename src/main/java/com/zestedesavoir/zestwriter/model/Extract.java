@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 
@@ -61,7 +62,7 @@ public class Extract extends MetaContent implements Textual, ContentNode{
     }
 
     @Override
-    public boolean isMoveableIn(ContentNode receiver, Content root) {
+    public boolean isMovableIn(ContentNode receiver, Content root) {
         if(receiver.getFilePath().equals(getFilePath())) {
             return false;
         }
@@ -88,7 +89,7 @@ public class Extract extends MetaContent implements Textual, ContentNode{
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return Objects.hash(getFilePath());
     }
 
     @Override

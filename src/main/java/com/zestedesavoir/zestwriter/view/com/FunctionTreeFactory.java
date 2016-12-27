@@ -237,12 +237,16 @@ public class FunctionTreeFactory {
                 if (step < 60) {
                     sb.append(" ").append(step).append(" ");
                     sb.append(Configuration.getBundle().getString("ui.label.time.minute"));
-                    if (step > 1) sb.append("s");
+                    if (step > 1) {
+                        sb.append("s");
+                    }
                 } else {
                     int value = step / 60;
                     sb.append(" ").append(value).append(" ");
                     sb.append(Configuration.getBundle().getString("ui.label.time.hour"));
-                    if (value > 1) sb.append("s");
+                    if (value > 1) {
+                        sb.append("s");
+                    }
                 }
                 return sb.toString();
             }

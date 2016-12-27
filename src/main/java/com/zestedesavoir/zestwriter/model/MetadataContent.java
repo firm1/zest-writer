@@ -1,5 +1,7 @@
 package com.zestedesavoir.zestwriter.model;
 
+import java.util.Objects;
+
 public class MetadataContent {
     String id;
     String slug;
@@ -56,7 +58,7 @@ public class MetadataContent {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return Objects.hash(id, slug, type);
     }
 
 }

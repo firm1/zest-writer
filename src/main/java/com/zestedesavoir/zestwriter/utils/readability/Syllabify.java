@@ -19,8 +19,8 @@ package com.zestedesavoir.zestwriter.utils.readability;
  */
 public class Syllabify {
 
-    static String[] SubSyl = { "cial", "tia", "cius", "cious", "giu", "ion", "iou", "sia$", ".ely$" };
-    static String[] AddSyl = { "ia", "riet", "dien", "iu", "io", "ii", "[aeiouym]bl$", "[aeiou]{3}", "^mc", "ism$", "[^aeiouy][^aeiouy]l$", "[^l]lien","^coa[dglx].", "[^gq]ua[^auieo]", "dnt$" };
+    static String[] subSyl = { "cial", "tia", "cius", "cious", "giu", "ion", "iou", "sia$", ".ely$" };
+    static String[] addSyl = { "ia", "riet", "dien", "iu", "io", "ii", "[aeiouym]bl$", "[aeiou]{3}", "^mc", "ism$", "[^aeiouy][^aeiouy]l$", "[^l]lien","^coa[dglx].", "[^gq]ua[^auieo]", "dnt$" };
 
     private Syllabify() {
     }
@@ -30,8 +30,9 @@ public class Syllabify {
         String currentWord = word.toLowerCase();
         currentWord = currentWord.replaceAll("'", " ");
 
-        if ("i".equals(currentWord)) return 1;
-        if ("a".equals(currentWord)) return 1;
+        if ("i".equals(currentWord) || "a".equals(currentWord)) {
+            return 1;
+        }
 
         if (currentWord.endsWith("e")) {
             currentWord = currentWord.substring(0, currentWord.length() - 1);
@@ -40,12 +41,12 @@ public class Syllabify {
         String[] phonems = currentWord.split("[^aeiouy]+");
 
         int syl = 0;
-        for (String syllabe : SubSyl) {
+        for (String syllabe : subSyl) {
             if (currentWord.matches(syllabe)) {
                 syl--;
             }
         }
-        for (String syllabe : AddSyl) {
+        for (String syllabe : addSyl) {
             if (currentWord.matches(syllabe)) {
                 syl++;
             }

@@ -5,7 +5,6 @@
  */
 package com.zestedesavoir.zestwriter.utils;
 
-import com.zestedesavoir.zestwriter.MainApp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +15,7 @@ import java.io.File;
  *
  * @author fdambrine
  */
+@FunctionalInterface
 public interface StorageSaver {
     String getBaseDirectory();
 
@@ -31,7 +31,7 @@ public interface StorageSaver {
                 }
             }
             else {
-                String files[] = file.list();
+                String[] files = file.list();
                 for(String temp: files != null ? files : new String[0]) {
                     File fileDelete = new File(file, temp);
                     deleteFile(fileDelete);

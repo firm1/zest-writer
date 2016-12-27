@@ -2,6 +2,9 @@ package com.zestedesavoir.zestwriter.model;
 
 import java.util.regex.Pattern;
 
+/**
+ * Class which referenced all constant off app
+ */
 public class Constant {
     public static final String DEFAULT_INTRODUCTION_FILENAME="introduction.md";
     public static final String DEFAULT_CONCLUSION_FILENAME="conclusion.md";
@@ -11,6 +14,7 @@ public class Constant {
     public static final String SET_COOKIE_HEADER = "Set-Cookie";
     public static final String CSRF_ZDS_KEY = "csrfmiddlewaretoken";
     public static final String CSRF_COOKIE_KEY = "csrftoken";
+    public static final String JVM_KEY_USER_HOME = "user.home";
 
     private Constant() {
         throw new IllegalAccessError("Utility class");
