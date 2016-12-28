@@ -41,6 +41,14 @@ public interface Textual{
         setMarkdown(readMarkdown());
     }
     String getTitle();
+    default String getLimitedTitle() {
+        String title = getTitle();
+        if (title.length() > Constant.LIMIT_COUNT_CHARS_OF_TITLE) {
+            return title.substring(0, Constant.LIMIT_COUNT_CHARS_OF_TITLE) + " ...";
+        } else {
+            return title;
+        }
+    }
     void setMarkdown(String markdown);
     String getFilePath();
     void setBasePath(String basePath);

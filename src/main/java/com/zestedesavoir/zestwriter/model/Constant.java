@@ -15,6 +15,7 @@ public class Constant {
     public static final String CSRF_ZDS_KEY = "csrfmiddlewaretoken";
     public static final String CSRF_COOKIE_KEY = "csrftoken";
     public static final String JVM_KEY_USER_HOME = "user.home";
+    public static final int LIMIT_COUNT_CHARS_OF_TITLE = 20;
 
     private Constant() {
         throw new IllegalAccessError("Utility class");

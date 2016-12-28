@@ -39,6 +39,19 @@ public class MetaAttribute implements Textual, ContentNode{
         return title;
     }
 
+    public String getExpandTitle() {
+        return getTitle()+" (" + getParent().getTitle() + ")";
+    }
+
+    public String getLimitedExpandTitle() {
+        String title = getExpandTitle();
+        if (title.length() > Constant.LIMIT_COUNT_CHARS_OF_TITLE) {
+            return title.substring(0, Constant.LIMIT_COUNT_CHARS_OF_TITLE) + " ...";
+        } else {
+            return title;
+        }
+    }
+
     @Override
     public void setTitle(String title) {
         this.title = title;

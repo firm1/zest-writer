@@ -133,10 +133,10 @@ public class MenuController{
         Map<Textual, Double> statIndex = container.doOnTextual(calIndex);
         for(Map.Entry<Textual, Double> st:statIndex.entrySet()) {
             if(!(st.getKey() instanceof MetaAttribute)) {
-                series.getData().add(new XYChart.Data(st.getKey().getTitle(), st.getValue()));
+                series.getData().add(new XYChart.Data(st.getKey().getLimitedTitle(), st.getValue()));
             } else {
                 MetaAttribute attribute = (MetaAttribute) st.getKey();
-                series.getData().add(new XYChart.Data(attribute.getTitle()+ " (" + attribute.getParent().getTitle() + ")", st.getValue()));
+                series.getData().add(new XYChart.Data(attribute.getLimitedExpandTitle(), st.getValue()));
             }
         }
         lineChart.getData().addAll(series);

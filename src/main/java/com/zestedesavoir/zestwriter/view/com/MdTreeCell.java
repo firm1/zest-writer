@@ -325,6 +325,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             final CategoryAxis xAxis = new CategoryAxis();
             final NumberAxis yAxis = new NumberAxis();
             final BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
+            barChart.setLegendVisible(false);
             barChart.setCategoryGap(5);
             barChart.setBarGap(5);
 
@@ -332,7 +333,6 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             yAxis.setLabel(Configuration.getBundle().getString("ui.actions.stats.yaxis"));
 
             XYChart.Series<String, Number> series1 = new XYChart.Series<>();
-            series1.setName(Configuration.getBundle().getString("ui.actions.stats.type.histogram"));
             Container container = (Container) getItem();
             Function<Textual, Integer> performCount = (Textual ch) -> {
                 String md = ch.readMarkdown();
@@ -342,10 +342,10 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             Map<Textual, Integer> stat = container.doOnTextual(performCount);
             for(Map.Entry<Textual, Integer> st:stat.entrySet()) {
                 if(!(st.getKey() instanceof MetaAttribute)) {
-                    series1.getData().add(new XYChart.Data(st.getKey().getTitle(), st.getValue()));
+                    series1.getData().add(new XYChart.Data(st.getKey().getLimitedTitle(), st.getValue()));
                 } else {
                     MetaAttribute attribute = (MetaAttribute) st.getKey();
-                    series1.getData().add(new XYChart.Data(attribute.getTitle()+ " (" + attribute.getParent().getTitle() + ")", st.getValue()));
+                    series1.getData().add(new XYChart.Data(attribute.getLimitedExpandTitle(), st.getValue()));
                 }
             }
             barChart.getData().addAll(series1);
@@ -398,23 +398,24 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             Map<Textual, Double> statF = container.doOnTextual(performFlesch);
             for(Map.Entry<Textual, Double> st:statG.entrySet()) {
                 if(!(st.getKey() instanceof MetaAttribute)) {
-                    series1.getData().add(new XYChart.Data(st.getKey().getTitle(), st.getValue()));
+                    series1.getData().add(new XYChart.Data(st.getKey().getLimitedTitle(), st.getValue()));
                 } else {
                     MetaAttribute attribute = (MetaAttribute) st.getKey();
-                    series1.getData().add(new XYChart.Data(attribute.getTitle()+ " (" + attribute.getParent().getTitle() + ")", st.getValue()));
+                    series1.getData().add(new XYChart.Data(attribute.getLimitedExpandTitle(), st.getValue()));
                 }
             }
             for(Map.Entry<Textual, Double> st:statF.entrySet()) {
                 if(!(st.getKey() instanceof MetaAttribute)) {
-                    series2.getData().add(new XYChart.Data(st.getKey().getTitle(), st.getValue()));
+                    series2.getData().add(new XYChart.Data(st.getKey().getLimitedTitle(), st.getValue()));
                 } else {
                     MetaAttribute attribute = (MetaAttribute) st.getKey();
-                    series2.getData().add(new XYChart.Data(attribute.getTitle()+ " (" + attribute.getParent().getTitle() + ")", st.getValue()));
+                    series2.getData().add(new XYChart.Data(attribute.getLimitedExpandTitle(), st.getValue()));
                 }
             }
             lineChart.getData().addAll(series1, series2);
             dialog.getDialogPane().setContent(lineChart);
             dialog.setResizable(true);
+            xAxis.setTickLabelRotation(0);
             dialog.showAndWait();
         });
 
@@ -429,12 +430,12 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             final NumberAxis yAxis = new NumberAxis();
             final LineChart<String,Number> lineChart = new LineChart<>(xAxis, yAxis);
             lineChart.setTitle(Configuration.getBundle().getString("ui.actions.stats.mistake"));
+            lineChart.setLegendVisible(false);
 
             xAxis.setLabel(Configuration.getBundle().getString("ui.actions.stats.xaxis"));
             yAxis.setLabel(Configuration.getBundle().getString("ui.actions.stats.mistakes.yaxis"));
 
             XYChart.Series<String, Number> series1 = new XYChart.Series();
-            series1.setName(Configuration.getBundle().getString("ui.actions.stats.mistakes.yaxis"));
             Container container = (Container) getItem();
 
             Corrector corrector = new Corrector();
@@ -450,7 +451,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             Map<Textual, Integer> statMistake = container.doOnTextual(performCorrection);
             statMistake.entrySet().stream()
                     .filter(st -> !(st.getKey() instanceof MetaAttribute))
-                    .forEachOrdered(st -> series1.getData().add(new XYChart.Data(st.getKey().getTitle(), st.getValue())));
+                    .forEachOrdered(st -> series1.getData().add(new XYChart.Data(st.getKey().getLimitedTitle(), st.getValue())));
             lineChart.getData().addAll(series1);
             dialog.getDialogPane().setContent(lineChart);
             dialog.setResizable(true);
