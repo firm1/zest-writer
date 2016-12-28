@@ -232,7 +232,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                             .forEach(x -> x.getValue().setText(result.get()));
                     item1.getValue().renameTitle(result.get());
                     saveManifestJson();
-                    index.openContent(content);
+                    index.getSummary().refresh();
                 }
             }
 
