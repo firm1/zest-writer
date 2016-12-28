@@ -8,11 +8,14 @@ import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.MdTextController;
+import com.zestedesavoir.zestwriter.view.MenuController;
 import com.zestedesavoir.zestwriter.view.dialogs.BaseDialog;
+import com.zestedesavoir.zestwriter.view.task.ComputeIndexService;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -356,67 +359,47 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
         menuStatReadability.setOnAction(t -> {
             logger.debug("Tentative de calcul des statistiques de lisiblité");
-            BaseDialog dialog = new BaseDialog(Configuration.getBundle().getString("ui.actions.stats.label"), Configuration.getBundle().getString("ui.actions.stats.header")+" "+getItem().getTitle());
-            dialog.getDialogPane().setPrefSize(800, 600);
-            dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.getBundle().getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
-
-            // draw
-            final CategoryAxis xAxis = new CategoryAxis();
-            final NumberAxis yAxis = new NumberAxis();
-            final LineChart<String,Number> lineChart = new LineChart<>(xAxis, yAxis);
-            lineChart.setTitle(Configuration.getBundle().getString("ui.actions.stats.readability"));
-
-            xAxis.setLabel(Configuration.getBundle().getString("ui.actions.stats.xaxis"));
-            yAxis.setLabel(Configuration.getBundle().getString("ui.actions.readable.yaxis"));
-
-            XYChart.Series<String, Number> series1 = new XYChart.Series();
-            XYChart.Series<String, Number> series2 = new XYChart.Series();
-            series1.setName(Configuration.getBundle().getString("ui.menu.edit.readable.gunning_index"));
-            series2.setName(Configuration.getBundle().getString("ui.menu.edit.readable.flesch_index"));
             Container container = (Container) getItem();
             Function<Textual, Double> performGuning = (Textual ch) -> {
-                String md = ch.readMarkdown();
-                try {
-                    Readability readText = new Readability(md);
-                    return readText.getGunningFog();
-                } catch(Exception e) {
-                    logger.trace(e.getMessage(), e);
-                    return 0.0;
+                String htmlText = StringEscapeUtils.unescapeHtml(MenuController.markdownToHtml(index, ch.readMarkdown()));
+                String plainText = Corrector.htmlToTextWithoutCode(htmlText);
+                if("".equals(plainText.trim())){
+                    return 100.0;
+                }else{
+                    Readability rd = new Readability(plainText);
+                    return rd.getGunningFog();
                 }
             };
             Function<Textual, Double> performFlesch = (Textual ch) -> {
-                String md = ch.readMarkdown();
-                try {
-                    Readability readText = new Readability(md);
-                    return readText.getFleschReadingEase();
-                } catch(Exception e) {
-                    logger.trace(e.getMessage(), e);
-                    return 0.0;
+                String htmlText = StringEscapeUtils.unescapeHtml(MenuController.markdownToHtml(index, ch.readMarkdown()));
+                String plainText = Corrector.htmlToTextWithoutCode(htmlText);
+                if("".equals(plainText.trim())){
+                    return 100.0;
+                }else{
+                    Readability rd = new Readability(plainText);
+                    return rd.getFleschReadingEase();
                 }
             };
-            Map<Textual, Double> statG = container.doOnTextual(performGuning);
-            Map<Textual, Double> statF = container.doOnTextual(performFlesch);
-            for(Map.Entry<Textual, Double> st:statG.entrySet()) {
-                if(!(st.getKey() instanceof MetaAttribute)) {
-                    series1.getData().add(new XYChart.Data(st.getKey().getLimitedTitle(), st.getValue()));
-                } else {
-                    MetaAttribute attribute = (MetaAttribute) st.getKey();
-                    series1.getData().add(new XYChart.Data(attribute.getLimitedExpandTitle(), st.getValue()));
-                }
-            }
-            for(Map.Entry<Textual, Double> st:statF.entrySet()) {
-                if(!(st.getKey() instanceof MetaAttribute)) {
-                    series2.getData().add(new XYChart.Data(st.getKey().getLimitedTitle(), st.getValue()));
-                } else {
-                    MetaAttribute attribute = (MetaAttribute) st.getKey();
-                    series2.getData().add(new XYChart.Data(attribute.getLimitedExpandTitle(), st.getValue()));
-                }
-            }
-            lineChart.getData().addAll(series1, series2);
-            dialog.getDialogPane().setContent(lineChart);
-            dialog.setResizable(true);
-            xAxis.setTickLabelRotation(0);
-            dialog.showAndWait();
+
+            ComputeIndexService computeGuningService = new ComputeIndexService(performGuning, container);
+            index.getMainApp().getMenuController().gethBottomBox().getChildren().clear();
+            index.getMainApp().getMenuController().gethBottomBox().getChildren().addAll(index.getMainApp().getMenuController().getLabelField());
+            index.getMainApp().getMenuController().getLabelField().textProperty().bind(computeGuningService.messageProperty());
+            computeGuningService.setOnSucceeded(g -> {
+                ComputeIndexService computeFleshService = new ComputeIndexService(performFlesch, container);
+                computeFleshService.setOnSucceeded(f -> {
+                    displayIndexChart(((ComputeIndexService) g.getSource()).getValue(), ((ComputeIndexService) f.getSource()).getValue());
+                    index.getMainApp().getMenuController().gethBottomBox().getChildren().clear();
+                });
+                computeFleshService.setOnFailed(f -> {
+                    index.getMainApp().getMenuController().gethBottomBox().getChildren().clear();
+                });
+                computeFleshService.start();
+            });
+            computeGuningService.setOnFailed(g -> {
+                index.getMainApp().getMenuController().gethBottomBox().getChildren().clear();
+            });
+            computeGuningService.start();
         });
 
         menuStatMistakes.setOnAction(t -> {
@@ -457,6 +440,39 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             dialog.setResizable(true);
             dialog.showAndWait();
         });
+    }
+
+    public XYChart.Series<String, Number> getSeriesIndex(Map<String, Double> statIndex, String title) {
+        XYChart.Series<String, Number> series = new XYChart.Series();
+        series.setName(title);
+
+        for(Map.Entry<String, Double> st:statIndex.entrySet()) {
+            series.getData().add(new XYChart.Data(st.getKey(), st.getValue()));
+        }
+        return series;
+    }
+    public void displayIndexChart(Map<String, Double> statG, Map<String, Double> statF) {
+        BaseDialog dialog = new BaseDialog(Configuration.getBundle().getString("ui.actions.stats.label"), Configuration.getBundle().getString("ui.actions.stats.header")+" "+getItem().getTitle());
+        dialog.getDialogPane().setPrefSize(800, 600);
+        dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.getBundle().getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
+
+        // draw
+        final CategoryAxis xAxis = new CategoryAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        final LineChart<String,Number> lineChart = new LineChart<>(xAxis, yAxis);
+        lineChart.setTitle(Configuration.getBundle().getString("ui.actions.stats.readability"));
+
+        xAxis.setLabel(Configuration.getBundle().getString("ui.actions.stats.xaxis"));
+        yAxis.setLabel(Configuration.getBundle().getString("ui.actions.readable.yaxis"));
+
+        XYChart.Series<String, Number> series1  = getSeriesIndex(statG, Configuration.getBundle().getString("ui.menu.edit.readable.gunning_index"));
+        XYChart.Series<String, Number> series2 = getSeriesIndex(statF, Configuration.getBundle().getString("ui.menu.edit.readable.flesch_index"));
+
+        lineChart.getData().addAll(series1, series2);
+        dialog.getDialogPane().setContent(lineChart);
+        dialog.setResizable(true);
+        xAxis.setTickLabelRotation(0);
+        dialog.showAndWait();
     }
 
     protected void updateItem(ContentNode item, boolean empty) {

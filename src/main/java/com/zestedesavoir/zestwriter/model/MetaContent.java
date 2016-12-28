@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 
 import java.io.File;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -100,6 +101,8 @@ public abstract class MetaContent{
     public abstract String getFilePath();
     public abstract String exportContentToMarkdown(int level, int levelDepth);
     public abstract<R> Map<Textual, R> doOnTextual(Function<Textual,R> f);
+    public abstract<R> Map<Textual, R> doOnTextual(Function<Textual,R> f, Function<Textual, Void> execBefore);
+
 
     public boolean canDelete() {
         return true;

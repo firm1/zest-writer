@@ -203,15 +203,26 @@ public class Container extends MetaContent implements ContentNode {
     @Override
     public <R> Map<Textual, R> doOnTextual(Function<Textual,R> f) {
         Map<Textual, R> map = new LinkedHashMap<>();
-
         map.put(getIntroduction(), f.apply(getIntroduction()));
 
         for(MetaContent c:getChildren()) {
             map.putAll(c.doOnTextual(f));
         }
-
         map.put(getConclusion(), f.apply(getConclusion()));
+        return map;
+    }
 
+    @Override
+    public <R> Map<Textual, R> doOnTextual(Function<Textual,R> f, Function<Textual, Void> execBefore) {
+        Map<Textual, R> map = new LinkedHashMap<>();
+        execBefore.apply(getIntroduction());
+        map.put(getIntroduction(), f.apply(getIntroduction()));
+
+        for(MetaContent c:getChildren()) {
+            map.putAll(c.doOnTextual(f, execBefore));
+        }
+        execBefore.apply(getConclusion());
+        map.put(getConclusion(), f.apply(getConclusion()));
         return map;
     }
 }

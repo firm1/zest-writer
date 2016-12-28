@@ -103,4 +103,10 @@ public class Extract extends MetaContent implements Textual, ContentNode{
         return map;
     }
 
+    @Override
+    public <R> Map<Textual, R> doOnTextual(Function<Textual,R> f, Function<Textual, Void> execBefore) {
+        execBefore.apply(this);
+        return doOnTextual(f);
+    }
+
 }

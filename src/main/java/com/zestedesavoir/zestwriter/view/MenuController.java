@@ -113,7 +113,7 @@ public class MenuController{
         return render.toString();
     }
 
-    private void handleIndex(Function<Textual, Double> calIndex, String title, String header) {
+    private void displayIndex(Map<String, Double> resultIndex, String title, String header) {
         BaseDialog dialog = new BaseDialog(title, header);
         dialog.getDialogPane().setPrefSize(800, 600);
         dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.getBundle().getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
@@ -129,15 +129,8 @@ public class MenuController{
         yAxis.setLabel(Configuration.getBundle().getString("ui.actions.readable.yaxis"));
 
         XYChart.Series<String, Number> series = new XYChart.Series();
-        Container container = (Container) mainApp.getIndex().getSummary().getRoot().getValue();
-        Map<Textual, Double> statIndex = container.doOnTextual(calIndex);
-        for(Map.Entry<Textual, Double> st:statIndex.entrySet()) {
-            if(!(st.getKey() instanceof MetaAttribute)) {
-                series.getData().add(new XYChart.Data(st.getKey().getLimitedTitle(), st.getValue()));
-            } else {
-                MetaAttribute attribute = (MetaAttribute) st.getKey();
-                series.getData().add(new XYChart.Data(attribute.getLimitedExpandTitle(), st.getValue()));
-            }
+        for(Map.Entry<String, Double> st:resultIndex.entrySet()) {
+            series.getData().add(new XYChart.Data(st.getKey(), st.getValue()));
         }
         lineChart.getData().addAll(series);
         dialog.getDialogPane().setContent(lineChart);
@@ -156,10 +149,17 @@ public class MenuController{
                 return rd.getFleschReadingEase();
             }
         };
-
-        handleIndex(calFlesh,
-                Configuration.getBundle().getString("ui.menu.edit.readable.flesch_index"),
-                Configuration.getBundle().getString("ui.menu.edit.readable.flesch_index.header"));
+        ComputeIndexService computeIndexService = new ComputeIndexService(calFlesh, (Container) mainApp.getIndex().getSummary().getRoot().getValue());
+        hBottomBox.getChildren().clear();
+        hBottomBox.getChildren().addAll(labelField);
+        labelField.textProperty().bind(computeIndexService.messageProperty());
+        computeIndexService.setOnSucceeded(t -> {
+            displayIndex(((ComputeIndexService) t.getSource()).getValue(),
+                    Configuration.getBundle().getString("ui.menu.edit.readable.flesch_index"),
+                    Configuration.getBundle().getString("ui.menu.edit.readable.flesch_index.header"));
+            hBottomBox.getChildren().clear();
+        });
+        computeIndexService.start();
     }
 
     @FXML private void handleGunningButtonAction(ActionEvent event){
@@ -173,9 +173,17 @@ public class MenuController{
                 return rd.getGunningFog();
             }
         };
-        handleIndex(calGuning,
-                Configuration.getBundle().getString("ui.menu.edit.readable.gunning_index"),
-                Configuration.getBundle().getString("ui.menu.edit.readable.gunning_index.header"));
+        ComputeIndexService computeIndexService = new ComputeIndexService(calGuning, (Container) mainApp.getIndex().getSummary().getRoot().getValue());
+        hBottomBox.getChildren().clear();
+        hBottomBox.getChildren().addAll(labelField);
+        labelField.textProperty().bind(computeIndexService.messageProperty());
+        computeIndexService.setOnSucceeded(t -> {
+            displayIndex(((ComputeIndexService) t.getSource()).getValue(),
+                    Configuration.getBundle().getString("ui.menu.edit.readable.gunning_index"),
+                    Configuration.getBundle().getString("ui.menu.edit.readable.gunning_index.header"));
+            hBottomBox.getChildren().clear();
+        });
+        computeIndexService.start();
     }
 
     @FXML private void handleReportWithoutTypoButtonAction(ActionEvent event){
