@@ -225,13 +225,12 @@ public class FunctionTreeFactory {
         dialogStage.show();
     }
 
-    private static StringBuilder getLogarithmTime(StringBuilder sb, int value, String label) {
+    private static void performLogarithmTime(StringBuilder sb, int value, String label) {
         sb.append(" ").append(value).append(" ");
         sb.append(label);
         if (value > 1) {
             sb.append("s");
         }
-        return sb;
     }
     public static String getNumberOfTextualReadMinutes(String text) {
         Double mins = Readability.getNumberOfReadMinutes(text);
@@ -246,9 +245,9 @@ public class FunctionTreeFactory {
                 }
 
                 if (step < 60) {
-                    sb.append(getLogarithmTime(sb, step, Configuration.getBundle().getString("ui.label.time.minute")));
+                    performLogarithmTime(sb, step, Configuration.getBundle().getString("ui.label.time.minute"));
                 } else {
-                    sb.append(getLogarithmTime(sb, step / 60, Configuration.getBundle().getString("ui.label.time.hour")));
+                    performLogarithmTime(sb, step / 60, Configuration.getBundle().getString("ui.label.time.hour"));
                 }
                 return sb.toString();
             }
