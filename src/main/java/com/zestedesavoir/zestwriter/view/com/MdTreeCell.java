@@ -404,41 +404,32 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
         menuStatMistakes.setOnAction(t -> {
             logger.debug("Tentative de calcul du nombre de fautes");
-            BaseDialog dialog = new BaseDialog(Configuration.getBundle().getString("ui.actions.stats.label"), Configuration.getBundle().getString("ui.actions.stats.header")+" "+getItem().getTitle());
-            dialog.getDialogPane().setPrefSize(800, 600);
-            dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.getBundle().getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
-
-            // draw
-            final CategoryAxis xAxis = new CategoryAxis();
-            final NumberAxis yAxis = new NumberAxis();
-            final LineChart<String,Number> lineChart = new LineChart<>(xAxis, yAxis);
-            lineChart.setTitle(Configuration.getBundle().getString("ui.actions.stats.mistake"));
-            lineChart.setLegendVisible(false);
-
-            xAxis.setLabel(Configuration.getBundle().getString("ui.actions.stats.xaxis"));
-            yAxis.setLabel(Configuration.getBundle().getString("ui.actions.stats.mistakes.yaxis"));
-
-            XYChart.Series<String, Number> series1 = new XYChart.Series();
             Container container = (Container) getItem();
 
             Corrector corrector = new Corrector();
-            Function<Textual, Integer> performCorrection = (Textual ch) -> {
+            Function<Textual, Double> performCorrection = (Textual ch) -> {
                 String md = ch.readMarkdown();
                 try {
-                    return corrector.countMistakes(index, md);
+                    return new Double(corrector.countMistakes(index, md));
                 } catch(Exception e) {
                     logger.trace(e.getMessage(), e);
-                    return 0;
+                    return 0.0;
                 }
             };
-            Map<Textual, Integer> statMistake = container.doOnTextual(performCorrection);
-            statMistake.entrySet().stream()
-                    .filter(st -> !(st.getKey() instanceof MetaAttribute))
-                    .forEachOrdered(st -> series1.getData().add(new XYChart.Data(st.getKey().getLimitedTitle(), st.getValue())));
-            lineChart.getData().addAll(series1);
-            dialog.getDialogPane().setContent(lineChart);
-            dialog.setResizable(true);
-            dialog.showAndWait();
+
+            ComputeIndexService computeTypoService = new ComputeIndexService(performCorrection, container);
+            index.getMainApp().getMenuController().gethBottomBox().getChildren().clear();
+            index.getMainApp().getMenuController().gethBottomBox().getChildren().addAll(index.getMainApp().getMenuController().getLabelField());
+            index.getMainApp().getMenuController().getLabelField().textProperty().bind(computeTypoService.messageProperty());
+            computeTypoService.setOnSucceeded(tp -> {
+                Map<String, Double> mapT = ((ComputeIndexService) tp.getSource()).getValue();
+                displayTypoChart(mapT);
+                index.getMainApp().getMenuController().gethBottomBox().getChildren().clear();
+            });
+            computeTypoService.setOnFailed(g -> {
+                index.getMainApp().getMenuController().gethBottomBox().getChildren().clear();
+            });
+            computeTypoService.start();
         });
     }
 
@@ -451,6 +442,34 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         }
         return series;
     }
+
+    public void displayTypoChart(Map<String, Double> statT) {
+        BaseDialog dialog = new BaseDialog(Configuration.getBundle().getString("ui.actions.stats.label"), Configuration.getBundle().getString("ui.actions.stats.header")+" "+getItem().getTitle());
+        dialog.getDialogPane().setPrefSize(800, 600);
+        dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.getBundle().getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
+
+        // draw
+        final CategoryAxis xAxis = new CategoryAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        final LineChart<String,Number> lineChart = new LineChart<>(xAxis, yAxis);
+        lineChart.setTitle(Configuration.getBundle().getString("ui.actions.stats.mistake"));
+        lineChart.setLegendVisible(false);
+
+        xAxis.setLabel(Configuration.getBundle().getString("ui.actions.stats.xaxis"));
+        yAxis.setLabel(Configuration.getBundle().getString("ui.actions.stats.mistakes.yaxis"));
+
+        XYChart.Series<String, Number> series1 = new XYChart.Series();
+        for(Map.Entry<String, Double> st:statT.entrySet()) {
+            series1.getData().add(new XYChart.Data(st.getKey(), st.getValue()));
+        }
+
+        lineChart.getData().addAll(series1);
+        dialog.getDialogPane().setContent(lineChart);
+        dialog.setResizable(true);
+        dialog.showAndWait();
+
+    }
+
     public void displayIndexChart(Map<String, Double> statG, Map<String, Double> statF) {
         BaseDialog dialog = new BaseDialog(Configuration.getBundle().getString("ui.actions.stats.label"), Configuration.getBundle().getString("ui.actions.stats.header")+" "+getItem().getTitle());
         dialog.getDialogPane().setPrefSize(800, 600);
