@@ -74,6 +74,8 @@ public class OptionsDialog{
         MainApp.getConfig().setDisplayTheme(optDisplayTheme.getValue().getFilename());
         MainApp.getConfig().setDisplayLang(optDisplayLang.getValue().getLocale().toString());
 
+        MainApp.getConfig().setWorkspacePath(workspacepath.getText());
+
         if(optDisplayWindowMaximizeYes.isSelected())
             MainApp.getConfig().setDisplayWindowMaximize("true");
         else
@@ -138,7 +140,6 @@ public class OptionsDialog{
         File directory = directoryChooser.showDialog(null);
 
         if(directory != null && directory.exists()){
-            MainApp.getConfig().setWorkspacePath(directory.getAbsolutePath());
             workspacepath.setText(directory.getAbsolutePath());
         }
     }
@@ -303,9 +304,6 @@ public class OptionsDialog{
 
     private void resetOptions(){
         MainApp.getConfig().resetAllOptions();
-        setEditorOptions();
-        setDisplayOptions();
-        setAuthentificationOptions();
-        setAdvancedOptions();
+        initialize();
     }
 }
