@@ -13,7 +13,6 @@ import com.zestedesavoir.zestwriter.view.task.*;
 import javafx.beans.property.BooleanPropertyBase;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -21,10 +20,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -37,7 +39,6 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-import org.controlsfx.control.Rating;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
@@ -49,7 +50,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -113,50 +113,35 @@ public class MenuController{
         return render.toString();
     }
 
-    private void handleIndex(Function<Textual, Double> calFlesh, String title, String header) {
-        Map<Textual, Double> fleshResult = ((Content)mainApp.getIndex().getSummary().getRoot().getValue()).doOnTextual(calFlesh);
+    private void handleIndex(Function<Textual, Double> calIndex, String title, String header) {
+        BaseDialog dialog = new BaseDialog(title, header);
+        dialog.getDialogPane().setPrefSize(800, 600);
+        dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.getBundle().getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
 
-        ObservableList<ModelLisibilty> rows = FXCollections.observableArrayList();
-        for(Entry<Textual, Double> entry : fleshResult.entrySet()){
-            String v1;
-            if(entry.getKey() instanceof MetaAttribute) {
-                MetaAttribute attribute = (MetaAttribute) entry.getKey();
-                v1 = attribute.getTitle()+ " (" + attribute.getParent().getTitle() + ")";
+        // draw
+        final CategoryAxis xAxis = new CategoryAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        final LineChart<String,Number> lineChart = new LineChart<>(xAxis, yAxis);
+        lineChart.setTitle(title);
+        lineChart.setLegendVisible(false);
+
+        xAxis.setLabel(Configuration.getBundle().getString("ui.actions.stats.xaxis"));
+        yAxis.setLabel(Configuration.getBundle().getString("ui.actions.readable.yaxis"));
+
+        XYChart.Series<String, Number> series = new XYChart.Series();
+        Container container = (Container) mainApp.getIndex().getSummary().getRoot().getValue();
+        Map<Textual, Double> statIndex = container.doOnTextual(calIndex);
+        for(Map.Entry<Textual, Double> st:statIndex.entrySet()) {
+            if(!(st.getKey() instanceof MetaAttribute)) {
+                series.getData().add(new XYChart.Data(st.getKey().getTitle(), st.getValue()));
             } else {
-                v1 = entry.getKey().getTitle();
+                MetaAttribute attribute = (MetaAttribute) st.getKey();
+                series.getData().add(new XYChart.Data(attribute.getTitle()+ " (" + attribute.getParent().getTitle() + ")", st.getValue()));
             }
-            Double t = (entry.getValue()/100)*5;
-            Rating rating = new Rating(5, t.intValue());
-            rows.add(new ModelLisibilty(v1, rating));
         }
-
-        // Create the custom dialog.
-        CustomDialog<Pair<String, String>> dialog = new CustomDialog<>();
+        lineChart.getData().addAll(series);
+        dialog.getDialogPane().setContent(lineChart);
         dialog.setResizable(true);
-        dialog.setTitle(title);
-        dialog.setHeaderText(header);
-
-        // Set the button types.
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        TableView table = new TableView();
-        table.setPrefSize(600, 400);
-        TableColumn colText = new TableColumn();
-        colText.setCellValueFactory(new PropertyValueFactory<ModelLisibilty, String>("text"));
-        TableColumn colRate = new TableColumn();
-        colRate.setCellValueFactory(new PropertyValueFactory<ModelLisibilty, Rating>("rating"));
-        table.getColumns().addAll(colText, colRate);
-        table.setItems(rows);
-
-
-        dialog.getDialogPane().setContent(table);
-        dialog.setResultConverter(dialogButton -> {
-            if(dialogButton == ButtonType.OK){
-                return null;
-            }
-            return null;
-        });
-
         dialog.showAndWait();
     }
 
