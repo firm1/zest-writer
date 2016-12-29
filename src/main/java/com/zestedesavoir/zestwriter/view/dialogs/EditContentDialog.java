@@ -1,5 +1,6 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
+import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Constant;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.License;
@@ -13,9 +14,14 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
+import java.io.File;
 import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.Locale;
@@ -54,10 +60,24 @@ public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Objec
 		grid.setPadding(new Insets(20, 150, 10, 10));
 
 		TextField title = new TextField(defaultContent.getTitle());
+		Label warning = new Label();
+        ImageView image = new ImageView(new Image(MainApp.class.getResourceAsStream("images/warning.png")));
+        warning.setTextFill(Color.web("#b71c1c"));
 		title.textProperty().addListener((ov, oldValue, newValue) -> {
 			if (newValue.length() > MAX_TITLE_LENGTH) {
 				title.setText(oldValue);
-			}
+			} else {
+                if(!newValue.equals(defaultContent.getTitle())) {
+                    File future = new File(MainApp.getConfig().getOfflineSaver().getBaseDirectory(), getSlug(newValue));
+                    if (future.exists()) {
+                        warning.setGraphic(image);
+                        warning.setText(Configuration.getBundle().getString("ui.content.label.warning.duplicate"));
+                    } else {
+                        warning.setGraphic(null);
+                        warning.setText("");
+                    }
+                }
+            }
 		});
 		TextArea subtitle = new TextArea(defaultContent.getDescription());
 		subtitle.setWrapText(true);
@@ -73,14 +93,15 @@ public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Objec
 	    ComboBox<License> license = new ComboBox<>(licOptions);
 	    license.setValue(licOptions.get(licOptions.indexOf(new License(defaultContent.getLicence(), ""))));
 
-	    grid.add(new Label(Configuration.getBundle().getString("ui.content.label.title")), 0, 0);
-	    grid.add(title, 1, 0);
-	    grid.add(new Label(Configuration.getBundle().getString("ui.content.label.description")), 0, 1);
-	    grid.add(subtitle, 1, 1);
-	    grid.add(new Label(Configuration.getBundle().getString("ui.content.label.type")), 0, 2);
-	    grid.add(type, 1, 2);
-	    grid.add(new Label(Configuration.getBundle().getString("ui.content.label.license")), 0, 3);
-	    grid.add(license, 1, 3);
+		grid.add(warning, 0, 0, 2, 1);
+	    grid.add(new Label(Configuration.getBundle().getString("ui.content.label.title")), 0, 1);
+	    grid.add(title, 1, 1);
+	    grid.add(new Label(Configuration.getBundle().getString("ui.content.label.description")), 0, 2);
+	    grid.add(subtitle, 1, 2);
+	    grid.add(new Label(Configuration.getBundle().getString("ui.content.label.type")), 0, 3);
+	    grid.add(type, 1, 3);
+	    grid.add(new Label(Configuration.getBundle().getString("ui.content.label.license")), 0, 4);
+	    grid.add(license, 1, 4);
 
 	    // Enable/Disable login button depending on whether a username was entered.
 		this.getDialogPane().lookupButton(validButtonType);

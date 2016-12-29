@@ -201,15 +201,6 @@ public class FunctionTreeFactory {
         return file.getAbsolutePath();
     }
 
-    public static void switchContent(Content content, ObservableList<Content> contents) {
-        if(!contents.isEmpty()) {
-            contents.set(0, content);
-        } else {
-            contents.add(content);
-        }
-
-    }
-
     public static void openFindReplaceDialog(StyleClassedTextArea sourceText) {
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/FindReplaceDialog.fxml"));
 
