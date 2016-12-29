@@ -39,7 +39,6 @@ public class MdTextController {
     @FXML public AnchorPane treePane;
     private MainApp mainApp;
     private PythonInterpreter pyconsole;
-    private MdConvertController controllerConvert;
     @FXML private VBox contentBox;
     @FXML private TabPane editorList;
     @FXML private Tab home;
@@ -126,13 +125,18 @@ public class MdTextController {
 
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
-        mainApp.contentProperty().addListener(change -> FunctionTreeFactory.clearContent(mainApp.getExtracts(), editorList, () -> {
-            summary.setRoot(null);
-            if(mainApp.contentProperty().isNotNull().get()) {
-                openContent(mainApp.getContent());
-            }
-            return null;
-        }));
+        mainApp.contentProperty().addListener(change -> {
+            logger.info("Détection du changement de contenu");
+            FunctionTreeFactory.clearContent(mainApp.getExtracts(), editorList, () -> {
+                logger.info("Début de la fonction à executer après le clear");
+                summary.setRoot(null);
+                if (mainApp.contentProperty().isNotNull().get()) {
+                    openContent(mainApp.getContent());
+                }
+                return null;
+            });
+
+        });
 
         mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.TAB, SHORTCUT_DOWN), () -> switchTabTo(true));
         mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.TAB, SHORTCUT_DOWN, SHIFT_DOWN), () -> switchTabTo(false));
@@ -265,7 +269,7 @@ public class MdTextController {
         editorList.getTabs().add(tab);
         editorList.getSelectionModel().select(tab);
 
-        controllerConvert = loader.getController();
+        MdConvertController controllerConvert = loader.getController();
         controllerConvert.setMdBox(this, extract, tab);
 
         tab.setOnCloseRequest(t -> {

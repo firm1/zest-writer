@@ -71,7 +71,7 @@ public class MdConvertController {
     private StringProperty countChars = new SimpleStringProperty();
     private StringProperty countWords = new SimpleStringProperty();
     private StringProperty countTimes = new SimpleStringProperty();
-    private BooleanPropertyBase isSaved = new SimpleBooleanProperty(true);
+    private BooleanPropertyBase saved = new SimpleBooleanProperty(true);
 
     @FXML private WebView renderView;
     @FXML private Button saveButton;
@@ -123,7 +123,7 @@ public class MdConvertController {
             sourceText.getUndoManager().forgetHistory();
             sourceText.textProperty().addListener((observableValue, s, s2) -> {
                 tab.setText("! " + extract.getTitle());
-                this.isSaved.setValue(false);
+                setSaved(false);
                 sourceText.getUndoManager().mark();
                 updateRender();
             });
@@ -227,7 +227,7 @@ public class MdConvertController {
         if(MainApp.getConfig().isEditorLinenoView())
             sourceText.setParagraphGraphicFactory(LineNumberFactory.get(sourceText));
 
-        saveButton.disableProperty().bind(isSaved);
+        saveButton.disableProperty().bind(savedProperty());
     }
 
     /*
@@ -238,7 +238,7 @@ public class MdConvertController {
         extract.setMarkdown(sourceText.getText());
         extract.save();
         tab.setText(extract.getTitle());
-        this.isSaved.setValue(true);
+        setSaved(true);
 
         sourceText.requestFocus();
     }
@@ -696,7 +696,15 @@ public class MdConvertController {
     }
 
     public boolean isSaved() {
-        return isSaved.getValue();
+        return saved.get();
+    }
+
+    public BooleanPropertyBase savedProperty() {
+        return saved;
+    }
+
+    public void setSaved(boolean saved) {
+        this.saved.set(saved);
     }
 
     @FXML private void handleFindReplaceDialog(){

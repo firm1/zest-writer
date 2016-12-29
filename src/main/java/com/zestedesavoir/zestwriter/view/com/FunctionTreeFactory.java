@@ -8,7 +8,6 @@ import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
@@ -68,14 +67,13 @@ public class FunctionTreeFactory {
 
     public static void clearContent(ObservableMap<Textual, Tab> extracts, TabPane editorList, Supplier<Void> doAfter) {
 
-        if(extracts.size() == 0) {
+        if(extracts.isEmpty()) {
             doAfter.get();
         }
 
         for(Entry<Textual, Tab> entry:extracts.entrySet()) {
             Platform.runLater(() -> {
                 Event.fireEvent(entry.getValue(), new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
-
                 if(editorList.getTabs().size() <= 1) {
                     extracts.clear();
                     doAfter.get();
