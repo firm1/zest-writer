@@ -19,7 +19,7 @@
          <TabPane fx:id="editorList" minWidth="400.0" prefHeight="410.0" prefWidth="422.0"
                   tabClosingPolicy="ALL_TABS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <Tab fx:id="Home" closable="false" text="%ui.home">
+            <Tab fx:id="home" closable="false" text="%ui.home">
                <VBox>
                   <VBox styleClass="home-header-box" alignment="CENTER_LEFT" prefHeight="10.0"
                         prefWidth="100.0">

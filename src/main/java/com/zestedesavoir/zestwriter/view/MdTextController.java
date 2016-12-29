@@ -10,6 +10,7 @@ import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.view.com.*;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -41,6 +42,7 @@ public class MdTextController {
     private MdConvertController controllerConvert;
     @FXML private VBox contentBox;
     @FXML private TabPane editorList;
+    @FXML private Tab home;
     @FXML private TreeView<ContentNode> summary;
     @FXML private SplitPane splitPane;
 
@@ -57,6 +59,7 @@ public class MdTextController {
         editorList.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> mainApp.getMenuController().setIsOnReadingTab(! (newValue.getContent() instanceof SplitPane))
         );
+        home.setOnSelectionChanged(t -> mainApp.getMenuController().gethBottomBox().getChildren().clear());
     }
 
     public TabPane getEditorList() {
