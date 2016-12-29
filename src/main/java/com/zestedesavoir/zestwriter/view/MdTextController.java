@@ -10,7 +10,6 @@ import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.view.com.*;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
-import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -124,10 +123,11 @@ public class MdTextController {
 
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
-
-        mainApp.getContents().addListener((ListChangeListener<Content>) change -> FunctionTreeFactory.clearContent(mainApp.getExtracts(), editorList, () -> {
+        mainApp.contentProperty().addListener(change -> FunctionTreeFactory.clearContent(mainApp.getExtracts(), editorList, () -> {
             summary.setRoot(null);
-            mainApp.getContents().forEach(this::openContent);
+            if(mainApp.contentProperty().isNotNull().get()) {
+                openContent(mainApp.getContent());
+            }
             return null;
         }));
 
@@ -173,7 +173,7 @@ public class MdTextController {
                     Label description = new Label(c.getDescription());
                     description.setWrapText(true);
                     MaterialDesignIconView type = IconFactory.createContentIcon(c.getType());
-                    link.setOnAction(t -> FunctionTreeFactory.switchContent(c, mainApp.getContents()));
+                    link.setOnAction(t -> mainApp.setContent(c));
                     bPane.setTop(link);
                     bPane.setBottom(description);
                     bPane.setLeft(type);

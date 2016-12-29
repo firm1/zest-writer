@@ -38,12 +38,9 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
     public MdTreeCell(MdTextController index) {
 		this.index = index;
-        if(!index.getMainApp().getContents().isEmpty()) {
-            this.content = index.getMainApp().getContents().stream().findFirst().get();
+        this.content = index.getMainApp().getContent();
+        if(index.getMainApp().contentProperty().isNotNull().get()) {
             this.baseFilePath = this.content.getBasePath();
-        }
-        else {
-            this.content = null;
         }
 		this.logger = LoggerFactory.getLogger(getClass());
 	}
@@ -134,7 +131,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                         // delete physically file
                         deleteContent.delete();
                         // delete in logical tree
-                        index.getMainApp().getContents().clear();
+                        index.getMainApp().setContent(null);
                         index.refreshRecentProject();
                         return null;
                     });

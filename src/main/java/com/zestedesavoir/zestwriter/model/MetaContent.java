@@ -13,7 +13,7 @@ import java.util.function.Function;
 
 import static com.zestedesavoir.zestwriter.utils.StorageSaver.deleteFile;
 
-@JsonIgnoreProperties({"basePath", "filePath", "editable", "object", "countChildrenExtract", "countDescendantContainer", "rootContent"})
+@JsonIgnoreProperties({"basePath", "filePath", "editable", "object", "countChildrenExtract", "countDescendantContainer", "rootContent", "limitedTitle"})
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="object", visible=true)
 @JsonSubTypes({@Type(value = Extract.class, name = "extract"), @Type(value = Container.class, name = "container") })
 public abstract class MetaContent{

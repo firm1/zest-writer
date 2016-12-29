@@ -281,11 +281,7 @@ public class MdConvertController {
         Stage dialogStage = new CustomStage(loader, Configuration.getBundle().getString("ui.dialog.upload.img.title"));
 
         ImageInputDialog imageController = loader.getController();
-        if(!mainApp.getContents().isEmpty()) {
-            imageController.setSourceText(sourceText, MainApp.getZdsutils(), mainApp.getMenuController(), mainApp.getContents().get(0));
-        } else {
-            imageController.setSourceText(sourceText, MainApp.getZdsutils(), mainApp.getMenuController(), null);
-        }
+        imageController.setSourceText(sourceText, MainApp.getZdsutils(), mainApp.getMenuController(), mainApp.getContent());
         imageController.setStage(dialogStage);
 
         dialogStage.show();

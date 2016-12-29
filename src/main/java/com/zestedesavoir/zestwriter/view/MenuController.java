@@ -261,7 +261,7 @@ public class MenuController{
                 FunctionTreeFactory.generateMetadataAttributes(realLocalPath + File.separator);
                 Content content = mapper.readValue(manifest, Content.class);
                 content.setRootContent(content, realLocalPath);
-                FunctionTreeFactory.switchContent(content, mainApp.getContents());
+                mainApp.setContent(content);
             }catch(IOException e){
                 logger.error(e.getMessage(), e);
             }
@@ -287,7 +287,7 @@ public class MenuController{
             try{
                 content = mapper.readValue(manifest, Content.class);
                 content.setRootContent(content, selectedDirectory.getAbsolutePath());
-                FunctionTreeFactory.switchContent(content, mainApp.getContents());
+                mainApp.setContent(content);
             }catch(IOException e){
                 logger.error(e.getMessage(), e);
             }
@@ -295,10 +295,10 @@ public class MenuController{
     }
 
     public void activateButtonForOpenContent() {
-        menuUpload.setDisable(false);
-        menuLisibility.setDisable(false);
-        menuReport.setDisable(false);
-        menuExport.setDisable(false);
+        menuExport.disableProperty().bind(mainApp.contentProperty().isNull());
+        menuUpload.disableProperty().bind(mainApp.contentProperty().isNull());
+        menuLisibility.disableProperty().bind(mainApp.contentProperty().isNull());
+        menuReport.disableProperty().bind(mainApp.contentProperty().isNull());
     }
 
     @FXML public Service<Void> handleLoginButtonAction(ActionEvent event){
@@ -347,9 +347,6 @@ public class MenuController{
         if(! MainApp.getZdsutils().isAuthenticated()){
             Service<Void> loginTask = handleLoginButtonAction(event);
             loginTask.setOnSucceeded(t -> {
-                if(!mainApp.getContents().isEmpty()){
-                    menuUpload.setDisable(false);
-                }
                 downloadContents();
             });
             loginTask.setOnCancelled(t -> {
@@ -382,7 +379,7 @@ public class MenuController{
         hBottomBox.add(labelField, 0, 0);
 
         try {
-            if(mainApp.getContents ().get (0).isArticle()) {
+            if(mainApp.getContent().isArticle()) {
                 MainApp.getZdsutils().initInfoOnlineContent("article");
             } else {
                 MainApp.getZdsutils().initInfoOnlineContent("tutorial");
@@ -395,7 +392,7 @@ public class MenuController{
         List<MetadataContent> contents = new ArrayList<>();
         contents.add(new MetadataContent(null, "---"+Configuration.getBundle().getString("ui.content.new.title")+"---", null));
         List<MetadataContent> possibleContent;
-        if(mainApp.getContents ().get (0).isArticle()) {
+        if(mainApp.getContent().isArticle()) {
             possibleContent = MainApp.getZdsutils().getContentListOnline().stream()
                     .filter(MetadataContent::isArticle)
                     .collect(Collectors.toList());
@@ -436,7 +433,7 @@ public class MenuController{
             return null;
         });
         Optional<Pair<String, MetadataContent>> result = dialog.showAndWait();
-        UploadContentService uploadContentTask = new UploadContentService(result, mainApp.getContents ().get (0));
+        UploadContentService uploadContentTask = new UploadContentService(result, mainApp.getContent());
         labelField.textProperty().bind(uploadContentTask.messageProperty());
         uploadContentTask.setOnSucceeded(t -> {
             Alert alert = new CustomAlert(AlertType.INFORMATION);
@@ -458,7 +455,7 @@ public class MenuController{
                 File f = new File(ch.getFilePath());
                 return f.exists();
             };
-            Map<Textual, Boolean> analyse = mainApp.getContents().get(0).doOnTextual(checkExtractAvailability);
+            Map<Textual, Boolean> analyse = mainApp.getContent().doOnTextual(checkExtractAvailability);
             if(analyse.entrySet().stream().filter(t -> !t.getValue()).count() == 0) {
                 uploadContentTask.start();
             }
@@ -485,9 +482,6 @@ public class MenuController{
                 alert.showAndWait();
             });
             loginTask.setOnSucceeded(t -> {
-                if(!mainApp.getContents().isEmpty()){
-                    menuUpload.setDisable(false);
-                }
                 uploadContents();
             });
             loginTask.start();
@@ -516,7 +510,7 @@ public class MenuController{
     }
 
     @FXML private void handleExportMarkdownButtonAction(ActionEvent event){
-        Content content = mainApp.getContents().get(0);
+        Content content = mainApp.getContent();
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setInitialDirectory(MainApp.getDefaultHome());
         fileChooser.setTitle(Configuration.getBundle().getString("ui.dialog.export.dir.title"));
@@ -540,7 +534,7 @@ public class MenuController{
     }
 
     @FXML private void handleExportPdfButtonAction(ActionEvent event){
-        Content content = mainApp.getContents().get(0);
+        Content content = mainApp.getContent();
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setInitialDirectory(MainApp.getDefaultHome());
         fileChooser.setTitle(Configuration.getBundle().getString("ui.dialog.export.dir.title"));
@@ -651,7 +645,7 @@ public class MenuController{
                 hBottomBox.getChildren().clear();
             });
             downloadGithubTask.setOnSucceeded (t -> {
-                FunctionTreeFactory.switchContent (downloadGithubTask.getValue (), mainApp.getContents ());
+                mainApp.setContent(downloadGithubTask.getValue ());
                 alert.setAlertType(AlertType.INFORMATION);
                 alert.setTitle(Configuration.getBundle().getString("ui.dialog.download.github.success.title"));
                 alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.download.github.success.header"));
@@ -692,7 +686,7 @@ public class MenuController{
                 hBottomBox.getChildren().clear();
             });
             downloadZdsTask.setOnSucceeded (t -> {
-                FunctionTreeFactory.switchContent (downloadZdsTask.getValue (), mainApp.getContents ());
+                mainApp.setContent(downloadZdsTask.getValue ());
                 alert.setAlertType(AlertType.INFORMATION);
                 alert.setTitle(Configuration.getBundle().getString("ui.dialog.download.zds.success.title"));
                 alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.download.zds.success.header"));

@@ -14,8 +14,9 @@ import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.task.LoginService;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -50,7 +51,7 @@ public class MainApp extends Application{
     private Scene scene;
     private BorderPane rootLayout;
     private ObservableMap<Textual, Tab> extracts = FXCollections.observableMap(new HashMap<>());
-    private ObservableList<Content> contents = FXCollections.observableArrayList();
+    private ObjectProperty<Content> content = new SimpleObjectProperty<>();
     private MdTextController index;
     private StringBuilder key = new StringBuilder();
     private static Logger logger;
@@ -145,8 +146,16 @@ public class MainApp extends Application{
         return index;
     }
 
-    public ObservableList<Content> getContents() {
-        return contents;
+    public Content getContent() {
+        return content.get();
+    }
+
+    public void setContent(Content content) {
+        this.content.set(content);
+    }
+
+    public ObjectProperty<Content> contentProperty() {
+        return content;
     }
 
     public ObservableMap<Textual, Tab> getExtracts() {
