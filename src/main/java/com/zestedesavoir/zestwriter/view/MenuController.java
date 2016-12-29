@@ -616,7 +616,8 @@ public class MenuController{
         OptionsDialog optionsController = loader.getController();
         optionsController.setWindow(dialogStage);
 
-        dialogStage.show();
+        dialogStage.showAndWait();
+        mainApp.getIndex().refreshRecentProject();
     }
 
     @FXML private void handleImportGithubButtonAction() {

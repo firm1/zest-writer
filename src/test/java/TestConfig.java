@@ -22,6 +22,7 @@ public class TestConfig {
     public void setUp() {
         StorageSaver.deleteFile(new File(TEST_DIR, ".zestwriter"));
         config = new Configuration(TEST_DIR.getAbsolutePath());
+        config.setWorkspacePath(TEST_DIR.getAbsolutePath());
     }
 
     @Test
@@ -126,7 +127,7 @@ public class TestConfig {
     @Test
     public void testActions() {
         assertEquals(new File(TEST_DIR, ".zestwriter").exists(), true);
-        assertEquals(new File(TEST_DIR, ".zestwriter"+File.separator+"action.properties").exists(), true);
+        assertEquals(new File(TEST_DIR, "action.properties").exists(), true);
         assertEquals(config.getActions().size(), 0);
         config.addActionProject(new File(TEST_DIR, "tutorial-one").getAbsolutePath());
         assertEquals(config.getActions().size(), 1);

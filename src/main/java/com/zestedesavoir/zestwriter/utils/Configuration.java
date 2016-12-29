@@ -49,7 +49,7 @@ public class Configuration {
         }
 
         initConf(confDirPath);
-        initActions(confDirPath);
+        initActions();
         try {
             bundle = ResourceBundle.getBundle("locales/ui", Lang.getLangFromCode(getDisplayLang()).getLocale());
         }catch(Exception e) {
@@ -76,12 +76,11 @@ public class Configuration {
         return null;
     }
 
-    private void initActions(String confDirPath) {
+    private void initActions() {
         actions = new Properties();
 
         String actionFileName = "action.properties";
-        String actionFilePath = confDirPath+File.separator+ actionFileName;
-        actionFile = new File(actionFilePath);
+        actionFile = new File(getWorkspacePath(), actionFileName);
 
         if(!actionFile.exists()) {
             logger.debug("le fichier des actions "+actionFile.getAbsolutePath()+" n'existe pas");
@@ -248,6 +247,7 @@ public class Configuration {
 
     public void setWorkspacePath(String path){
         conf.setProperty(ConfigData.WORKSPACE_PATH.getKey(), path);
+        initActions();
     }
 
     public String getContentsPath(){

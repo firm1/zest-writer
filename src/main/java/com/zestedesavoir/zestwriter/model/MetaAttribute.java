@@ -40,8 +40,7 @@ public class MetaAttribute implements Textual, ContentNode{
     }
 
     public String getExpandTitle() {
-        return getTitle()+" (" +
-                getParent().getTitle() + ")";
+        return getTitle()+" (" + getParent().getTitle() + ")";
     }
 
     public String getLimitedExpandTitle() {
