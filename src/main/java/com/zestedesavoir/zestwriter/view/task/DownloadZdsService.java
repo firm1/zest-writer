@@ -48,7 +48,7 @@ public class DownloadZdsService extends Service<Content>{
                         ObjectMapper mapper = new ObjectMapper();
                         File manifest = new File(folder.getAbsolutePath() + File.separator + "manifest.json");
                         Content c = mapper.readValue(manifest, Content.class);
-                        c.setBasePath(folder.getAbsolutePath());
+                        c.setRootContent(c, folder.getAbsolutePath());
                         updateMessage (Configuration.getBundle().getString("ui.dialog.download.zds.message.done"));
                         return c;
                     }
