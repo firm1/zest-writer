@@ -402,12 +402,16 @@ public class ZdsHttp {
             case 200:
                 return !resultPost.getValue ().contains ("alert-box alert");
             case 404:
-                logger.debug("Your target id and slug is incorrect, please give us real informations");
+                logger.debug("L'id cible du contenu ou le slug est incorrect. Donnez de meilleur informations");
                 return false;
             case 403:
-                logger.debug("Your are not authorize to do this task. Please check if your are login");
+                logger.debug("Vous n'êtes pas autorisé à uploader ce contenu. Vérifiez que vous êtes connecté");
+                return false;
+            case 413:
+                logger.debug("Le fichier que vous essayer d'envoyer est beaucoup trop lourd. Le serveur n'arrive pas à le supporter");
                 return false;
             default:
+                logger.debug("Problème d'upload du contenu. Le code http de retour est le suivant : "+statusCode);
                 return false;
         }
     }
