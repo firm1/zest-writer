@@ -79,6 +79,8 @@
                </MenuItem>
            </Menu>
            <Menu mnemonicParsing="false" text="%ui.menu.edit">
+               <MenuItem fx:id="menuFindReplace" mnemonicParsing="false" onAction="#handleFindReplaceAction"
+                         text="%ui.menu.tools.find_replace" disable="true"/>
                <MenuItem fx:id="menuReport" disable="true" mnemonicParsing="false"
                          onAction="#handleReportWithoutTypoButtonAction" text="%ui.menu.edit.correction">
                    <graphic>
@@ -105,30 +107,26 @@
                </MenuItem>
            </Menu>
            <Menu mnemonicParsing="false" text="%ui.menu.tools">
-               <Menu mnemonicParsing="false" text="%ui.menu.syncho">
-                   <MenuItem fx:id="menuDownload" mnemonicParsing="false" onAction="#handleDownloadButtonAction"
-                             text="%ui.menu.syncho.download">
-                       <graphic>
-                           <MaterialDesignIconView fill="#084561" glyphName="CLOUD_DOWNLOAD" size="1.8em"/>
-                       </graphic>
-                       <accelerator>
-                           <KeyCodeCombination alt="UP" code="D" control="DOWN" meta="UP" shift="UP"
-                                               shortcut="UP"/>
-                       </accelerator>
-                   </MenuItem>
-                   <MenuItem fx:id="menuUpload" disable="true" mnemonicParsing="false"
-                             onAction="#handleUploadButtonAction" text="%ui.menu.syncho.upload">
-                       <graphic>
-                           <MaterialDesignIconView fill="#084561" glyphName="CLOUD_UPLOAD" size="1.8em"/>
-                       </graphic>
-                       <accelerator>
-                           <KeyCodeCombination alt="UP" code="U" control="DOWN" meta="UP" shift="UP"
-                                               shortcut="UP"/>
-                       </accelerator>
-                   </MenuItem>
-               </Menu>
-               <MenuItem fx:id="menuFindReplace" mnemonicParsing="false" onAction="#handleFindReplaceAction"
-                         text="%ui.menu.tools.find_replace" disable="true"/>
+               <MenuItem fx:id="menuDownload" mnemonicParsing="false" onAction="#handleDownloadButtonAction"
+                         text="%ui.menu.syncho.download">
+                   <graphic>
+                       <MaterialDesignIconView fill="#084561" glyphName="CLOUD_DOWNLOAD" size="1.8em"/>
+                   </graphic>
+                   <accelerator>
+                       <KeyCodeCombination alt="UP" code="D" control="DOWN" meta="UP" shift="UP"
+                                           shortcut="UP"/>
+                   </accelerator>
+               </MenuItem>
+               <MenuItem fx:id="menuUpload" disable="true" mnemonicParsing="false"
+                         onAction="#handleUploadButtonAction" text="%ui.menu.syncho.upload">
+                   <graphic>
+                       <MaterialDesignIconView fill="#084561" glyphName="CLOUD_UPLOAD" size="1.8em"/>
+                   </graphic>
+                   <accelerator>
+                       <KeyCodeCombination alt="UP" code="U" control="DOWN" meta="UP" shift="UP"
+                                           shortcut="UP"/>
+                   </accelerator>
+               </MenuItem>
            </Menu>
            <Menu mnemonicParsing="false" text="%ui.menu.help">
                <MenuItem mnemonicParsing="false" onAction="#handleAboutButtonAction" text="%ui.menu.help.about"/>
