@@ -74,6 +74,15 @@
     .box-content .hyperlink {
         -fx-font-size: 1.6em;
     }
+
+    .open-content .label {
+        -fx-font-size: 0.9em;
+    }
+
+    .open-content .hyperlink {
+        -fx-font-size: 1.2em;
+    }
+
     .title-content-home {
         -fx-font-size: 1.8em;
         -fx-text-fill: -fx-text-inner-color;

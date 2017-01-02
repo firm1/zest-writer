@@ -269,29 +269,16 @@ public class MenuController{
     }
 
     @FXML private void handleOpenButtonAction(ActionEvent event){
-        DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle(Configuration.getBundle().getString("ui.menu.dialog.open.title"));
-        File defaultDirectory;
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/OpenContent.fxml"));
 
-        if(MainApp.getConfig().getWorkspaceFactory() == null){
-            MainApp.getConfig().loadWorkspace();
-        }
-        defaultDirectory = new File(MainApp.getZdsutils().getOfflineContentPathDir());
-        chooser.setInitialDirectory(defaultDirectory);
-        File selectedDirectory = chooser.showDialog(MainApp.getPrimaryStage());
+        Stage dialogStage = new CustomStage(loader, Configuration.getBundle().getString("ui.menu.dialog.content.open.title"));
+        dialogStage.setMaximized(true);
+        dialogStage.setResizable(false);
+        OpenContent openContentDialog = loader.getController();
+        openContentDialog.setMainApp(mainApp);
+        openContentDialog.setOpenContentWindow(dialogStage);
 
-        if(selectedDirectory != null){
-            File manifest = new File(selectedDirectory.getAbsolutePath() + File.separator + "manifest.json");
-            ObjectMapper mapper = new ObjectMapper();
-            Content content;
-            try{
-                content = mapper.readValue(manifest, Content.class);
-                content.setRootContent(content, selectedDirectory.getAbsolutePath());
-                mainApp.setContent(content);
-            }catch(IOException e){
-                logger.error(e.getMessage(), e);
-            }
-        }
+        dialogStage.show();
     }
 
     public void activateButtonForOpenContent() {
