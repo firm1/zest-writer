@@ -28,10 +28,6 @@ public class Lang {
 
     public static Lang getLangFromCode(String code) {
         Optional <Lang> lang = langAvailable.stream().filter(p -> p.getLocale().toString().equals(code)).findFirst();
-        if(lang.isPresent()) {
-            return lang.get();
-        } else {
-            return null;
-        }
+        return lang.orElse(null);
     }
 }

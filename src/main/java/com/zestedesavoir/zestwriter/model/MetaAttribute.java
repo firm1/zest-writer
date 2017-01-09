@@ -58,11 +58,11 @@ public class MetaAttribute implements Textual, ContentNode{
     }
 
     public String getSlug() {
-        return _slug;
+        return _slug.replace("\\", "/");
     }
 
     public void setSlug(String slug) {
-        this._slug = slug;
+        this._slug = slug.replace("\\", "/");
     }
 
     public String getBasePath() {

@@ -27,11 +27,11 @@ public class Extract extends MetaContent implements Textual, ContentNode{
     }
 
     public String getText() {
-        return _text;
+        return _text.replace("\\", "/");
     }
 
     public void setText(String text) {
-        this._text = text;
+        this._text = text.replace("\\", "/");
     }
 
     @Override

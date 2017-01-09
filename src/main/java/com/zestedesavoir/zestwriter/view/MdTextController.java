@@ -10,7 +10,6 @@ import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.view.com.*;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
-import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

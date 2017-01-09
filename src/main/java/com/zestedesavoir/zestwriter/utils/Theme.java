@@ -70,10 +70,7 @@ public class Theme {
 
     public static Theme getThemeFromFileName(String filename) {
         Optional<Theme> t = themeAvailable.stream().filter(p -> p.getFilename().equals(filename)).findFirst();
-        if(t.isPresent()) {
-            return t.get();
-        }
-        return null;
+        return t.orElse(null);
     }
 
     public static Theme getActiveTheme() {

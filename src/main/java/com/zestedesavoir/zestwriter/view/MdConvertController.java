@@ -353,9 +353,7 @@ public class MdConvertController {
 
         // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
-        if (result.isPresent()) {
-            sourceText.replaceText(sourceText.getSelection(), "\n[[" + result.get() + "]]\n" + text.toString());
-        }
+        result.ifPresent(s -> sourceText.replaceText(sourceText.getSelection(), "\n[[" + s + "]]\n" + text.toString()));
 
         sourceText.requestFocus();
     }
@@ -574,7 +572,7 @@ public class MdConvertController {
                         }
                     });
         }
-        performStats();
+        //performStats();
     }
 
     @FXML private void handleValidateButtonAction(ActionEvent event) {

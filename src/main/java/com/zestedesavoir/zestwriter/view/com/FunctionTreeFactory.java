@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
@@ -57,11 +58,7 @@ public class FunctionTreeFactory {
         }
 
         Optional<Pair<String, Map<String, Object>>> result = dialog.showAndWait();
-        if(result.isPresent()) {
-            return result.get().getValue();
-        } else {
-            return null;
-        }
+        return result.map(Pair::getValue).orElse(null);
 
      }
 
@@ -89,7 +86,7 @@ public class FunctionTreeFactory {
             node.getChildren().add(itemIntro);
             container.getChildren().stream()
                     .map(x -> (ContentNode) x)
-                    .map(y -> new TreeItem<>(y))
+                    .map(TreeItem::new)
                     .forEach(x -> node.getChildren().add(buildChild(x)));
             TreeItem<ContentNode> itemConclu = new TreeItem<>((ContentNode) container.getConclusion());
             node.getChildren().add(itemConclu);
@@ -156,13 +153,9 @@ public class FunctionTreeFactory {
                     .filter(x -> x instanceof Container)
                     .map(x -> (Container) x)
                     .map(x -> getContainerOfMetaAttribute(x, meta))
-                    .filter(x -> x != null)
+                    .filter(Objects::nonNull)
                     .findFirst();
-            if(optContainer.isPresent()) {
-                return optContainer.get();
-            } else {
-                return null;
-            }
+            return optContainer.orElse(null);
         }
     }
 

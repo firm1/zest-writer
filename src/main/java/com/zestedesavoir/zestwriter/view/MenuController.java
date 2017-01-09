@@ -332,9 +332,7 @@ public class MenuController{
     @FXML private void handleDownloadButtonAction(ActionEvent event){
         if(! MainApp.getZdsutils().isAuthenticated()){
             Service<Void> loginTask = handleLoginButtonAction(event);
-            loginTask.setOnSucceeded(t -> {
-                downloadContents();
-            });
+            loginTask.setOnSucceeded(t -> downloadContents());
             loginTask.setOnCancelled(t -> {
                 hBottomBox.getChildren().clear();
                 Alert alert = new CustomAlert(AlertType.ERROR);
@@ -467,9 +465,7 @@ public class MenuController{
 
                 alert.showAndWait();
             });
-            loginTask.setOnSucceeded(t -> {
-                uploadContents();
-            });
+            loginTask.setOnSucceeded(t -> uploadContents());
             loginTask.start();
         }else{
             uploadContents();
@@ -641,9 +637,7 @@ public class MenuController{
                 hBottomBox.getChildren().clear();
             });
 
-            if(result.isPresent()){
-                downloadGithubTask.start();
-            }
+            result.ifPresent(s -> downloadGithubTask.start());
         });
     }
 
@@ -682,9 +676,7 @@ public class MenuController{
                 hBottomBox.getChildren().clear();
             });
 
-            if(result.isPresent()){
-                downloadZdsTask.start();
-            }
+            result.ifPresent(s -> downloadZdsTask.start());
         });
     }
 

@@ -3,11 +3,8 @@ package com.zestedesavoir.zestwriter.view.task;
 import com.zestedesavoir.zestwriter.model.Container;
 import com.zestedesavoir.zestwriter.model.MetaAttribute;
 import com.zestedesavoir.zestwriter.model.Textual;
-import com.zestedesavoir.zestwriter.utils.Corrector;
-import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import org.apache.commons.lang.StringEscapeUtils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

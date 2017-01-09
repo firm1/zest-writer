@@ -30,8 +30,4 @@ public class BaseDialog<T> extends CustomDialog<T> {
 	public GridPane getGridPane() {
 		return gridPane;
 	}
-
-	public void setGridPane(GridPane gridPane) {
-		this.gridPane = gridPane;
-	}
 }

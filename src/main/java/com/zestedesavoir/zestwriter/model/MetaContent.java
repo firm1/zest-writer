@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 
 import java.io.File;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -57,11 +56,11 @@ public abstract class MetaContent{
     }
 
     public String getSlug() {
-        return _slug;
+        return _slug.replace("\\", "/");
     }
 
     public void setSlug(String slug) {
-        this._slug = slug;
+        this._slug = slug.replace("\\", "/");
     }
 
     public String getObject() {

@@ -123,7 +123,7 @@ public class OpenContent{
                         }
                     })
                     .filter(Objects::nonNull)
-                    .map(c -> c.getValue())
+                    .map(Pair::getValue)
                     .collect(Collectors.toList());
         }
     }

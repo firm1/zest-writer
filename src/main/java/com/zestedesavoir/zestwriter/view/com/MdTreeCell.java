@@ -165,7 +165,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                     }
                     // delete in logical tree
                     Container parentContainer = (Container) getTreeItem().getParent().getValue();
-                    parentContainer.getChildren().remove((MetaContent) getItem());
+                    parentContainer.getChildren().remove(getItem());
                     // delete in gui tree
                     getTreeItem().getParent().getChildren().remove(getTreeItem());
                     // delete physically file
@@ -431,7 +431,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             Function<Textual, Double> performCorrection = (Textual ch) -> {
                 String md = ch.readMarkdown();
                 try {
-                    return new Double(corrector.countMistakes(index, md));
+                    return (double) corrector.countMistakes(index, md);
                 } catch(Exception e) {
                     logger.trace(e.getMessage(), e);
                     return 0.0;
