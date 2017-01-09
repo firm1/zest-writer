@@ -56,12 +56,22 @@ public class MdTreeCell extends TreeCell<ContentNode>{
     }
 
 	private void initContextMenu(ContentNode item) {
+        TreeItem<ContentNode> parentTree = getTreeItem().getParent();
+        long countContainerParent;
+        if(parentTree != null) {
+            countContainerParent = parentTree.getChildren().stream()
+                    .filter(x -> x.getValue() instanceof Container)
+                    .count();
+        } else {
+            countContainerParent = 0;
+        }
         MenuItem addMenuItem1 = new MenuItem(Configuration.getBundle().getString("ui.actions.add_extract.label"));
         MenuItem addMenuItem2 = new MenuItem(Configuration.getBundle().getString("ui.actions.add_container.label"));
         MenuItem addMenuItem3 = new MenuItem(Configuration.getBundle().getString("ui.actions.rename.label"));
         MenuItem addMenuItem4 = new MenuItem(Configuration.getBundle().getString("ui.actions.delete.label"));
         MenuItem addMenuItem5 = new MenuItem(Configuration.getBundle().getString("ui.actions.edit.label"));
         MenuItem addMenuItem6 = new MenuItem(Configuration.getBundle().getString("ui.actions.merge_extracts.label"));
+        MenuItem addMenuItem7 = new MenuItem(Configuration.getBundle().getString("ui.actions.unpack_extracts.label"));
         Menu menuStats = new Menu(Configuration.getBundle().getString("ui.actions.stats.label"));
         MenuItem menuStatCountHisto = new MenuItem(Configuration.getBundle().getString("ui.actions.stats.count.histo"));
         MenuItem menuStatReadability = new MenuItem(Configuration.getBundle().getString("ui.actions.stats.readability"));
@@ -75,6 +85,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         addMenuItem4.setGraphic(IconFactory.createRemoveIcon());
         addMenuItem5.setGraphic(IconFactory.createEditIcon());
         addMenuItem6.setGraphic(IconFactory.createMoveIcon());
+        addMenuItem7.setGraphic(IconFactory.createDeleteIcon());
         menuStats.setGraphic(IconFactory.createStatsIcon());
         menuStatCountHisto.setGraphic(IconFactory.createStatsHistoIcon());
         menuStatReadability.setGraphic(IconFactory.createStatsHistoIcon());
@@ -109,10 +120,16 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             addMenu.getItems().add(new SeparatorMenuItem());
             addMenu.getItems().add(addMenuItem6);
         }
+        if(item instanceof Container && countContainerParent == 1) {
+            addMenu.getItems().add(new SeparatorMenuItem());
+            addMenu.getItems().add(addMenuItem7);
+
+        }
         if (item.canDelete()) {
             addMenu.getItems().add(new SeparatorMenuItem());
             addMenu.getItems().add(addMenuItem4);
         }
+
 
         addMenuItem4.setOnAction(t -> {
             Alert alert = new CustomAlert(AlertType.CONFIRMATION);
@@ -315,6 +332,17 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             }
         });
 
+        addMenuItem7.setOnAction(t -> {
+            logger.debug("Tentative de suppression de conteneur");
+            // move extracts on parents
+            Container parentNode = (Container) getTreeItem().getParent().getValue();
+            Container currentNode = (Container) getItem();
+            currentNode.getChildren().forEach(x -> parentNode.getChildren().add(x));
+            parentNode.getChildren().remove(currentNode);
+            saveManifestJson();
+            index.openContent(content);
+        });
+
         menuStatCountHisto.setOnAction(t -> {
             logger.debug("Tentative de calcul des statistiques de type histogramme");
             BaseDialog dialog = new BaseDialog(Configuration.getBundle().getString("ui.actions.stats.label"), Configuration.getBundle().getString("ui.actions.stats.header")+" "+getItem().getTitle());
@@ -388,14 +416,10 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                     displayIndexChart(((ComputeIndexService) g.getSource()).getValue(), ((ComputeIndexService) f.getSource()).getValue());
                     index.getMainApp().getMenuController().gethBottomBox().getChildren().clear();
                 });
-                computeFleshService.setOnFailed(f -> {
-                    index.getMainApp().getMenuController().gethBottomBox().getChildren().clear();
-                });
+                computeFleshService.setOnFailed(f -> index.getMainApp().getMenuController().gethBottomBox().getChildren().clear());
                 computeFleshService.start();
             });
-            computeGuningService.setOnFailed(g -> {
-                index.getMainApp().getMenuController().gethBottomBox().getChildren().clear();
-            });
+            computeGuningService.setOnFailed(g -> index.getMainApp().getMenuController().gethBottomBox().getChildren().clear());
             computeGuningService.start();
         });
 
@@ -423,14 +447,12 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 displayTypoChart(mapT);
                 index.getMainApp().getMenuController().gethBottomBox().getChildren().clear();
             });
-            computeTypoService.setOnFailed(g -> {
-                index.getMainApp().getMenuController().gethBottomBox().getChildren().clear();
-            });
+            computeTypoService.setOnFailed(g -> index.getMainApp().getMenuController().gethBottomBox().getChildren().clear());
             computeTypoService.start();
         });
     }
 
-    public XYChart.Series<String, Number> getSeriesIndex(Map<String, Double> statIndex, String title) {
+    private XYChart.Series<String, Number> getSeriesIndex(Map<String, Double> statIndex, String title) {
         XYChart.Series<String, Number> series = new XYChart.Series();
         series.setName(title);
 
@@ -440,7 +462,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         return series;
     }
 
-    public void displayTypoChart(Map<String, Double> statT) {
+    private void displayTypoChart(Map<String, Double> statT) {
         BaseDialog dialog = new BaseDialog(Configuration.getBundle().getString("ui.actions.stats.label"), Configuration.getBundle().getString("ui.actions.stats.header")+" "+getItem().getTitle());
         dialog.getDialogPane().setPrefSize(800, 600);
         dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.getBundle().getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
