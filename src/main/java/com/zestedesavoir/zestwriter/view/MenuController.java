@@ -272,7 +272,6 @@ public class MenuController{
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/OpenContent.fxml"));
 
         Stage dialogStage = new CustomStage(loader, Configuration.getBundle().getString("ui.menu.dialog.content.open.title"));
-        dialogStage.setMaximized(true);
         dialogStage.setResizable(false);
         OpenContent openContentDialog = loader.getController();
         openContentDialog.setMainApp(mainApp);
