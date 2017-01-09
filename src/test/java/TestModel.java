@@ -12,8 +12,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.function.Function;
 
 import static org.junit.Assert.*;
@@ -21,24 +23,24 @@ import static org.junit.Assert.*;
 public class TestModel {
 
     private final static String TEST_DIR = System.getProperty("java.io.tmpdir");
-    Content content;
-    Container part1;
-    Container part2;
-    Container part3;
-    Container chapter11;
-    Container chapter12;
-    Container chapter13;
-    Container chapter14;
-    Container chapter15;
-    Container chapter16;
-    Container chapter17;
-    Container chapter21;
-    Container chapter31;
-    Extract extract111;
-    Extract extract112;
-    Extract extract113;
-    Extract extract211;
-    Extract extract212;
+    private Content content;
+    private Container part1;
+    private Container part2;
+    private Container part3;
+    private Container chapter11;
+    private Container chapter12;
+    private Container chapter13;
+    private Container chapter14;
+    private Container chapter15;
+    private Container chapter16;
+    private Container chapter17;
+    private Container chapter21;
+    private Container chapter31;
+    private Extract extract111;
+    private Extract extract112;
+    private Extract extract113;
+    private Extract extract211;
+    private Extract extract212;
 
     @Before
     public void setUp() throws Exception {
@@ -54,6 +56,20 @@ public class TestModel {
         part1 = (Container) content.getChildren().get(0);
         part2 = (Container) content.getChildren().get(1);
         part3 = (Container) content.getChildren().get(2);
+    }
+
+    private void checkManifestAntislash(Content c) {
+        File file = new File(c.getFilePath(), "manifest.json");
+        StringBuilder bfString = new StringBuilder();
+        try(Scanner scanner = new Scanner(file, StandardCharsets.UTF_8.name())) {
+            while (scanner.hasNextLine()) {
+                bfString.append(scanner.nextLine());
+                bfString.append("\n");
+            }
+            assertFalse(bfString.toString().contains("\\"));
+        } catch (IOException e) {
+            MainApp.getLogger().error(e.getMessage(), e);
+        }
     }
 
     private void loadChapters() {
@@ -82,11 +98,13 @@ public class TestModel {
         assertEquals(content.getChildren().size(), 3);
 
         loadParts();
+        checkManifestAntislash(content);
         assertEquals(part1.getChildren().size(), 7);
         assertEquals(part2.getChildren().size(), 5);
         assertEquals(part3.getChildren().size(), 3);
 
         loadChapters();
+        checkManifestAntislash(content);
         assertEquals(chapter11.getChildren().size(), 6);
         assertEquals(chapter12.getChildren().size(), 3);
         assertEquals(chapter13.getChildren().size(), 6);
@@ -170,8 +188,8 @@ public class TestModel {
             Readability rd = new Readability(ch.readMarkdown());
             return rd.getWords();
         };
-
         Map<Textual, Integer> result = content.doOnTextual(countWords);
+        checkManifestAntislash(content);
 
     }
 
@@ -214,7 +232,6 @@ public class TestModel {
 
         chapter_11.getChildren().add(extract111);
         assertEquals(extract111.getSlug(), "premier-extrait");
-        assertFalse(extract111.canTakeContainer(bigtuto));
         assertFalse(extract111.canTakeExtract());
         Extract extract_21 = new Extract("extract", ZdsHttp.toSlug(extract_21_title), extract_21_title, ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(extract_21_title)+".md");
 
@@ -223,7 +240,6 @@ public class TestModel {
 
         bigtuto.setRootContent(bigtuto, new File(workspace, bigtuto.getSlug()).getAbsolutePath());
         assertFalse(bigtuto.canTakeExtract());
-        assertFalse(part_2.canTakeContainer(bigtuto));
 
         assertTrue(new File(part_1.getIntroduction().getFilePath()).exists());
         assertFalse(((ContentNode) part_1.getIntroduction()).canDelete());
@@ -255,6 +271,7 @@ public class TestModel {
         assertEquals((new File(chapter_12.getFilePath())).exists(), false);
         bigtuto.delete();
         assertEquals((new File(bigtuto.getFilePath())).exists(), false);
+        checkManifestAntislash(bigtuto);
     }
 
     @Test
@@ -295,19 +312,7 @@ public class TestModel {
         assertFalse(c1.equals(c8));
         assertTrue(c9.equals(c1));
         assertTrue(c1.equals(c9));
-        assertFalse(new String("FAILED").equals(c1));
-        assertTrue(c1.equals(c1));
-        assertTrue(c2.equals(c2));
-        assertTrue(c3.equals(c3));
-        assertTrue(c4.equals(c4));
-        assertTrue(c5.equals(c5));
-        assertTrue(c5b.equals(c5b));
-        assertTrue(c6.equals(c6));
-        assertTrue(c6b.equals(c6b));
-        assertTrue(c7.equals(c7));
-        assertTrue(c7b.equals(c7b));
-        assertTrue(c8.equals(c8));
-        assertTrue(c9.equals(c9));
+        assertFalse("FAILED".equals(c1));
     }
 
     @Test
@@ -360,6 +365,7 @@ public class TestModel {
         assertTrue(off.exists());
         try {
             Content loadContent = GithubHttp.loadManifest(folder.getAbsolutePath(), "steeve", "france.code-civil");
+            checkManifestAntislash(loadContent);
             assertNotNull(loadContent);
             assertNotNull(loadContent.getTitle());
             assertNotNull(loadContent.getFilePath());
