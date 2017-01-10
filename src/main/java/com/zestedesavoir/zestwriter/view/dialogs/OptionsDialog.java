@@ -48,6 +48,7 @@ public class OptionsDialog{
     @FXML private ComboBox<String> optAdvancedProtocol;
     @FXML private TextField optAdvancedHost;
     @FXML private TextField optAdvancedPort;
+    @FXML private TextField optAdvancedPandocUrl;
     @FXML private Label workspacepath;
 
     @FXML public void initialize() {
@@ -97,6 +98,7 @@ public class OptionsDialog{
         MainApp.getConfig().setAdvancedServerProtocol(optAdvancedProtocol.getValue());
         MainApp.getConfig().setAdvancedServerHost(optAdvancedHost.getText());
         MainApp.getConfig().setAdvancedServerPort(optAdvancedPort.getText());
+        MainApp.getConfig().setAdvancedServerPandoc(optAdvancedPandocUrl.getText());
 
         MainApp.getConfig().saveConfFile();
         MainApp.getConfig().loadWorkspace();
@@ -300,6 +302,7 @@ public class OptionsDialog{
         optAdvancedProtocol.setValue(MainApp.getConfig().getAdvancedServerProtocol());
         optAdvancedHost.setText(MainApp.getConfig().getAdvancedServerHost());
         optAdvancedPort.setText(MainApp.getConfig().getAdvancedServerPort());
+        optAdvancedPandocUrl.setText(MainApp.getConfig().getAdvancedServerPandoc());
     }
 
     private void resetOptions(){

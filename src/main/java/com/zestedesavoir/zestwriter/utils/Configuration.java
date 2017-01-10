@@ -148,10 +148,6 @@ public class Configuration {
         }
     }
 
-    public String getPandocProvider() {
-        return "http://firm1.eu/2pdf/";
-    }
-
     public StorageSaver getOfflineSaver() {
         return offlineSaver;
     }
@@ -444,6 +440,19 @@ public class Configuration {
         }
     }
 
+    public void setAdvancedServerPandoc(String host){
+        conf.setProperty(ConfigData.ADVANCED_SERVER_PANDOC.getKey(), host);
+    }
+
+    public String getAdvancedServerPandoc(){
+        if(conf.containsKey(ConfigData.ADVANCED_SERVER_PANDOC.getKey())) {
+            return conf.getProperty(ConfigData.ADVANCED_SERVER_PANDOC.getKey());
+        }
+        else {
+            return ConfigData.ADVANCED_SERVER_PANDOC.getDefaultValue();
+        }
+    }
+
     public void setAdvancedServerPort(String port){
         conf.setProperty(ConfigData.ADVANCED_SERVER_PORT.getKey(), port);
     }
@@ -554,7 +563,8 @@ public class Configuration {
         ADVANCED_API_SERVER_PORT("options.advanced.port", "80"),
         ADVANCED_SERVER_PROTOCOL("server.protocol", "https"),
         ADVANCED_SERVER_HOST("server.host", "zestedesavoir.com"),
-        ADVANCED_SERVER_PORT("server.port", "443");
+        ADVANCED_SERVER_PORT("server.port", "443"),
+        ADVANCED_SERVER_PANDOC("server.pandoc.url", "http:/"+"/firm1.eu/2pdf/");
 
         private String key;
         private String defaultValue;

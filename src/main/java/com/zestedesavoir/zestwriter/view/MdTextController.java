@@ -16,7 +16,6 @@ import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanPropertyBase;
 import javafx.beans.property.ObjectPropertyBase;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -35,12 +34,14 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Pair;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMException;
 
 import java.io.File;
@@ -57,29 +58,35 @@ import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
 import static org.fxmisc.wellbehaved.event.EventPattern.keyPressed;
 import static org.fxmisc.wellbehaved.event.EventPattern.keyReleased;
 
+@Slf4j
+@NoArgsConstructor
 public class MdTextController {
+    @Getter @Setter
     private boolean pythonStarted=false;
-    private final Logger logger;
     @FXML public AnchorPane treePane;
+    @Getter
     private MainApp mainApp;
+    @Getter @Setter
     private PythonInterpreter pyconsole;
     @FXML private VBox contentBox;
+    @Getter
     @FXML private TabPane editorList;
     @FXML private Tab home;
+    @Getter
     @FXML private TreeView<ContentNode> summary;
+    @Getter
     @FXML private SplitPane splitPane;
+    @Getter
     @FXML private Button saveButton;
     @FXML private ToolBar editorToolBar;
+    @Getter @Setter
     private WebView currentRenderView;
+    @Getter @Setter
     private BorderPane currentBoxRender;
+    @Getter @Setter
     private CustomStyledClassedTextArea currentSourceText;
     private ObjectPropertyBase<Textual> currentExtract = new SimpleObjectProperty<>(null);
     public BooleanPropertyBase currentSaved;
-
-    public MdTextController() {
-        super();
-        logger = LoggerFactory.getLogger(MdTextController.class);
-    }
 
     @FXML private void initialize() {
         if(MainApp.getConfig().isEditorRenderView())
@@ -100,22 +107,6 @@ public class MdTextController {
         editorToolBar.visibleProperty().bind(currentExtractProperty().isNotNull());
     }
 
-    public TabPane getEditorList() {
-        return editorList;
-    }
-
-    public boolean isPythonStarted() {
-        return pythonStarted;
-    }
-
-    public void setPythonStarted(boolean pythonStarted) {
-        this.pythonStarted = pythonStarted;
-    }
-
-    public void setCurrentRenderView(WebView currentRenderView) {
-        this.currentRenderView = currentRenderView;
-    }
-
     public Textual getCurrentExtract() {
         return currentExtract.get();
     }
@@ -126,10 +117,6 @@ public class MdTextController {
 
     public void setCurrentExtract(Textual currentExtract) {
         this.currentExtract.set(currentExtract);
-    }
-
-    public void setCurrentSourceText(CustomStyledClassedTextArea currentSourceText) {
-        this.currentSourceText = currentSourceText;
     }
 
     public boolean isCurrentSaved() {
@@ -144,14 +131,6 @@ public class MdTextController {
         this.currentSaved.set(currentSaved);
     }
 
-    public void setCurrentBoxRender(BorderPane currentBoxRender) {
-        this.currentBoxRender = currentBoxRender;
-    }
-
-    public Button getSaveButton() {
-        return saveButton;
-    }
-
     public void loadConsolePython() {
         new Thread(() -> {
             pyconsole = new PythonInterpreter();
@@ -159,7 +138,7 @@ public class MdTextController {
             pyconsole.exec("from markdown.extensions.zds import ZdsExtension");
             pyconsole.exec("from smileys_definition import smileys");
             pyconsole.exec("mk_instance = Markdown(extensions=(ZdsExtension(inline=False, emoticons=smileys, js_support=False, ping_url=None),),safe_mode = 'escape', enable_attributes = False, tab_length = 4, output_format = 'html5', smart_emphasis = True, lazy_ol = True)");
-            logger.info("PYTHON STARTED");
+            log.info("PYTHON STARTED");
             setPythonStarted(true);
         }).start();
     }
@@ -182,32 +161,12 @@ public class MdTextController {
         }).start();
     }
 
-    public PythonInterpreter getPyconsole() {
-        return pyconsole;
-    }
-
-    public void setPyconsole(PythonInterpreter pyconsole) {
-        this.pyconsole = pyconsole;
-    }
-
-    public SplitPane getSplitPane() {
-        return splitPane;
-    }
-
-    public TreeView<ContentNode> getSummary() {
-        return summary;
-    }
-
-    public MainApp getMainApp() {
-        return mainApp;
-    }
-
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
         mainApp.contentProperty().addListener(change -> {
-            logger.info("Détection du changement de contenu");
+            log.info("Détection du changement de contenu");
             FunctionTreeFactory.clearContent(mainApp.getExtracts(), editorList, () -> {
-                logger.info("Début de la fonction à executer après le clear");
+                log.info("Début de la fonction à executer après le clear");
                 summary.setRoot(null);
                 if (mainApp.contentProperty().isNotNull().get()) {
                     openContent(mainApp.getContent());
@@ -265,7 +224,7 @@ public class MdTextController {
                     bPane.setLeft(type);
                     gPane.add(bPane, col % size, row);
                 } catch (IOException e) {
-                    logger.error("Impossible de lire le contenu répertorié dans : " + recentFilePath, e);
+                    log.error("Impossible de lire le contenu répertorié dans : " + recentFilePath, e);
                 }
                 col++;
                 if (col % size == 0) {
@@ -349,11 +308,11 @@ public class MdTextController {
     }
 
     public void createTabExtract(Textual extract) throws IOException {
-        logger.debug("Tentative de création d'un nouvel onglet pour "+extract.getTitle());
+        log.debug("Tentative de création d'un nouvel onglet pour "+extract.getTitle());
         extract.loadMarkdown();
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Editor.fxml"));
         Tab writer = loader.load();
-        logger.trace("Fichier Editor.fxml chargé");
+        log.trace("Fichier Editor.fxml chargé");
         editorList.getTabs().add(writer);
         editorList.getSelectionModel().select(writer);
 
@@ -379,7 +338,7 @@ public class MdTextController {
                 if (result.isPresent()) {
                     if (result.get() != buttonTypeCancel) {
                         if (result.get() == buttonTypeYes) {
-                            handleSaveButtonAction(null);
+                            handleSaveButtonAction();
                         }
                         Event.fireEvent(writer, new Event(Tab.CLOSED_EVENT));
                     } else {
@@ -402,7 +361,7 @@ public class MdTextController {
 
         summary.getSelectionModel().select(selectItemOnTree(summary.getRoot(), extract));
         mainApp.getExtracts().put(extract, writer);
-        logger.info("Nouvel onglet crée pour "+extract.getTitle());
+        log.info("Nouvel onglet crée pour "+extract.getTitle());
     }
 
     public MdTextController getThis() {
@@ -412,7 +371,7 @@ public class MdTextController {
     public void openContent(Content content) {
     	String filePath = content.getBasePath();
         mainApp.getExtracts().clear();
-        logger.debug("Tentative d'ouverture du contenu stocké dans "+filePath);
+        log.debug("Tentative d'ouverture du contenu stocké dans "+filePath);
 
         // load content informations
         MainApp.getZdsutils().setLocalSlug(content.getSlug());
@@ -431,7 +390,7 @@ public class MdTextController {
                             try {
                                 createTabExtract((Textual)item.getValue());
                             } catch (IOException e) {
-                                logger.error("Problème lors de la création de l'extrait", e);
+                                log.error("Problème lors de la création de l'extrait", e);
                             }
                         } else {
                             TabPaneSkin skin = (TabPaneSkin) editorList.getSkin();
@@ -501,7 +460,7 @@ public class MdTextController {
             MainApp.getConfig().addActionProject(filePath);
             refreshRecentProject();
         }
-        logger.info("Contenu stocké dans "+filePath+" ouvert");
+        log.info("Contenu stocké dans "+filePath+" ouvert");
     }
 
     private void handleSmartEnter() {
@@ -556,7 +515,7 @@ public class MdTextController {
      * Editor Toolbar Action
      */
 
-    @FXML public void handleSaveButtonAction(ActionEvent event) {
+    @FXML public void handleSaveButtonAction() {
         getCurrentExtract().setMarkdown(currentSourceText.getText());
         getCurrentExtract().save();
 
@@ -860,7 +819,7 @@ public class MdTextController {
                     + MainApp.class.getResource("assets").toExternalForm() + "' /></head><body>" + result + "</body></html>");
             webEngine.setUserStyleSheetLocation(MainApp.class.getResource("assets/static/css/content.css").toExternalForm());
         } catch (DOMException e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -887,7 +846,7 @@ public class MdTextController {
         });
     }
 
-    @FXML private void handleUnbreakableAction(ActionEvent event) {
+    @FXML private void handleUnbreakableAction() {
         currentSourceText.replaceText(currentSourceText.getSelection(), currentSourceText.getSelectedText() + "\u00a0");
         currentSourceText.requestFocus();
     }
@@ -910,7 +869,7 @@ public class MdTextController {
     private void initKeyMapping() {
         Platform.runLater(() -> {
             EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
-                    EventHandlerHelper.on(keyPressed(KeyCode.S, SHORTCUT_DOWN)).act(ev -> handleSaveButtonAction(null)).create());
+                    EventHandlerHelper.on(keyPressed(KeyCode.S, SHORTCUT_DOWN)).act(ev -> handleSaveButtonAction()).create());
             EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
                     EventHandlerHelper.on(keyPressed(KeyCode.G, SHORTCUT_DOWN)).act(ev -> handleBoldButtonAction(null)).create());
             EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
@@ -928,7 +887,7 @@ public class MdTextController {
             EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
                     EventHandlerHelper.on(keyPressed(KeyCode.D, SHIFT_DOWN, SHORTCUT_DOWN)).act(ev -> handleRightButtonAction(null)).create());
             EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
-                    EventHandlerHelper.on(keyPressed(KeyCode.SPACE, SHORTCUT_DOWN)).act(ev -> handleUnbreakableAction(null)).create());
+                    EventHandlerHelper.on(keyPressed(KeyCode.SPACE, SHORTCUT_DOWN)).act(ev -> handleUnbreakableAction()).create());
             EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
                     EventHandlerHelper.on(keyPressed(KeyCode.L, SHORTCUT_DOWN)).act(ev -> handleGoToLineAction()).create());
             EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),

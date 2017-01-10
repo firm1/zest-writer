@@ -60,15 +60,17 @@ public class TestModel {
 
     private void checkManifestAntislash(Content c) {
         File file = new File(c.getFilePath(), "manifest.json");
-        StringBuilder bfString = new StringBuilder();
-        try(Scanner scanner = new Scanner(file, StandardCharsets.UTF_8.name())) {
-            while (scanner.hasNextLine()) {
-                bfString.append(scanner.nextLine());
-                bfString.append("\n");
+        if(file.exists()) {
+            StringBuilder bfString = new StringBuilder();
+            try (Scanner scanner = new Scanner(file, StandardCharsets.UTF_8.name())) {
+                while (scanner.hasNextLine()) {
+                    bfString.append(scanner.nextLine());
+                    bfString.append("\n");
+                }
+                assertFalse(bfString.toString().contains("\\"));
+            } catch (IOException e) {
+                MainApp.getLogger().error(e.getMessage(), e);
             }
-            assertFalse(bfString.toString().contains("\\"));
-        } catch (IOException e) {
-            MainApp.getLogger().error(e.getMessage(), e);
         }
     }
 

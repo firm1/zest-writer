@@ -37,13 +37,14 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,11 +55,13 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
+@NoArgsConstructor
 public class MenuController{
+    @Setter
     private MainApp mainApp;
     private final ProgressBar pb = new ProgressBar(0);
     private final Text labelField = new Text("");
-    private final Logger logger;
 
     @FXML private MenuItem menuDownload;
     @FXML private MenuItem menuUpload;
@@ -69,21 +72,6 @@ public class MenuController{
     @FXML private MenuItem menuQuit;
     @FXML private MenuItem menuFindReplace;
     private BooleanPropertyBase isOnReadingTab = new SimpleBooleanProperty(true);
-
-    public MenuController(){
-        super();
-        logger = LoggerFactory.getLogger(getClass());
-    }
-
-    public void setMainApp(MainApp mainApp){
-        this.mainApp = mainApp;
-    }
-
-    public MainApp getMainApp() {
-        return mainApp;
-    }
-
-
 
     public BooleanPropertyBase isOnReadingTabProperty() {
         return isOnReadingTab;
@@ -263,7 +251,7 @@ public class MenuController{
                 content.setRootContent(content, realLocalPath);
                 mainApp.setContent(content);
             }catch(IOException e){
-                logger.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
         }
     }
@@ -369,7 +357,7 @@ public class MenuController{
                 MainApp.getZdsutils().initInfoOnlineContent("tutorial");
             }
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
 
 
@@ -498,12 +486,12 @@ public class MenuController{
         fileChooser.setTitle(Configuration.getBundle().getString("ui.dialog.export.dir.title"));
         File selectedDirectory = fileChooser.showDialog(MainApp.getPrimaryStage());
         File selectedFile = new File(selectedDirectory, ZdsHttp.toSlug(content.getTitle()) + ".md");
-        logger.debug("Tentative d'export vers le fichier " + selectedFile.getAbsolutePath());
+        log.debug("Tentative d'export vers le fichier " + selectedFile.getAbsolutePath());
 
         if(selectedDirectory != null){
 
             content.saveToMarkdown(selectedFile);
-            logger.debug("Export réussi vers " + selectedFile.getAbsolutePath());
+            log.debug("Export réussi vers " + selectedFile.getAbsolutePath());
 
             Alert alert = new CustomAlert(AlertType.INFORMATION);
             alert.setTitle(Configuration.getBundle().getString("ui.dialog.export.success.title"));
@@ -522,13 +510,13 @@ public class MenuController{
         fileChooser.setTitle(Configuration.getBundle().getString("ui.dialog.export.dir.title"));
         File selectedDirectory = fileChooser.showDialog(MainApp.getPrimaryStage());
         File selectedFile = new File(selectedDirectory, ZdsHttp.toSlug(content.getTitle()) + ".pdf");
-        logger.debug("Tentative d'export vers le fichier " + selectedFile.getAbsolutePath());
+        log.debug("Tentative d'export vers le fichier " + selectedFile.getAbsolutePath());
 
         if(selectedDirectory != null){
             hBottomBox.getChildren().clear();
             hBottomBox.add(pb, 0, 0);
             hBottomBox.add(labelField, 1, 0);
-            ExportPdfService exportPdfTask = new ExportPdfService(MainApp.getConfig().getPandocProvider(), content, selectedFile);
+            ExportPdfService exportPdfTask = new ExportPdfService(MainApp.getConfig().getAdvancedServerPandoc(), content, selectedFile);
             labelField.textProperty().bind(exportPdfTask.messageProperty());
             pb.progressProperty().bind(exportPdfTask.progressProperty());
             Alert alert = new CustomAlert(AlertType.NONE);

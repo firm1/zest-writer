@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.controlsfx.control.Rating;
 
+
 public class ModelLisibilty {
     private final SimpleStringProperty text;
     private final SimpleObjectProperty rating;
