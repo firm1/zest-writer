@@ -60,7 +60,6 @@ public class MdConvertController {
         initCurrentComponents(extract);
         tab.setText(extract.getTitle());
 
-
         Platform.runLater(() -> {
             saved.addListener((observableValue, s, s2) -> {
                 if(s2) {
@@ -107,6 +106,7 @@ public class MdConvertController {
         mdBox.setCurrentBoxRender(boxRender);
         mdBox.setCurrentExtract(extract);
         mdBox.getSaveButton().disableProperty().bind(saved);
+        mdBox.initKeyMapping(sourceText);
     }
 
     public MdTextController getMdBox() {

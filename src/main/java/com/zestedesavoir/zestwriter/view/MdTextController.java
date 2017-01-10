@@ -866,40 +866,40 @@ public class MdTextController {
         FunctionTreeFactory.openFindReplaceDialog(currentSourceText);
     }
 
-    private void initKeyMapping() {
+    public void initKeyMapping(CustomStyledClassedTextArea sourceText) {
         Platform.runLater(() -> {
-            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                     EventHandlerHelper.on(keyPressed(KeyCode.S, SHORTCUT_DOWN)).act(ev -> handleSaveButtonAction()).create());
-            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                     EventHandlerHelper.on(keyPressed(KeyCode.G, SHORTCUT_DOWN)).act(ev -> handleBoldButtonAction(null)).create());
-            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                     EventHandlerHelper.on(keyPressed(KeyCode.I, SHORTCUT_DOWN)).act(ev -> handleItalicButtonAction(null)).create());
-            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                     EventHandlerHelper.on(keyPressed(KeyCode.B, SHORTCUT_DOWN)).act(ev -> handleBarredButtonAction(null)).create());
-            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                     EventHandlerHelper.on(keyPressed(KeyCode.K, SHORTCUT_DOWN)).act(ev -> handleTouchButtonAction(null)).create());
-            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                     EventHandlerHelper.on(keyPressed(KeyCode.PLUS, SHORTCUT_DOWN)).act(ev -> handleExpButtonAction(null)).create());
-            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                     EventHandlerHelper.on(keyPressed(KeyCode.EQUALS, SHORTCUT_DOWN)).act(ev -> handleIndButtonAction(null)).create());
-            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                     EventHandlerHelper.on(keyPressed(KeyCode.E, SHORTCUT_DOWN)).act(ev -> handleCenterButtonAction(null)).create());
-            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                     EventHandlerHelper.on(keyPressed(KeyCode.D, SHIFT_DOWN, SHORTCUT_DOWN)).act(ev -> handleRightButtonAction(null)).create());
-            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                     EventHandlerHelper.on(keyPressed(KeyCode.SPACE, SHORTCUT_DOWN)).act(ev -> handleUnbreakableAction()).create());
-            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                     EventHandlerHelper.on(keyPressed(KeyCode.L, SHORTCUT_DOWN)).act(ev -> handleGoToLineAction()).create());
-            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                     EventHandlerHelper.on(keyPressed(KeyCode.F, SHORTCUT_DOWN)).act(ev -> handleFindReplaceDialog()).create());
             if (FunctionTreeFactory.isMacOs()) {
-                EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+                EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
                         EventHandlerHelper.on(keyPressed(KeyCode.Q, SHORTCUT_DOWN)).act(ev -> currentSourceText.selectAll()).create());
             }
             if (MainApp.getConfig().isEditorSmart()) {
-                EventHandlerHelper.install(currentSourceText.onKeyReleasedProperty(),
+                EventHandlerHelper.install(sourceText.onKeyReleasedProperty(),
                         EventHandlerHelper.on(keyReleased(KeyCode.TAB)).act(ev -> handleSmartTab()).create());
-                EventHandlerHelper.install(currentSourceText.onKeyReleasedProperty(),
+                EventHandlerHelper.install(sourceText.onKeyReleasedProperty(),
                         EventHandlerHelper.on(keyReleased(KeyCode.ENTER)).act(ev -> handleSmartEnter()).create());
             }
         });
