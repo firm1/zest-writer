@@ -18,6 +18,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import lombok.Setter;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,19 +29,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class OpenContent{
+    @Setter
     private MainApp mainApp;
+    @Setter
     private Stage openContentWindow;
     private List<Content> sortedContents;
     @FXML private GridPane globalPane;
     @FXML private TextField search;
-
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
-    }
-
-    public void setOpenContentWindow(Stage openContentWindow) {
-        this.openContentWindow = openContentWindow;
-    }
 
     @FXML public void initialize() {
         loadProject();

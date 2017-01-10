@@ -1,8 +1,8 @@
 package com.zestedesavoir.zestwriter.model;
 
-import lombok.*;
-
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter

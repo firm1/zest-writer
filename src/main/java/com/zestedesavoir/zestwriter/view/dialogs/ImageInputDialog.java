@@ -57,7 +57,7 @@ public class ImageInputDialog{
             Service<Void> loginTask = menuManager.handleLoginButtonAction(null);
             loginTask.setOnSucceeded(t -> selectAndUploadImage());
             loginTask.setOnCancelled(t -> {
-                menuManager.gethBottomBox().getChildren().clear();
+                menuManager.getHBottomBox().getChildren().clear();
                 Alert alert = new CustomAlert(AlertType.ERROR);
                 alert.setTitle(Configuration.getBundle().getString("ui.dialog.auth.failed.title"));
                 alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.auth.failed.header"));

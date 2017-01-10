@@ -1,20 +1,15 @@
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.File;
-import java.io.IOException;
-
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.StorageSaver;
+import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.zeroturnaround.zip.ZipUtil;
 
-import com.zestedesavoir.zestwriter.model.MetaContent;
-import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.utils.ZdsHttp;
+import java.io.File;
+import java.io.IOException;
+
+import static org.junit.Assert.*;
 
 public class TestApiZds {
 

@@ -29,10 +29,6 @@ public abstract class MetaContent{
         this._title = title;
     }
 
-    public Content getRootContent() {
-        return rootContent;
-    }
-
     public void setRootContent(Content rootContent, String basePath) {
         setBasePath(basePath);
         this.rootContent = rootContent;

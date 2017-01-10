@@ -37,6 +37,7 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -58,20 +59,29 @@ import java.util.stream.Collectors;
 @Slf4j
 @NoArgsConstructor
 public class MenuController{
-    @Setter
-    private MainApp mainApp;
     private final ProgressBar pb = new ProgressBar(0);
     private final Text labelField = new Text("");
-
+    @Setter
+    private MainApp mainApp;
+    @Getter
     @FXML private MenuItem menuDownload;
     @FXML private MenuItem menuUpload;
     @FXML private MenuItem menuReport;
     @FXML private MenuItem menuLisibility;
+    @Getter
     @FXML private GridPane hBottomBox;
     @FXML private Menu menuExport;
     @FXML private MenuItem menuQuit;
     @FXML private MenuItem menuFindReplace;
     private BooleanPropertyBase isOnReadingTab = new SimpleBooleanProperty(true);
+
+    public static String markdownToHtml(MdTextController index, String chaine) {
+        PythonInterpreter console = index.getPyconsole();
+        console.set("text", chaine);
+        console.exec("render = mk_instance.convert(text)");
+        PyString render = console.get("render", PyString.class);
+        return render.toString();
+    }
 
     public BooleanPropertyBase isOnReadingTabProperty() {
         return isOnReadingTab;
@@ -91,14 +101,6 @@ public class MenuController{
 
     @FXML private void handleQuitButtonAction(ActionEvent event){
         mainApp.quitApp();
-    }
-
-    public static String markdownToHtml(MdTextController index, String chaine){
-        PythonInterpreter console = index.getPyconsole();
-        console.set("text", chaine);
-        console.exec("render = mk_instance.convert(text)");
-        PyString render = console.get("render", PyString.class);
-        return render.toString();
     }
 
     private void displayIndex(Map<String, Double> resultIndex, String title, String header) {
@@ -723,13 +725,5 @@ public class MenuController{
 
     public Text getLabelField(){
         return labelField;
-    }
-
-    public GridPane gethBottomBox(){
-        return hBottomBox;
-    }
-
-    public MenuItem getMenuDownload(){
-        return menuDownload;
     }
 }

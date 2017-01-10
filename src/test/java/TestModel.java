@@ -5,9 +5,9 @@ import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.GithubHttp;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
+import org.apache.http.client.HttpResponseException;
 import org.junit.Before;
 import org.junit.Test;
-import org.apache.http.client.HttpResponseException;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;

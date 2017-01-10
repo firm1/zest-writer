@@ -29,9 +29,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class MdTreeCell extends TreeCell<ContentNode>{
-	private MdTextController index;
+    private final Logger logger;
+    private MdTextController index;
 	private String baseFilePath;
-	private final Logger logger;
     private ContextMenu addMenu = new ContextMenu();
     private Content content;
 
@@ -407,19 +407,19 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             };
 
             ComputeIndexService computeGuningService = new ComputeIndexService(performGuning, container);
-            index.getMainApp().getMenuController().gethBottomBox().getChildren().clear();
-            index.getMainApp().getMenuController().gethBottomBox().getChildren().addAll(index.getMainApp().getMenuController().getLabelField());
+            index.getMainApp().getMenuController().getHBottomBox().getChildren().clear();
+            index.getMainApp().getMenuController().getHBottomBox().getChildren().addAll(index.getMainApp().getMenuController().getLabelField());
             index.getMainApp().getMenuController().getLabelField().textProperty().bind(computeGuningService.messageProperty());
             computeGuningService.setOnSucceeded(g -> {
                 ComputeIndexService computeFleshService = new ComputeIndexService(performFlesch, container);
                 computeFleshService.setOnSucceeded(f -> {
                     displayIndexChart(((ComputeIndexService) g.getSource()).getValue(), ((ComputeIndexService) f.getSource()).getValue());
-                    index.getMainApp().getMenuController().gethBottomBox().getChildren().clear();
+                    index.getMainApp().getMenuController().getHBottomBox().getChildren().clear();
                 });
-                computeFleshService.setOnFailed(f -> index.getMainApp().getMenuController().gethBottomBox().getChildren().clear());
+                computeFleshService.setOnFailed(f -> index.getMainApp().getMenuController().getHBottomBox().getChildren().clear());
                 computeFleshService.start();
             });
-            computeGuningService.setOnFailed(g -> index.getMainApp().getMenuController().gethBottomBox().getChildren().clear());
+            computeGuningService.setOnFailed(g -> index.getMainApp().getMenuController().getHBottomBox().getChildren().clear());
             computeGuningService.start();
         });
 
@@ -439,15 +439,15 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             };
 
             ComputeIndexService computeTypoService = new ComputeIndexService(performCorrection, container);
-            index.getMainApp().getMenuController().gethBottomBox().getChildren().clear();
-            index.getMainApp().getMenuController().gethBottomBox().getChildren().addAll(index.getMainApp().getMenuController().getLabelField());
+            index.getMainApp().getMenuController().getHBottomBox().getChildren().clear();
+            index.getMainApp().getMenuController().getHBottomBox().getChildren().addAll(index.getMainApp().getMenuController().getLabelField());
             index.getMainApp().getMenuController().getLabelField().textProperty().bind(computeTypoService.messageProperty());
             computeTypoService.setOnSucceeded(tp -> {
                 Map<String, Double> mapT = ((ComputeIndexService) tp.getSource()).getValue();
                 displayTypoChart(mapT);
-                index.getMainApp().getMenuController().gethBottomBox().getChildren().clear();
+                index.getMainApp().getMenuController().getHBottomBox().getChildren().clear();
             });
-            computeTypoService.setOnFailed(g -> index.getMainApp().getMenuController().gethBottomBox().getChildren().clear());
+            computeTypoService.setOnFailed(g -> index.getMainApp().getMenuController().getHBottomBox().getChildren().clear());
             computeTypoService.start();
         });
     }

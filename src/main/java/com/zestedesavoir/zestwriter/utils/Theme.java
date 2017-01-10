@@ -1,6 +1,9 @@
 package com.zestedesavoir.zestwriter.utils;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -12,13 +15,6 @@ import java.util.Optional;
 @Setter
 @ToString
 public class Theme {
-    private String filename;
-    private String label;
-    private int startDay=0;
-    private int startMonth=0;
-    private int endDay=0;
-    private int endMonth=0;
-
     private static List<Theme> themeAvailable = Arrays.asList(
             new Theme("dark.css", Configuration.getBundle().getString("ui.options.display.theme.dark")),
             new Theme("light.css", Configuration.getBundle().getString("ui.options.display.theme.light")),
@@ -26,6 +22,12 @@ public class Theme {
             new Theme("winxaito_light.css", "WinXaito's Light"),
             new Theme("winxaito_dark.css", "WinXaito's Dark"),
             new Theme("christmas.css", Configuration.getBundle().getString("ui.options.display.theme.christmas"), 15, 12, 27, 12));
+    private String filename;
+    private String label;
+    private int startDay = 0;
+    private int startMonth = 0;
+    private int endDay = 0;
+    private int endMonth = 0;
 
     public Theme(String filename, String label) {
         this.filename = filename;

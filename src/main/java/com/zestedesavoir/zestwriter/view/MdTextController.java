@@ -61,9 +61,11 @@ import static org.fxmisc.wellbehaved.event.EventPattern.keyReleased;
 @Slf4j
 @NoArgsConstructor
 public class MdTextController {
+    @FXML
+    public AnchorPane treePane;
+    public BooleanPropertyBase currentSaved;
     @Getter @Setter
     private boolean pythonStarted=false;
-    @FXML public AnchorPane treePane;
     @Getter
     private MainApp mainApp;
     @Getter @Setter
@@ -86,7 +88,6 @@ public class MdTextController {
     @Getter @Setter
     private CustomStyledClassedTextArea currentSourceText;
     private ObjectPropertyBase<Textual> currentExtract = new SimpleObjectProperty<>(null);
-    public BooleanPropertyBase currentSaved;
 
     @FXML private void initialize() {
         if(MainApp.getConfig().isEditorRenderView())
@@ -97,7 +98,7 @@ public class MdTextController {
                 (observable, oldValue, newValue) -> mainApp.getMenuController().setIsOnReadingTab(! (newValue.getContent() instanceof SplitPane))
         );
         home.setOnSelectionChanged(t -> {
-            mainApp.getMenuController().gethBottomBox().getChildren().clear();
+            mainApp.getMenuController().getHBottomBox().getChildren().clear();
             setCurrentExtract(null);
             currentBoxRender = null;
             currentRenderView = null;
@@ -111,24 +112,24 @@ public class MdTextController {
         return currentExtract.get();
     }
 
-    public ObjectPropertyBase<Textual> currentExtractProperty() {
-        return currentExtract;
-    }
-
     public void setCurrentExtract(Textual currentExtract) {
         this.currentExtract.set(currentExtract);
+    }
+
+    public ObjectPropertyBase<Textual> currentExtractProperty() {
+        return currentExtract;
     }
 
     public boolean isCurrentSaved() {
         return currentSaved.get();
     }
 
-    public BooleanPropertyBase currentSavedProperty() {
-        return currentSaved;
-    }
-
     public void setCurrentSaved(boolean currentSaved) {
         this.currentSaved.set(currentSaved);
+    }
+
+    public BooleanPropertyBase currentSavedProperty() {
+        return currentSaved;
     }
 
     public void loadConsolePython() {

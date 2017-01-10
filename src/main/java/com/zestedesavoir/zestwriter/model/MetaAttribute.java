@@ -39,6 +39,11 @@ public class MetaAttribute implements Textual, ContentNode{
         return title;
     }
 
+    @Override
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getExpandTitle() {
         return getTitle()+" (" + getParent().getTitle() + ")";
     }
@@ -50,11 +55,6 @@ public class MetaAttribute implements Textual, ContentNode{
         } else {
             return title;
         }
-    }
-
-    @Override
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getSlug() {
@@ -102,11 +102,6 @@ public class MetaAttribute implements Textual, ContentNode{
     @Override
     public MaterialDesignIconView buildIcon() {
         return IconFactory.createFileBlankIcon();
-    }
-
-    @Override
-    public Content getRootContent() {
-        return rootContent;
     }
 
     @Override

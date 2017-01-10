@@ -105,6 +105,38 @@ public class MainApp extends Application{
         launch(args);
     }
 
+    public static Configuration getConfig() {
+        return config;
+    }
+
+    public static Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
+    private static void setPrimaryStage(Stage primaryStage) {
+        MainApp.primaryStage = primaryStage;
+    }
+
+    public static ZdsHttp getZdsutils() {
+        return zdsutils;
+    }
+
+    public static File getDefaultHome() {
+        return defaultHome;
+    }
+
+    public static Markdown getMdUtils() {
+        return mdUtils;
+    }
+
+    public static Logger getLogger() {
+        return logger;
+    }
+
+    public static void setLogger(Logger logger) {
+        MainApp.logger = logger;
+    }
+
     private void initEnvVariable() {
         Path logPath;
         Path logDir;
@@ -133,47 +165,16 @@ public class MainApp extends Application{
         System.setProperty("zw.logPath", log.getAbsolutePath());
     }
 
-
-    public static Configuration getConfig() {
-        return config;
-    }
-
-    public static Stage getPrimaryStage() {
-        return primaryStage;
-    }
-
-    public static ZdsHttp getZdsutils() {
-        return zdsutils;
-    }
-
-    public static File getDefaultHome() {
-        return defaultHome;
-    }
-
-    public static Markdown getMdUtils() { return mdUtils; }
-
-    private static void setPrimaryStage(Stage primaryStage) {
-        MainApp.primaryStage = primaryStage;
-    }
-
-    public static Logger getLogger() {
-        return logger;
-    }
-
-    public static void setLogger(Logger logger) {
-        MainApp.logger = logger;
-    }
-
     public Content getContent() {
         return content.get();
     }
 
-    public ObjectProperty<Content> contentProperty() {
-        return content;
-    }
-
     public void setContent(Content content) {
         this.content.set(content);
+    }
+
+    public ObjectProperty<Content> contentProperty() {
+        return content;
     }
 
     @Override
@@ -274,8 +275,8 @@ public class MainApp extends Application{
             LoginService loginTask = new LoginService(config.getAuthentificationUsername(), config.getAuthentificationPassword());
 
             menuController.getMenuDownload().setDisable(true);
-            menuController.gethBottomBox().getChildren().clear();
-            menuController.gethBottomBox().getChildren().addAll(menuController.getLabelField());
+            menuController.getHBottomBox().getChildren().clear();
+            menuController.getHBottomBox().getChildren().addAll(menuController.getLabelField());
             menuController.getLabelField().textProperty().bind(loginTask.messageProperty());
 
             loginTask.setOnCancelled(t -> {
@@ -286,7 +287,7 @@ public class MainApp extends Application{
 
                 alert.showAndWait();
                 menuController.getMenuDownload().setDisable(false);
-                menuController.gethBottomBox().getChildren().clear();
+                menuController.getHBottomBox().getChildren().clear();
             });
 
             loginTask.setOnSucceeded(t -> menuController.getMenuDownload().setDisable(false));

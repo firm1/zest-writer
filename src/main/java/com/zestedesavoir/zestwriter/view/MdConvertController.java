@@ -35,10 +35,12 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class MdConvertController {
-    private MdTextController mdBox;
+    public static final Pattern recognizeNumber = Pattern.compile("^(\\s*)([\\d][\\.]) (\\s*)(.*)");
+    public static final Pattern recognizeBullet = Pattern.compile("^(\\s*)([*|-]) (\\s*)(.*)");
     public static Corrector corrector;
-    private Service<String> renderTask;
     private final Logger logger = LoggerFactory.getLogger(MdConvertController.class);
+    private MdTextController mdBox;
+    private Service<String> renderTask;
     private int xRenderPosition = 0;
     private int yRenderPosition = 0;
     private StringProperty countChars = new SimpleStringProperty();
@@ -46,14 +48,11 @@ public class MdConvertController {
     private StringProperty countTimes = new SimpleStringProperty();
     private BooleanPropertyBase needRefresh = new SimpleBooleanProperty(false);
     private BooleanPropertyBase saved  = new SimpleBooleanProperty(true);
-
     @FXML private WebView renderView;
     @FXML private SplitPane splitPane;
     @FXML private BorderPane boxRender;
     @FXML private Tab tab;
     @FXML private CustomStyledClassedTextArea sourceText;
-    public static final Pattern recognizeNumber = Pattern.compile("^(\\s*)([\\d][\\.]) (\\s*)(.*)");
-    public static final Pattern recognizeBullet = Pattern.compile("^(\\s*)([*|-]) (\\s*)(.*)");
 
     public void setMdBox(MdTextController mdBox, Textual extract) {
         this.mdBox = mdBox;
@@ -181,9 +180,9 @@ public class MdConvertController {
 
     public void initStats() {
         String fontSize="-fx-font-size: 0.9em;";
-        getMdBox().getMainApp().getMenuController().gethBottomBox().getChildren().clear();
-        getMdBox().getMainApp().getMenuController().gethBottomBox().getColumnConstraints().clear();
-        getMdBox().getMainApp().getMenuController().gethBottomBox().setPadding(new Insets(5, 5, 5, 5));
+        getMdBox().getMainApp().getMenuController().getHBottomBox().getChildren().clear();
+        getMdBox().getMainApp().getMenuController().getHBottomBox().getColumnConstraints().clear();
+        getMdBox().getMainApp().getMenuController().getHBottomBox().setPadding(new Insets(5, 5, 5, 5));
         ColumnConstraints c1 = new ColumnConstraints();
         ColumnConstraints c2 = new ColumnConstraints();
         ColumnConstraints c3 = new ColumnConstraints();
@@ -198,10 +197,10 @@ public class MdConvertController {
         chars.setStyle(fontSize);
         words.setStyle(fontSize);
         times.setStyle(fontSize);
-        getMdBox().getMainApp().getMenuController().gethBottomBox().getColumnConstraints().addAll(c1, c2, c3, c4);
-        getMdBox().getMainApp().getMenuController().gethBottomBox().add(times, 1, 0);
-        getMdBox().getMainApp().getMenuController().gethBottomBox().add(chars, 2, 0);
-        getMdBox().getMainApp().getMenuController().gethBottomBox().add(words, 3, 0);
+        getMdBox().getMainApp().getMenuController().getHBottomBox().getColumnConstraints().addAll(c1, c2, c3, c4);
+        getMdBox().getMainApp().getMenuController().getHBottomBox().add(times, 1, 0);
+        getMdBox().getMainApp().getMenuController().getHBottomBox().add(chars, 2, 0);
+        getMdBox().getMainApp().getMenuController().getHBottomBox().add(words, 3, 0);
 
         chars.textProperty().bind(countChars);
         words.textProperty().bind(countWords);

@@ -1,10 +1,9 @@
-import static org.junit.Assert.assertEquals;
-
 import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.zestedesavoir.zestwriter.utils.readability.Readability;
+import static org.junit.Assert.assertEquals;
 
 public class TestStatsText {
 

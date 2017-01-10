@@ -14,6 +14,9 @@ import java.util.Scanner;
 public interface Textual{
 
     String getMarkdown();
+
+    void setMarkdown(String markdown);
+
     default void save() {
         try (FileOutputStream fos = new FileOutputStream(getFilePath())) {
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF8"));
@@ -23,6 +26,7 @@ public interface Textual{
             MainApp.getLogger().error(e.getMessage(), e);
         }
     }
+
     default String readMarkdown() {
         Path path = Paths.get(this.getFilePath());
         StringBuilder bfString = new StringBuilder();
@@ -37,10 +41,13 @@ public interface Textual{
         }
         return "";
     }
+
     default void loadMarkdown() {
         setMarkdown(readMarkdown());
     }
+
     String getTitle();
+
     default String getLimitedTitle() {
         String title = getTitle();
         if (title.length() > Constant.LIMIT_COUNT_CHARS_OF_TITLE) {
@@ -49,9 +56,8 @@ public interface Textual{
             return title;
         }
     }
-    void setMarkdown(String markdown);
+
     String getFilePath();
     void setBasePath(String basePath);
-    Content getRootContent();
     void setRootContent(Content rootContent, String basePath);
 }

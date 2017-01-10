@@ -1,22 +1,18 @@
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.IOException;
-
+import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.StorageSaver;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.zestedesavoir.zestwriter.utils.Configuration;
+import java.io.File;
+import java.io.IOException;
+
+import static org.junit.Assert.*;
 
 public class TestConfig {
-    Configuration config;
-
     public final static File TEST_DIR = new File(System.getProperty("java.io.tmpdir"));
+    Configuration config;
 
     @Before
     public void setUp() {

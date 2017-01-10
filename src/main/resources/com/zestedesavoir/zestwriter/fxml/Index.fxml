@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.materialdesignicons.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
-<AnchorPane styleClass="content-index" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" styleClass="content-index" xmlns="http://javafx.com/javafx/8.0.40"
             fx:controller="com.zestedesavoir.zestwriter.view.MdTextController">
    <SplitPane fx:id="splitPane" dividerPositions="0.2" layoutX="-315.0" layoutY="-210.0"
               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
