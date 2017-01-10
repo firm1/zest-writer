@@ -8,29 +8,54 @@ import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.utils.Corrector;
+import com.zestedesavoir.zestwriter.utils.FlipTable;
 import com.zestedesavoir.zestwriter.view.com.*;
+import com.zestedesavoir.zestwriter.view.dialogs.ImageInputDialog;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import javafx.application.Platform;
+import javafx.beans.property.BooleanPropertyBase;
+import javafx.beans.property.ObjectPropertyBase;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Pair;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.fxmisc.wellbehaved.event.EventHandlerHelper;
+import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.DOMException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
 
+import static com.zestedesavoir.zestwriter.view.MdConvertController.recognizeBullet;
+import static com.zestedesavoir.zestwriter.view.MdConvertController.recognizeNumber;
 import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
 import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
+import static org.fxmisc.wellbehaved.event.EventPattern.keyPressed;
+import static org.fxmisc.wellbehaved.event.EventPattern.keyReleased;
 
 public class MdTextController {
     private boolean pythonStarted=false;
@@ -43,6 +68,13 @@ public class MdTextController {
     @FXML private Tab home;
     @FXML private TreeView<ContentNode> summary;
     @FXML private SplitPane splitPane;
+    @FXML private Button saveButton;
+    @FXML private ToolBar editorToolBar;
+    private WebView currentRenderView;
+    private BorderPane currentBoxRender;
+    private CustomStyledClassedTextArea currentSourceText;
+    private ObjectPropertyBase<Textual> currentExtract = new SimpleObjectProperty<>(null);
+    public BooleanPropertyBase currentSaved;
 
     public MdTextController() {
         super();
@@ -57,7 +89,15 @@ public class MdTextController {
         editorList.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> mainApp.getMenuController().setIsOnReadingTab(! (newValue.getContent() instanceof SplitPane))
         );
-        home.setOnSelectionChanged(t -> mainApp.getMenuController().gethBottomBox().getChildren().clear());
+        home.setOnSelectionChanged(t -> {
+            mainApp.getMenuController().gethBottomBox().getChildren().clear();
+            setCurrentExtract(null);
+            currentBoxRender = null;
+            currentRenderView = null;
+            currentSourceText = null;
+        });
+        editorToolBar.setVisible(MainApp.getConfig().isEditorToolbarView());
+        editorToolBar.visibleProperty().bind(currentExtractProperty().isNotNull());
     }
 
     public TabPane getEditorList() {
@@ -70,6 +110,46 @@ public class MdTextController {
 
     public void setPythonStarted(boolean pythonStarted) {
         this.pythonStarted = pythonStarted;
+    }
+
+    public void setCurrentRenderView(WebView currentRenderView) {
+        this.currentRenderView = currentRenderView;
+    }
+
+    public Textual getCurrentExtract() {
+        return currentExtract.get();
+    }
+
+    public ObjectPropertyBase<Textual> currentExtractProperty() {
+        return currentExtract;
+    }
+
+    public void setCurrentExtract(Textual currentExtract) {
+        this.currentExtract.set(currentExtract);
+    }
+
+    public void setCurrentSourceText(CustomStyledClassedTextArea currentSourceText) {
+        this.currentSourceText = currentSourceText;
+    }
+
+    public boolean isCurrentSaved() {
+        return currentSaved.get();
+    }
+
+    public BooleanPropertyBase currentSavedProperty() {
+        return currentSaved;
+    }
+
+    public void setCurrentSaved(boolean currentSaved) {
+        this.currentSaved.set(currentSaved);
+    }
+
+    public void setCurrentBoxRender(BorderPane currentBoxRender) {
+        this.currentBoxRender = currentBoxRender;
+    }
+
+    public Button getSaveButton() {
+        return saveButton;
     }
 
     public void loadConsolePython() {
@@ -255,32 +335,41 @@ public class MdTextController {
         return null;
     }
 
+    public String markdownToHtml(String chaine) {
+        PythonInterpreter console = getPyconsole();
+        if (console != null) {
+            console.set("text", chaine);
+            console.exec(
+                    "render = mk_instance.convert(text)");
+            PyString render = console.get("render", PyString.class);
+            return render.toString();
+        } else {
+            return null;
+        }
+    }
+
     public void createTabExtract(Textual extract) throws IOException {
         logger.debug("Tentative de création d'un nouvel onglet pour "+extract.getTitle());
         extract.loadMarkdown();
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Editor.fxml"));
-        SplitPane writer = loader.load();
+        Tab writer = loader.load();
         logger.trace("Fichier Editor.fxml chargé");
-
-        Tab tab = new Tab();
-        tab.setText(extract.getTitle());
-        tab.setContent(writer);
-        editorList.getTabs().add(tab);
-        editorList.getSelectionModel().select(tab);
+        editorList.getTabs().add(writer);
+        editorList.getSelectionModel().select(writer);
 
         MdConvertController controllerConvert = loader.getController();
-        controllerConvert.setMdBox(this, extract, tab);
+        controllerConvert.setMdBox(this, extract);
 
-        tab.setOnCloseRequest(t -> {
-            if(!controllerConvert.isSaved()) {
-                Alert alert = new CustomAlert(AlertType.CONFIRMATION);
+        writer.setOnCloseRequest(t -> {
+            if(!isCurrentSaved()) {
+                Alert alert = new CustomAlert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle(Configuration.getBundle().getString("ui.alert.tab.close.title"));
-                alert.setHeaderText(Configuration.getBundle().getString("ui.alert.tab.close.header")+" : "+tab.getText().substring(1));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.alert.tab.close.header")+" : "+writer.getText().substring(1));
                 alert.setContentText(Configuration.getBundle().getString("ui.alert.tab.close.text"));
 
                 ButtonType buttonTypeYes = new ButtonType(Configuration.getBundle().getString("ui.yes"));
                 ButtonType buttonTypeNo = new ButtonType(Configuration.getBundle().getString("ui.no"));
-                ButtonType buttonTypeCancel = new ButtonType(Configuration.getBundle().getString("ui.cancel"), ButtonData.CANCEL_CLOSE);
+                ButtonType buttonTypeCancel = new ButtonType(Configuration.getBundle().getString("ui.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
 
                 alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo, buttonTypeCancel);
                 alert.setResizable(true);
@@ -290,30 +379,29 @@ public class MdTextController {
                 if (result.isPresent()) {
                     if (result.get() != buttonTypeCancel) {
                         if (result.get() == buttonTypeYes) {
-                            controllerConvert.handleSaveButtonAction(null);
+                            handleSaveButtonAction(null);
                         }
-                        Event.fireEvent(tab, new Event(Tab.CLOSED_EVENT));
+                        Event.fireEvent(writer, new Event(Tab.CLOSED_EVENT));
                     } else {
                         t.consume();
                     }
                 }
             } else {
-                Event.fireEvent(tab, new Event(Tab.CLOSED_EVENT));
+                Event.fireEvent(writer, new Event(Tab.CLOSED_EVENT));
             }
         });
 
-        tab.setOnClosed(t -> {
-            editorList.getTabs().remove(tab);
+        writer.setOnClosed(t -> {
+            editorList.getTabs().remove(writer);
             mainApp.getExtracts().remove(extract);
             t.consume();
             if (getSplitPane().getItems().size() <= 1 && editorList.getTabs().size() == 1) {
-                controllerConvert.addTreeSummary();
+                addTreeSummary();
             }
         });
 
         summary.getSelectionModel().select(selectItemOnTree(summary.getRoot(), extract));
-
-        mainApp.getExtracts().put(extract, tab);
+        mainApp.getExtracts().put(extract, writer);
         logger.info("Nouvel onglet crée pour "+extract.getTitle());
     }
 
@@ -416,4 +504,445 @@ public class MdTextController {
         logger.info("Contenu stocké dans "+filePath+" ouvert");
     }
 
+    private void handleSmartEnter() {
+        int precLine = currentSourceText.getCurrentParagraph() - 1;
+        if(precLine >= 0) {
+            String line = currentSourceText.getParagraph(precLine).toString();
+            Matcher matcher = recognizeBullet.matcher(line);
+            //TODO: find how combine recognize bullet and number together for breaking following if
+            if(!matcher.matches()) {
+                matcher = recognizeNumber.matcher(line);
+            }
+            if(matcher.matches()) {
+                if("".equals(matcher.group(4).trim())) {
+                    int positionCaret = currentSourceText.getCaretPosition();
+                    currentSourceText.deleteText(positionCaret-line.length() - 1, positionCaret);
+                } else {
+                    currentSourceText.replaceSelection(matcher.group(1)+matcher.group(2)+" ");
+                }
+            }
+        }
+    }
+
+    private void handleSmartTab() {
+        int caseLine = currentSourceText.getCurrentParagraph();
+        if(caseLine >= 0) {
+            String line = currentSourceText.getParagraph(caseLine).toString();
+            Matcher matcher = recognizeBullet.matcher(line);
+            //TODO: find how combine recognize bullet and number together for breaking following if
+            if(!matcher.matches()) {
+                matcher = recognizeNumber.matcher(line);
+            }
+            if(matcher.matches()) {
+                int positionCaret = currentSourceText.getCaretPosition();
+                int delta = matcher.group(1).length() + matcher.group(2).length() + matcher.group(3).length() + 1;
+                currentSourceText.replaceText(positionCaret-delta, positionCaret, "    "+matcher.group(2)+" "+matcher.group(4));
+            }
+        }
+    }
+
+    private void replaceAction(String defaultString, int defaultOffsetCaret, String beforeString, String afterString) {
+        if(currentSourceText.getSelectedText().isEmpty()){
+            currentSourceText.replaceText(currentSourceText.getSelection(), defaultString);
+            currentSourceText.moveTo(currentSourceText.getCaretPosition() - defaultOffsetCaret);
+        }else{
+            currentSourceText.replaceText(currentSourceText.getSelection(), beforeString + currentSourceText.getSelectedText() + afterString);
+        }
+
+        Platform.runLater(currentSourceText::requestFocus);
+    }
+
+    /*
+     * Editor Toolbar Action
+     */
+
+    @FXML public void handleSaveButtonAction(ActionEvent event) {
+        getCurrentExtract().setMarkdown(currentSourceText.getText());
+        getCurrentExtract().save();
+
+        setCurrentSaved(true);
+        currentSourceText.requestFocus();
+    }
+
+    @FXML private void handleBoldButtonAction(ActionEvent event) {
+        replaceAction("****", 2, "**", "**");
+    }
+
+    @FXML private void handleItalicButtonAction(ActionEvent event) {
+        replaceAction("**", 1, "*", "*");
+    }
+
+    @FXML private void handleBarredButtonAction(ActionEvent event) {
+        replaceAction("~~~~", 2, "~~", "~~");
+    }
+
+    @FXML private void handleTouchButtonAction(ActionEvent event) {
+        replaceAction("||||", 2, "||", "||");
+    }
+
+    @FXML private void handleExpButtonAction(ActionEvent event) {
+        replaceAction("^^", 1, "^", "^");
+    }
+
+    @FXML private void handleIndButtonAction(ActionEvent event) {
+        replaceAction("~~", 1, "~", "~");
+    }
+
+    @FXML private void handleCenterButtonAction(ActionEvent event) {
+        replaceAction("\n->  <-", 3, "\n-> ", " <-");
+    }
+
+    @FXML private void handleRightButtonAction(ActionEvent event) {
+        replaceAction("\n->  ->", 3, "\n-> ", " ->\n");
+    }
+
+    @FXML private void handleImgButtonAction(ActionEvent event) {
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/ImageInput.fxml"));
+
+        Stage dialogStage = new CustomStage(loader, Configuration.getBundle().getString("ui.dialog.upload.img.title"));
+
+        ImageInputDialog imageController = loader.getController();
+        imageController.setSourceText(currentSourceText, MainApp.getZdsutils(), getMainApp().getMenuController(), getMainApp().getContent());
+        imageController.setStage(dialogStage);
+
+        dialogStage.show();
+    }
+    @FXML private void handleBulletButtonAction(ActionEvent event) {
+        if(currentSourceText.getSelectedText().isEmpty()){
+            currentSourceText.replaceText(currentSourceText.getSelection(), "- ");
+        }else{
+            StringBuilder sb = new StringBuilder();
+            String[] lines = currentSourceText.getSelectedText().split("\n");
+            for(String line : lines){
+                sb.append("- ").append(line).append("\n");
+            }
+
+            currentSourceText.replaceText(currentSourceText.getSelection(), sb.toString());
+        }
+
+        currentSourceText.requestFocus();
+    }
+
+    @FXML private void handleNumberedButtonAction(ActionEvent event) {
+        if(currentSourceText.getSelectedText().isEmpty()){
+            currentSourceText.replaceText(currentSourceText.getSelection(), "1. ");
+        }else{
+            StringBuilder sb = new StringBuilder();
+            String[] lines = currentSourceText.getSelectedText().split("\n");
+            int i = 1;
+            for(String line : lines){
+                sb.append(i).append(". ").append(line).append("\n");
+                i++;
+            }
+
+            currentSourceText.replaceText(currentSourceText.getSelection(), sb.toString());
+        }
+
+        currentSourceText.requestFocus();
+    }
+
+    @FXML private void handleHeaderButtonAction(ActionEvent event) {
+        currentSourceText.replaceText(currentSourceText.getSelection(), "# " + currentSourceText.getSelectedText());
+        currentSourceText.requestFocus();
+    }
+
+    @FXML private void handleQuoteButtonAction(ActionEvent event) {
+        replaceAction("> ", 0, "> ", "\n\n");
+    }
+
+    @FXML private void handleBlocButtonAction(ActionEvent event) {
+        StringBuilder text = new StringBuilder();
+        String[] lines = currentSourceText.getSelectedText().split("\n");
+        for (String line : lines) {
+            text.append("| ").append(line).append("\n");
+        }
+
+        List<String> choices = new ArrayList<>();
+        choices.add("information");
+        choices.add("question");
+        choices.add("attention");
+        choices.add("erreur");
+        choices.add("secret");
+
+        ChoiceDialog<String> dialog = new ChoiceDialog<>("information", choices);
+        FunctionTreeFactory.addTheming(dialog.getDialogPane());
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(MainApp.getPrimaryStage());
+        dialog.setTitle(Configuration.getBundle().getString("ui.editor.dialog.bloc.title"));
+        dialog.setHeaderText(Configuration.getBundle().getString("ui.editor.dialog.bloc.header"));
+        dialog.setContentText(Configuration.getBundle().getString("ui.editor.dialog.bloc.text"));
+
+        // Traditional way to get the response value.
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(s -> currentSourceText.replaceText(currentSourceText.getSelection(), "\n[[" + s + "]]\n" + text.toString()));
+
+        currentSourceText.requestFocus();
+    }
+
+    @FXML private void handleTableButtonAction(ActionEvent event) throws IOException {
+        // Create the custom dialog.
+        Dialog<Pair<ObservableList, ObservableList<ZRow>>> dialog = new CustomDialog<>();
+        dialog.setTitle(Configuration.getBundle().getString("ui.editor.button.table"));
+        dialog.setHeaderText("");
+
+        // Set the button types.
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/TableEditor.fxml"));
+        BorderPane tableEditor = loader.load();
+        TableView<ZRow> tbView = (TableView) tableEditor.getCenter();
+
+        dialog.getDialogPane().setContent(tableEditor);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                return new Pair<>(tbView.getColumns(), tbView.getItems());
+            }
+            return null;
+        });
+
+        Optional<Pair<ObservableList, ObservableList<ZRow>>> result = dialog.showAndWait();
+
+        result.ifPresent(datas -> {
+            String[][] data = new String[datas.getValue().size()][datas.getValue().get(0).getRow().size()];
+            String[] headers = new String[datas.getKey().size()];
+            int cpt = 0;
+            for (Object key : datas.getKey()) {
+                headers[cpt] = ((TextField) ((TableColumn) key).getGraphic()).getText();
+                cpt++;
+            }
+
+            for (int i = 0; i < datas.getValue().size(); i++) {
+                for (int j = 0; j < datas.getValue().get(i).getRow().size(); j++) {
+                    data[i][j] = datas.getValue().get(i).getRow().get(j);
+                }
+            }
+            String tablestring = FlipTable.of(headers, data);
+            currentSourceText.replaceText(currentSourceText.getSelection(), "\n\n" + tablestring + "\n\n");
+            currentSourceText.requestFocus();
+        });
+    }
+
+    @FXML private void handleLinkButtonAction(ActionEvent event) {
+        String link = currentSourceText.getSelectedText();
+
+        // Create the custom dialog.
+        Dialog<Pair<String, String>> dialog = new CustomDialog<>();
+        dialog.setTitle(Configuration.getBundle().getString("ui.editor.dialog.link.title"));
+        dialog.setHeaderText(Configuration.getBundle().getString("ui.editor.dialog.link.header"));
+
+        // Set the icon (must be included in the project).
+        dialog.setGraphic(IconFactory.createLinkIcon());
+
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        // Create the username and password labels and fields.
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 15, 10, 10));
+
+        TextField tLink = new TextField();
+        tLink.setText(link);
+        TextField tLabel = new TextField();
+        tLabel.setText(link);
+
+        grid.add(new Label(Configuration.getBundle().getString("ui.editor.dialog.link.field.url")), 0, 0);
+        grid.add(tLink, 1, 0);
+        grid.add(new Label(Configuration.getBundle().getString("ui.editor.dialog.link.field.label")), 0, 1);
+        grid.add(tLabel, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Request focus on the username field by default.
+        Platform.runLater(tLink::requestFocus);
+
+        // Convert the result to a username-password-pair when the login button
+        // is clicked.
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                return new Pair<>(tLink.getText(), tLabel.getText());
+            }
+            return null;
+        });
+
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+
+        result.ifPresent(tLinkTLabel -> currentSourceText.replaceText(currentSourceText.getSelection(),
+                "[" + tLinkTLabel.getValue() + "](" + tLinkTLabel.getKey() + ")"));
+
+        currentSourceText.requestFocus();
+    }
+
+    @FXML private void handleCodeButtonAction(ActionEvent event) {
+        String code = currentSourceText.getSelectedText();
+        if (code.trim().startsWith("```") && code.trim().endsWith("```")) {
+            int start = code.trim().indexOf('\n') + 1;
+            int end = code.trim().lastIndexOf('\n');
+            code = code.substring(start, end);
+        }
+
+        // Create the custom dialog.
+        Dialog<Pair<String, String>> dialog = new CustomDialog<>();
+        dialog.setTitle(Configuration.getBundle().getString("ui.editor.dialog.code.title"));
+        dialog.setHeaderText(Configuration.getBundle().getString("ui.editor.dialog.code.header"));
+
+        // Set the icon (must be included in the project).
+        dialog.setGraphic(IconFactory.createCodeIcon());
+
+        // Set the button types.
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        // Create the username and password labels and fields.
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 15, 10, 10));
+
+        TextField tLangage = new TextField();
+        TextArea tCode = new TextArea();
+        tCode.setText(code);
+
+        grid.add(new Label(Configuration.getBundle().getString("ui.editor.dialog.code.field.lang")), 0, 0);
+        grid.add(tLangage, 1, 0);
+        grid.add(new Label(Configuration.getBundle().getString("ui.editor.dialog.code.field.code")), 0, 1);
+        grid.add(tCode, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Request focus on the username field by default.
+        Platform.runLater(tLangage::requestFocus);
+
+        // Convert the result to a username-password-pair when the login button
+        // is clicked.
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                return new Pair<>(tLangage.getText(), tCode.getText());
+            }
+            return null;
+        });
+
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+
+        result.ifPresent(tLangageTCode -> currentSourceText.replaceText(currentSourceText.getSelection(),
+                "\n```" + tLangageTCode.getKey() + "\n" + tLangageTCode.getValue() + "\n```\n"));
+
+        currentSourceText.requestFocus();
+    }
+
+    /*
+     * Render Toolbar Action
+     */
+
+    public void addTreeSummary() {
+        getSplitPane().getItems().add(0, treePane);
+        getSplitPane().setDividerPositions(0.2);
+        SplitPane.setResizableWithParent(treePane,Boolean.FALSE);
+    }
+
+    @FXML private void handleFullScreeenButtonAction(ActionEvent event) {
+        if (getSplitPane().getItems().size() > 1) {
+            getSplitPane().getItems().remove(0);
+        } else {
+            addTreeSummary();
+        }
+    }
+
+    @FXML private void handleValidateButtonAction(ActionEvent event) {
+        String s = StringEscapeUtils.unescapeHtml(markdownToHtml(currentSourceText.getText()));
+        if(MdConvertController.corrector == null) {
+            MdConvertController.corrector = new Corrector();
+        }
+        try {
+            String result = MdConvertController.corrector.checkHtmlContent(s);
+            WebEngine webEngine = currentRenderView.getEngine();
+            webEngine.loadContent("<!doctype html><html lang='fr'><head><meta charset='utf-8'><base href='"
+                    + MainApp.class.getResource("assets").toExternalForm() + "' /></head><body>" + result + "</body></html>");
+            webEngine.setUserStyleSheetLocation(MainApp.class.getResource("assets/static/css/content.css").toExternalForm());
+        } catch (DOMException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    @FXML private void handleExternalButtonAction(ActionEvent event){
+        splitPane.getItems().remove(1);
+
+        Stage stage = new CustomStage(Configuration.getBundle().getString("ui.window.externalrender.title"));
+        AnchorPane pane = new AnchorPane(currentRenderView);
+        AnchorPane.setTopAnchor(currentRenderView, 0.0);
+        AnchorPane.setLeftAnchor(currentRenderView, 0.0);
+        AnchorPane.setBottomAnchor(currentRenderView, 0.0);
+        AnchorPane.setRightAnchor(currentRenderView, 0.0);
+        pane.setPrefWidth(600);
+        pane.setPrefHeight(500);
+        Scene scene = new Scene(pane);
+        stage.setScene(scene);
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.show();
+
+        stage.setOnCloseRequest(e -> {
+            currentBoxRender.setCenter(currentRenderView);
+            splitPane.getItems().add(1, currentBoxRender);
+            splitPane.setDividerPositions(0.5);
+        });
+    }
+
+    @FXML private void handleUnbreakableAction(ActionEvent event) {
+        currentSourceText.replaceText(currentSourceText.getSelection(), currentSourceText.getSelectedText() + "\u00a0");
+        currentSourceText.requestFocus();
+    }
+
+    public void handleGoToLineAction() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle(Configuration.getBundle().getString("ui.editor.dialog.goto.title"));
+        dialog.setHeaderText(Configuration.getBundle().getString("ui.editor.dialog.goto.header"));
+        dialog.setContentText(Configuration.getBundle().getString("ui.editor.dialog.goto.text"));
+        dialog.initOwner(MainApp.getPrimaryStage());
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(line -> currentSourceText.positionCaret(currentSourceText.position(Integer.parseInt(line)-1, 0).toOffset()));
+    }
+
+    @FXML private void handleFindReplaceDialog(){
+        FunctionTreeFactory.openFindReplaceDialog(currentSourceText);
+    }
+
+    private void initKeyMapping() {
+        Platform.runLater(() -> {
+            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+                    EventHandlerHelper.on(keyPressed(KeyCode.S, SHORTCUT_DOWN)).act(ev -> handleSaveButtonAction(null)).create());
+            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+                    EventHandlerHelper.on(keyPressed(KeyCode.G, SHORTCUT_DOWN)).act(ev -> handleBoldButtonAction(null)).create());
+            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+                    EventHandlerHelper.on(keyPressed(KeyCode.I, SHORTCUT_DOWN)).act(ev -> handleItalicButtonAction(null)).create());
+            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+                    EventHandlerHelper.on(keyPressed(KeyCode.B, SHORTCUT_DOWN)).act(ev -> handleBarredButtonAction(null)).create());
+            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+                    EventHandlerHelper.on(keyPressed(KeyCode.K, SHORTCUT_DOWN)).act(ev -> handleTouchButtonAction(null)).create());
+            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+                    EventHandlerHelper.on(keyPressed(KeyCode.PLUS, SHORTCUT_DOWN)).act(ev -> handleExpButtonAction(null)).create());
+            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+                    EventHandlerHelper.on(keyPressed(KeyCode.EQUALS, SHORTCUT_DOWN)).act(ev -> handleIndButtonAction(null)).create());
+            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+                    EventHandlerHelper.on(keyPressed(KeyCode.E, SHORTCUT_DOWN)).act(ev -> handleCenterButtonAction(null)).create());
+            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+                    EventHandlerHelper.on(keyPressed(KeyCode.D, SHIFT_DOWN, SHORTCUT_DOWN)).act(ev -> handleRightButtonAction(null)).create());
+            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+                    EventHandlerHelper.on(keyPressed(KeyCode.SPACE, SHORTCUT_DOWN)).act(ev -> handleUnbreakableAction(null)).create());
+            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+                    EventHandlerHelper.on(keyPressed(KeyCode.L, SHORTCUT_DOWN)).act(ev -> handleGoToLineAction()).create());
+            EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+                    EventHandlerHelper.on(keyPressed(KeyCode.F, SHORTCUT_DOWN)).act(ev -> handleFindReplaceDialog()).create());
+            if (FunctionTreeFactory.isMacOs()) {
+                EventHandlerHelper.install(currentSourceText.onKeyPressedProperty(),
+                        EventHandlerHelper.on(keyPressed(KeyCode.Q, SHORTCUT_DOWN)).act(ev -> currentSourceText.selectAll()).create());
+            }
+            if (MainApp.getConfig().isEditorSmart()) {
+                EventHandlerHelper.install(currentSourceText.onKeyReleasedProperty(),
+                        EventHandlerHelper.on(keyReleased(KeyCode.TAB)).act(ev -> handleSmartTab()).create());
+                EventHandlerHelper.install(currentSourceText.onKeyReleasedProperty(),
+                        EventHandlerHelper.on(keyReleased(KeyCode.ENTER)).act(ev -> handleSmartEnter()).create());
+            }
+        });
+    }
 }
