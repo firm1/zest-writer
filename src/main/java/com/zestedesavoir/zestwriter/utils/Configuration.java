@@ -2,10 +2,9 @@ package com.zestedesavoir.zestwriter.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.http.client.fluent.Request;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
@@ -19,8 +18,8 @@ import java.util.stream.Collectors;
 /**
  * Configuration class for Zest Writer App
  */
+@Slf4j
 public class Configuration {
-    private final Logger logger;
     private Properties conf;
     private Properties actions;
     private File confFile;
@@ -36,15 +35,14 @@ public class Configuration {
      * @param homeDir Absolute path of home directory
      */
     public Configuration(String homeDir) {
-        logger = LoggerFactory.getLogger(Configuration.class);
         String appName = "zestwriter";
         String confDirPath = homeDir + File.separator + "." + appName;
         File confDir = new File(confDirPath);
         if(!confDir.exists()){
             if(!confDir.mkdir()) {
-                logger.error("Le répertoire de configuration n'a pas pu être crée");
+                log.error("Le répertoire de configuration n'a pas pu être crée");
             } else {
-                logger.info("Le répertoire de configuration a été crée avec succès");
+                log.info("Le répertoire de configuration a été crée avec succès");
             }
         }
 
@@ -54,11 +52,11 @@ public class Configuration {
             bundle = ResourceBundle.getBundle("locales/ui", Lang.getLangFromCode(getDisplayLang()).getLocale());
         }catch(Exception e) {
             bundle = ResourceBundle.getBundle("locales/ui", Locale.FRANCE);
-            logger.error("Impossible de charger la langue "+getDisplayLang(), e);
+            log.error("Impossible de charger la langue "+getDisplayLang(), e);
         }
     }
 
-    public static String getDefaultWorkspace() {
+    private static String getDefaultWorkspace() {
         JFileChooser fr = new JFileChooser();
         FileSystemView fw = fr.getFileSystemView();
         return fw.getDefaultDirectory().getAbsolutePath() + File.separator + "zwriter-workspace";
@@ -83,14 +81,14 @@ public class Configuration {
         actionFile = new File(getWorkspacePath(), actionFileName);
 
         if(!actionFile.exists()) {
-            logger.debug("le fichier des actions "+actionFile.getAbsolutePath()+" n'existe pas");
+            log.debug("le fichier des actions "+actionFile.getAbsolutePath()+" n'existe pas");
             saveActionFile();
         }
         else {
             try {
                 actions.load(new FileInputStream(actionFile));
             } catch (IOException e) {
-                logger.error("Impossible de charger le fichier d'actions", e);
+                log.error("Impossible de charger le fichier d'actions", e);
             }
         }
     }
@@ -104,13 +102,13 @@ public class Configuration {
         try {
             props.load(MainApp.class.getClassLoader().getResourceAsStream("config.properties"));
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
 
         conf = new Properties(props);
 
         if(!confFile.exists()) {
-            logger.debug("le fichier de configuration "+confFile.getAbsolutePath()+" n'existe pas");
+            log.debug("le fichier de configuration "+confFile.getAbsolutePath()+" n'existe pas");
             setWorkspacePath(Configuration.getDefaultWorkspace());
             saveConfFile();
         }
@@ -119,7 +117,7 @@ public class Configuration {
                 conf.load(new FileInputStream(confFile));
                 loadWorkspace();
             } catch (IOException e) {
-                logger.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
         }
 
@@ -135,18 +133,18 @@ public class Configuration {
     public void saveConfFile() {
         try {
             conf.store(new FileOutputStream(confFile), "");
-            logger.info("Fichier de configuration enregistré dans "+confFile.getAbsolutePath());
+            log.info("Fichier de configuration enregistré dans "+confFile.getAbsolutePath());
         } catch (IOException e) {
-            logger.error("Impossible de sauvegarder le fichier de configuration", e);
+            log.error("Impossible de sauvegarder le fichier de configuration", e);
         }
     }
 
-    public void saveActionFile() {
+    private void saveActionFile() {
         try {
             actions.store(new FileOutputStream(actionFile), "");
-            logger.info("Fichier d'actions enregistré");
+            log.info("Fichier d'actions enregistré");
         } catch (IOException e) {
-            logger.error("Impossible de sauvegarder le fichier d'actions", e);
+            log.error("Impossible de sauvegarder le fichier d'actions", e);
         }
     }
 
@@ -176,7 +174,7 @@ public class Configuration {
 
         offlineSaver = workspaceFactory.getOfflineSaver();
         onlineSaver = workspaceFactory.getOnlineSaver();
-        logger.info("Espace de travail chargé en mémoire");
+        log.info("Espace de travail chargé en mémoire");
     }
 
     /*

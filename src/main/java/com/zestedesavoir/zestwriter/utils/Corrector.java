@@ -1,8 +1,8 @@
 package com.zestedesavoir.zestwriter.utils;
 
-import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.examples.HtmlToPlainText;
@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
+@Slf4j
 public class Corrector {
 
     private JLanguageTool langTool;
@@ -84,7 +85,7 @@ public class Corrector {
         return st.toString();
     }
 
-    public AnnotatedText makeAnnotatedText(String pseudoXml) {
+    private AnnotatedText makeAnnotatedText(String pseudoXml) {
         AnnotatedTextBuilder builder = new AnnotatedTextBuilder();
         StringTokenizer tokenizer = new StringTokenizer(pseudoXml, "<>", true);
         boolean inMarkup = false;
@@ -159,7 +160,7 @@ public class Corrector {
             matches = langTool.check(markup);
         }
         catch (Exception e) {
-            MainApp.getLogger().error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         int offset = 0;
         for (RuleMatch match : matches) {
@@ -190,7 +191,7 @@ public class Corrector {
         try {
             matches = langTool.check(markup);
         } catch (IOException e) {
-            MainApp.getLogger().error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
 
         for (RuleMatch match : matches) {
@@ -221,7 +222,7 @@ public class Corrector {
             return matches.size();
         }
         catch (IOException e) {
-            MainApp.getLogger().error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         return 0;
     }

@@ -2,6 +2,7 @@ package com.zestedesavoir.zestwriter.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.model.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Executor;
@@ -10,8 +11,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.LaxRedirectStrategy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
@@ -27,8 +26,8 @@ import java.util.Map;
 import static com.zestedesavoir.zestwriter.utils.ZdsHttp.toSlug;
 import static com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory.generateMetadataAttributes;
 
+@Slf4j
 public class GithubHttp {
-    static Logger logger = LoggerFactory.getLogger(GithubHttp.class);
 
     private GithubHttp() {
     }
@@ -60,12 +59,12 @@ public class GithubHttp {
         dirname = dirname.substring(0, dirname.length() - 4);
         // create output directory is not exists
         File folder = new File(destFolder + File.separator + dirname);
-        logger.debug("Tentative de dezippage de " + zipFilePath + " dans " + folder.getAbsolutePath());
+        log.debug("Tentative de dezippage de " + zipFilePath + " dans " + folder.getAbsolutePath());
         if (!folder.exists()) {
             folder.mkdir();
-            logger.info("Dézippage dans " + folder.getAbsolutePath() + " réalisé avec succès");
+            log.info("Dézippage dans " + folder.getAbsolutePath() + " réalisé avec succès");
         } else {
-            logger.debug("Le répertoire dans lequel vous souhaitez dezipper existe déjà ");
+            log.debug("Le répertoire dans lequel vous souhaitez dezipper existe déjà ");
         }
         ZipUtil.unpack(new File(zipFilePath), folder);
         return folder;
@@ -74,7 +73,7 @@ public class GithubHttp {
     public static Content loadManifest(String folder, String owner, String repo) throws IOException {
         String projecUrl = "https://api.github.com/repos/"+owner+"/"+repo;
         String title = null;
-        logger.debug("Tentative de connexion à l'url : "+projecUrl);
+        log.debug("Tentative de connexion à l'url : "+projecUrl);
         String githubUser = System.getProperty("zw.github_user");
         String githubToken = System.getProperty("zw.github_token");
 

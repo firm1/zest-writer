@@ -1,8 +1,7 @@
 package com.zestedesavoir.zestwriter.utils;
 
 import com.zestedesavoir.zestwriter.MainApp;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.zeroturnaround.zip.commons.IOUtils;
 
 import java.io.IOException;
@@ -10,14 +9,10 @@ import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 public class Markdown {
     private String htmlTemplate;
-    private static Logger logger;
     private static final String CONTENT_KEYWORD = "<!--content-->";
-
-    public Markdown() {
-        logger = LoggerFactory.getLogger(Markdown.class);
-    }
 
     private String getHTMLTemplate() {
         if(htmlTemplate == null) {
@@ -28,7 +23,7 @@ public class Markdown {
             try {
                 template= IOUtils.toString(is, "UTF-8");
             } catch (IOException e) {
-                logger.error("Error when reading the template stream.", e);
+                log.error("Error when reading the template stream.", e);
             }
 
             Matcher pathMatcher = Pattern.compile("%%(.*)%%").matcher(template);

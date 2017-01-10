@@ -3,6 +3,7 @@ package com.zestedesavoir.zestwriter.utils;
 import com.zestedesavoir.zestwriter.model.Constant;
 import com.zestedesavoir.zestwriter.model.MetadataContent;
 import javafx.util.Pair;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -36,8 +37,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.*;
@@ -59,6 +58,7 @@ import java.util.zip.ZipInputStream;
 /**
  * Java Api class for exchange with ZdS
  */
+@Slf4j
 public class ZdsHttp {
     private String idUser;
     private String galleryId;
@@ -74,7 +74,6 @@ public class ZdsHttp {
     private String cookies;
     private HttpClientContext context;
     private String localSlug;
-    private static final Logger logger = LoggerFactory.getLogger(ZdsHttp.class);
     private Configuration config;
 
     /**
@@ -190,7 +189,7 @@ public class ZdsHttp {
             builder.loadTrustMaterial(null, (TrustStrategy) (chain, authType) -> true);
             sslsf = new SSLConnectionSocketFactory(builder.build());
         } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
 
         Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder
@@ -225,7 +224,7 @@ public class ZdsHttp {
         if(login != null && id != null) {
             this.login = login;
             this.idUser = id;
-            logger.info("L'identifiant de l'utilisateur " + this.login + " est : " + idUser);
+            log.info("L'identifiant de l'utilisateur " + this.login + " est : " + idUser);
             cookieStore = new BasicCookieStore();
             for(HttpCookie cookie:cookies) {
                 BasicClientCookie c = new BasicClientCookie(cookie.getName(), cookie.getValue());
@@ -240,7 +239,7 @@ public class ZdsHttp {
             this.authenticated = true;
         }
         else {
-            logger.debug("Le login de l'utilisateur n'a pas pu être trouvé");
+            log.debug("Le login de l'utilisateur n'a pas pu être trouvé");
         }
     }
 
@@ -275,7 +274,7 @@ public class ZdsHttp {
             BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             return new Pair<>(responseCode, rd.lines().collect(Collectors.joining("\n")));
         } catch (IOException e) {
-            logger.error("Impossible d'executer la requête POST", e);
+            log.error("Impossible d'executer la requête POST", e);
         }
 
         return new Pair<>(500, null);
@@ -283,12 +282,12 @@ public class ZdsHttp {
 
     public void initGalleryId(String idContent, String slugContent) throws IOException {
         String url = getDraftContentUrl(idContent, slugContent);
-        logger.info("Tentative de récupération de la page offline du contenu "+idContent+"("+slugContent+")");
+        log.info("Tentative de récupération de la page offline du contenu "+idContent+"("+slugContent+")");
 
         HttpGet get = new HttpGet(url);
         HttpResponse response = client.execute(get, context);
         this.cookies = response.getFirstHeader(Constant.SET_COOKIE_HEADER).toString();
-        logger.info("Tentative réussie");
+        log.info("Tentative réussie");
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
@@ -304,7 +303,7 @@ public class ZdsHttp {
         }
     }
 
-    public String getId(String homeConnectedContent) {
+    private String getId(String homeConnectedContent) {
         Document doc = Jsoup.parse(homeConnectedContent);
         Elements sections = doc.select("div.my-account-dropdown > ul > li > a[href^=/contenus/tutoriels]");
         for (Element section : sections) {
@@ -339,9 +338,9 @@ public class ZdsHttp {
         if (pair.getKey() == 200 && pair.getValue().contains("my-account-dropdown")) {
             this.authenticated = true;
             this.idUser = getId(pair.getValue());
-            logger.info("Utilisateur " + this.login + " connecté");
+            log.info("Utilisateur " + this.login + " connecté");
         } else {
-            logger.debug("Utilisateur " + this.login + " non connecté via " + getLoginUrl());
+            log.debug("Utilisateur " + this.login + " non connecté via " + getLoginUrl());
         }
         return this.authenticated;
     }
@@ -402,49 +401,49 @@ public class ZdsHttp {
             case 200:
                 return !resultPost.getValue ().contains ("alert-box alert");
             case 404:
-                logger.debug("L'id cible du contenu ou le slug est incorrect. Donnez de meilleur informations");
+                log.debug("L'id cible du contenu ou le slug est incorrect. Donnez de meilleur informations");
                 return false;
             case 403:
-                logger.debug("Vous n'êtes pas autorisé à uploader ce contenu. Vérifiez que vous êtes connecté");
+                log.debug("Vous n'êtes pas autorisé à uploader ce contenu. Vérifiez que vous êtes connecté");
                 return false;
             case 413:
-                logger.debug("Le fichier que vous essayer d'envoyer est beaucoup trop lourd. Le serveur n'arrive pas à le supporter");
+                log.debug("Le fichier que vous essayer d'envoyer est beaucoup trop lourd. Le serveur n'arrive pas à le supporter");
                 return false;
             default:
-                logger.debug("Problème d'upload du contenu. Le code http de retour est le suivant : "+statusCode);
+                log.debug("Problème d'upload du contenu. Le code http de retour est le suivant : "+statusCode);
                 return false;
         }
     }
     public boolean importNewContent(String filePath, String msg) throws IOException {
 
-        logger.debug("Tentative d'import via l'url : " + getImportNewContenttUrl());
+        log.debug("Tentative d'import via l'url : " + getImportNewContenttUrl());
         return uploadContent(filePath, getImportNewContenttUrl(), msg);
     }
 
     public boolean importContent(String filePath, String targetId, String targetSlug, String msg)
             throws IOException {
-        logger.debug("Tentative d'import via l'url : " + getImportContenttUrl(targetId, targetSlug));
+        log.debug("Tentative d'import via l'url : " + getImportContenttUrl(targetId, targetSlug));
         return uploadContent(filePath, getImportContenttUrl(targetId, targetSlug), msg);
     }
 
     public void initInfoOnlineContent(String type) throws IOException {
         HttpGet get = null;
 
-        logger.info("Initialisation des metadonnées contenus en ligne de type " + type);
+        log.info("Initialisation des metadonnées contenus en ligne de type " + type);
 
         if ("tutorial".equals(type)) {
-            logger.info("Tentative de joindre l'url : " + getPersonalTutorialUrl());
+            log.info("Tentative de joindre l'url : " + getPersonalTutorialUrl());
             get = new HttpGet(getPersonalTutorialUrl());
         } else {
             if ("article".equals(type)) {
-                logger.info("Tentative de joindre l'url : " + getPersonalArticleUrl());
+                log.info("Tentative de joindre l'url : " + getPersonalArticleUrl());
                 get = new HttpGet(getPersonalArticleUrl());
             }
         }
 
         HttpResponse response = client.execute(get, context);
         this.cookies = response.getFirstHeader(Constant.SET_COOKIE_HEADER).toString();
-        logger.info("Tentative réussie");
+        log.info("Tentative réussie");
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
@@ -452,7 +451,7 @@ public class ZdsHttp {
         Elements sections = doc.select("article > a[href^=/contenus/]");
         for (Element section : sections) {
             String ref = section.attr("href").trim();
-            logger.trace("Chaine à decrypter pour trouver le slug : " + ref);
+            log.trace("Chaine à decrypter pour trouver le slug : " + ref);
             if (ref.startsWith("/contenus/")) {
                 String[] tab = ref.split("/");
                 MetadataContent onlineContent = new MetadataContent(tab[2], tab[3], type);
@@ -461,7 +460,7 @@ public class ZdsHttp {
                 }
             }
         }
-        logger.info("Contenu de type " + type + " chargés en mémoire : " + getContentListOnline());
+        log.info("Contenu de type " + type + " chargés en mémoire : " + getContentListOnline());
     }
 
     private String getTargetSlug(String targetId, String type) {
@@ -476,7 +475,7 @@ public class ZdsHttp {
     public void downloaDraft(String targetId, String type) throws IOException {
         String targetSlug = getTargetSlug(targetId, type);
         HttpGet get = new HttpGet(getDownloadDraftContentUrl(targetId, targetSlug));
-        logger.debug("Tentative de téléchargement via le lien : " + getDownloadDraftContentUrl(targetId, targetSlug));
+        log.debug("Tentative de téléchargement via le lien : " + getDownloadDraftContentUrl(targetId, targetSlug));
 
 
         HttpResponse response = client.execute(get, context);
@@ -497,12 +496,12 @@ public class ZdsHttp {
         dirname = dirname.substring(0, dirname.length() - 4);
         // create output directory is not exists
         File folder = new File(destFolder + File.separator + dirname);
-        logger.debug("Tentative de dezippage de " + zipFilePath + " dans " + folder.getAbsolutePath());
+        log.debug("Tentative de dezippage de " + zipFilePath + " dans " + folder.getAbsolutePath());
         if (!folder.exists()) {
             folder.mkdir();
-            logger.info("Dézippage dans " + folder.getAbsolutePath() + " réalisé avec succès");
+            log.info("Dézippage dans " + folder.getAbsolutePath() + " réalisé avec succès");
         } else {
-            logger.debug("Le répertoire dans lequel vous souhaitez dezipper existe déjà ");
+            log.debug("Le répertoire dans lequel vous souhaitez dezipper existe déjà ");
         }
         ZipUtil.unpack(new File(zipFilePath), folder);
         return folder;
@@ -514,7 +513,7 @@ public class ZdsHttp {
         dirname = dirname.substring(0, dirname.length() - 4);
         // create output directory is not exists
         File folder = new File(getOfflineContentPathDir() + File.separator + dirname);
-        logger.debug("Tentative de dezippage de " + zipFilePath + " dans " + folder.getAbsolutePath());
+        log.debug("Tentative de dezippage de " + zipFilePath + " dans " + folder.getAbsolutePath());
 
         byte[] buffer = new byte[1024];
         if (!folder.exists()) {
@@ -527,7 +526,7 @@ public class ZdsHttp {
 
                 while (ze != null) {
                     String fileName = ze.getName();
-                    logger.trace("Traitement du fichier : " + fileName);
+                    log.trace("Traitement du fichier : " + fileName);
                     File newFile = new File(folder + File.separator + fileName);
                     new File(newFile.getParent()).mkdirs();
 
@@ -538,17 +537,17 @@ public class ZdsHttp {
                         }
                         ze = zis.getNextEntry();
                     } catch (IOException ioe) {
-                        logger.error(ioe.getMessage(), ioe);
+                        log.error(ioe.getMessage(), ioe);
                     }
                 }
                 zis.closeEntry();
-                logger.info("Dézippage dans " + folder.getAbsolutePath() + " réalisé avec succès");
+                log.info("Dézippage dans " + folder.getAbsolutePath() + " réalisé avec succès");
 
             } catch (IOException ex) {
-                logger.debug("Echec de dezippage dans " + zipFilePath, ex);
+                log.debug("Echec de dezippage dans " + zipFilePath, ex);
             }
         } else {
-            logger.debug("Le répertoire dans lequel vous souhaitez dezipper existe déjà");
+            log.debug("Le répertoire dans lequel vous souhaitez dezipper existe déjà");
         }
     }
 
@@ -561,12 +560,12 @@ public class ZdsHttp {
                     .setRedirectStrategy(new LaxRedirectStrategy())
                     .build();
             String urlForGet = "https://zestedesavoir.com/" + type + "/zip/"+ id + "/" + slug + ".zip";
-            logger.debug("Tentative de téléchargement du lien "+urlForGet);
-            logger.debug("Répertoire de téléchargement cible : "+destFolder);
+            log.debug("Tentative de téléchargement du lien "+urlForGet);
+            log.debug("Répertoire de téléchargement cible : "+destFolder);
 
             HttpGet get = new HttpGet(urlForGet);
 
-            logger.debug("Execution de la requete http");
+            log.debug("Execution de la requete http");
 
             HttpResponse response = httpclient.execute(get);
 
@@ -575,13 +574,13 @@ public class ZdsHttp {
             FileOutputStream fos = new FileOutputStream(new File(filePath));
 
 
-            logger.debug("Début du téléchargement");
+            log.debug("Début du téléchargement");
             int inByte;
             while ((inByte = is.read()) != -1)
                 fos.write(inByte);
             is.close();
             fos.close();
-            logger.debug("Archive téléchargée : "+filePath);
+            log.debug("Archive téléchargée : "+filePath);
             return filePath;
     }
 }

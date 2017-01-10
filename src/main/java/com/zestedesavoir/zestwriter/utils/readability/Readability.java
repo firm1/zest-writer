@@ -1,11 +1,14 @@
 package com.zestedesavoir.zestwriter.utils.readability;
 
+import lombok.Getter;
+
 /**
  * Implements various readability indexes
  * http://code.google.com/p/panos-ipeirotis/source/browse/trunk/src/com/ipeirotis/readability/?r=2
  * @author Panos Ipeirotis
  *
  */
+@Getter
 public class Readability {
 
     private static SentenceExtractor se = new SentenceExtractor();
@@ -25,27 +28,11 @@ public class Readability {
         this.characters = getNumberOfCharacters(text);
     }
 
-    public Integer getCharacters() {
-        return characters;
-    }
-
-    public Integer getSentences() {
-        return sentences;
-    }
-
-    public Integer getSyllables() {
-        return syllables;
-    }
-
-    public Integer getWords() {
-        return words;
-    }
-
     /**
      * Returns true is the word contains 3 or more syllables
      *
-     * @param w
-     * @return
+     * @param w word
+     * @return true is the word contains 3 or more syllables
      */
     private static boolean isComplex(String w) {
         int syllables = Syllabify.syllable(w);

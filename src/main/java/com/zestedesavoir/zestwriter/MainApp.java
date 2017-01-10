@@ -32,6 +32,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,16 +50,22 @@ public class MainApp extends Application{
     private static Stage primaryStage;
     private static ZdsHttp zdsutils;
     private static Markdown mdUtils;
-    private Scene scene;
-    private BorderPane rootLayout;
-    private ObservableMap<Textual, Tab> extracts = FXCollections.observableMap(new HashMap<>());
-    private ObjectProperty<Content> content = new SimpleObjectProperty<>();
-    private MdTextController index;
-    private StringBuilder key = new StringBuilder();
-    private static Logger logger;
-    private MenuController menuController;
     private static String[] args;
     private static File defaultHome;
+    private static Logger logger;
+    @Getter @Setter
+    private Scene scene;
+    @Getter @Setter
+    private BorderPane rootLayout;
+    @Getter @Setter
+    private ObservableMap<Textual, Tab> extracts = FXCollections.observableMap(new HashMap<>());
+    private ObjectProperty<Content> content = new SimpleObjectProperty<>();
+    @Getter @Setter
+    private MdTextController index;
+    @Getter
+    private StringBuilder key = new StringBuilder();
+    @Getter @Setter
+    private MenuController menuController;
 
     /**
      * Public Main App constructor
@@ -138,37 +146,13 @@ public class MainApp extends Application{
         return zdsutils;
     }
 
-    public Scene getScene() {
-        return scene;
-    }
-
-    public MdTextController getIndex() {
-        return index;
-    }
-
-    public Content getContent() {
-        return content.get();
-    }
-
-    public void setContent(Content content) {
-        this.content.set(content);
-    }
-
-    public ObjectProperty<Content> contentProperty() {
-        return content;
-    }
-
-    public ObservableMap<Textual, Tab> getExtracts() {
-        return extracts;
-    }
-
     public static File getDefaultHome() {
         return defaultHome;
     }
 
     public static Markdown getMdUtils() { return mdUtils; }
 
-    public static void setPrimaryStage(Stage primaryStage) {
+    private static void setPrimaryStage(Stage primaryStage) {
         MainApp.primaryStage = primaryStage;
     }
 
@@ -178,6 +162,18 @@ public class MainApp extends Application{
 
     public static void setLogger(Logger logger) {
         MainApp.logger = logger;
+    }
+
+    public Content getContent() {
+        return content.get();
+    }
+
+    public ObjectProperty<Content> contentProperty() {
+        return content;
+    }
+
+    public void setContent(Content content) {
+        this.content.set(content);
     }
 
     @Override
@@ -271,10 +267,6 @@ public class MainApp extends Application{
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
-    }
-
-    public MenuController getMenuController() {
-        return menuController;
     }
 
     private void initConnection(){

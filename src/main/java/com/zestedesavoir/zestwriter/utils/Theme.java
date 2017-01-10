@@ -1,10 +1,16 @@
 package com.zestedesavoir.zestwriter.utils;
 
+import lombok.*;
+
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class Theme {
     private String filename;
     private String label;
@@ -21,51 +27,13 @@ public class Theme {
             new Theme("winxaito_dark.css", "WinXaito's Dark"),
             new Theme("christmas.css", Configuration.getBundle().getString("ui.options.display.theme.christmas"), 15, 12, 27, 12));
 
-    public Theme(String filename, String label, int startDay, int startMonth, int endDay, int endMonth) {
-        this.filename = filename;
-        this.label = label;
-        this.startDay = startDay;
-        this.startMonth = startMonth;
-        this.endDay = endDay;
-        this.endMonth = endMonth;
-    }
-
     public Theme(String filename, String label) {
         this.filename = filename;
         this.label = label;
     }
 
-    public String getFilename() {
-        return filename;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public int getStartDay() {
-        return startDay;
-    }
-
-    public int getStartMonth() {
-        return startMonth;
-    }
-
-    public int getEndDay() {
-        return endDay;
-    }
-
-    public int getEndMonth() {
-        return endMonth;
-    }
-
     public static List<Theme> getThemeAvailable() {
         return themeAvailable;
-    }
-
-    @Override
-    public String toString() {
-        return getLabel();
     }
 
     public static Theme getThemeFromFileName(String filename) {
