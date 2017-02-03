@@ -138,7 +138,7 @@ public class MdTextController {
             pyconsole.exec("from markdown import Markdown");
             pyconsole.exec("from markdown.extensions.zds import ZdsExtension");
             pyconsole.exec("from smileys_definition import smileys");
-            pyconsole.exec("mk_instance = Markdown(extensions=(ZdsExtension(inline=False, emoticons=smileys, js_support=False, ping_url=None),),safe_mode = 'escape', enable_attributes = False, tab_length = 4, output_format = 'html5', smart_emphasis = True, lazy_ol = True)");
+            pyconsole.exec("mk_instance = Markdown(extensions=(ZdsExtension(inline=False, emoticons=smileys, js_support=False, ping_url=None),), inline=False)");
             log.info("PYTHON STARTED");
             setPythonStarted(true);
         }).start();
@@ -296,12 +296,10 @@ public class MdTextController {
     }
 
     public String markdownToHtml(String chaine) {
-        PythonInterpreter console = getPyconsole();
-        if (console != null) {
-            console.set("text", chaine);
-            console.exec(
-                    "render = mk_instance.convert(text)");
-            PyString render = console.get("render", PyString.class);
+        if (pyconsole != null) {
+            pyconsole.set("text", chaine);
+            pyconsole.exec("render = mk_instance.convert(text)");
+            PyString render = pyconsole.get("render", PyString.class);
             return render.toString();
         } else {
             return null;

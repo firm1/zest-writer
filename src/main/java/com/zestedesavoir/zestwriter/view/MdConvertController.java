@@ -32,6 +32,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
 public class MdConvertController {
@@ -53,6 +55,7 @@ public class MdConvertController {
     @FXML private BorderPane boxRender;
     @FXML private Tab tab;
     @FXML private CustomStyledClassedTextArea sourceText;
+
 
     public void setMdBox(MdTextController mdBox, Textual extract) {
         this.mdBox = mdBox;
@@ -140,7 +143,6 @@ public class MdConvertController {
                         if (html != null) {
                             return MainApp.getMdUtils().addHeaderAndFooter(html);
                         } else {
-                            renderTask.wait(5000);
                             throw new IOException();
                         }
                     }
@@ -148,7 +150,10 @@ public class MdConvertController {
             }
         };
 
-        renderTask.setOnFailed(t -> renderTask.restart());
+        renderTask.setOnFailed(t -> {
+            renderTask.restart();
+        });
+
         renderTask.setOnSucceeded(t -> {
             Platform.runLater(() -> {
                 yRenderPosition = getVScrollValue(renderView);

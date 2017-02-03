@@ -11,36 +11,40 @@ import java.util.regex.Pattern;
 
 @Slf4j
 public class Markdown {
-    private String htmlTemplate;
-    private static final String CONTENT_KEYWORD = "<!--content-->";
+    private static String CONTENT_KEYWORD_BEFORE;
+    private static String CONTENT_KEYWORD_AFTER;
 
-    private String getHTMLTemplate() {
-        if(htmlTemplate == null) {
-            final String htmlTemplateLocation = "assets/static/html/template.html";
-            InputStream is = MainApp.class.getResourceAsStream(htmlTemplateLocation);
-
-            String template = "";
-            try {
-                template= IOUtils.toString(is, "UTF-8");
-            } catch (IOException e) {
-                log.error("Error when reading the template stream.", e);
-            }
-
+    public Markdown() {
+        try(InputStream is = MainApp.class.getResourceAsStream("assets/static/html/template-begin.html"))  {
+            String template= IOUtils.toString(is, "UTF-8");
             Matcher pathMatcher = Pattern.compile("%%(.*)%%").matcher(template);
-
-            StringBuffer sbCheatSheet = new StringBuffer();
-
+            StringBuffer sb = new StringBuffer();
             while (pathMatcher.find()) {
                 String path = MainApp.class.getResource("assets" + pathMatcher.group(1)).toExternalForm();
-                pathMatcher.appendReplacement(sbCheatSheet, path);
+                pathMatcher.appendReplacement(sb, path);
             }
-            pathMatcher.appendTail(sbCheatSheet);
-            htmlTemplate = new String(sbCheatSheet);
+            pathMatcher.appendTail(sb);
+            CONTENT_KEYWORD_BEFORE = new String(sb);
+        } catch (IOException e) {
+            log.error("Error when reading the template stream.", e);
         }
-        return htmlTemplate;
+
+        try(InputStream is = MainApp.class.getResourceAsStream("assets/static/html/template-end.html"))  {
+            String template= IOUtils.toString(is, "UTF-8");
+            Matcher pathMatcher = Pattern.compile("%%(.*)%%").matcher(template);
+            StringBuffer sb = new StringBuffer();
+            while (pathMatcher.find()) {
+                String path = MainApp.class.getResource("assets" + pathMatcher.group(1)).toExternalForm();
+                pathMatcher.appendReplacement(sb, path);
+            }
+            pathMatcher.appendTail(sb);
+            CONTENT_KEYWORD_AFTER = new String(sb);
+        } catch (IOException e) {
+            log.error("Error when reading the template stream.", e);
+        }
     }
 
     public String addHeaderAndFooter(String content) {
-        return getHTMLTemplate().replaceFirst(CONTENT_KEYWORD, Matcher.quoteReplacement(content));
+        return CONTENT_KEYWORD_BEFORE+content+CONTENT_KEYWORD_AFTER;
     }
 }

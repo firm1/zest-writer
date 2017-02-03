@@ -13,7 +13,6 @@ import java.util.Optional;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
 public class Theme {
     private static List<Theme> themeAvailable = Arrays.asList(
             new Theme("dark.css", Configuration.getBundle().getString("ui.options.display.theme.dark")),
@@ -58,5 +57,10 @@ public class Theme {
             }
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return label;
     }
 }
