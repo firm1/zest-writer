@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 public class Lang {
     private static List<Lang> langAvailable = Arrays.asList(new Lang(Locale.FRANCE), new Lang(Locale.ENGLISH));
@@ -25,5 +24,10 @@ public class Lang {
 
     public static List<Lang> getLangAvailable() {
         return langAvailable;
+    }
+
+    @Override
+    public String toString() {
+        return locale.getDisplayLanguage();
     }
 }
