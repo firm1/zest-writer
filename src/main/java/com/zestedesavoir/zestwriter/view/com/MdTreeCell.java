@@ -196,7 +196,8 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 File extFile = new File(extract.getFilePath());
                 FunctionTreeFactory.performCreateNewFile(extFile);
                 saveManifestJson();
-                index.openContent(content);
+                // add visual node
+                getTreeItem().getChildren().add(getTreeItem().getChildren().size()-1, FunctionTreeFactory.buildChild(new TreeItem<>((ContentNode) extract)));
             }
         });
 
@@ -229,7 +230,8 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                     dirFile.mkdir();
                 }
                 saveManifestJson();
-                index.openContent(content);
+                // refresh visual
+                getTreeItem().getChildren().add(getTreeItem().getChildren().size()-1, FunctionTreeFactory.buildChild(new TreeItem<>((ContentNode) container)));
             }
         });
 
@@ -266,7 +268,8 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                     ((Content) index.getSummary().getRoot().getValue()).setLicence(paramContent.get("licence").toString());
                     baseFilePath = ((Content) index.getSummary().getRoot().getValue()).getBasePath();
                     saveManifestJson();
-                    index.openContent(content);
+                    // refresh visual
+                    index.getSummary().refresh();
                 }
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
@@ -340,6 +343,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             currentNode.getChildren().forEach(x -> parentNode.getChildren().add(x));
             parentNode.getChildren().remove(currentNode);
             saveManifestJson();
+            // resfresh visual
             index.openContent(content);
         });
 
