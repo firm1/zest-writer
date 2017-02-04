@@ -9,7 +9,7 @@ import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -40,7 +40,7 @@ public class CorrectionService extends Service<String>{
                         MainApp.getLogger().debug("Jython en cours de chargement mémoire");
                         return null;
                     } else {
-                        String htmlText = StringEscapeUtils.unescapeHtml(MenuController.markdownToHtml(mdText, markdown));
+                        String htmlText = StringEscapeUtils.unescapeXml(MenuController.markdownToHtml(mdText, markdown));
                         return corrector.checkHtmlContentToText(htmlText, ext.getTitle());
                     }
                 };

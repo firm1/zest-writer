@@ -3,7 +3,7 @@ package com.zestedesavoir.zestwriter.utils;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.examples.HtmlToPlainText;
 import org.languagetool.JLanguageTool;
@@ -212,7 +212,7 @@ public class Corrector {
     }
 
     public int countMistakes(MdTextController mdTextController, String markdown) {
-        String htmlText = StringEscapeUtils.unescapeHtml(MenuController.markdownToHtml(mdTextController, markdown));
+        String htmlText = StringEscapeUtils.unescapeXml(MenuController.markdownToHtml(mdTextController, markdown));
         AnnotatedText markup = makeAnnotatedText(htmlText);
 
         langTool.getAllActiveRules().stream()

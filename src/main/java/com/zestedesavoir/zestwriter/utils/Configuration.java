@@ -3,7 +3,7 @@ package com.zestedesavoir.zestwriter.utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.http.client.fluent.Request;
 
 import javax.swing.*;

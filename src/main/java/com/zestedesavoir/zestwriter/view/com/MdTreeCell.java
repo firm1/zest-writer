@@ -15,7 +15,7 @@ import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -390,7 +390,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             logger.debug("Tentative de calcul des statistiques de lisiblité");
             Container container = (Container) getItem();
             Function<Textual, Double> performGuning = (Textual ch) -> {
-                String htmlText = StringEscapeUtils.unescapeHtml(MenuController.markdownToHtml(index, ch.readMarkdown()));
+                String htmlText = StringEscapeUtils.unescapeXml(MenuController.markdownToHtml(index, ch.readMarkdown()));
                 String plainText = Corrector.htmlToTextWithoutCode(htmlText);
                 if("".equals(plainText.trim())){
                     return 100.0;
@@ -400,7 +400,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 }
             };
             Function<Textual, Double> performFlesch = (Textual ch) -> {
-                String htmlText = StringEscapeUtils.unescapeHtml(MenuController.markdownToHtml(index, ch.readMarkdown()));
+                String htmlText = StringEscapeUtils.unescapeXml(MenuController.markdownToHtml(index, ch.readMarkdown()));
                 String plainText = Corrector.htmlToTextWithoutCode(htmlText);
                 if("".equals(plainText.trim())){
                     return 100.0;

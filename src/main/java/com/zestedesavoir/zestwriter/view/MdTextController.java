@@ -38,7 +38,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
@@ -807,7 +807,7 @@ public class MdTextController {
     }
 
     @FXML private void handleValidateButtonAction(ActionEvent event) {
-        String s = StringEscapeUtils.unescapeHtml(markdownToHtml(currentSourceText.getText()));
+        String s = StringEscapeUtils.unescapeXml(markdownToHtml(currentSourceText.getText()));
         if(MdConvertController.corrector == null) {
             MdConvertController.corrector = new Corrector();
         }

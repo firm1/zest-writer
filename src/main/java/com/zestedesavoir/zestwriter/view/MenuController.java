@@ -41,8 +41,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
@@ -130,7 +130,7 @@ public class MenuController{
 
     @FXML private void handleFleshButtonAction(ActionEvent event){
         Function<Textual, Double> calFlesh = (Textual ch) -> {
-            String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
+            String htmlText = StringEscapeUtils.unescapeXml(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
             String plainText = Corrector.htmlToTextWithoutCode(htmlText);
             if("".equals(plainText.trim())){
                 return 100.0;
@@ -154,7 +154,7 @@ public class MenuController{
 
     @FXML private void handleGunningButtonAction(ActionEvent event){
         Function<Textual, Double> calGuning = (Textual ch) -> {
-            String htmlText = StringEscapeUtils.unescapeHtml(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
+            String htmlText = StringEscapeUtils.unescapeXml(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
             String plainText = Corrector.htmlToTextWithoutCode(htmlText);
             if("".equals(plainText.trim())){
                 return 100.0;

@@ -34,7 +34,7 @@ javafx {
 
     // informations
     category = "Office"
-    copyright = "Copyright (c) 2016 Zest Writer"
+    copyright = "Copyright (c) 2016 - 2017 Zest Writer"
     description = "This is a Markdown Editor for Zeste de Savoir contents"
     licenseType = "GPLv3"
     vendor = "firm1"
@@ -113,7 +113,7 @@ tasks.minifyCss.dependsOn tasks.processResources
 
 dependencies {
     testCompile 'junit:junit:4.12'
-    compile group: 'org.languagetool', name: 'language-fr', version: '3.5'
+    compile group: 'org.languagetool', name: 'language-fr', version: '3.6'
     compile group: 'org.apache.httpcomponents', name: 'fluent-hc', version: '4.5.2'
     compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.2'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.5'
