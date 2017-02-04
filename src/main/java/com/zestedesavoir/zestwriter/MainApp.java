@@ -19,6 +19,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -246,6 +247,10 @@ public class MainApp extends Application{
             menuController.setMainApp(this);
 
             scene = new Scene(rootLayout);
+            scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+                if(event.isAltDown())
+                    event.consume();
+            });
             primaryStage.setScene(scene);
             primaryStage.show();
             loadCombinason();
