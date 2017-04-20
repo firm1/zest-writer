@@ -1,15 +1,21 @@
 .findReplace-highlightsFind{
-    -fx-background-fill: #fdde02;
+    -fx-background-fill: #FFF9C8;
+    -fx-border-color: #fdde02;
+    -fx-border-width: 1px;
 }
 
 .findReplace-highlightsFindAction{
     -fx-background-fill: #ff9900;
     -fx-font-weigh: bold;
     -fx-underline: true;
+    -fx-border-color: #fdde02;
+    -fx-border-width: 1px;
 }
 
 .findReplace-highlightsReplace{
     -fx-background-fill: #ff9900;
+    -fx-border-color: #fdde02;
+    -fx-border-width: 1px;
 }
 
 .lineno {
