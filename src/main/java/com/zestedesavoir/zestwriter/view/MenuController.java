@@ -385,6 +385,11 @@ public class MenuController{
         }
         contents.addAll(possibleContent);
 
+        Optional<MetadataContent> selectedContent = MainApp.getZdsutils().getContentListOnline().stream()
+                .filter(t -> t.getSlug().equals(mainApp.getContent().getSlug()))
+                .findFirst();
+
+
         Dialog<Pair<String, MetadataContent>> dialog = new CustomDialog<>();
         dialog.setTitle(Configuration.getBundle().getString("ui.content.select.title"));
         dialog.setHeaderText(Configuration.getBundle().getString("ui.content.select.header"));
@@ -400,6 +405,9 @@ public class MenuController{
         msg.setText(Configuration.getBundle().getString("ui.content.select.placeholder.commit_msg"));
         ChoiceBox<MetadataContent> contenus = new ChoiceBox<>();
         contenus.setItems(FXCollections.observableArrayList(contents));
+        if(selectedContent.isPresent()) {
+            contenus.getSelectionModel().select(selectedContent.get());
+        }
 
         grid.add(new Label(Configuration.getBundle().getString("ui.content.select.field.slug")+" : "), 0, 0);
         grid.add(contenus, 1, 0);
