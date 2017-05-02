@@ -356,8 +356,10 @@ public class MenuController{
         try {
             if(mainApp.getContent().isArticle()) {
                 MainApp.getZdsutils().initInfoOnlineContent("article");
+            } else if(mainApp.getContent().isOpinion()) {
+                MainApp.getZdsutils().initInfoOnlineContent("opinion");
             } else {
-                MainApp.getZdsutils().initInfoOnlineContent("tutorial");
+                    MainApp.getZdsutils().initInfoOnlineContent("tutorial");
             }
         } catch (IOException e) {
             log.error(e.getMessage(), e);
@@ -371,7 +373,12 @@ public class MenuController{
             possibleContent = MainApp.getZdsutils().getContentListOnline().stream()
                     .filter(MetadataContent::isArticle)
                     .collect(Collectors.toList());
-        } else {
+        } else if(mainApp.getContent().isOpinion()) {
+            possibleContent = MainApp.getZdsutils().getContentListOnline().stream()
+                    .filter(MetadataContent::isOpinion)
+                    .collect(Collectors.toList());
+        }
+        else {
             possibleContent = MainApp.getZdsutils().getContentListOnline().stream()
                     .filter(MetadataContent::isTutorial)
                     .collect(Collectors.toList());

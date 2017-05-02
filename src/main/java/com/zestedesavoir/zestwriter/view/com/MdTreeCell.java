@@ -107,7 +107,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         }
         if (item instanceof Content) {
             addMenu.getItems().add(addMenuItem5);
-            if(((Content) item).isArticle()) {
+            if(((Content) item).isArticle() || ((Content) item).isOpinion()) {
                 addMenuItem2.setDisable(true);
                 addMenuItem6.setDisable(true);
             }

@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-@JsonIgnoreProperties({"basePath", "filePath", "editable", "countChildrenExtract", "countDescendantContainer" ,"rootContent", "depth", "tutorial", "article"})
+@JsonIgnoreProperties({"basePath", "filePath", "editable", "countChildrenExtract", "countDescendantContainer" ,"rootContent", "depth", "tutorial", "article", "opinion"})
 public class Content extends Container implements ContentNode{
     private int _version;
     private String _licence;
@@ -40,7 +40,7 @@ public class Content extends Container implements ContentNode{
      * @param version content version
      * @param licence content license
      * @param description description of content
-     * @param type content type (tutorial or article)
+     * @param type content type (tutorial, article or opinion)
      */
     @JsonCreator
     public Content(@JsonProperty("object") String object, @JsonProperty("slug") String slug, @JsonProperty("title") String title, @JsonProperty("introduction") String introduction, @JsonProperty("conclusion") String conclusion,
@@ -130,6 +130,10 @@ public class Content extends Container implements ContentNode{
 
     public boolean isTutorial() {
         return "TUTORIAL".equals(getType());
+    }
+
+    public boolean isOpinion() {
+        return "OPINION".equals(getType());
     }
 
     public void saveToMarkdown(File file) {

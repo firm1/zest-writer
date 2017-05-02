@@ -30,7 +30,9 @@ public class EditContentDialog extends BaseDialog<Pair<String, Map<String, Objec
 	public static final int MAX_TITLE_LENGTH = 80;
 	public static final int MAX_SUBTITLE_LENGTH = 200;
 
-	private static ObservableList<TypeContent> typeOptions = FXCollections.observableArrayList(new TypeContent("ARTICLE", "Article"), new TypeContent("TUTORIAL","Tutoriel"));
+	private static ObservableList<TypeContent> typeOptions = FXCollections.observableArrayList(new TypeContent("ARTICLE", "Article"),
+            new TypeContent("TUTORIAL","Tutoriel"),
+            new TypeContent("OPINION","Billet"));
     private static ObservableList<License> licOptions = FXCollections.observableArrayList(
         new License("CC BY", Configuration.getBundle().getString("ui.content.label.license.ccby")),
         new License("CC BY-SA", Configuration.getBundle().getString("ui.content.label.license.ccbysa")),

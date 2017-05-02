@@ -137,6 +137,10 @@ public class ZdsHttp {
         return getBaseUrl() + "/contenus/articles/" + idUser + "/";
     }
 
+    private String getPersonalOpinionUrl() {
+        return getBaseUrl() + "/contenus/tribunes/" + idUser + "/";
+    }
+
     private String getDownloadDraftContentUrl(String id, String slug) {
         return getBaseUrl() + "/contenus/telecharger/" + id + "/" + slug + "/";
     }
@@ -434,11 +438,12 @@ public class ZdsHttp {
         if ("tutorial".equals(type)) {
             log.info("Tentative de joindre l'url : " + getPersonalTutorialUrl());
             get = new HttpGet(getPersonalTutorialUrl());
-        } else {
-            if ("article".equals(type)) {
+        } else if ("article".equals(type)) {
                 log.info("Tentative de joindre l'url : " + getPersonalArticleUrl());
                 get = new HttpGet(getPersonalArticleUrl());
-            }
+        } else if ("opinion".equals(type)) {
+            log.info("Tentative de joindre l'url : " + getPersonalOpinionUrl());
+            get = new HttpGet(getPersonalOpinionUrl());
         }
 
         HttpResponse response = client.execute(get, context);

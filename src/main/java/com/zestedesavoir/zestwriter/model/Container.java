@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.function.Function;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="type", visible=true)
-@JsonSubTypes({@Type(value = Container.class, name = "null"), @Type(value = Content.class, name = "TUTORIAL"), @Type(value = Content.class, name = "ARTICLE") })
+@JsonSubTypes({@Type(value = Container.class, name = "null"), @Type(value = Content.class, name = "TUTORIAL"), @Type(value = Content.class, name = "ARTICLE"), @Type(value = Content.class, name = "OPINION") })
 public class Container extends MetaContent implements ContentNode {
     private Textual _introduction;
     private Textual _conclusion;
