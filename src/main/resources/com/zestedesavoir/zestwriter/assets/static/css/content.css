@@ -371,3 +371,7 @@ table tbody tr {
     background: #fdfdfd;
     border-bottom: 1px solid #ddd;
 }
+
+/* Link unclicable */
+
+a { pointer-events: none }
