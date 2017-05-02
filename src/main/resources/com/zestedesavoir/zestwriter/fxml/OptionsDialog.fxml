@@ -42,6 +42,30 @@
                            <Label fx:id="workspacepath" text="%ui.options.workspace.path"
                                   wrapText="true"/>
                        </GridPane>
+                       <Label styleClass="subtitle" text="%ui.options.writing">
+                           <VBox.margin>
+                               <Insets/>
+                           </VBox.margin>
+                       </Label>
+                       <GridPane hgap="20.0" styleClass="options-grid">
+                           <columnConstraints>
+                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="364.0" minWidth="10.0"
+                                                  prefWidth="364.0"/>
+                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="206.0" minWidth="10.0"
+                                                  prefWidth="147.0"/>
+                           </columnConstraints>
+                           <rowConstraints>
+                               <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                               vgrow="SOMETIMES"/>
+                           </rowConstraints>
+                           <padding>
+                               <Insets left="20.0"/>
+                           </padding>
+                           <Label fx:id="writingLicense" text="%ui.options.writing.license"
+                                  wrapText="true"/>
+                           <ComboBox fx:id="optWritingLicense" prefWidth="200.0"
+                                     GridPane.columnIndex="1"/>
+                       </GridPane>
                    </VBox>
                </AnchorPane>
            </Tab>

@@ -2,6 +2,7 @@ package com.zestedesavoir.zestwriter.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
+import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.http.client.fluent.Request;
@@ -322,12 +323,23 @@ public class Configuration {
             return ConfigData.DISPLAY_LANG.getDefaultValue();
     }
 
+    public String getWritingLicense(){
+        if(conf.containsKey(ConfigData.WRITING_LICENSE.getKey()))
+            return conf.getProperty(ConfigData.WRITING_LICENSE.getKey());
+        else
+            return ConfigData.WRITING_LICENSE.getDefaultValue();
+    }
+
     public void setDisplayTheme(String displayTheme){
         conf.setProperty(ConfigData.DISPLAY_THEME.getKey(), displayTheme);
     }
 
     public void setDisplayLang(String displayLang){
         conf.setProperty(ConfigData.DISPLAY_LANG.getKey(), displayLang);
+    }
+
+    public void setWritingLicense(String license){
+        conf.setProperty(ConfigData.WRITING_LICENSE.getKey(), license);
     }
 
     public boolean isDisplayWindowPersonnalDimension(){
@@ -552,6 +564,7 @@ public class Configuration {
         EDITOR_RENDER_VIEW("options.editor.render.view", "true"),
         DISPLAY_THEME("options.display.theme", "light.css"),
         DISPLAY_LANG("options.display.lang", Locale.FRANCE.toString()),
+        WRITING_LICENSE("options.writing.license", "Tous droits réservés"),
         DISPLAY_WINDOW_PERSONAL_DIMENSION("options.display.window.standardDimension", "true"),
         DISPLAY_WINDOW_PERSONAL_POSITION("options.display.window.standardPosition", "true"),
         DISPLAY_WINDOW_MAXIMIZE("options.display.window.maximize", "false"),

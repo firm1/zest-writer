@@ -2,6 +2,7 @@ package com.zestedesavoir.zestwriter.view.dialogs;
 
 
 import com.zestedesavoir.zestwriter.MainApp;
+import com.zestedesavoir.zestwriter.model.License;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Lang;
 import com.zestedesavoir.zestwriter.utils.Theme;
@@ -37,6 +38,7 @@ public class OptionsDialog{
     @FXML private Button optEditorFontButton;
     @FXML private ComboBox<Theme> optDisplayTheme;
     @FXML private ComboBox<Lang> optDisplayLang;
+    @FXML private ComboBox<License> optWritingLicense;
     @FXML private RadioButton optDisplayWindowMaximizeYes;
     @FXML private RadioButton optDisplayWindowMaximizeNo;
     @FXML private RadioButton optDisplayWindowDimensionYes;
@@ -74,6 +76,7 @@ public class OptionsDialog{
 
         MainApp.getConfig().setDisplayTheme(optDisplayTheme.getValue().getFilename());
         MainApp.getConfig().setDisplayLang(optDisplayLang.getValue().getLocale().toString());
+        MainApp.getConfig().setWritingLicense(optWritingLicense.getValue().getCode());
 
         MainApp.getConfig().setWorkspacePath(workspacepath.getText());
 
@@ -245,7 +248,6 @@ public class OptionsDialog{
     private void setDisplayOptions(){
         optDisplayTheme.getItems().addAll(Theme.getThemeAvailable());
         optDisplayTheme.setValue(Theme.getThemeFromFileName(MainApp.getConfig().getDisplayTheme()));
-
         optDisplayTheme.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             Alert alert = new CustomAlert(Alert.AlertType.WARNING);
             alert.setTitle(Configuration.getBundle().getString("ui.dialog.change_theme.title"));
@@ -267,6 +269,9 @@ public class OptionsDialog{
 
             alert.showAndWait();
         });
+
+        optWritingLicense.getItems().addAll(EditContentDialog.getLicOptions());
+        optWritingLicense.setValue(License.getLicenseFromCode(MainApp.getConfig().getWritingLicense()));
 
         if(MainApp.getConfig().isDisplayWindowMaximize())
             optDisplayWindowMaximizeYes.setSelected(true);

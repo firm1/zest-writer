@@ -49,7 +49,7 @@ public class FunctionTreeFactory {
                     Constant.DEFAULT_CONCLUSION_FILENAME,
                     new ArrayList<>(),
                     2,
-                    EditContentDialog.getLicOptions().get(6).getCode(),
+                    MainApp.getConfig().getWritingLicense(),
                     "",
                     EditContentDialog.getTypeOptions().get(1).getCode()));
         } else {
