@@ -7,7 +7,6 @@ import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.view.MenuController;
 import com.zestedesavoir.zestwriter.view.com.CustomAlert;
-import com.zestedesavoir.zestwriter.view.com.CustomStyledClassedTextArea;
 import com.zestedesavoir.zestwriter.view.task.UploadImageService;
 import javafx.concurrent.Service;
 import javafx.fxml.FXML;
@@ -17,11 +16,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.fxmisc.richtext.StyleClassedTextArea;
 
 import java.io.File;
 
 public class ImageInputDialog{
-    private CustomStyledClassedTextArea sourceText;
+    private StyleClassedTextArea sourceText;
     private ZdsHttp zdsUtils;
     private MenuController menuManager;
     private Content content;
@@ -30,7 +30,7 @@ public class ImageInputDialog{
     @FXML private TextField link;
     @FXML private TextField title;
 
-    public void setSourceText(CustomStyledClassedTextArea sourceText, ZdsHttp zdsUtils, MenuController menuManager, Content content){
+    public void setSourceText(StyleClassedTextArea sourceText, ZdsHttp zdsUtils, MenuController menuManager, Content content){
         this.sourceText = sourceText;
         this.zdsUtils = zdsUtils;
         this.menuManager = menuManager;

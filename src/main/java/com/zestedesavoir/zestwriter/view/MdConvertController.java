@@ -6,7 +6,6 @@ import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
-import com.zestedesavoir.zestwriter.view.com.CustomStyledClassedTextArea;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanPropertyBase;
@@ -26,14 +25,15 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.web.WebView;
+import lombok.Getter;
 import netscape.javascript.JSException;
+import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.LineNumberFactory;
+import org.fxmisc.richtext.StyleClassedTextArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
 public class MdConvertController {
@@ -49,12 +49,15 @@ public class MdConvertController {
     private StringProperty countWords = new SimpleStringProperty();
     private StringProperty countTimes = new SimpleStringProperty();
     private BooleanPropertyBase needRefresh = new SimpleBooleanProperty(false);
+    @Getter
     private BooleanPropertyBase saved  = new SimpleBooleanProperty(true);
     @FXML private WebView renderView;
     @FXML private SplitPane splitPane;
     @FXML private BorderPane boxRender;
     @FXML private Tab tab;
-    @FXML private CustomStyledClassedTextArea sourceText;
+    private StyleClassedTextArea sourceText;
+    @FXML private BorderPane container;
+    VirtualizedScrollPane<StyleClassedTextArea> vsPane;
 
 
     public void setMdBox(MdTextController mdBox, Textual extract) {
@@ -73,16 +76,18 @@ public class MdConvertController {
             sourceText.replaceText(extract.getMarkdown());
             initStats();
             sourceText.getUndoManager().forgetHistory();
-            sourceText.textProperty().addListener((observableValue, s, s2) -> {
-                sourceText.getUndoManager().mark();
-                getMdBox().setCurrentSaved(false);
-                if(renderTask.getState().equals(State.READY)) {
-                    renderTask.start();
-                    needRefresh.set(false);
-                } else {
-                    needRefresh.set(true);
-                }
-            });
+            sourceText.richChanges()
+                    .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
+                    .subscribe(change -> {
+                        sourceText.getUndoManager().mark();
+                        getMdBox().setCurrentSaved(false);
+                        if(renderTask.getState().equals(State.READY)) {
+                            renderTask.start();
+                            needRefresh.set(false);
+                        } else {
+                            needRefresh.set(true);
+                        }
+                    });
             if(renderTask.getState().equals(State.READY)) {
                 renderTask.start();
             }
@@ -115,7 +120,15 @@ public class MdConvertController {
         return mdBox;
     }
 
+    public MdConvertController() {
+        sourceText = new StyleClassedTextArea();
+        sourceText.setStyle("markdown-editor");
+        sourceText.setWrapText(true);
+        vsPane = new VirtualizedScrollPane<>(sourceText);
+    }
+
     @FXML private void initialize() {
+        container.setCenter(vsPane);
         sourceText.getStylesheets().add(MainApp.class.getResource("css/editor.css").toExternalForm());
         sourceText.setStyle("-fx-font-family: \"" + MainApp.getConfig().getEditorFont() + "\";-fx-font-size: " + MainApp.getConfig().getEditorFontsize() + ";");
 
@@ -162,6 +175,7 @@ public class MdConvertController {
                 performStats();
                 renderTask.reset();
                 if(needRefresh.getValue()) {
+                    needRefresh.set(false);
                     renderTask.start();
                 }
             });
@@ -173,7 +187,6 @@ public class MdConvertController {
                 }
             });
     }
-
 
 
     public void performStats() {

@@ -46,9 +46,9 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 	}
 
     private void closeTab(Textual closedTextual) {
-        for (Map.Entry<Textual, Tab> entry : index.getMainApp().getExtracts().entrySet()) {
-            if (entry.getKey().equals(closedTextual)) {
-                index.getEditorList().getTabs().remove(entry.getValue());
+        for (Textual entry : index.getMainApp().getExtracts()) {
+            if (entry.equals(closedTextual)) {
+                index.getEditorList().getTabs().remove(FunctionTreeFactory.getTabFromTextual(index.getEditorList(), entry));
                 index.getMainApp().getExtracts().remove(entry);
                 break;
             }
@@ -246,15 +246,14 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
                 if (!"".equals(result.get().trim())) {
-                    index.getMainApp().getExtracts().entrySet().stream()
-                            .filter(x -> x.getKey().equals(item1.getValue()))
-                            .forEach(x -> x.getValue().setText(result.get()));
+                    index.getMainApp().getExtracts().stream()
+                            .filter(x -> x.equals(item1.getValue()))
+                            .forEach(x -> FunctionTreeFactory.getTabFromTextual(index.getEditorList(), x).setText(result.get()));
                     item1.getValue().renameTitle(result.get());
                     saveManifestJson();
                     index.getSummary().refresh();
                 }
-            }
-
+            }   
         });
 
         addMenuItem5.setOnAction(t -> {

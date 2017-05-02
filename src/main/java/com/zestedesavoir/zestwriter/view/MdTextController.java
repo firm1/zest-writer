@@ -39,7 +39,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.fxmisc.wellbehaved.event.EventHandlerHelper;
+import org.fxmisc.richtext.StyleClassedTextArea;
+import org.fxmisc.wellbehaved.event.Nodes;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 import org.w3c.dom.DOMException;
@@ -56,7 +57,8 @@ import static com.zestedesavoir.zestwriter.view.MdConvertController.recognizeNum
 import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
 import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
 import static org.fxmisc.wellbehaved.event.EventPattern.keyPressed;
-import static org.fxmisc.wellbehaved.event.EventPattern.keyReleased;
+import static org.fxmisc.wellbehaved.event.InputMap.consume;
+import static org.fxmisc.wellbehaved.event.InputMap.sequence;
 
 @Slf4j
 @NoArgsConstructor
@@ -64,38 +66,51 @@ public class MdTextController {
     @FXML
     public AnchorPane treePane;
     public BooleanPropertyBase currentSaved;
-    @Getter @Setter
-    private boolean pythonStarted=false;
+    @Getter
+    @Setter
+    private boolean pythonStarted = false;
     @Getter
     private MainApp mainApp;
-    @Getter @Setter
+    @Getter
+    @Setter
     private PythonInterpreter pyconsole;
-    @FXML private VBox contentBox;
+    @FXML
+    private VBox contentBox;
     @Getter
-    @FXML private TabPane editorList;
-    @FXML private Tab home;
+    @FXML
+    private TabPane editorList;
+    @FXML
+    private Tab home;
     @Getter
-    @FXML private TreeView<ContentNode> summary;
+    @FXML
+    private TreeView<ContentNode> summary;
     @Getter
-    @FXML private SplitPane splitPane;
+    @FXML
+    private SplitPane splitPane;
     @Getter
-    @FXML private Button saveButton;
-    @FXML private ToolBar editorToolBar;
-    @Getter @Setter
+    @FXML
+    private Button saveButton;
+    @FXML
+    private ToolBar editorToolBar;
+    @Getter
+    @Setter
     private WebView currentRenderView;
-    @Getter @Setter
+    @Getter
+    @Setter
     private BorderPane currentBoxRender;
-    @Getter @Setter
-    private CustomStyledClassedTextArea currentSourceText;
+    @Getter
+    @Setter
+    private StyleClassedTextArea currentSourceText;
     private ObjectPropertyBase<Textual> currentExtract = new SimpleObjectProperty<>(null);
 
-    @FXML private void initialize() {
-        if(MainApp.getConfig().isEditorRenderView())
+    @FXML
+    private void initialize() {
+        if (MainApp.getConfig().isEditorRenderView())
             loadConsolePython();
 
         loadFonts();
         editorList.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> mainApp.getMenuController().setIsOnReadingTab(! (newValue.getContent() instanceof SplitPane))
+                (observable, oldValue, newValue) -> mainApp.getMenuController().setIsOnReadingTab(!(newValue.getContent() instanceof SplitPane))
         );
         home.setOnSelectionChanged(t -> {
             mainApp.getMenuController().getHBottomBox().getChildren().clear();
@@ -118,10 +133,6 @@ public class MdTextController {
 
     public ObjectPropertyBase<Textual> currentExtractProperty() {
         return currentExtract;
-    }
-
-    public boolean isCurrentSaved() {
-        return currentSaved.get();
     }
 
     public void setCurrentSaved(boolean currentSaved) {
@@ -179,7 +190,7 @@ public class MdTextController {
 
         mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.TAB, SHORTCUT_DOWN), () -> switchTabTo(true));
         mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.TAB, SHORTCUT_DOWN, SHIFT_DOWN), () -> switchTabTo(false));
-        if(FunctionTreeFactory.isMacOs()) {
+        if (FunctionTreeFactory.isMacOs()) {
             mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.Z, SHORTCUT_DOWN), this::closeCurrentTab);
         } else {
             mainApp.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.W, SHORTCUT_DOWN), this::closeCurrentTab);
@@ -199,16 +210,16 @@ public class MdTextController {
         col1.setPercentWidth(50);
         ColumnConstraints col2 = new ColumnConstraints();
         col2.setPercentWidth(50);
-        gPane.getColumnConstraints().addAll(col1,col2);
+        gPane.getColumnConstraints().addAll(col1, col2);
         gPane.setHgap(10);
         gPane.setVgap(10);
         gPane.setPadding(new Insets(10, 10, 10, 10));
-        int row=0;
-        int col=0;
-        int size=2;
-        for(String recentFilePath: MainApp.getConfig().getActions()) {
+        int row = 0;
+        int col = 0;
+        int size = 2;
+        for (String recentFilePath : MainApp.getConfig().getActions()) {
             File manifest = new File(recentFilePath + File.separator + "manifest.json");
-            if(manifest.exists()) {
+            if (manifest.exists()) {
                 BorderPane bPane = new BorderPane();
                 bPane.setPadding(new Insets(10, 10, 10, 10));
                 bPane.getStyleClass().add("box-content");
@@ -248,6 +259,7 @@ public class MdTextController {
 
     /**
      * Switch on new tab on TabPane
+     *
      * @param right if true, then switch on right side, else switch on left side
      */
     public void switchTabTo(boolean right) {
@@ -260,7 +272,7 @@ public class MdTextController {
             int selectedIndex = editorList.getSelectionModel().getSelectedIndex();
 
             if (right) {
-                if (selectedIndex < size -1) {
+                if (selectedIndex < size - 1) {
                     tabPaneBehavior.selectNextTab();
                 } else {
                     tabPaneBehavior.selectTab(editorList.getTabs().get(0));
@@ -277,17 +289,18 @@ public class MdTextController {
 
     /**
      * Select any item on Tree
-     * @param item from which one wants to search
+     *
+     * @param item    from which one wants to search
      * @param textual textual open on tab which one wants to select
      * @return TreeItem what you want to select
      */
     public TreeItem<ContentNode> selectItemOnTree(TreeItem<ContentNode> item, Textual textual) {
-        for(TreeItem<ContentNode> node: item.getChildren()) {
-            if(node.getValue().getFilePath().equals(textual.getFilePath())) {
+        for (TreeItem<ContentNode> node : item.getChildren()) {
+            if (node.getValue().getFilePath().equals(textual.getFilePath())) {
                 return node;
             } else {
                 TreeItem<ContentNode> it = selectItemOnTree(node, textual);
-                if(it != null) {
+                if (it != null) {
                     return it;
                 }
             }
@@ -307,7 +320,7 @@ public class MdTextController {
     }
 
     public void createTabExtract(Textual extract) throws IOException {
-        log.debug("Tentative de création d'un nouvel onglet pour "+extract.getTitle());
+        log.debug("Tentative de création d'un nouvel onglet pour " + extract.getTitle());
         extract.loadMarkdown();
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/Editor.fxml"));
         Tab writer = loader.load();
@@ -317,12 +330,15 @@ public class MdTextController {
 
         MdConvertController controllerConvert = loader.getController();
         controllerConvert.setMdBox(this, extract);
+        writer.setId(extract.getFilePath());
 
         writer.setOnCloseRequest(t -> {
-            if(!isCurrentSaved()) {
+            log.debug("Demande de fermeture de l'onglet " + writer.getText());
+            if (!controllerConvert.getSaved().get()) {
+                log.debug("Onglet en cours de rédaction");
                 Alert alert = new CustomAlert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle(Configuration.getBundle().getString("ui.alert.tab.close.title"));
-                alert.setHeaderText(Configuration.getBundle().getString("ui.alert.tab.close.header")+" : "+writer.getText().substring(1));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.alert.tab.close.header") + " : " + writer.getText().substring(1));
                 alert.setContentText(Configuration.getBundle().getString("ui.alert.tab.close.text"));
 
                 ButtonType buttonTypeYes = new ButtonType(Configuration.getBundle().getString("ui.yes"));
@@ -350,6 +366,7 @@ public class MdTextController {
         });
 
         writer.setOnClosed(t -> {
+            log.debug("Execution de la fermeture de l'onglet");
             editorList.getTabs().remove(writer);
             mainApp.getExtracts().remove(extract);
             t.consume();
@@ -359,8 +376,8 @@ public class MdTextController {
         });
 
         summary.getSelectionModel().select(selectItemOnTree(summary.getRoot(), extract));
-        mainApp.getExtracts().put(extract, writer);
-        log.info("Nouvel onglet crée pour "+extract.getTitle());
+        mainApp.getExtracts().add(extract);
+        log.info("Nouvel onglet crée pour " + extract.getTitle());
     }
 
     public MdTextController getThis() {
@@ -368,9 +385,9 @@ public class MdTextController {
     }
 
     public void openContent(Content content) {
-    	String filePath = content.getBasePath();
+        String filePath = content.getBasePath();
         mainApp.getExtracts().clear();
-        log.debug("Tentative d'ouverture du contenu stocké dans "+filePath);
+        log.debug("Tentative d'ouverture du contenu stocké dans " + filePath);
 
         // load content informations
         MainApp.getZdsutils().setLocalSlug(content.getSlug());
@@ -383,18 +400,19 @@ public class MdTextController {
             if (mouseEvent.getClickCount() == 2) {
                 TreeItem<ContentNode> item = summary.getSelectionModel().getSelectedItem();
 
-                if(item.getValue() instanceof Textual) {
+                if (item.getValue() instanceof Textual) {
+                    Textual myTextual = (Textual) item.getValue();
                     if (item.getValue().getFilePath() != null) {
-                        if (!mainApp.getExtracts().containsKey(item.getValue())) {
+                        if (!mainApp.getExtracts().contains(myTextual)) {
                             try {
-                                createTabExtract((Textual)item.getValue());
+                                createTabExtract(myTextual);
                             } catch (IOException e) {
                                 log.error("Problème lors de la création de l'extrait", e);
                             }
                         } else {
                             TabPaneSkin skin = (TabPaneSkin) editorList.getSkin();
                             TabPaneBehavior tabPaneBehavior = skin.getBehavior();
-                            tabPaneBehavior.selectTab(mainApp.getExtracts().get(item.getValue()));
+                            tabPaneBehavior.selectTab(FunctionTreeFactory.getTabFromTextual(editorList, myTextual));
                         }
                     }
                 }
@@ -405,7 +423,7 @@ public class MdTextController {
 
             @Override
             public TreeCell<ContentNode> call(TreeView<ContentNode> extractTreeView) {
-            	MdTreeCell treeCell = new MdTreeCell(getThis());
+                MdTreeCell treeCell = new MdTreeCell(getThis());
 
                 treeCell.setOnDragDetected(mouseEvent -> {
                     dragObject = treeCell.getTreeItem();
@@ -423,7 +441,7 @@ public class MdTextController {
 
 
                 treeCell.setOnDragExited(dragEvent -> {
-                    if(treeCell.getItem() != null) {
+                    if (treeCell.getItem() != null) {
                         treeCell.setGraphic(treeCell.getItem().buildIcon());
                     }
                     dragEvent.consume();
@@ -431,9 +449,8 @@ public class MdTextController {
 
 
                 treeCell.setOnDragOver(dragEvent -> {
-                    if(dragObject != null && treeCell.getItem() != null) {
-                        if (!dragObject.getValue().isMovableIn(treeCell.getItem(), (Content) summary.getRoot().getValue()))
-                        {
+                    if (dragObject != null && treeCell.getItem() != null) {
+                        if (!dragObject.getValue().isMovableIn(treeCell.getItem(), (Content) summary.getRoot().getValue())) {
                             treeCell.setGraphic(IconFactory.createDeleteIcon());
                         } else {
                             treeCell.setGraphic(IconFactory.createArrowDownIcon());
@@ -455,28 +472,28 @@ public class MdTextController {
         });
         MainApp.getZdsutils().setGalleryId(null);
         mainApp.getMenuController().activateButtonForOpenContent();
-        if(filePath != null && !"null".equals(filePath)) {
+        if (filePath != null && !"null".equals(filePath)) {
             MainApp.getConfig().addActionProject(filePath);
             refreshRecentProject();
         }
-        log.info("Contenu stocké dans "+filePath+" ouvert");
+        log.info("Contenu stocké dans " + filePath + " ouvert");
     }
 
     private void handleSmartEnter() {
         int precLine = currentSourceText.getCurrentParagraph() - 1;
-        if(precLine >= 0) {
+        if (precLine >= 0) {
             String line = currentSourceText.getParagraph(precLine).toString();
             Matcher matcher = recognizeBullet.matcher(line);
             //TODO: find how combine recognize bullet and number together for breaking following if
-            if(!matcher.matches()) {
+            if (!matcher.matches()) {
                 matcher = recognizeNumber.matcher(line);
             }
-            if(matcher.matches()) {
-                if("".equals(matcher.group(4).trim())) {
+            if (matcher.matches()) {
+                if ("".equals(matcher.group(4).trim())) {
                     int positionCaret = currentSourceText.getCaretPosition();
-                    currentSourceText.deleteText(positionCaret-line.length() - 1, positionCaret);
+                    currentSourceText.deleteText(positionCaret - line.length() - 1, positionCaret);
                 } else {
-                    currentSourceText.replaceSelection(matcher.group(1)+matcher.group(2)+" ");
+                    currentSourceText.replaceSelection(matcher.group(1) + matcher.group(2) + " ");
                 }
             }
         }
@@ -484,26 +501,26 @@ public class MdTextController {
 
     private void handleSmartTab() {
         int caseLine = currentSourceText.getCurrentParagraph();
-        if(caseLine >= 0) {
+        if (caseLine >= 0) {
             String line = currentSourceText.getParagraph(caseLine).toString();
             Matcher matcher = recognizeBullet.matcher(line);
             //TODO: find how combine recognize bullet and number together for breaking following if
-            if(!matcher.matches()) {
+            if (!matcher.matches()) {
                 matcher = recognizeNumber.matcher(line);
             }
-            if(matcher.matches()) {
+            if (matcher.matches()) {
                 int positionCaret = currentSourceText.getCaretPosition();
                 int delta = matcher.group(1).length() + matcher.group(2).length() + matcher.group(3).length() + 1;
-                currentSourceText.replaceText(positionCaret-delta, positionCaret, "    "+matcher.group(2)+" "+matcher.group(4));
+                currentSourceText.replaceText(positionCaret - delta, positionCaret, "    " + matcher.group(2) + " " + matcher.group(4));
             }
         }
     }
 
     private void replaceAction(String defaultString, int defaultOffsetCaret, String beforeString, String afterString) {
-        if(currentSourceText.getSelectedText().isEmpty()){
+        if (currentSourceText.getSelectedText().isEmpty()) {
             currentSourceText.replaceText(currentSourceText.getSelection(), defaultString);
             currentSourceText.moveTo(currentSourceText.getCaretPosition() - defaultOffsetCaret);
-        }else{
+        } else {
             currentSourceText.replaceText(currentSourceText.getSelection(), beforeString + currentSourceText.getSelectedText() + afterString);
         }
 
@@ -514,7 +531,8 @@ public class MdTextController {
      * Editor Toolbar Action
      */
 
-    @FXML public void handleSaveButtonAction() {
+    @FXML
+    public void handleSaveButtonAction() {
         getCurrentExtract().setMarkdown(currentSourceText.getText());
         getCurrentExtract().save();
 
@@ -522,39 +540,48 @@ public class MdTextController {
         currentSourceText.requestFocus();
     }
 
-    @FXML private void handleBoldButtonAction(ActionEvent event) {
+    @FXML
+    private void handleBoldButtonAction(ActionEvent event) {
         replaceAction("****", 2, "**", "**");
     }
 
-    @FXML private void handleItalicButtonAction(ActionEvent event) {
+    @FXML
+    private void handleItalicButtonAction(ActionEvent event) {
         replaceAction("**", 1, "*", "*");
     }
 
-    @FXML private void handleBarredButtonAction(ActionEvent event) {
+    @FXML
+    private void handleBarredButtonAction(ActionEvent event) {
         replaceAction("~~~~", 2, "~~", "~~");
     }
 
-    @FXML private void handleTouchButtonAction(ActionEvent event) {
+    @FXML
+    private void handleTouchButtonAction(ActionEvent event) {
         replaceAction("||||", 2, "||", "||");
     }
 
-    @FXML private void handleExpButtonAction(ActionEvent event) {
+    @FXML
+    private void handleExpButtonAction(ActionEvent event) {
         replaceAction("^^", 1, "^", "^");
     }
 
-    @FXML private void handleIndButtonAction(ActionEvent event) {
+    @FXML
+    private void handleIndButtonAction(ActionEvent event) {
         replaceAction("~~", 1, "~", "~");
     }
 
-    @FXML private void handleCenterButtonAction(ActionEvent event) {
+    @FXML
+    private void handleCenterButtonAction(ActionEvent event) {
         replaceAction("\n->  <-", 3, "\n-> ", " <-");
     }
 
-    @FXML private void handleRightButtonAction(ActionEvent event) {
+    @FXML
+    private void handleRightButtonAction(ActionEvent event) {
         replaceAction("\n->  ->", 3, "\n-> ", " ->\n");
     }
 
-    @FXML private void handleImgButtonAction(ActionEvent event) {
+    @FXML
+    private void handleImgButtonAction(ActionEvent event) {
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/ImageInput.fxml"));
 
         Stage dialogStage = new CustomStage(loader, Configuration.getBundle().getString("ui.dialog.upload.img.title"));
@@ -565,13 +592,15 @@ public class MdTextController {
 
         dialogStage.show();
     }
-    @FXML private void handleBulletButtonAction(ActionEvent event) {
-        if(currentSourceText.getSelectedText().isEmpty()){
+
+    @FXML
+    private void handleBulletButtonAction(ActionEvent event) {
+        if (currentSourceText.getSelectedText().isEmpty()) {
             currentSourceText.replaceText(currentSourceText.getSelection(), "- ");
-        }else{
+        } else {
             StringBuilder sb = new StringBuilder();
             String[] lines = currentSourceText.getSelectedText().split("\n");
-            for(String line : lines){
+            for (String line : lines) {
                 sb.append("- ").append(line).append("\n");
             }
 
@@ -581,14 +610,15 @@ public class MdTextController {
         currentSourceText.requestFocus();
     }
 
-    @FXML private void handleNumberedButtonAction(ActionEvent event) {
-        if(currentSourceText.getSelectedText().isEmpty()){
+    @FXML
+    private void handleNumberedButtonAction(ActionEvent event) {
+        if (currentSourceText.getSelectedText().isEmpty()) {
             currentSourceText.replaceText(currentSourceText.getSelection(), "1. ");
-        }else{
+        } else {
             StringBuilder sb = new StringBuilder();
             String[] lines = currentSourceText.getSelectedText().split("\n");
             int i = 1;
-            for(String line : lines){
+            for (String line : lines) {
                 sb.append(i).append(". ").append(line).append("\n");
                 i++;
             }
@@ -599,16 +629,19 @@ public class MdTextController {
         currentSourceText.requestFocus();
     }
 
-    @FXML private void handleHeaderButtonAction(ActionEvent event) {
+    @FXML
+    private void handleHeaderButtonAction(ActionEvent event) {
         currentSourceText.replaceText(currentSourceText.getSelection(), "# " + currentSourceText.getSelectedText());
         currentSourceText.requestFocus();
     }
 
-    @FXML private void handleQuoteButtonAction(ActionEvent event) {
+    @FXML
+    private void handleQuoteButtonAction(ActionEvent event) {
         replaceAction("> ", 0, "> ", "\n\n");
     }
 
-    @FXML private void handleBlocButtonAction(ActionEvent event) {
+    @FXML
+    private void handleBlocButtonAction(ActionEvent event) {
         StringBuilder text = new StringBuilder();
         String[] lines = currentSourceText.getSelectedText().split("\n");
         for (String line : lines) {
@@ -637,7 +670,8 @@ public class MdTextController {
         currentSourceText.requestFocus();
     }
 
-    @FXML private void handleTableButtonAction(ActionEvent event) throws IOException {
+    @FXML
+    private void handleTableButtonAction(ActionEvent event) throws IOException {
         // Create the custom dialog.
         Dialog<Pair<ObservableList, ObservableList<ZRow>>> dialog = new CustomDialog<>();
         dialog.setTitle(Configuration.getBundle().getString("ui.editor.button.table"));
@@ -681,7 +715,8 @@ public class MdTextController {
         });
     }
 
-    @FXML private void handleLinkButtonAction(ActionEvent event) {
+    @FXML
+    private void handleLinkButtonAction(ActionEvent event) {
         String link = currentSourceText.getSelectedText();
 
         // Create the custom dialog.
@@ -732,7 +767,8 @@ public class MdTextController {
         currentSourceText.requestFocus();
     }
 
-    @FXML private void handleCodeButtonAction(ActionEvent event) {
+    @FXML
+    private void handleCodeButtonAction(ActionEvent event) {
         String code = currentSourceText.getSelectedText();
         if (code.trim().startsWith("```") && code.trim().endsWith("```")) {
             int start = code.trim().indexOf('\n') + 1;
@@ -795,10 +831,11 @@ public class MdTextController {
     public void addTreeSummary() {
         getSplitPane().getItems().add(0, treePane);
         getSplitPane().setDividerPositions(0.2);
-        SplitPane.setResizableWithParent(treePane,Boolean.FALSE);
+        SplitPane.setResizableWithParent(treePane, Boolean.FALSE);
     }
 
-    @FXML private void handleFullScreeenButtonAction(ActionEvent event) {
+    @FXML
+    private void handleFullScreeenButtonAction(ActionEvent event) {
         if (getSplitPane().getItems().size() > 1) {
             getSplitPane().getItems().remove(0);
         } else {
@@ -806,9 +843,10 @@ public class MdTextController {
         }
     }
 
-    @FXML private void handleValidateButtonAction(ActionEvent event) {
+    @FXML
+    private void handleValidateButtonAction(ActionEvent event) {
         String s = StringEscapeUtils.unescapeXml(markdownToHtml(currentSourceText.getText()));
-        if(MdConvertController.corrector == null) {
+        if (MdConvertController.corrector == null) {
             MdConvertController.corrector = new Corrector();
         }
         try {
@@ -822,7 +860,8 @@ public class MdTextController {
         }
     }
 
-    @FXML private void handleExternalButtonAction(ActionEvent event){
+    @FXML
+    private void handleExternalButtonAction(ActionEvent event) {
         splitPane.getItems().remove(1);
 
         Stage stage = new CustomStage(Configuration.getBundle().getString("ui.window.externalrender.title"));
@@ -845,7 +884,8 @@ public class MdTextController {
         });
     }
 
-    @FXML private void handleUnbreakableAction() {
+    @FXML
+    private void handleUnbreakableAction() {
         currentSourceText.replaceText(currentSourceText.getSelection(), currentSourceText.getSelectedText() + "\u00a0");
         currentSourceText.requestFocus();
     }
@@ -858,48 +898,34 @@ public class MdTextController {
         dialog.initOwner(MainApp.getPrimaryStage());
 
         Optional<String> result = dialog.showAndWait();
-        result.ifPresent(line -> currentSourceText.positionCaret(currentSourceText.position(Integer.parseInt(line)-1, 0).toOffset()));
+        result.ifPresent(line -> currentSourceText.moveTo(currentSourceText.position(Integer.parseInt(line) - 1, 0).toOffset()));
     }
 
-    @FXML private void handleFindReplaceDialog(){
+    @FXML
+    private void handleFindReplaceDialog() {
         FunctionTreeFactory.openFindReplaceDialog(currentSourceText);
     }
 
-    public void initKeyMapping(CustomStyledClassedTextArea sourceText) {
+    public void initKeyMapping(StyleClassedTextArea sourceText) {
         Platform.runLater(() -> {
-            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
-                    EventHandlerHelper.on(keyPressed(KeyCode.S, SHORTCUT_DOWN)).act(ev -> handleSaveButtonAction()).create());
-            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
-                    EventHandlerHelper.on(keyPressed(KeyCode.G, SHORTCUT_DOWN)).act(ev -> handleBoldButtonAction(null)).create());
-            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
-                    EventHandlerHelper.on(keyPressed(KeyCode.I, SHORTCUT_DOWN)).act(ev -> handleItalicButtonAction(null)).create());
-            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
-                    EventHandlerHelper.on(keyPressed(KeyCode.B, SHORTCUT_DOWN)).act(ev -> handleBarredButtonAction(null)).create());
-            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
-                    EventHandlerHelper.on(keyPressed(KeyCode.K, SHORTCUT_DOWN)).act(ev -> handleTouchButtonAction(null)).create());
-            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
-                    EventHandlerHelper.on(keyPressed(KeyCode.PLUS, SHORTCUT_DOWN)).act(ev -> handleExpButtonAction(null)).create());
-            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
-                    EventHandlerHelper.on(keyPressed(KeyCode.EQUALS, SHORTCUT_DOWN)).act(ev -> handleIndButtonAction(null)).create());
-            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
-                    EventHandlerHelper.on(keyPressed(KeyCode.E, SHORTCUT_DOWN)).act(ev -> handleCenterButtonAction(null)).create());
-            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
-                    EventHandlerHelper.on(keyPressed(KeyCode.D, SHIFT_DOWN, SHORTCUT_DOWN)).act(ev -> handleRightButtonAction(null)).create());
-            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
-                    EventHandlerHelper.on(keyPressed(KeyCode.SPACE, SHORTCUT_DOWN)).act(ev -> handleUnbreakableAction()).create());
-            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
-                    EventHandlerHelper.on(keyPressed(KeyCode.L, SHORTCUT_DOWN)).act(ev -> handleGoToLineAction()).create());
-            EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
-                    EventHandlerHelper.on(keyPressed(KeyCode.F, SHORTCUT_DOWN)).act(ev -> handleFindReplaceDialog()).create());
+            Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.S, SHORTCUT_DOWN), e -> handleSaveButtonAction())));
+            Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.G, SHORTCUT_DOWN), e -> handleBoldButtonAction(null))));
+            Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.I, SHORTCUT_DOWN), e -> handleItalicButtonAction(null))));
+            Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.B, SHORTCUT_DOWN), e -> handleBarredButtonAction(null))));
+            Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.K, SHORTCUT_DOWN), e -> handleTouchButtonAction(null))));
+            Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.PLUS, SHORTCUT_DOWN), e -> handleExpButtonAction(null))));
+            Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.EQUALS, SHORTCUT_DOWN), e -> handleIndButtonAction(null))));
+            Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.E, SHORTCUT_DOWN), e -> handleCenterButtonAction(null))));
+            Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.D, SHIFT_DOWN, SHORTCUT_DOWN), e -> handleRightButtonAction(null))));
+            Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.SPACE, SHORTCUT_DOWN), e -> handleUnbreakableAction())));
+            Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.L, SHORTCUT_DOWN), e -> handleGoToLineAction())));
+            Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.F, SHORTCUT_DOWN), e -> handleFindReplaceDialog())));
             if (FunctionTreeFactory.isMacOs()) {
-                EventHandlerHelper.install(sourceText.onKeyPressedProperty(),
-                        EventHandlerHelper.on(keyPressed(KeyCode.Q, SHORTCUT_DOWN)).act(ev -> currentSourceText.selectAll()).create());
+                Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.Q, SHORTCUT_DOWN), e -> currentSourceText.selectAll())));
             }
             if (MainApp.getConfig().isEditorSmart()) {
-                EventHandlerHelper.install(sourceText.onKeyReleasedProperty(),
-                        EventHandlerHelper.on(keyReleased(KeyCode.TAB)).act(ev -> handleSmartTab()).create());
-                EventHandlerHelper.install(sourceText.onKeyReleasedProperty(),
-                        EventHandlerHelper.on(keyReleased(KeyCode.ENTER)).act(ev -> handleSmartEnter()).create());
+                //Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.TAB), e -> handleSmartTab())));
+                //Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.ENTER), e -> handleSmartEnter())));
             }
         });
     }

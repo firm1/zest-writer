@@ -60,6 +60,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class MenuController{
     private final ProgressBar pb = new ProgressBar(0);
+    @Getter
     private final Text labelField = new Text("");
     @Setter
     private MainApp mainApp;
@@ -554,13 +555,11 @@ public class MenuController{
     }
 
     @FXML private void handleFindReplaceAction(ActionEvent event){
-        SplitPane sPane = (SplitPane) mainApp.getExtracts()
-                .entrySet()
-                .stream()
-                .filter(entry -> entry.getValue().isSelected())
+        SplitPane sPane = (SplitPane) mainApp.getIndex().getEditorList().getTabs().stream()
+                .filter(t ->t.isSelected())
                 .findFirst()
                 .get()
-                .getValue().getContent();
+                .getContent();
         BorderPane bPane = (BorderPane) sPane.getItems().get(0);
         StyleClassedTextArea source = (StyleClassedTextArea) bPane.getCenter();
         FunctionTreeFactory.openFindReplaceDialog(source);
@@ -721,9 +720,5 @@ public class MenuController{
         });
 
         checkService.start();
-    }
-
-    public Text getLabelField(){
-        return labelField;
     }
 }

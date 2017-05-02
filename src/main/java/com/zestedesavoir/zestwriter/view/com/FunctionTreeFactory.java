@@ -8,7 +8,7 @@ import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
 import com.zestedesavoir.zestwriter.view.dialogs.FindReplaceDialog;
 import javafx.application.Platform;
-import javafx.collections.ObservableMap;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -39,10 +38,10 @@ public class FunctionTreeFactory {
         return System.getProperty("os.name").toLowerCase().contains("mac");
     }
 
-    public static Map<String,Object> initContentDialog(Content defaultContent) {
+    public static Map<String, Object> initContentDialog(Content defaultContent) {
         EditContentDialog dialog;
         // Create wizard
-        if(defaultContent == null) {
+        if (defaultContent == null) {
             dialog = new EditContentDialog(new Content("container",
                     "",
                     "",
@@ -60,18 +59,31 @@ public class FunctionTreeFactory {
         Optional<Pair<String, Map<String, Object>>> result = dialog.showAndWait();
         return result.map(Pair::getValue).orElse(null);
 
-     }
+    }
 
-    public static void clearContent(ObservableMap<Textual, Tab> extracts, TabPane editorList, Supplier<Void> doAfter) {
+    public static Tab getTabFromTextual(TabPane editorList, Textual textual) {
 
-        if(extracts.isEmpty()) {
+        Optional<Tab> find = editorList.getTabs().stream()
+                .filter(t -> t.getId().equals(textual.getFilePath()))
+                .findFirst();
+
+        if (find.isPresent()) {
+            return find.get();
+        }
+        return null;
+    }
+
+    public static void clearContent(ObservableList<Textual> extracts, TabPane editorList, Supplier<Void> doAfter) {
+
+        if (extracts.isEmpty()) {
             doAfter.get();
         }
 
-        for(Entry<Textual, Tab> entry:extracts.entrySet()) {
+        for (Textual entry : extracts) {
             Platform.runLater(() -> {
-                Event.fireEvent(entry.getValue(), new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
-                if(editorList.getTabs().size() <= 1) {
+                Tab tab = getTabFromTextual(editorList, entry);
+                Event.fireEvent(tab, new Event(Tab.TAB_CLOSE_REQUEST_EVENT));
+                if (editorList.getTabs().size() <= 1) {
                     extracts.clear();
                     doAfter.get();
                 }
@@ -80,7 +92,7 @@ public class FunctionTreeFactory {
     }
 
     public static TreeItem<ContentNode> buildChild(TreeItem<ContentNode> node) {
-        if(node.getValue() instanceof Container) {
+        if (node.getValue() instanceof Container) {
             Container container = (Container) node.getValue();
             TreeItem<ContentNode> itemIntro = new TreeItem<>((ContentNode) container.getIntroduction());
             node.getChildren().add(itemIntro);
@@ -90,8 +102,7 @@ public class FunctionTreeFactory {
                     .forEach(x -> node.getChildren().add(buildChild(x)));
             TreeItem<ContentNode> itemConclu = new TreeItem<>((ContentNode) container.getConclusion());
             node.getChildren().add(itemConclu);
-        }
-        else if(node.getValue() instanceof Extract) {
+        } else if (node.getValue() instanceof Extract) {
             Extract extract = (Extract) node.getValue();
             return new TreeItem<>(extract);
         }
@@ -106,7 +117,7 @@ public class FunctionTreeFactory {
         src.getParent().getChildren().remove(src);
 
         if (dest.getValue() instanceof Container) {
-            Container destination = (Container)dest.getValue();
+            Container destination = (Container) dest.getValue();
             int position = destination.getChildren().size();
             // update model
             destination.getChildren().add(position, srcContent);
@@ -125,7 +136,7 @@ public class FunctionTreeFactory {
 
     public static String padding(int number) {
         StringBuilder sb = new StringBuilder();
-        for(int i=0;i<number;i++) {
+        for (int i = 0; i < number; i++) {
             sb.append('#');
         }
         return sb.toString();
@@ -133,7 +144,7 @@ public class FunctionTreeFactory {
 
     public static String offsetHeaderMarkdown(String text, int level) {
         String regex = "^(#+)(.{0,}?)(#*)$";
-        return Pattern.compile(regex, Pattern.MULTILINE).matcher(text).replaceAll(padding(level)+"$1$2");
+        return Pattern.compile(regex, Pattern.MULTILINE).matcher(text).replaceAll(padding(level) + "$1$2");
     }
 
     public static String changeLocationImages(String text) {
@@ -142,10 +153,10 @@ public class FunctionTreeFactory {
     }
 
     public static Container getContainerOfMetaAttribute(Container c, MetaAttribute meta) {
-        if(c == null || meta == null) {
+        if (c == null || meta == null) {
             return null;
         }
-        if(meta.equals(c.getIntroduction()) || meta.equals(c.getConclusion())) {
+        if (meta.equals(c.getIntroduction()) || meta.equals(c.getConclusion())) {
             return c;
         } else {
             Optional<Container> optContainer = c.getChildren()
@@ -161,7 +172,7 @@ public class FunctionTreeFactory {
 
     public static void addTheming(Pane pane) {
         Theme forcedTheme = Theme.getActiveTheme();
-        if(forcedTheme == null ) {
+        if (forcedTheme == null) {
             pane.getStylesheets().add(MainApp.class.getResource("css/" + MainApp.getConfig().getDisplayTheme()).toExternalForm());
         } else {
             pane.getStylesheets().add(MainApp.class.getResource("css/" + forcedTheme.getFilename()).toExternalForm());
@@ -172,7 +183,7 @@ public class FunctionTreeFactory {
         String realLocalPath = path + "." + ext;
         File file = new File(realLocalPath);
         int i = 1;
-        while(file.exists()){
+        while (file.exists()) {
             realLocalPath = path + "-" + i + "." + ext;
             file = new File(realLocalPath);
             i++;
@@ -184,7 +195,7 @@ public class FunctionTreeFactory {
         String realLocalPath = path;
         File file = new File(realLocalPath);
         int i = 1;
-        while(file.exists()){
+        while (file.exists()) {
             realLocalPath = path + "-" + i;
             file = new File(realLocalPath);
             i++;
@@ -214,15 +225,16 @@ public class FunctionTreeFactory {
             sb.append("s");
         }
     }
+
     public static String getNumberOfTextualReadMinutes(String text) {
         Double mins = Readability.getNumberOfReadMinutes(text);
         int[] steps = new int[]{1, 2, 5, 10, 15, 20, 30, 40, 60, 90, 120};
-        for(int step:steps) {
+        for (int step : steps) {
             StringBuilder sb = new StringBuilder();
-            if(mins < step) {
-                if(step == steps[0]) {
+            if (mins < step) {
+                if (step == steps[0]) {
                     sb.append(Configuration.getBundle().getString("ui.label.lessof"));
-                } else if(step == steps[steps.length-1]) {
+                } else if (step == steps[steps.length - 1]) {
                     sb.append(Configuration.getBundle().getString("ui.label.moreof"));
                 }
 
@@ -238,22 +250,22 @@ public class FunctionTreeFactory {
     }
 
     public static void generateMetadataAttributes(String file) {
-        performCreateNewFile(new File (file, Constant.DEFAULT_INTRODUCTION_FILENAME));
-        performCreateNewFile(new File (file, Constant.DEFAULT_CONCLUSION_FILENAME));
+        performCreateNewFile(new File(file, Constant.DEFAULT_INTRODUCTION_FILENAME));
+        performCreateNewFile(new File(file, Constant.DEFAULT_CONCLUSION_FILENAME));
     }
 
     public static void generateMetadataAttributes(Container container) {
-        performCreateNewFile(new File (container.getIntroduction().getFilePath()));
-        performCreateNewFile(new File (container.getConclusion().getFilePath()));
+        performCreateNewFile(new File(container.getIntroduction().getFilePath()));
+        performCreateNewFile(new File(container.getConclusion().getFilePath()));
     }
 
     public static void performCreateNewFile(File file) {
         try {
-            if(!file.exists ()) {
-                if(!file.createNewFile ()) {
-                    MainApp.getLogger().error("Impossible de créer le fichier "+file.getAbsolutePath());
+            if (!file.exists()) {
+                if (!file.createNewFile()) {
+                    MainApp.getLogger().error("Impossible de créer le fichier " + file.getAbsolutePath());
                 } else {
-                    MainApp.getLogger().info("Le fichier "+file.getAbsolutePath()+ " a été crée avec succès");
+                    MainApp.getLogger().info("Le fichier " + file.getAbsolutePath() + " a été crée avec succès");
                 }
             }
         } catch (IOException e) {

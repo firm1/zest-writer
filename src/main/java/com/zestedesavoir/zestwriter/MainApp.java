@@ -17,6 +17,7 @@ import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -59,7 +60,7 @@ public class MainApp extends Application{
     @Getter @Setter
     private BorderPane rootLayout;
     @Getter @Setter
-    private ObservableMap<Textual, Tab> extracts = FXCollections.observableMap(new HashMap<>());
+    private ObservableList<Textual> extracts = FXCollections.observableArrayList();
     private ObjectProperty<Content> content = new SimpleObjectProperty<>();
     @Getter @Setter
     private MdTextController index;
