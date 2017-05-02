@@ -212,7 +212,7 @@ public class Corrector {
     }
 
     public int countMistakes(MdTextController mdTextController, String markdown) {
-        String htmlText = StringEscapeUtils.unescapeXml(MenuController.markdownToHtml(mdTextController, markdown));
+        String htmlText = StringEscapeUtils.unescapeHtml4(MenuController.markdownToHtml(mdTextController, markdown));
         AnnotatedText markup = makeAnnotatedText(htmlText);
 
         langTool.getAllActiveRules().stream()

@@ -845,7 +845,7 @@ public class MdTextController {
 
     @FXML
     private void handleValidateButtonAction(ActionEvent event) {
-        String s = StringEscapeUtils.unescapeXml(markdownToHtml(currentSourceText.getText()));
+        String s = StringEscapeUtils.unescapeHtml4(markdownToHtml(currentSourceText.getText()));
         if (MdConvertController.corrector == null) {
             MdConvertController.corrector = new Corrector();
         }

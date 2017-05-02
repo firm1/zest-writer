@@ -131,7 +131,7 @@ public class MenuController{
 
     @FXML private void handleFleshButtonAction(ActionEvent event){
         Function<Textual, Double> calFlesh = (Textual ch) -> {
-            String htmlText = StringEscapeUtils.unescapeXml(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
+            String htmlText = StringEscapeUtils.unescapeHtml4(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
             String plainText = Corrector.htmlToTextWithoutCode(htmlText);
             if("".equals(plainText.trim())){
                 return 100.0;
@@ -155,7 +155,7 @@ public class MenuController{
 
     @FXML private void handleGunningButtonAction(ActionEvent event){
         Function<Textual, Double> calGuning = (Textual ch) -> {
-            String htmlText = StringEscapeUtils.unescapeXml(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
+            String htmlText = StringEscapeUtils.unescapeHtml4(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
             String plainText = Corrector.htmlToTextWithoutCode(htmlText);
             if("".equals(plainText.trim())){
                 return 100.0;

@@ -389,7 +389,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             logger.debug("Tentative de calcul des statistiques de lisiblité");
             Container container = (Container) getItem();
             Function<Textual, Double> performGuning = (Textual ch) -> {
-                String htmlText = StringEscapeUtils.unescapeXml(MenuController.markdownToHtml(index, ch.readMarkdown()));
+                String htmlText = StringEscapeUtils.unescapeHtml4(MenuController.markdownToHtml(index, ch.readMarkdown()));
                 String plainText = Corrector.htmlToTextWithoutCode(htmlText);
                 if("".equals(plainText.trim())){
                     return 100.0;
@@ -399,7 +399,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 }
             };
             Function<Textual, Double> performFlesch = (Textual ch) -> {
-                String htmlText = StringEscapeUtils.unescapeXml(MenuController.markdownToHtml(index, ch.readMarkdown()));
+                String htmlText = StringEscapeUtils.unescapeHtml4(MenuController.markdownToHtml(index, ch.readMarkdown()));
                 String plainText = Corrector.htmlToTextWithoutCode(htmlText);
                 if("".equals(plainText.trim())){
                     return 100.0;

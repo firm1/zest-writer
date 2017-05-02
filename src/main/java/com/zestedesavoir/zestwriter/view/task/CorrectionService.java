@@ -40,7 +40,7 @@ public class CorrectionService extends Service<String>{
                         MainApp.getLogger().debug("Jython en cours de chargement mémoire");
                         return null;
                     } else {
-                        String htmlText = StringEscapeUtils.unescapeXml(MenuController.markdownToHtml(mdText, markdown));
+                        String htmlText = StringEscapeUtils.unescapeHtml4(MenuController.markdownToHtml(mdText, markdown));
                         return corrector.checkHtmlContentToText(htmlText, ext.getTitle());
                     }
                 };
@@ -50,7 +50,7 @@ public class CorrectionService extends Service<String>{
                 for (Entry<Textual, String> entry : validationResult.entrySet()) {
                     resultCorrect.append(entry.getValue());
                 }
-                return resultCorrect.toString();
+                return StringEscapeUtils.unescapeHtml4(resultCorrect.toString());
             }
         };
     }
