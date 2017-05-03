@@ -15,8 +15,8 @@ Windows 32 bits        Windows 64 bits
 `setup 32 bits`_       `setup 64 bits`_
 =====================  ======================
 
-.. _setup 32 bits: https://bintray.com/firm1/windows-x86/setup/_latestVersion#files
-.. _setup 64 bits: https://bintray.com/firm1/windows-x64/setup/_latestVersion#files
+.. _setup 32 bits: https://bintray.com/zest-writer/windows-x86/setup/_latestVersion#files
+.. _setup 64 bits: https://bintray.com/zest-writer/windows-x64/setup/_latestVersion#files
 
 .. NOTE::
    Pour vérifier si votre ordinateur tourne sur une version 32 bits ou 64 bits de Windows, cliquez le bouton ``Windows``, ``Ordinateur``, puis ``Propriétés`` et regardez en dessous de ``Système``.
@@ -24,7 +24,7 @@ Windows 32 bits        Windows 64 bits
 Os X
 ####
 
-Téléchargez la dernière version de Zest Writer via `ce lien <https://bintray.com/firm1/dmg/zest-writer/_latestVersion#files>`_, puis installez le fichier dmg.
+Téléchargez la dernière version de Zest Writer via `ce lien <https://bintray.com/zest-writer/dmg/zest-writer/_latestVersion#files>`_, puis installez le fichier dmg.
 
 Linux
 #####
@@ -41,7 +41,7 @@ Debian, Ubuntu, etc.
 
 2. ajoutez une nouvelle source :
 
-   ``echo "deb https://dl.bintray.com/firm1/deb wheezy main" | sudo tee -a /etc/apt/sources.list.d/zestwriter.list``
+   ``echo "deb https://dl.bintray.com/zest-writer/deb wheezy main" | sudo tee -a /etc/apt/sources.list.d/zestwriter.list``
 
 3. mettez à jour vos dépôts :
 
@@ -61,7 +61,7 @@ Fedora, ArchLinux, CentOs, etc.
 
    [zestwriter]
    name=zestwriter
-   baseurl=http://dl.bintray.com/firm1/rpm
+   baseurl=http://dl.bintray.com/zest-writer/rpm
    gpgcheck=0
    enabled=1
 
@@ -75,7 +75,7 @@ Les fichiers ``jar`` sont plus légers car ils n'embarquent pas la machine virtu
 1. Vérifier votre version de Java
     - ouvrez un terminal (``Windows + R`` puis ``cmd`` sous Windows) et tapez ``java -version`` ;
     - si vous avez Java 1.7 ou antérieure, téléchargez la dernière version de Java depuis `le site officiel <http://www.java.com/fr/download/>`_ ;
-2. téléchargez la dernière version de Zest Writer via `ce lien <https://bintray.com/firm1/maven/zest-writer/_latestVersion#files>`_ ;
+2. téléchargez la dernière version de Zest Writer via `ce lien <https://bintray.com/zest-writer/maven/zest-writer/_latestVersion#files>`_ ;
 3. ouvrez un terminal et lancez le jar en tapant ``java -jar zest-writer-all-x.y.z.jar`` (x.y.z étant le numéro de version).
 
 .. _install_from_sources:

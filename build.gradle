@@ -64,7 +64,7 @@ repositories {
     mavenCentral()
     jcenter()
     maven {
-        url "https://dl.bintray.com/firm1/maven"
+        url "https://dl.bintray.com/zest-writer/maven"
     }
 }
 
@@ -131,7 +131,7 @@ dependencies {
     compile group: 'org.zeroturnaround', name: 'zt-zip', version: '1.10'
     compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.12'
     compile group: 'org.fxmisc.richtext', name: 'richtextfx', version: '0.7-M5'
-    compile group: 'com.zestedesavoir.zmarkdown', name: 'java-zmarkdown', version: '2.6.0.17'
+    compile group: 'eu.firm1.zmarkdown', name: 'java-zmarkdown', version: '2.6.0.17'
     compile group: 'com.fasterxml', name: 'jackson-module-json-org', version: '0.9.1'
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.16'

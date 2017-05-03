@@ -4,9 +4,9 @@ environment:
   TERM: dumb
   matrix:
     - JAVA_HOME: C:\Program Files (x86)\Java\jdk1.8.0
-      PLATFORM: windows-x86
+      PLATFORM: win32
     - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
-      PLATFORM: windows-x64
+      PLATFORM: win64
 install:
   - set PATH=%JAVA_HOME%\bin;%PATH%
   - echo %PATH%
@@ -31,13 +31,13 @@ deploy:
   - provider: BinTray
     on:
       appveyor_repo_tag: true
-    username: firm1
+    username: firm2
     version: $(APPVEYOR_REPO_TAG_NAME)
     api_key:
-      secure: uM4le5ByQ6WNAILGPWMhO0iAl4VH9iaHXfcBdHktVpXmrV9t7IT/oJYco9oYJsgJ
-    subject: firm1
+      secure: vAEXLy1B2dK6n9JB/VQFG9M7jEV6T4wpjqG7PVcRRUafWQ1dQ0YKGKLg/p07sU5y
+    subject: zest-writer
     repo: $(PLATFORM)
-    package: setup
+    package: zest-writer
     publish: true
-    override: true
+    override: false
     explode: false
