@@ -53,6 +53,7 @@ public class LoginService extends Service<Void>{
                             MainApp.getZdsutils().getContentListOnline().clear();
                             MainApp.getZdsutils().initInfoOnlineContent("tutorial");
                             MainApp.getZdsutils().initInfoOnlineContent("article");
+                            MainApp.getZdsutils().initInfoOnlineContent("opinion");
                             updateMessage(Configuration.getBundle().getString("ui.task.auth.success.text"));
                         } else {
                             MainApp.getConfig().resetAuthentification();
@@ -70,6 +71,7 @@ public class LoginService extends Service<Void>{
                             MainApp.getZdsutils().getContentListOnline().clear();
                             MainApp.getZdsutils().initInfoOnlineContent("tutorial");
                             MainApp.getZdsutils().initInfoOnlineContent("article");
+                            MainApp.getZdsutils().initInfoOnlineContent("opinion");
                         } catch (IOException e) {
                             logger.error("Echec de téléchargement des metadonnés des contenus en ligne", e);
                         }
