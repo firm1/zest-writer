@@ -6,6 +6,7 @@ import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +36,21 @@ public class UploadImageService extends Service<String>{
                 if (MainApp.getZdsutils().isAuthenticated()) {
                     MetadataContent find = getContentFromSlug();
                     if(find == null ) {
-                        throw new IOException();
+                        updateMessage("Le contenu n'existe pas encore sur le site, tentative de création");
+                        // send a new file content
+                        ZipUtil.pack(new File(content.getFilePath()), new File(content.getFilePath() + ".zip"));
+                        MainApp.getZdsutils().importNewContent(content.getFilePath() + ".zip", "Init content");
+
+                        // refresh content list info
+                        MainApp.getZdsutils().getContentListOnline().clear();
+                        MainApp.getZdsutils().initInfoOnlineContent("tutorial");
+                        MainApp.getZdsutils().initInfoOnlineContent("article");
+                        MainApp.getZdsutils().initInfoOnlineContent("opinion");
+                        find = getContentFromSlug();
+
+                        if(find == null) {
+                            throw new IOException();
+                        }
                     }
 
                     String targetId = find.getId();
