@@ -74,7 +74,7 @@ public class ExportPdfService extends Service<Void>{
                     updateMessage(Configuration.getBundle().getString("ui.task.export.prepare.label")+" ...");
                     HttpResponse response = client.execute(post);
                     logger.debug("Début du traitement de la réponse");
-                    if(response.getStatusLine().getStatusCode() >= 400) {
+                    if(response.getStatusLine().getStatusCode() != 200) {
                         return false;
                     }
                     InputStream is = response.getEntity().getContent();
