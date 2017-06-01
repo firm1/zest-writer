@@ -195,6 +195,9 @@
     .icon-arrow-down, .icon-chart-areaspline, .icon-chart-bar, .icon-chart-pie, .icon-link, .icon-code-tags, .icon-library-books{
         -fx-fill: #acacac;
     }
+    .icon-book {
+        -fx-fill: #283593;
+    }
 
 .options-grid{
     -fx-padding:0 0 0 40;

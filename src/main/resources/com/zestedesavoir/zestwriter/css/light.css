@@ -112,5 +112,7 @@
 .icon-arrow-down, .icon-chart-areaspline, .icon-chart-bar, .icon-chart-pie, .icon-link, .icon-code-tags, .icon-library-books{
     -fx-fill: #48a200;
 }
-
+.icon-book {
+    -fx-fill: #283593;
+}
 

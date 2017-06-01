@@ -298,13 +298,13 @@ public class MenuController{
         return loginTask;
     }
 
-    private void downloadContents(){
+    private void downloadContents(String typeContent){
         prerequisitesForData();
 
         hBottomBox.getChildren().clear();
         hBottomBox.add(pb, 0, 0);
         hBottomBox.add(labelField, 1, 0);
-        DownloadContentService downloadContentTask = new DownloadContentService();
+        DownloadContentService downloadContentTask = new DownloadContentService(typeContent);
         labelField.textProperty().bind(downloadContentTask.messageProperty());
         pb.progressProperty().bind(downloadContentTask.progressProperty());
         downloadContentTask.setOnSucceeded(t -> {
@@ -323,7 +323,7 @@ public class MenuController{
     @FXML private void handleDownloadButtonAction(ActionEvent event){
         if(! MainApp.getZdsutils().isAuthenticated()){
             Service<Void> loginTask = handleLoginButtonAction(event);
-            loginTask.setOnSucceeded(t -> downloadContents());
+            loginTask.setOnSucceeded(t -> downloadContents(null));
             loginTask.setOnCancelled(t -> {
                 hBottomBox.getChildren().clear();
                 Alert alert = new CustomAlert(AlertType.ERROR);
@@ -336,9 +336,68 @@ public class MenuController{
 
             loginTask.start();
         }else{
-            downloadContents();
+            downloadContents(null);
         }
+    }
 
+    @FXML private void handleDownloadArticleButtonAction(ActionEvent event){
+        if(! MainApp.getZdsutils().isAuthenticated()){
+            Service<Void> loginTask = handleLoginButtonAction(event);
+            loginTask.setOnSucceeded(t -> downloadContents("ARTICLE"));
+            loginTask.setOnCancelled(t -> {
+                hBottomBox.getChildren().clear();
+                Alert alert = new CustomAlert(AlertType.ERROR);
+                alert.setTitle(Configuration.getBundle().getString("ui.dialog.auth.failed.title"));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.auth.failed.header"));
+                alert.setContentText(Configuration.getBundle().getString("ui.dialog.auth.failed.text"));
+
+                alert.showAndWait();
+            });
+
+            loginTask.start();
+        }else{
+            downloadContents("ARTICLE");
+        }
+    }
+
+    @FXML private void handleDownloadTutorialButtonAction(ActionEvent event){
+        if(! MainApp.getZdsutils().isAuthenticated()){
+            Service<Void> loginTask = handleLoginButtonAction(event);
+            loginTask.setOnSucceeded(t -> downloadContents("TUTORIAL"));
+            loginTask.setOnCancelled(t -> {
+                hBottomBox.getChildren().clear();
+                Alert alert = new CustomAlert(AlertType.ERROR);
+                alert.setTitle(Configuration.getBundle().getString("ui.dialog.auth.failed.title"));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.auth.failed.header"));
+                alert.setContentText(Configuration.getBundle().getString("ui.dialog.auth.failed.text"));
+
+                alert.showAndWait();
+            });
+
+            loginTask.start();
+        }else{
+            downloadContents("TUTORIAL");
+        }
+    }
+
+    @FXML private void handleDownloadOpinionButtonAction(ActionEvent event){
+        if(! MainApp.getZdsutils().isAuthenticated()){
+            Service<Void> loginTask = handleLoginButtonAction(event);
+            loginTask.setOnSucceeded(t -> downloadContents("OPINION"));
+            loginTask.setOnCancelled(t -> {
+                hBottomBox.getChildren().clear();
+                Alert alert = new CustomAlert(AlertType.ERROR);
+                alert.setTitle(Configuration.getBundle().getString("ui.dialog.auth.failed.title"));
+                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.auth.failed.header"));
+                alert.setContentText(Configuration.getBundle().getString("ui.dialog.auth.failed.text"));
+
+                alert.showAndWait();
+            });
+
+            loginTask.start();
+        }else{
+            downloadContents("OPINION");
+        }
     }
 
     private void prerequisitesForData(){

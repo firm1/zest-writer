@@ -163,6 +163,14 @@ public class IconFactory {
     }
 
     /**
+     * Create icon for tutorials
+     * @return tutorial's material icon
+     */
+    public static MaterialDesignIconView createOpinionIcon() {
+        return makeIcon(MaterialDesignIcon.BOOK, "icon-book");
+    }
+
+    /**
      * Create icon for spell checks
      * @return spell checks material icon
      */
@@ -179,6 +187,8 @@ public class IconFactory {
         MaterialDesignIconView icon;
         if("ARTICLE".equalsIgnoreCase(type)) {
             icon = createArticleIcon();
+        } else if("OPINION".equalsIgnoreCase(type)) {
+            icon = createOpinionIcon();
         } else {
             icon = createTutorialIcon();
         }
