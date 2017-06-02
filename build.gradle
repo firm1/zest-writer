@@ -118,7 +118,7 @@ lombok { // optional: values below are the defaults
 
 dependencies {
     testCompile 'junit:junit:4.12'
-    compile group: 'org.languagetool', name: 'language-fr', version: '3.6'
+    compile group: 'org.languagetool', name: 'language-fr', version: '3.7'
     compile group: 'org.apache.httpcomponents', name: 'fluent-hc', version: '4.5.2'
     compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.2'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.5'
