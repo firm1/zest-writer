@@ -35,12 +35,15 @@ import java.util.Map;
 public class DiffDisplayDialog extends BaseDialog<Boolean>{
     String newContent;
     String oldContent;
+    String titleContent;
+    String titleExtract;
     File file;
 
-	public DiffDisplayDialog(File file, String newContent) {
-		super("Résolution de conflit", "");
+	public DiffDisplayDialog(File file, String newContent, String titleContent, String titleExtract) {
+		super("Résolution de conflit", "L'extrait présent en ligne est différent de celui que vous avez en local, voulez-vous écraser l'extrait en local ?");
 		this.file = file;
-		this.newContent = newContent;
+		this.newContent = titleContent;
+		this.titleContent = titleExtract;
         try {
             this.oldContent = IOUtils.toString(new FileInputStream(this.file), "UTF-8");
         } catch (IOException e) {
@@ -57,6 +60,8 @@ public class DiffDisplayDialog extends BaseDialog<Boolean>{
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 20, 10, 10));
+        Label l01 = new Label("Contenu : "+titleContent);
+        Label l02 = new Label("Extrait : "+titleExtract);
 		Label l1 = new Label("Ancien Contenu");
         Label l2 = new Label("Nouveau Contenu");
 		TextArea textArea1 = new TextArea();
@@ -77,10 +82,12 @@ public class DiffDisplayDialog extends BaseDialog<Boolean>{
         scrollPane2.setFitToWidth(true);
 
 
-		grid.add(l1, 0, 0);
-        grid.add(scrollPane1, 0, 1);
-	    grid.add(l2, 1, 0);
-        grid.add(scrollPane2, 1, 1);
+        grid.add(l01, 0, 0,2, 1);
+        grid.add(l02, 0, 1, 2, 1);
+		grid.add(l1, 0, 2);
+	    grid.add(l2, 1, 2);
+        grid.add(scrollPane1, 0, 3);
+        grid.add(scrollPane2, 1, 3);
 
 	    // Enable/Disable login button depending on whether a username was entered.
 		this.getDialogPane().lookupButton(validButtonType);

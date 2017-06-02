@@ -320,10 +320,8 @@ public class MenuController{
                     .forEach(c -> {
                         c.getValue().get("update").stream().forEach(elt -> {
                             elt.entrySet().stream().forEach(map -> {
-                                DiffDisplayDialog confirm = new DiffDisplayDialog(map.getKey(), map.getValue());
-                                confirm.setTitle("Confirmation de fusion de l'extrait");
-                                confirm.setHeaderText("Mise à jour de l'extrait " + map.getKey().getName() + " dans le contenu " + c.getKey().getTitle());
-                                confirm.setContentText("Cet extrait est présent dans votre version en ligne et dans votre version locale, mais les contenus ne sont pas identiques.\nÊtes vous certain de vouloir écraser le contenu de votre version locale par celui de la version en ligne ?");
+                                DiffDisplayDialog confirm = new DiffDisplayDialog(map.getKey(), map.getValue(), c.getKey().getTitle(), map.getKey().getName());
+                                confirm.setTitle("Confirmation de la mise à jour de l'extrait");
 
                                 Optional<Boolean> choice = confirm.showAndWait();
                                 if (choice.get()) {
@@ -337,10 +335,8 @@ public class MenuController{
                         });
                         c.getValue().get("add").stream().forEach(elt -> {
                             elt.entrySet().stream().forEach(map -> {
-                                DiffDisplayDialog confirm = new DiffDisplayDialog(map.getKey(), map.getValue());
-                                confirm.setTitle("Confirmation d'ajout d'un extrait");
-                                confirm.setHeaderText("Ajout de l'extrait "+map.getKey().getName()+" dans le contenu "+c.getKey().getTitle());
-                                confirm.setContentText("Cet extrait est présent dans votre version en ligne, mais n'existe pas dans votre version en local.\nÊtes vous certain de vouloir l'ajouter dans votre version locale ?");
+                                DiffDisplayDialog confirm = new DiffDisplayDialog(map.getKey(), map.getValue(), c.getKey().getTitle(), map.getKey().getName());
+                                confirm.setTitle("Confirmation de l'ajout d'un extrait");
 
                                 Optional<Boolean> choice = confirm.showAndWait();
                                 if (choice.get()) {

@@ -88,9 +88,7 @@ public class DownloadContentService extends Service<Map<Content, Map<String, Lis
                 } else { // file for add
                     Map<File, String> mapping = new HashMap<>();
                     String text = IOUtils.toString(in, "UTF-8");
-                    System.out.println("valeur string ===> "+text);
                     result.get("add").add(mapping);
-                    System.out.println("add : "+mapping);
                 }
             }
         });
