@@ -10,6 +10,7 @@ import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.com.*;
 import com.zestedesavoir.zestwriter.view.dialogs.*;
 import com.zestedesavoir.zestwriter.view.task.*;
+import edu.berkeley.nlp.lm.io.IOUtils;
 import javafx.beans.property.BooleanPropertyBase;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -41,6 +42,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fxmisc.richtext.StyleClassedTextArea;
@@ -48,7 +50,9 @@ import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -308,12 +312,53 @@ public class MenuController{
         labelField.textProperty().bind(downloadContentTask.messageProperty());
         pb.progressProperty().bind(downloadContentTask.progressProperty());
         downloadContentTask.setOnSucceeded(t -> {
+            hBottomBox.getChildren().clear();
+
+            Map<Content, Map<String, List<Map<File, String>>>> result = downloadContentTask.getValue();
+            result.entrySet().stream()
+                    .filter(r -> r.getValue() != null)
+                    .forEach(c -> {
+                        c.getValue().get("update").stream().forEach(elt -> {
+                            elt.entrySet().stream().forEach(map -> {
+                                DiffDisplayDialog confirm = new DiffDisplayDialog(map.getKey(), map.getValue());
+                                confirm.setTitle("Confirmation de fusion de l'extrait");
+                                confirm.setHeaderText("Mise à jour de l'extrait " + map.getKey().getName() + " dans le contenu " + c.getKey().getTitle());
+                                confirm.setContentText("Cet extrait est présent dans votre version en ligne et dans votre version locale, mais les contenus ne sont pas identiques.\nÊtes vous certain de vouloir écraser le contenu de votre version locale par celui de la version en ligne ?");
+
+                                Optional<Boolean> choice = confirm.showAndWait();
+                                if (choice.get()) {
+                                    try {
+                                        FileUtils.writeStringToFile(map.getKey(), map.getValue(), "UTF-8");
+                                    } catch (IOException e) {
+                                        log.error(e.getMessage(), e);
+                                    }
+                                }
+                            });
+                        });
+                        c.getValue().get("add").stream().forEach(elt -> {
+                            elt.entrySet().stream().forEach(map -> {
+                                DiffDisplayDialog confirm = new DiffDisplayDialog(map.getKey(), map.getValue());
+                                confirm.setTitle("Confirmation d'ajout d'un extrait");
+                                confirm.setHeaderText("Ajout de l'extrait "+map.getKey().getName()+" dans le contenu "+c.getKey().getTitle());
+                                confirm.setContentText("Cet extrait est présent dans votre version en ligne, mais n'existe pas dans votre version en local.\nÊtes vous certain de vouloir l'ajouter dans votre version locale ?");
+
+                                Optional<Boolean> choice = confirm.showAndWait();
+                                if (choice.get()) {
+                                    try {
+                                        FileUtils.writeStringToFile(map.getKey(), map.getValue(), "UTF-8");
+                                    } catch (IOException e) {
+                                        log.error(e.getMessage(), e);
+                                    }
+                                }
+                            });
+                        });
+                    });
+
             Alert alert = new CustomAlert(AlertType.INFORMATION);
             alert.setTitle(Configuration.getBundle().getString("ui.alert.download.success.title"));
             alert.setHeaderText(Configuration.getBundle().getString("ui.alert.download.success.header"));
             alert.setContentText(Configuration.getBundle().getString("ui.alert.download.success.text"));
             alert.showAndWait();
-            hBottomBox.getChildren().clear();
 
             mainApp.getIndex().refreshRecentProject();
         });
