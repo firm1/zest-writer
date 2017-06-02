@@ -1,35 +1,20 @@
 package com.zestedesavoir.zestwriter.view.dialogs;
 
-import com.zestedesavoir.zestwriter.MainApp;
-import com.zestedesavoir.zestwriter.model.Constant;
-import com.zestedesavoir.zestwriter.model.Content;
-import com.zestedesavoir.zestwriter.model.License;
-import com.zestedesavoir.zestwriter.model.TypeContent;
 import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.view.com.CustomAlert;
-import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
 import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.util.Pair;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.zeroturnaround.zip.commons.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.Normalizer;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 @Slf4j
 public class DiffDisplayDialog extends BaseDialog<Boolean>{
@@ -40,19 +25,22 @@ public class DiffDisplayDialog extends BaseDialog<Boolean>{
     File file;
 
 	public DiffDisplayDialog(File file, String newContent, String titleContent, String titleExtract) {
-		super("Résolution de conflit", "L'extrait présent en ligne est différent de celui que vous avez en local, voulez-vous écraser l'extrait en local ?");
+		super(Configuration.getBundle().getString("ui.dialog.download.compare.window.title"), Configuration.getBundle().getString("ui.dialog.download.compare.window.header"));
 		this.file = file;
-		this.newContent = titleContent;
-		this.titleContent = titleExtract;
+		this.newContent = newContent;
+		this.titleContent = titleContent;
+        this.titleExtract = titleExtract;
         try {
-            this.oldContent = IOUtils.toString(new FileInputStream(this.file), "UTF-8");
+            if(this.file.exists()) {
+                this.oldContent = IOUtils.toString(new FileInputStream(this.file), "UTF-8");
+            }
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
         ;
 
 	    // Set the button types.
-	    ButtonType validButtonType = new ButtonType("Confirmer", ButtonData.OK_DONE);
+	    ButtonType validButtonType = new ButtonType(Configuration.getBundle().getString("ui.dialog.download.compare.button.confirm"), ButtonData.OK_DONE);
 	    this.getDialogPane().getButtonTypes().addAll(validButtonType, ButtonType.CANCEL);
 
 		// Create the username and password labels and fields.
@@ -60,10 +48,10 @@ public class DiffDisplayDialog extends BaseDialog<Boolean>{
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 20, 10, 10));
-        Label l01 = new Label("Contenu : "+titleContent);
-        Label l02 = new Label("Extrait : "+titleExtract);
-		Label l1 = new Label("Ancien Contenu");
-        Label l2 = new Label("Nouveau Contenu");
+        Label l01 = new Label(Configuration.getBundle().getString("ui.dialog.download.compare.content_name") + " : "+titleContent);
+        Label l02 = new Label(Configuration.getBundle().getString("ui.dialog.download.compare.extract_name") + " : "+titleExtract);
+		Label l1 = new Label(Configuration.getBundle().getString("ui.dialog.download.compare.old_content"));
+        Label l2 = new Label(Configuration.getBundle().getString("ui.dialog.download.compare.new_content"));
 		TextArea textArea1 = new TextArea();
 		textArea1.setEditable(false);
         textArea1.setWrapText(true);

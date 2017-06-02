@@ -321,8 +321,7 @@ public class MenuController{
                         c.getValue().get("update").stream().forEach(elt -> {
                             elt.entrySet().stream().forEach(map -> {
                                 DiffDisplayDialog confirm = new DiffDisplayDialog(map.getKey(), map.getValue(), c.getKey().getTitle(), map.getKey().getName());
-                                confirm.setTitle("Confirmation de la mise à jour de l'extrait");
-
+                                confirm.setGraphic(c.getKey().buildIcon());
                                 Optional<Boolean> choice = confirm.showAndWait();
                                 if (choice.get()) {
                                     try {
@@ -336,8 +335,7 @@ public class MenuController{
                         c.getValue().get("add").stream().forEach(elt -> {
                             elt.entrySet().stream().forEach(map -> {
                                 DiffDisplayDialog confirm = new DiffDisplayDialog(map.getKey(), map.getValue(), c.getKey().getTitle(), map.getKey().getName());
-                                confirm.setTitle("Confirmation de l'ajout d'un extrait");
-
+                                confirm.setGraphic(c.getKey().buildIcon());
                                 Optional<Boolean> choice = confirm.showAndWait();
                                 if (choice.get()) {
                                     try {

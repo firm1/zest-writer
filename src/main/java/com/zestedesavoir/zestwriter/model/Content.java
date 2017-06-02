@@ -119,6 +119,8 @@ public class Content extends Container implements ContentNode{
     public MaterialDesignIconView buildIcon() {
         if("ARTICLE".equals(getType())) {
             return IconFactory.createArticleIcon();
+        } else if("OPINION".equals(getType())) {
+            return IconFactory.createOpinionIcon();
         } else {
             return IconFactory.createTutorialIcon();
         }

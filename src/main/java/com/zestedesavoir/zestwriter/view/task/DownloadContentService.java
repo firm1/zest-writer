@@ -5,18 +5,17 @@ import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.MetadataContent;
 import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.view.com.CustomAlert;
-import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import org.zeroturnaround.zip.ZipEntryCallback;
 import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.IOUtils;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
@@ -80,22 +79,24 @@ public class DownloadContentService extends Service<Map<Content, Map<String, Lis
                 File fileOffline = new File(existFolder,zipEntry.getName());
                 if(fileOffline.exists()) { // file for merge
                     if(zipEntry.getCrc() != getCrc(fileOffline.getAbsolutePath())) {
-                        Map<File, String> mapping = new HashMap<>();
-                        String text = IOUtils.toString(in, "UTF-8");
-                        mapping.put(fileOffline, text);
-                        result.get("update").add(mapping);
+                        result.get("update").add(inputToMapping(in, fileOffline));
                     }
                 } else { // file for add
-                    Map<File, String> mapping = new HashMap<>();
-                    String text = IOUtils.toString(in, "UTF-8");
-                    result.get("add").add(mapping);
+                    result.get("add").add(inputToMapping(in, fileOffline));
                 }
             }
         });
         return result;
     }
 
-        @Override
+    private Map<File, String> inputToMapping(InputStream src, File dest) throws IOException {
+        Map<File, String> mapping = new HashMap<>();
+        String text = IOUtils.toString(src, "UTF-8");
+        mapping.put(dest, text);
+        return mapping;
+    }
+
+    @Override
     protected Task<Map<Content, Map<String, List<Map<File,String>>>>> createTask() {
         return new Task<Map<Content, Map<String, List<Map<File,String>>>>>() {
             @Override
@@ -103,7 +104,6 @@ public class DownloadContentService extends Service<Map<Content, Map<String, Lis
 
                 Map<Content, Map<String, List<Map<File,String>>>> conflicts = new HashMap<>();
 
-                Map<String, List<Map<File, String>>> conflict = null;
                 if (MainApp.getZdsutils().isAuthenticated()) {
                     List<MetadataContent> workedList = MainApp.getZdsutils().getContentListOnline();
                     if(typeContent != null) {
@@ -125,8 +125,8 @@ public class DownloadContentService extends Service<Map<Content, Map<String, Lis
                     for (MetadataContent meta : workedList) {
                         updateMessage(Configuration.getBundle().getString("ui.task.unzip.label")+" : " + meta.getSlug());
                         updateProgress(iterations, max);
-                        Map<String, List<Map<File,String>>> conflit = compareOfflineAndOnline(MainApp.getZdsutils().getOnlineContentPathDir() + File.separator + meta.getSlug() + ".zip", MainApp.getZdsutils().getOfflineContentPathDir() + File.separator + meta.getSlug());
-                        conflicts.put(getContentFromDir(MainApp.getZdsutils().getOfflineContentPathDir() + File.separator + meta.getSlug()), conflit);
+                        Map<String, List<Map<File,String>>> conflict = compareOfflineAndOnline(MainApp.getZdsutils().getOnlineContentPathDir() + File.separator + meta.getSlug() + ".zip", MainApp.getZdsutils().getOfflineContentPathDir() + File.separator + meta.getSlug());
+                        conflicts.put(getContentFromDir(MainApp.getZdsutils().getOfflineContentPathDir() + File.separator + meta.getSlug()), conflict);
                         MainApp.getZdsutils().unzipOnlineContent(MainApp.getZdsutils().getOnlineContentPathDir() + File.separator + meta.getSlug() + ".zip");
                         iterations++;
                     }
