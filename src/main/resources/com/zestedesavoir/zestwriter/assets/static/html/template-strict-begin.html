@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <base href='%%/%%' />
+        <link rel="stylesheet" href="%%/static/css/contentExport.css%%" />
+        <link rel="stylesheet" href="%%/static/js/katex/katex.min.css%%" />
+        <script src="%%/static/js/katex/katex.min.js%%"></script>
+        <script src="%%/static/js/katex/contrib/auto-render.min.js%%"></script>
+        <style type='text/css'>.baseline-fix {font-size: 0px;} .fontsize-ensurer span {display:none;}</style>
+        <style>
+            @page {
+                margin: 10%;
+                size: portrait;
+                @bottom-right {
+                    font-family: "Source Code Pro";
+                    font-size: 0.8em;
+                    content: " " counter(page);
+                }
+                @top-center {
+                    font-family: "Merriweather";
+                    font-size: 0.8em;
+                    font-style: italic;
+                    content: "##title##";
+                }
+                @bottom-left {
+                    background-position: center;
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    background-image: url(%%/static/blockicons/logo-zds.png%%);
+                    content: ". "
+                }
+            }
+        </style>
+    </head>
+    <body>

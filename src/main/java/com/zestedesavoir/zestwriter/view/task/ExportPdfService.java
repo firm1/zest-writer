@@ -1,10 +1,14 @@
 package com.zestedesavoir.zestwriter.view.task;
 
+import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.utils.Configuration;
+import com.zestedesavoir.zestwriter.utils.PdfUtilExport;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
+import com.zestedesavoir.zestwriter.view.MdTextController;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -22,42 +26,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+@Slf4j
 public class ExportPdfService extends Service<Void>{
 
-    private final Logger logger;
     private File fileDest;
     private Content content;
-    private HttpClient client;
-    private File markdownFile;
-    HttpPost post;
+    private MdTextController index;
+    private File htmlFile;
 
-    public ExportPdfService(String urlProvider, Content content, File fileDest) {
+    public ExportPdfService(MdTextController index, Content content, File fileDest) {
         this.fileDest = fileDest;
         this.content = content;
-        logger = LoggerFactory.getLogger(getClass());
-        markdownFile = new File(System.getProperty("java.io.tmpdir"), ZdsHttp.toSlug(content.getTitle()) + ".md");
-
-        PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
-        // Increase max total connection to 200
-        cm.setMaxTotal(500);
-        // Increase default max connection per route to 20
-        cm.setDefaultMaxPerRoute(20);
-        client = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).setConnectionManager(cm).build();
-        FileBody cbFile = new FileBody(markdownFile);
-
-        post = new HttpPost(urlProvider);
-        logger.debug("Création du formulaire");
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-        builder.addPart("file", cbFile);
-        post.setEntity(builder.build());
-        logger.debug("Exécution de la requête. Protocol : '"+post.getProtocolVersion()+"' Uri : '"+post.getURI()+"' Method : '"+post.getMethod());
-    }
-
-
-
-    public File getMarkdownFile() {
-        return markdownFile;
+        this.index = index;
+        htmlFile = new File(System.getProperty("java.io.tmpdir"), ZdsHttp.toSlug(content.getTitle()) + ".html");
     }
 
     public Service<Void> getThis() {
@@ -68,44 +49,14 @@ public class ExportPdfService extends Service<Void>{
     protected Task<Void> createTask() {
         return new Task<Void>() {
 
-            public boolean downloadPdf() {
-                logger.debug("Tentative de téléchargement du contenu au format Pdf");
-                try(FileOutputStream fos = new FileOutputStream(fileDest)) {
-                    updateMessage(Configuration.getBundle().getString("ui.task.export.prepare.label")+" ...");
-                    HttpResponse response = client.execute(post);
-                    logger.debug("Début du traitement de la réponse");
-                    if(response.getStatusLine().getStatusCode() != 200) {
-                        return false;
-                    }
-                    InputStream is = response.getEntity().getContent();
-                    long max = response.getEntity().getContentLength();
-                    long remain = 0;
-                    updateProgress(remain, max);
-                    int inByte;
-                    updateMessage(Configuration.getBundle().getString("ui.task.export.build.label"));
-                    while ((inByte = is.read()) != -1) {
-                        fos.write(inByte);
-                        remain++;
-                        updateProgress(remain, max);
-                    }
-                    updateProgress(max, max);
-                    is.close();
-                } catch (IOException | UnsupportedOperationException e) {
-                    logger.error(e.getMessage(),e);
-                    return false;
-                }
-
-                logger.info("Pdf téléchargé avec succès dans "+fileDest.getAbsolutePath());
-                return true;
-            }
-
             @Override
             protected Void call() throws Exception {
                 updateMessage(Configuration.getBundle().getString("ui.task.export.assemble.label"));
-                content.saveToMarkdown(markdownFile);
+                content.saveToHtml(htmlFile, index);
 
                 updateMessage(Configuration.getBundle().getString("ui.task.export.label"));
-                if(!downloadPdf()) {
+                PdfUtilExport act = new PdfUtilExport(content.getTitle(), content.getLicence(), "file://"+htmlFile, fileDest.getAbsolutePath());
+                if(!act.exportToPdf()) {
                     updateMessage(Configuration.getBundle().getString("ui.task.export.error"));
                     throw new IOException();
                 }

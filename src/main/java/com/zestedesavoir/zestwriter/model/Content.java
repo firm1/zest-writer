@@ -5,9 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
+import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -101,17 +103,13 @@ public class Content extends Container implements ContentNode{
 
     @Override
     public String exportContentToMarkdown(int level, int levelDepth) {
-        DateFormat dateFormat = new SimpleDateFormat("dd MMMMM yyyy");
         StringBuilder sb = new StringBuilder();
-        sb.append("% ").append(getTitle().toUpperCase()).append("\n");
-        sb.append("% ").append(dateFormat.format(new Date())).append("\n\n");
-        sb.append("# ").append(getIntroduction().getTitle()).append("\n\n");
-        sb.append(getIntroduction().readMarkdown()).append("\n\n");
+        sb.append(FunctionTreeFactory.changeLocationImages(getIntroduction().readMarkdown())).append("\n\n");
         for(MetaContent c:getChildren()) {
             sb.append(c.exportContentToMarkdown(level+1, levelDepth));
         }
         sb.append("# ").append(getConclusion().getTitle()).append("\n\n");
-        sb.append(getConclusion().readMarkdown());
+        sb.append(FunctionTreeFactory.changeLocationImages(getConclusion().readMarkdown()));
         return sb.toString();
     }
 
@@ -139,9 +137,35 @@ public class Content extends Container implements ContentNode{
     }
 
     public void saveToMarkdown(File file) {
+        DateFormat dateFormat = new SimpleDateFormat("dd MMMMM yyyy");
+        StringBuilder sb = new StringBuilder();
+        sb.append("% ").append(getTitle().toUpperCase()).append("\n");
+        sb.append("% ").append(dateFormat.format(new Date())).append("\n\n");
+        sb.append("# ").append(getIntroduction().getTitle()).append("\n\n");
+
         try (FileOutputStream fos = new FileOutputStream(file)) {
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF8"));
+            writer.append(sb.toString());
             writer.append(exportContentToMarkdown(0, getDepth()));
+            writer.flush();
+        } catch (Exception e) {
+            MainApp.getLogger().error(e.getMessage(), e);
+        }
+    }
+
+    public static String normalizeHtml(String htmlValue) {
+        String pattern = "(?i)(href=\"\\/media\\/galleries)(<title.*?>)(.+?)()";
+        String updated = htmlValue.replaceAll(pattern, "$2");
+        return htmlValue;
+    }
+
+    public void saveToHtml(File file, MdTextController index) {
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF8"));
+            String mdValue = exportContentToMarkdown(0, getDepth());
+            String htmlValue = StringEscapeUtils.unescapeHtml4(index.markdownToHtml(mdValue));
+            htmlValue = normalizeHtml(htmlValue);
+            writer.append(MainApp.getMdUtils().addHeaderAndFooterStrict(htmlValue, getTitle()));
             writer.flush();
         } catch (Exception e) {
             MainApp.getLogger().error(e.getMessage(), e);

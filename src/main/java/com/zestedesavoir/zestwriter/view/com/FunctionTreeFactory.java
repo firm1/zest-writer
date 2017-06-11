@@ -149,7 +149,7 @@ public class FunctionTreeFactory {
 
     public static String changeLocationImages(String text) {
         String regex = "()(!\\[.*?\\]\\()([^http])(.+?)(\\))";
-        return Pattern.compile(regex, Pattern.MULTILINE).matcher(text).replaceAll("$1$2http://zestedesavoir.com/$3$4$5");
+        return Pattern.compile(regex, Pattern.MULTILINE).matcher(text).replaceAll("$1$2http://zestedesavoir.com$3$4$5");
     }
 
     public static Container getContainerOfMetaAttribute(Container c, MetaAttribute meta) {

@@ -632,7 +632,7 @@ public class MenuController{
             hBottomBox.getChildren().clear();
             hBottomBox.add(pb, 0, 0);
             hBottomBox.add(labelField, 1, 0);
-            ExportPdfService exportPdfTask = new ExportPdfService(MainApp.getConfig().getAdvancedServerPandoc(), content, selectedFile);
+            ExportPdfService exportPdfTask = new ExportPdfService(mainApp.getIndex(), content, selectedFile);
             labelField.textProperty().bind(exportPdfTask.messageProperty());
             pb.progressProperty().bind(exportPdfTask.progressProperty());
             Alert alert = new CustomAlert(AlertType.NONE);
