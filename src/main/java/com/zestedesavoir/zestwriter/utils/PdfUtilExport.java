@@ -33,21 +33,16 @@ public class PdfUtilExport {
     private final static int FONT_SIZE_TITLE = 20;
     private final static int FONT_SIZE_AUTHOR = 12;
     private static PDFont FONT_STYLE_COVER;
-    private static File FONT_MERRIWEATHER_REGULAR;
-    private static File FONT_MERRIWEATHER_BOLD;
-    private static File FONT_MERRIWEATHER_ITALIC;
-    private static File FONT_SOURCE_CODE_PRO;
+    private static final String FONT_MERRIWEATHER_REGULAR="assets/static/fonts/Merriweather-Regular.ttf";
+    private static final String FONT_MERRIWEATHER_BOLD="assets/static/fonts/Merriweather-Bold.ttf";
+    private static final String FONT_MERRIWEATHER_ITALIC="assets/static/fonts/Merriweather-Italic.ttf";
+    private static final String FONT_SOURCE_CODE_PRO="assets/static/fonts/SourceCodePro-Regular.ttf";
 
     public PdfUtilExport(String titleContent, String authorContent, String srcHtmlPath, String destPdfPath) {
         this.titleContent = titleContent.toUpperCase();
         this.authorContent = authorContent;
         this.srcHtmlPath = srcHtmlPath;
         this.destPdfPath = destPdfPath;
-
-        FONT_MERRIWEATHER_REGULAR = new File(MainApp.class.getResource("assets/static/fonts/Merriweather-Regular.ttf").getFile());
-        FONT_MERRIWEATHER_BOLD = new File(MainApp.class.getResource("assets/static/fonts/Merriweather-Bold.ttf").getFile());
-        FONT_MERRIWEATHER_ITALIC = new File(MainApp.class.getResource("assets/static/fonts/Merriweather-Italic.ttf").getFile());
-        FONT_SOURCE_CODE_PRO = new File(MainApp.class.getResource("assets/static/fonts/SourceCodePro-Regular.ttf").getFile());
         XRLog.setLoggingEnabled(false);
     }
 
@@ -83,7 +78,7 @@ public class PdfUtilExport {
         PDDocument document = new PDDocument();
         PDPage page = new PDPage();
         document.addPage(page);
-        FONT_STYLE_COVER = PDTrueTypeFont.loadTTF(document, FONT_MERRIWEATHER_BOLD);
+        FONT_STYLE_COVER = PDTrueTypeFont.loadTTF(document, MainApp.class.getResourceAsStream(FONT_MERRIWEATHER_BOLD));
         PDPageContentStream contentStream = new PDPageContentStream(document, page);
         contentStream.setNonStrokingColor(25, 81, 107);
         contentStream.fillRect(0, 0, page.getMediaBox().getWidth(), (page.getMediaBox().getHeight() / 2) - 10);
@@ -125,10 +120,14 @@ public class PdfUtilExport {
 
                 builder.withUri(destPdfPath);
                 builder.toStream(os);
-                builder.useFont(FONT_MERRIWEATHER_REGULAR,"Merriweather",400, PdfRendererBuilder.FontStyle.NORMAL,true);
-                builder.useFont(FONT_MERRIWEATHER_ITALIC,"Merriweather", 400, PdfRendererBuilder.FontStyle.ITALIC,true);
-                builder.useFont(FONT_MERRIWEATHER_BOLD,"Merriweather", 700, PdfRendererBuilder.FontStyle.NORMAL, true);
-                builder.useFont(FONT_SOURCE_CODE_PRO,"Source Code Pro");
+                builder.useFont(new File(MainApp.class.getResource(FONT_MERRIWEATHER_REGULAR).getFile()),
+                        "Merriweather",400, PdfRendererBuilder.FontStyle.NORMAL,true);
+                builder.useFont(new File(MainApp.class.getResource(FONT_MERRIWEATHER_ITALIC).getFile()),
+                        "Merriweather", 400, PdfRendererBuilder.FontStyle.ITALIC,true);
+                builder.useFont(new File(MainApp.class.getResource(FONT_MERRIWEATHER_BOLD).getFile()),
+                        "Merriweather", 700, PdfRendererBuilder.FontStyle.NORMAL, true);
+                builder.useFont(new File(MainApp.class.getResource(FONT_SOURCE_CODE_PRO).getFile()),
+                        "Source Code Pro");
                 builder.withW3cDocument(html5ParseDocument(srcHtmlPath, 1000), srcHtmlPath);
                 builder.useHttpStreamImplementation(new OkHttpStreamFactory());
                 builder.run();
