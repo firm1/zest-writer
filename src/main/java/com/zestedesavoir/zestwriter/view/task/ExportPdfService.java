@@ -28,16 +28,13 @@ import java.io.InputStream;
 
 @Slf4j
 public class ExportPdfService extends Service<Void>{
-
     private File fileDest;
     private Content content;
-    private MdTextController index;
     private File htmlFile;
 
-    public ExportPdfService(MdTextController index, Content content, File fileDest) {
+    public ExportPdfService(Content content, File fileDest) {
         this.fileDest = fileDest;
         this.content = content;
-        this.index = index;
         htmlFile = new File(System.getProperty("java.io.tmpdir"), ZdsHttp.toSlug(content.getTitle()) + ".html");
     }
 
@@ -52,7 +49,7 @@ public class ExportPdfService extends Service<Void>{
             @Override
             protected Void call() throws Exception {
                 updateMessage(Configuration.getBundle().getString("ui.task.export.assemble.label"));
-                content.saveToHtml(htmlFile, index);
+                content.saveToHtml(htmlFile);
 
                 updateMessage(Configuration.getBundle().getString("ui.task.export.label"));
                 PdfUtilExport act = new PdfUtilExport(content.getTitle(), content.getLicence(), "file://"+htmlFile, fileDest.getAbsolutePath());

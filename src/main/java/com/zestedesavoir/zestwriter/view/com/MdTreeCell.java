@@ -3,6 +3,7 @@ package com.zestedesavoir.zestwriter.view.com;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.*;
+import com.zestedesavoir.zestwriter.model.markdown.ZMarkdown;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
@@ -389,7 +390,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             logger.debug("Tentative de calcul des statistiques de lisiblité");
             Container container = (Container) getItem();
             Function<Textual, Double> performGuning = (Textual ch) -> {
-                String htmlText = StringEscapeUtils.unescapeHtml4(MenuController.markdownToHtml(index, ch.readMarkdown()));
+                String htmlText = StringEscapeUtils.unescapeHtml4(ZMarkdown.markdownToHtml(ch.readMarkdown()));
                 String plainText = Corrector.htmlToTextWithoutCode(htmlText);
                 if("".equals(plainText.trim())){
                     return 100.0;
@@ -399,7 +400,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 }
             };
             Function<Textual, Double> performFlesch = (Textual ch) -> {
-                String htmlText = StringEscapeUtils.unescapeHtml4(MenuController.markdownToHtml(index, ch.readMarkdown()));
+                String htmlText = StringEscapeUtils.unescapeHtml4(ZMarkdown.markdownToHtml(ch.readMarkdown()));
                 String plainText = Corrector.htmlToTextWithoutCode(htmlText);
                 if("".equals(plainText.trim())){
                     return 100.0;
@@ -434,7 +435,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             Function<Textual, Double> performCorrection = (Textual ch) -> {
                 String md = ch.readMarkdown();
                 try {
-                    return (double) corrector.countMistakes(index, md);
+                    return (double) corrector.countMistakes(md);
                 } catch(Exception e) {
                     logger.trace(e.getMessage(), e);
                     return 0.0;

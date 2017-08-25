@@ -3,6 +3,7 @@ package com.zestedesavoir.zestwriter.view;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.*;
+import com.zestedesavoir.zestwriter.model.markdown.ZMarkdown;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
@@ -46,8 +47,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fxmisc.richtext.StyleClassedTextArea;
-import org.python.core.PyString;
-import org.python.util.PythonInterpreter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -79,14 +78,6 @@ public class MenuController{
     @FXML private MenuItem menuQuit;
     @FXML private MenuItem menuFindReplace;
     private BooleanPropertyBase isOnReadingTab = new SimpleBooleanProperty(true);
-
-    public static String markdownToHtml(MdTextController index, String chaine) {
-        PythonInterpreter console = index.getPyconsole();
-        console.set("text", chaine);
-        console.exec("render = mk_instance.convert(text)");
-        PyString render = console.get("render", PyString.class);
-        return render.toString();
-    }
 
     public BooleanPropertyBase isOnReadingTabProperty() {
         return isOnReadingTab;
@@ -135,7 +126,7 @@ public class MenuController{
 
     @FXML private void handleFleshButtonAction(ActionEvent event){
         Function<Textual, Double> calFlesh = (Textual ch) -> {
-            String htmlText = StringEscapeUtils.unescapeHtml4(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
+            String htmlText = StringEscapeUtils.unescapeHtml4(ZMarkdown.markdownToHtml(ch.readMarkdown()));
             String plainText = Corrector.htmlToTextWithoutCode(htmlText);
             if("".equals(plainText.trim())){
                 return 100.0;
@@ -159,7 +150,7 @@ public class MenuController{
 
     @FXML private void handleGunningButtonAction(ActionEvent event){
         Function<Textual, Double> calGuning = (Textual ch) -> {
-            String htmlText = StringEscapeUtils.unescapeHtml4(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
+            String htmlText = StringEscapeUtils.unescapeHtml4(ZMarkdown.markdownToHtml(ch.readMarkdown()));
             String plainText = Corrector.htmlToTextWithoutCode(htmlText);
             if("".equals(plainText.trim())){
                 return 100.0;
@@ -632,7 +623,7 @@ public class MenuController{
             hBottomBox.getChildren().clear();
             hBottomBox.add(pb, 0, 0);
             hBottomBox.add(labelField, 1, 0);
-            ExportPdfService exportPdfTask = new ExportPdfService(mainApp.getIndex(), content, selectedFile);
+            ExportPdfService exportPdfTask = new ExportPdfService(content, selectedFile);
             labelField.textProperty().bind(exportPdfTask.messageProperty());
             pb.progressProperty().bind(exportPdfTask.progressProperty());
             Alert alert = new CustomAlert(AlertType.NONE);

@@ -1,5 +1,6 @@
 package com.zestedesavoir.zestwriter.utils;
 
+import com.zestedesavoir.zestwriter.model.markdown.ZMarkdown;
 import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.MenuController;
 import lombok.extern.slf4j.Slf4j;
@@ -211,8 +212,8 @@ public class Corrector {
         return bf.toString();
     }
 
-    public int countMistakes(MdTextController mdTextController, String markdown) {
-        String htmlText = StringEscapeUtils.unescapeHtml4(MenuController.markdownToHtml(mdTextController, markdown));
+    public int countMistakes(String markdown) {
+        String htmlText = StringEscapeUtils.unescapeHtml4(ZMarkdown.markdownToHtml(markdown));
         AnnotatedText markup = makeAnnotatedText(htmlText);
 
         langTool.getAllActiveRules().stream()

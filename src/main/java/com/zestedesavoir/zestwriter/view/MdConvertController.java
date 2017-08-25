@@ -3,6 +3,7 @@ package com.zestedesavoir.zestwriter.view;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.ContentNode;
 import com.zestedesavoir.zestwriter.model.Textual;
+import com.zestedesavoir.zestwriter.model.markdown.ZMarkdown;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
@@ -152,7 +153,7 @@ public class MdConvertController {
                 return new Task<String>() {
                     @Override
                     protected String call() throws Exception {
-                        String html = getMdBox().markdownToHtml(sourceText.getText());
+                        String html = ZMarkdown.markdownToHtml(sourceText.getText());
                         if (html != null) {
                             return MainApp.getMdUtils().addHeaderAndFooter(html);
                         } else {
@@ -163,9 +164,7 @@ public class MdConvertController {
             }
         };
 
-        renderTask.setOnFailed(t -> {
-            renderTask.restart();
-        });
+        renderTask.setOnFailed(t -> renderTask.restart());
 
         renderTask.setOnSucceeded(t -> {
             Platform.runLater(() -> {

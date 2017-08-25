@@ -7,6 +7,7 @@ import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
 import com.zestedesavoir.zestwriter.model.Textual;
+import com.zestedesavoir.zestwriter.model.markdown.ZMarkdown;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.FlipTable;
@@ -41,8 +42,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.fxmisc.wellbehaved.event.Nodes;
-import org.python.core.PyString;
-import org.python.util.PythonInterpreter;
 import org.w3c.dom.DOMException;
 
 import java.io.File;
@@ -67,13 +66,7 @@ public class MdTextController {
     public AnchorPane treePane;
     public BooleanPropertyBase currentSaved;
     @Getter
-    @Setter
-    private boolean pythonStarted = false;
-    @Getter
     private MainApp mainApp;
-    @Getter
-    @Setter
-    private PythonInterpreter pyconsole;
     @FXML
     private VBox contentBox;
     @Getter
@@ -105,9 +98,6 @@ public class MdTextController {
 
     @FXML
     private void initialize() {
-        if (MainApp.getConfig().isEditorRenderView())
-            loadConsolePython();
-
         loadFonts();
         editorList.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> mainApp.getMenuController().setIsOnReadingTab(!(newValue.getContent() instanceof SplitPane))
@@ -141,18 +131,6 @@ public class MdTextController {
 
     public BooleanPropertyBase currentSavedProperty() {
         return currentSaved;
-    }
-
-    public void loadConsolePython() {
-        new Thread(() -> {
-            pyconsole = new PythonInterpreter();
-            pyconsole.exec("from markdown import Markdown");
-            pyconsole.exec("from markdown.extensions.zds import ZdsExtension");
-            pyconsole.exec("from smileys_definition import smileys");
-            pyconsole.exec("mk_instance = Markdown(extensions=(ZdsExtension(inline=False, emoticons=smileys, js_support=False, ping_url=None),), inline=False)");
-            log.info("PYTHON STARTED");
-            setPythonStarted(true);
-        }).start();
     }
 
     /**
@@ -306,17 +284,6 @@ public class MdTextController {
             }
         }
         return null;
-    }
-
-    public String markdownToHtml(String chaine) {
-        if (pyconsole != null) {
-            pyconsole.set("text", chaine);
-            pyconsole.exec("render = mk_instance.convert(text)");
-            PyString render = pyconsole.get("render", PyString.class);
-            return render.toString();
-        } else {
-            return null;
-        }
     }
 
     public void createTabExtract(Textual extract) throws IOException {
@@ -845,7 +812,7 @@ public class MdTextController {
 
     @FXML
     private void handleValidateButtonAction(ActionEvent event) {
-        String s = StringEscapeUtils.unescapeHtml4(markdownToHtml(currentSourceText.getText()));
+        String s = StringEscapeUtils.unescapeHtml4(ZMarkdown.markdownToHtml(currentSourceText.getText()));
         if (MdConvertController.corrector == null) {
             MdConvertController.corrector = new Corrector();
         }

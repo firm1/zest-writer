@@ -139,6 +139,7 @@ dependencies {
     compile group: 'com.openhtmltopdf', name: 'openhtmltopdf-pdfbox', version: '0.0.1-RC11'
     compile group: 'com.openhtmltopdf', name: 'openhtmltopdf-jsoup-dom-converter', version: '0.0.1-RC11'
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.8.0'
+    compile group: 'com.vladsch.flexmark', name: 'flexmark', version: '0.26.4'
 }
 
 test {
