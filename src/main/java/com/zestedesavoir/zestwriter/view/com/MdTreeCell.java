@@ -9,7 +9,6 @@ import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.MdTextController;
-import com.zestedesavoir.zestwriter.view.MenuController;
 import com.zestedesavoir.zestwriter.view.dialogs.BaseDialog;
 import com.zestedesavoir.zestwriter.view.task.ComputeIndexService;
 import javafx.scene.chart.*;

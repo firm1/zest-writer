@@ -1,8 +1,6 @@
 package com.zestedesavoir.zestwriter.utils;
 
 import com.zestedesavoir.zestwriter.model.markdown.ZMarkdown;
-import com.zestedesavoir.zestwriter.view.MdTextController;
-import com.zestedesavoir.zestwriter.view.MenuController;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;

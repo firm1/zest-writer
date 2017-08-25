@@ -1,13 +1,11 @@
 package com.zestedesavoir.zestwriter.view.task;
 
-import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.model.markdown.ZMarkdown;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.view.MdTextController;
-import com.zestedesavoir.zestwriter.view.MenuController;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import org.apache.commons.lang3.StringEscapeUtils;

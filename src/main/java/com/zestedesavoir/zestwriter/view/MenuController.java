@@ -11,7 +11,6 @@ import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.com.*;
 import com.zestedesavoir.zestwriter.view.dialogs.*;
 import com.zestedesavoir.zestwriter.view.task.*;
-import edu.berkeley.nlp.lm.io.IOUtils;
 import javafx.beans.property.BooleanPropertyBase;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -49,9 +48,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.fxmisc.richtext.StyleClassedTextArea;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
