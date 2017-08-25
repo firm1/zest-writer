@@ -22,6 +22,9 @@ build/
 doc/build/
 doc/rst/.presentation.rst
 
+#Sonar database backup
+sonar-database
+
 # Misc
 *.log
 venv/
