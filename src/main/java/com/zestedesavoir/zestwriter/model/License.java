@@ -1,6 +1,5 @@
 package com.zestedesavoir.zestwriter.model;
 
-import com.zestedesavoir.zestwriter.utils.Lang;
 import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

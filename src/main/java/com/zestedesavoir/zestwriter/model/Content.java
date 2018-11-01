@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zestedesavoir.zestwriter.MainApp;
+import com.zestedesavoir.zestwriter.model.markdown.ZMarkdown;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
-import com.zestedesavoir.zestwriter.view.MdTextController;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import com.zestedesavoir.zestwriter.view.com.IconFactory;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
@@ -159,11 +159,11 @@ public class Content extends Container implements ContentNode{
         return htmlValue;
     }
 
-    public void saveToHtml(File file, MdTextController index) {
+    public void saveToHtml(File file) {
         try (FileOutputStream fos = new FileOutputStream(file)) {
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF8"));
             String mdValue = exportContentToMarkdown(0, getDepth());
-            String htmlValue = StringEscapeUtils.unescapeHtml4(index.markdownToHtml(mdValue));
+            String htmlValue = StringEscapeUtils.unescapeHtml4(ZMarkdown.markdownToHtml(mdValue));
             htmlValue = normalizeHtml(htmlValue);
             writer.append(MainApp.getMdUtils().addHeaderAndFooterStrict(htmlValue, getTitle()));
             writer.flush();
