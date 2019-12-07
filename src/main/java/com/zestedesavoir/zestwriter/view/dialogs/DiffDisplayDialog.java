@@ -9,20 +9,20 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.log4j.Logger;
 import org.zeroturnaround.zip.commons.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-@Slf4j
 public class DiffDisplayDialog extends BaseDialog<Boolean>{
     String newContent;
     String oldContent;
     String titleContent;
     String titleExtract;
     File file;
+    private final Logger log = Logger.getLogger(getClass());
 
 	public DiffDisplayDialog(File file, String newContent, String titleContent, String titleExtract) {
 		super(Configuration.getBundle().getString("ui.dialog.download.compare.window.title"), Configuration.getBundle().getString("ui.dialog.download.compare.window.header"));

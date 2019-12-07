@@ -4,8 +4,7 @@ import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.utils.Configuration;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
@@ -15,13 +14,13 @@ public class LoginService extends Service<Void>{
 	private String password;
 
 	public LoginService(String username, String password) {
-        logger = LoggerFactory.getLogger(getClass());
+        logger = Logger.getLogger(getClass());
 		this.username = username;
 		this.password = password;
 	}
 
     public LoginService() {
-        logger = LoggerFactory.getLogger(getClass());
+        logger = Logger.getLogger(getClass());
     }
 
     public String getUsername() {

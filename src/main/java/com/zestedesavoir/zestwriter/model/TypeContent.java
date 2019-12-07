@@ -1,17 +1,32 @@
 package com.zestedesavoir.zestwriter.model;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.Objects;
 
-@Getter @Setter
-@AllArgsConstructor
 public class TypeContent {
     private String code;
     private String label;
+
+    public TypeContent(String code, String label) {
+        this.code = code;
+        this.label = label;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
     @Override
     public boolean equals(Object obj) {

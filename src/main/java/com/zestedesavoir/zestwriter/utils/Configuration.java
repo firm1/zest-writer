@@ -2,10 +2,9 @@ package com.zestedesavoir.zestwriter.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
-import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.http.client.fluent.Request;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
@@ -19,7 +18,6 @@ import java.util.stream.Collectors;
 /**
  * Configuration class for Zest Writer App
  */
-@Slf4j
 public class Configuration {
     private Properties conf;
     private Properties actions;
@@ -30,6 +28,7 @@ public class Configuration {
     private LocalDirectoryFactory workspaceFactory;
     private Properties props;
     private static ResourceBundle bundle;
+    private final Logger log = Logger.getLogger(getClass());
 
     /**
      * Class constructor

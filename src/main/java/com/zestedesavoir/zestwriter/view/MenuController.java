@@ -2,15 +2,15 @@ package com.zestedesavoir.zestwriter.view;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
-import com.zestedesavoir.zestwriter.model.*;
+import com.zestedesavoir.zestwriter.model.Constant;
+import com.zestedesavoir.zestwriter.model.Content;
+import com.zestedesavoir.zestwriter.model.MetadataContent;
+import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
-import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.com.*;
 import com.zestedesavoir.zestwriter.view.dialogs.*;
 import com.zestedesavoir.zestwriter.view.task.*;
-import edu.berkeley.nlp.lm.io.IOUtils;
 import javafx.beans.property.BooleanPropertyBase;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -38,21 +38,13 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.fxmisc.richtext.StyleClassedTextArea;
-import org.python.core.PyString;
-import org.python.util.PythonInterpreter;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -60,32 +52,60 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Slf4j
-@NoArgsConstructor
 public class MenuController{
     private final ProgressBar pb = new ProgressBar(0);
-    @Getter
     private final Text labelField = new Text("");
-    @Setter
     private MainApp mainApp;
-    @Getter
     @FXML private MenuItem menuDownload;
     @FXML private MenuItem menuUpload;
     @FXML private MenuItem menuReport;
     @FXML private MenuItem menuLisibility;
-    @Getter
     @FXML private GridPane hBottomBox;
     @FXML private Menu menuExport;
     @FXML private MenuItem menuQuit;
     @FXML private MenuItem menuFindReplace;
     private BooleanPropertyBase isOnReadingTab = new SimpleBooleanProperty(true);
+    private final Logger log = Logger.getLogger(getClass());
+
+    public MenuController() {
+    }
+
+    public Text getLabelField() {
+        return labelField;
+    }
+
+    public MainApp getMainApp() {
+        return mainApp;
+    }
+
+    public void setMainApp(MainApp mainApp) {
+        this.mainApp = mainApp;
+    }
+
+    public MenuItem getMenuDownload() {
+        return menuDownload;
+    }
+
+    public void setMenuDownload(MenuItem menuDownload) {
+        this.menuDownload = menuDownload;
+    }
+
+    public GridPane getHBottomBox() {
+        return hBottomBox;
+    }
+
+    public void setHBottomBox(GridPane hBottomBox) {
+        this.hBottomBox = hBottomBox;
+    }
 
     public static String markdownToHtml(MdTextController index, String chaine) {
+        /*
         PythonInterpreter console = index.getPyconsole();
         console.set("text", chaine);
         console.exec("render = mk_instance.convert(text)");
         PyString render = console.get("render", PyString.class);
-        return render.toString();
+        return render.toString();*/
+        return "";
     }
 
     public BooleanPropertyBase isOnReadingTabProperty() {
@@ -134,6 +154,7 @@ public class MenuController{
     }
 
     @FXML private void handleFleshButtonAction(ActionEvent event){
+        /*
         Function<Textual, Double> calFlesh = (Textual ch) -> {
             String htmlText = StringEscapeUtils.unescapeHtml4(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
             String plainText = Corrector.htmlToTextWithoutCode(htmlText);
@@ -145,6 +166,7 @@ public class MenuController{
             }
         };
         ComputeIndexService computeIndexService = new ComputeIndexService(calFlesh, (Container) mainApp.getIndex().getSummary().getRoot().getValue());
+
         hBottomBox.getChildren().clear();
         hBottomBox.getChildren().addAll(labelField);
         labelField.textProperty().bind(computeIndexService.messageProperty());
@@ -155,9 +177,11 @@ public class MenuController{
             hBottomBox.getChildren().clear();
         });
         computeIndexService.start();
+         */
     }
 
     @FXML private void handleGunningButtonAction(ActionEvent event){
+        /*
         Function<Textual, Double> calGuning = (Textual ch) -> {
             String htmlText = StringEscapeUtils.unescapeHtml4(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
             String plainText = Corrector.htmlToTextWithoutCode(htmlText);
@@ -179,6 +203,7 @@ public class MenuController{
             hBottomBox.getChildren().clear();
         });
         computeIndexService.start();
+         */
     }
 
     @FXML private void handleReportWithoutTypoButtonAction(ActionEvent event){
@@ -197,6 +222,7 @@ public class MenuController{
         expContent.add(textArea, 0, 1);
 
         hBottomBox.getChildren().addAll(labelField);
+        /*
         CorrectionService correctTask = new CorrectionService(mainApp.getIndex());
         labelField.textProperty().bind(correctTask.messageProperty());
         textArea.textProperty().bind(correctTask.valueProperty());
@@ -219,7 +245,7 @@ public class MenuController{
             alert.showAndWait();
             hBottomBox.getChildren().clear();
         });
-        correctTask.start();
+        correctTask.start();*/
     }
 
     @FXML private void handleNewButtonAction(ActionEvent event){

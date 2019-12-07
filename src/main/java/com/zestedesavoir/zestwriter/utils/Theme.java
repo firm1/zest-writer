@@ -1,18 +1,10 @@
 package com.zestedesavoir.zestwriter.utils;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
-@Getter
-@Setter
 public class Theme {
     private static List<Theme> themeAvailable = Arrays.asList(
             new Theme("dark.css", Configuration.getBundle().getString("ui.options.display.theme.dark")),
@@ -27,6 +19,48 @@ public class Theme {
     private int startMonth = 0;
     private int endDay = 0;
     private int endMonth = 0;
+
+    public Theme(String filename, String label, int startDay, int startMonth, int endDay, int endMonth) {
+        this.filename = filename;
+        this.label = label;
+        this.startDay = startDay;
+        this.startMonth = startMonth;
+        this.endDay = endDay;
+        this.endMonth = endMonth;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public int getStartDay() {
+        return startDay;
+    }
+
+    public int getStartMonth() {
+        return startMonth;
+    }
+
+    public int getEndDay() {
+        return endDay;
+    }
+
+
+    public int getEndMonth() {
+        return endMonth;
+    }
+
+    public void setEndMonth(int endMonth) {
+        this.endMonth = endMonth;
+    }
 
     public Theme(String filename, String label) {
         this.filename = filename;

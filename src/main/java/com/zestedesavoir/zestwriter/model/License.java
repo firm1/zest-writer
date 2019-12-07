@@ -1,19 +1,33 @@
 package com.zestedesavoir.zestwriter.model;
 
-import com.zestedesavoir.zestwriter.utils.Lang;
 import com.zestedesavoir.zestwriter.view.dialogs.EditContentDialog;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.Optional;
 
-@Getter
-@Setter
-@AllArgsConstructor
 public class License {
     private String code;
     private String label;
+
+    public License(String code, String label) {
+        this.code = code;
+        this.label = label;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
     @Override
     public boolean equals(Object obj) {

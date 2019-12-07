@@ -1,17 +1,12 @@
 plugins {
-    id "java"
     id "jacoco"
     id "com.github.kt3k.coveralls" version "2.6.3"
-    id "com.eriwen.gradle.css" version "2.12.0"
-    id "org.sonarqube" version "2.2"
-    id 'io.franzbecker.gradle-lombok' version '1.8'
+    id "org.openjfx.javafxplugin" version "0.0.8"
 }
 
 if(JavaVersion.current() < JavaVersion.VERSION_1_8){
     throw new GradleException("This build must be run with java 8 or higher. Current version is " + JavaVersion.current() + ".\nYou should install jdk >= 1.8 from http://www.oracle.com/technetwork/java/javase/downloads and/or check your JAVA_HOME.")
 }
-
-apply from: "http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.plugin"
 
 processResources {
     filesMatching('config.properties') {
@@ -19,126 +14,58 @@ processResources {
     }
 }
 
+apply plugin: 'java'
+
+sourceCompatibility = 1.9
+
 compileJava.options.encoding = 'UTF-8'
 
 // Configures plugin
 javafx {
-    // Application name and ID presented by target OS
-    appID 'ZestWriter'
-    appName 'ZestWriter'
-    mainClass 'com.zestedesavoir.zestwriter.MainApp'
-
-    // JVM arguments, system properties, application command line arguments
-    jvmArgs = ['-XX:+AggressiveOpts', '-XX:CompileThreshold=1']
-    systemProperties = ['prism.disableRegionCaching': 'true']
-    arguments = []
-
-    // informations
-    category = "Office"
-    copyright = "Copyright (c) 2016 - 2017 Zest Writer"
-    description = "This is a Markdown Editor for Zeste de Savoir contents"
-    licenseType = "GPLv3"
-    vendor = "firm1"
-    installSystemWide = false
-    menu = false
-
-    // app icons
-    icons {
-        shortcut = ["src/main/resources/logo/logo-16.png", "src/main/resources/logo/logo-32.png", "src/main/resources/logo/logo-128.png", "src/main/resources/logo/logo-256.png", "src/main/resources/logo/logo-16@2x.png", "src/main/resources/logo/logo-32@2x.png", "src/main/resources/logo/logo-128@2x.png"]
-        volume = 'src/main/resources/logo/logo-128.png'
-        setup = 'src/main/resources/logo/logo-128.png'
-    }
-
-    // Keystore credentials for signing JAR
-    // Generate key: keytool -genkey -alias release -keyalg RSA -keystore keystore.jks -keysize 2048
-
-    releaseKey {
-        alias = "release"
-        keyStore = file('keys/keystore.jks')
-    }
-    signingMode 'release'
+    version = '13'
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.web']
 }
 
 repositories {
     mavenLocal()
     mavenCentral()
     jcenter()
-    maven {
-        url "https://dl.bintray.com/zest-writer/maven"
-    }
 }
 
-sourceSets {
-    main {
-        java {
-            srcDir 'src/main/java'
-        }
-        resources {
-            srcDir 'src/main/resources'
-            exclude '*.pyc'
-        }
-    }
-    test {
-        java {
-            srcDir 'src/test/java'
-        }
-        resources {
-            srcDir 'src/test/resources'
-            exclude 'src/test/resources/log4j.properties'
-        }
-    }
-}
 
-task fatJar(type: Jar) {
-    manifest {
-        attributes 'Implementation-Title': 'Gradle Jar File',
-                'Implementation-Version': version,
-                'Main-Class': 'com.zestedesavoir.zestwriter.MainApp'
-    }
-    baseName = project.name + '-all'
-    zip64 = true
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-}
+//minifyCss {
+//    source = "${sourceSets.main.resources.srcDirs.first()}/com/zestedesavoir/zestwriter/assets/static/css/content.css"
+//    dest = "${sourceSets.main.output.resourcesDir}/com/zestedesavoir/zestwriter/assets/static/css/content.css"
+//    yuicompressor { // Optional
+//        lineBreakPos = -1
+//    }
+//}
 
-minifyCss {
-    source = "${sourceSets.main.resources.srcDirs.first()}/com/zestedesavoir/zestwriter/assets/static/css/content.css"
-    dest = "${sourceSets.main.output.resourcesDir}/com/zestedesavoir/zestwriter/assets/static/css/content.css"
-    yuicompressor { // Optional
-        lineBreakPos = -1
-    }
-}
+//tasks.cssToBin {
+//    dependsOn.minifyCss
+//}
 
-tasks.cssToBin.dependsOn tasks.minifyCss
-tasks.minifyCss.dependsOn tasks.processResources
-
-lombok { // optional: values below are the defaults
-    version = "1.16.16"
-}
+//tasks minifyCss {
+//    dependsOn 'processResources'
+//}
 
 dependencies {
-    testCompile 'junit:junit:4.12'
-    compile group: 'org.languagetool', name: 'language-fr', version: '3.7'
-    compile group: 'org.apache.httpcomponents', name: 'fluent-hc', version: '4.5.3'
-    compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.3'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.8.1'
-    compile group: 'de.julielab', name: 'aliasi-lingpipe', version: '4.1.0'
-    compile group: 'org.python', name: 'jython-standalone', version: '2.7.0'
-    compile group: 'org.jsoup', name: 'jsoup', version: '1.10.2'
-    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
-    compile group: 'de.jensd', name: 'fontawesomefx-commons', version: '8.11'
-    compile group: 'de.jensd', name: 'fontawesomefx-materialdesignfont', version: '1.4.57-2'
-    compile group: 'org.zeroturnaround', name: 'zt-zip', version: '1.11'
-    compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.12'
-    compile group: 'org.fxmisc.richtext', name: 'richtextfx', version: '0.7-M5'
-    compile group: 'eu.firm1.zmarkdown', name: 'java-zmarkdown', version: '2.6.0.17'
-    compile group: 'com.fasterxml', name: 'jackson-module-json-org', version: '0.9.1'
-    compile group: 'commons-io', name: 'commons-io', version: '2.5'
-    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.16'
-    compile group: 'com.openhtmltopdf', name: 'openhtmltopdf-core', version: '0.0.1-RC11'
-    compile group: 'com.openhtmltopdf', name: 'openhtmltopdf-pdfbox', version: '0.0.1-RC11'
-    compile group: 'com.openhtmltopdf', name: 'openhtmltopdf-jsoup-dom-converter', version: '0.0.1-RC11'
-    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.8.0'
+    testImplementation 'junit:junit:4.13-rc-2'
+    implementation group: 'org.apache.httpcomponents', name: 'fluent-hc', version: '4.5.3'
+    implementation group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.3'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.1'
+    implementation group: 'de.julielab', name: 'aliasi-lingpipe', version: '4.1.2-JL1.0'
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
+    implementation group: 'log4j', name: 'log4j', version: '1.2.17'
+    implementation group: 'de.jensd', name: 'fontawesomefx-commons', version: '9.1.2'
+    implementation group: 'de.jensd', name: 'fontawesomefx-materialdesignfont', version: '2.0.26-9.1.2'
+    implementation group: 'org.zeroturnaround', name: 'zt-zip', version: '1.11'
+    implementation group: 'org.controlsfx', name: 'controlsfx', version: '11.0.0'
+    implementation group: 'org.fxmisc.richtext', name: 'richtextfx', version: '0.10.3'
+    implementation group: 'com.fasterxml', name: 'jackson-module-json-org', version: '0.9.1'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.5'
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
 }
 
 test {
@@ -158,25 +85,20 @@ jacocoTestReport {
         xml.enabled = true
         html.enabled = true
     }
-    afterEvaluate {
-        classDirectories = files(classDirectories.files.collect {
-            fileTree(dir: it,
-                    exclude: ['**/view/**',
-                              '**/contents/**',
-                              '**/utils/api/**',
-                              '**/MainApp**',
-                              '**/officialContents/**',
-                              '**/task/**'])
-        })
-    }
+//    afterEvaluate {
+//        classDirectories = files(classDirectories.files.collect {
+//            fileTree(dir: it,
+//                    exclude: ['**/view/**',
+//                              '**/contents/**',
+//                              '**/utils/api/**',
+//                              '**/MainApp**',
+//                              '**/officialContents/**',
+//                              '**/task/**'])
+//        })
+//    }
 }
 
 tasks.check.dependsOn jacocoTestReport
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.9'
-}
-apply plugin: 'java'
 
 task doc (type:Exec) {
     workingDir './doc'

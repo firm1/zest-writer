@@ -1,0 +1,30 @@
+open module zest.writer.main {
+    requires javafx.controls;
+    requires javafx.fxml;
+    requires javafx.web;
+    requires com.fasterxml.jackson.databind;
+    requires de.jensd.fx.glyphs.materialdesignicons;
+    requires richtextfx;
+    requires wellbehavedfx;
+    requires de.jensd.fx.glyphs.commons;
+    requires commons.io;
+    requires zt.zip;
+    requires okhttp3;
+    requires fluent.hc;
+    requires httpclient;
+    requires commons.codec;
+    requires httpcore;
+    requires flowless;
+    requires java.desktop;
+    requires jdk.jsobject;
+    requires httpmime;
+    requires org.jsoup;
+    requires aliasi.lingpipe;
+    requires org.controlsfx.controls;
+    requires org.apache.commons.lang3;
+    requires undofx;
+    requires reactfx;
+    requires log4j;
+    exports com.zestedesavoir.zestwriter;
+    exports com.zestedesavoir.zestwriter.view;
+}

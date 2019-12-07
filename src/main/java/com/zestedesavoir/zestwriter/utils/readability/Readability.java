@@ -1,14 +1,11 @@
 package com.zestedesavoir.zestwriter.utils.readability;
 
-import lombok.Getter;
-
 /**
  * Implements various readability indexes
  * http://code.google.com/p/panos-ipeirotis/source/browse/trunk/src/com/ipeirotis/readability/?r=2
  * @author Panos Ipeirotis
  *
  */
-@Getter
 public class Readability {
 
     private static SentenceExtractor se = new SentenceExtractor();
@@ -26,6 +23,30 @@ public class Readability {
         this.words = getNumberOfWords(text);
         this.syllables = getNumberOfSyllables(text);
         this.characters = getNumberOfCharacters(text);
+    }
+
+    public static SentenceExtractor getSe() {
+        return se;
+    }
+
+    public Integer getSentences() {
+        return sentences;
+    }
+
+    public Integer getComplex() {
+        return complex;
+    }
+
+    public Integer getWords() {
+        return words;
+    }
+
+    public Integer getSyllables() {
+        return syllables;
+    }
+
+    public Integer getCharacters() {
+        return characters;
     }
 
     /**

@@ -4,7 +4,6 @@ import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.ContentNode;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory;
 import javafx.application.Platform;
@@ -25,13 +24,11 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.web.WebView;
-import lombok.Getter;
 import netscape.javascript.JSException;
+import org.apache.log4j.Logger;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleClassedTextArea;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -39,8 +36,8 @@ import java.util.regex.Pattern;
 public class MdConvertController {
     public static final Pattern recognizeNumber = Pattern.compile("^(\\s*)([\\d][\\.]) (\\s*)(.*)");
     public static final Pattern recognizeBullet = Pattern.compile("^(\\s*)([*|-]) (\\s*)(.*)");
-    public static Corrector corrector;
-    private final Logger logger = LoggerFactory.getLogger(MdConvertController.class);
+    //public static Corrector corrector;
+    private final Logger logger = Logger.getLogger(MdConvertController.class);
     private MdTextController mdBox;
     private Service<String> renderTask;
     private int xRenderPosition = 0;
@@ -49,7 +46,6 @@ public class MdConvertController {
     private StringProperty countWords = new SimpleStringProperty();
     private StringProperty countTimes = new SimpleStringProperty();
     private BooleanPropertyBase needRefresh = new SimpleBooleanProperty(false);
-    @Getter
     private BooleanPropertyBase saved  = new SimpleBooleanProperty(true);
     @FXML private WebView renderView;
     @FXML private SplitPane splitPane;
@@ -77,7 +73,7 @@ public class MdConvertController {
             initStats();
             sourceText.getUndoManager().forgetHistory();
             sourceText.richChanges()
-                    .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
+                    //.filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
                     .subscribe(change -> {
                         sourceText.getUndoManager().mark();
                         getMdBox().setCurrentSaved(false);
@@ -104,6 +100,10 @@ public class MdConvertController {
                 initStats();
             });
         });
+    }
+
+    public BooleanPropertyBase getSaved() {
+        return saved;
     }
 
     private void initCurrentComponents(Textual extract) {

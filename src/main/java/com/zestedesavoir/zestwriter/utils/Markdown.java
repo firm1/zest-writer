@@ -1,7 +1,7 @@
 package com.zestedesavoir.zestwriter.utils;
 
 import com.zestedesavoir.zestwriter.MainApp;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.log4j.Logger;
 import org.zeroturnaround.zip.commons.IOUtils;
 
 import java.io.IOException;
@@ -9,12 +9,12 @@ import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Slf4j
 public class Markdown {
     private static String CONTENT_KEYWORD_BEFORE;
     private static String CONTENT_KEYWORD_AFTER;
     private static String CONTENT_STRICT_BEFORE;
     private static String CONTENT_STRICT_AFTER;
+    private final Logger log = Logger.getLogger(getClass());
 
     public Markdown() {
         try(InputStream is = MainApp.class.getResourceAsStream("assets/static/html/template-begin.html"))  {

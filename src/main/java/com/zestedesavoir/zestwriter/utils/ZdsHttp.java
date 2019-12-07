@@ -3,7 +3,6 @@ package com.zestedesavoir.zestwriter.utils;
 import com.zestedesavoir.zestwriter.model.Constant;
 import com.zestedesavoir.zestwriter.model.MetadataContent;
 import javafx.util.Pair;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -33,6 +32,7 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -58,7 +58,6 @@ import java.util.zip.ZipInputStream;
 /**
  * Java Api class for exchange with ZdS
  */
-@Slf4j
 public class ZdsHttp {
     private String idUser;
     private String galleryId;
@@ -75,6 +74,7 @@ public class ZdsHttp {
     private HttpClientContext context;
     private String localSlug;
     private Configuration config;
+    private static final Logger log = Logger.getLogger(ZdsHttp.class);
 
     /**
      * ZdsHttp Constructor with configuration object

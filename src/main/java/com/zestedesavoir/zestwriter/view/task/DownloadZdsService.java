@@ -6,8 +6,7 @@ import com.zestedesavoir.zestwriter.utils.Configuration;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +21,7 @@ public class DownloadZdsService extends Service<Content>{
         this.url = url;
         this.offlineFolder = offlineFolder;
         this.onlineFolder = onlineFolder;
-        this.logger = LoggerFactory.getLogger(getClass ());
+        this.logger = Logger.getLogger(getClass ());
     }
 
     @Override

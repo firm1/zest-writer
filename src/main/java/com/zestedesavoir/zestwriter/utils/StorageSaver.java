@@ -5,8 +5,7 @@
  */
 package com.zestedesavoir.zestwriter.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 
@@ -20,7 +19,7 @@ public interface StorageSaver {
     String getBaseDirectory();
 
     static void deleteFile(File file) {
-        Logger logger = LoggerFactory.getLogger(StorageSaver.class);
+        Logger logger = Logger.getLogger(StorageSaver.class);
 
         if(file.isDirectory()) {
             if(file.list().length==0) {

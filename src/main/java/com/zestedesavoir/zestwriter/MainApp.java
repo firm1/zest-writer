@@ -18,26 +18,20 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
-import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import lombok.Getter;
-import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
@@ -45,7 +39,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 
 public class MainApp extends Application{
     private static Configuration config;
@@ -55,18 +48,12 @@ public class MainApp extends Application{
     private static String[] args;
     private static File defaultHome;
     private static Logger logger;
-    @Getter @Setter
     private Scene scene;
-    @Getter @Setter
     private BorderPane rootLayout;
-    @Getter @Setter
     private ObservableList<Textual> extracts = FXCollections.observableArrayList();
     private ObjectProperty<Content> content = new SimpleObjectProperty<>();
-    @Getter @Setter
     private MdTextController index;
-    @Getter
     private StringBuilder key = new StringBuilder();
-    @Getter @Setter
     private MenuController menuController;
 
     /**
@@ -76,7 +63,7 @@ public class MainApp extends Application{
         super();
 
         initEnvVariable();
-        logger = LoggerFactory.getLogger(MainApp.class);
+        logger = Logger.getLogger(MainApp.class);
 
         logger.info("Version Java de l'utilisateur: " + System.getProperty("java.version"));
         logger.info("Architecture du système utilisateur: " + System.getProperty("os.arch"));
@@ -105,6 +92,50 @@ public class MainApp extends Application{
     public static void main(String[] args) {
         MainApp.args  = args;
         launch(args);
+    }
+
+    public Scene getScene() {
+        return scene;
+    }
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
+    }
+
+    public BorderPane getRootLayout() {
+        return rootLayout;
+    }
+
+    public void setRootLayout(BorderPane rootLayout) {
+        this.rootLayout = rootLayout;
+    }
+
+    public ObservableList<Textual> getExtracts() {
+        return extracts;
+    }
+
+    public void setExtracts(ObservableList<Textual> extracts) {
+        this.extracts = extracts;
+    }
+
+    public MdTextController getIndex() {
+        return index;
+    }
+
+    public void setIndex(MdTextController index) {
+        this.index = index;
+    }
+
+    public StringBuilder getKey() {
+        return key;
+    }
+
+    public MenuController getMenuController() {
+        return menuController;
+    }
+
+    public void setMenuController(MenuController menuController) {
+        this.menuController = menuController;
     }
 
     public static Configuration getConfig() {

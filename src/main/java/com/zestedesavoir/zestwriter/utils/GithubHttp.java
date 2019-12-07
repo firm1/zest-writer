@@ -2,7 +2,6 @@ package com.zestedesavoir.zestwriter.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.model.*;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Executor;
@@ -11,6 +10,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.LaxRedirectStrategy;
+import org.apache.log4j.Logger;
 import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
@@ -26,8 +26,8 @@ import java.util.Map;
 import static com.zestedesavoir.zestwriter.utils.ZdsHttp.toSlug;
 import static com.zestedesavoir.zestwriter.view.com.FunctionTreeFactory.generateMetadataAttributes;
 
-@Slf4j
 public class GithubHttp {
+    private static final Logger log = Logger.getLogger(GithubHttp.class);
 
     private GithubHttp() {
     }

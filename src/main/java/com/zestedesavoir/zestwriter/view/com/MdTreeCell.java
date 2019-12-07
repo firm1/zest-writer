@@ -4,20 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.*;
 import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.ZdsHttp;
 import com.zestedesavoir.zestwriter.utils.readability.Readability;
 import com.zestedesavoir.zestwriter.view.MdTextController;
-import com.zestedesavoir.zestwriter.view.MenuController;
 import com.zestedesavoir.zestwriter.view.dialogs.BaseDialog;
-import com.zestedesavoir.zestwriter.view.task.ComputeIndexService;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +37,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         if(index.getMainApp().contentProperty().isNotNull().get()) {
             this.baseFilePath = this.content.getBasePath();
         }
-		this.logger = LoggerFactory.getLogger(getClass());
+		this.logger = Logger.getLogger(getClass());
 	}
 
     private void closeTab(Textual closedTextual) {
@@ -387,6 +382,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
         menuStatReadability.setOnAction(t -> {
             logger.debug("Tentative de calcul des statistiques de lisiblité");
+            /*
             Container container = (Container) getItem();
             Function<Textual, Double> performGuning = (Textual ch) -> {
                 String htmlText = StringEscapeUtils.unescapeHtml4(MenuController.markdownToHtml(index, ch.readMarkdown()));
@@ -409,6 +405,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 }
             };
 
+
             ComputeIndexService computeGuningService = new ComputeIndexService(performGuning, container);
             index.getMainApp().getMenuController().getHBottomBox().getChildren().clear();
             index.getMainApp().getMenuController().getHBottomBox().getChildren().addAll(index.getMainApp().getMenuController().getLabelField());
@@ -424,10 +421,13 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             });
             computeGuningService.setOnFailed(g -> index.getMainApp().getMenuController().getHBottomBox().getChildren().clear());
             computeGuningService.start();
+
+             */
         });
 
         menuStatMistakes.setOnAction(t -> {
             logger.debug("Tentative de calcul du nombre de fautes");
+            /*
             Container container = (Container) getItem();
 
             Corrector corrector = new Corrector();
@@ -452,6 +452,8 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             });
             computeTypoService.setOnFailed(g -> index.getMainApp().getMenuController().getHBottomBox().getChildren().clear());
             computeTypoService.start();
+
+             */
         });
     }
 

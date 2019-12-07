@@ -7,8 +7,7 @@ import com.zestedesavoir.zestwriter.utils.Configuration;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.util.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
@@ -23,7 +22,7 @@ public class UploadContentService extends Service<Void>{
 	public UploadContentService(Optional<Pair<String, MetadataContent>> result, Content content) {
 		this.result = result;
         this.content = content;
-		logger = LoggerFactory.getLogger(getClass());
+		logger = Logger.getLogger(getClass());
 	}
 
 	@Override

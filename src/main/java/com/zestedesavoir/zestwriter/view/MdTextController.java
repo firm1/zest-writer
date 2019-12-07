@@ -1,14 +1,11 @@
 package com.zestedesavoir.zestwriter.view;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.javafx.scene.control.behavior.TabPaneBehavior;
-import com.sun.javafx.scene.control.skin.TabPaneSkin;
 import com.zestedesavoir.zestwriter.MainApp;
 import com.zestedesavoir.zestwriter.model.Content;
 import com.zestedesavoir.zestwriter.model.ContentNode;
 import com.zestedesavoir.zestwriter.model.Textual;
 import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.utils.Corrector;
 import com.zestedesavoir.zestwriter.utils.FlipTable;
 import com.zestedesavoir.zestwriter.view.com.*;
 import com.zestedesavoir.zestwriter.view.dialogs.ImageInputDialog;
@@ -28,22 +25,14 @@ import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Pair;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.log4j.Logger;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.fxmisc.wellbehaved.event.Nodes;
-import org.python.core.PyString;
-import org.python.util.PythonInterpreter;
-import org.w3c.dom.DOMException;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,48 +49,105 @@ import static org.fxmisc.wellbehaved.event.EventPattern.keyPressed;
 import static org.fxmisc.wellbehaved.event.InputMap.consume;
 import static org.fxmisc.wellbehaved.event.InputMap.sequence;
 
-@Slf4j
-@NoArgsConstructor
 public class MdTextController {
     @FXML
     public AnchorPane treePane;
     public BooleanPropertyBase currentSaved;
-    @Getter
-    @Setter
     private boolean pythonStarted = false;
-    @Getter
     private MainApp mainApp;
-    @Getter
-    @Setter
-    private PythonInterpreter pyconsole;
+//    @Getter
+//    @Setter
+//    private PythonInterpreter pyconsole;
     @FXML
     private VBox contentBox;
-    @Getter
     @FXML
     private TabPane editorList;
     @FXML
     private Tab home;
-    @Getter
     @FXML
     private TreeView<ContentNode> summary;
-    @Getter
     @FXML
     private SplitPane splitPane;
-    @Getter
     @FXML
     private Button saveButton;
     @FXML
     private ToolBar editorToolBar;
-    @Getter
-    @Setter
     private WebView currentRenderView;
-    @Getter
-    @Setter
     private BorderPane currentBoxRender;
-    @Getter
-    @Setter
     private StyleClassedTextArea currentSourceText;
     private ObjectPropertyBase<Textual> currentExtract = new SimpleObjectProperty<>(null);
+    private final Logger log = Logger.getLogger(getClass());
+
+    public MdTextController() {
+    }
+
+    public boolean isPythonStarted() {
+        return pythonStarted;
+    }
+
+    public void setPythonStarted(boolean pythonStarted) {
+        this.pythonStarted = pythonStarted;
+    }
+
+    public TabPane getEditorList() {
+        return editorList;
+    }
+
+    public void setEditorList(TabPane editorList) {
+        this.editorList = editorList;
+    }
+
+    public TreeView<ContentNode> getSummary() {
+        return summary;
+    }
+
+    public void setSummary(TreeView<ContentNode> summary) {
+        this.summary = summary;
+    }
+
+    public MainApp getMainApp() {
+        return mainApp;
+    }
+
+    public SplitPane getSplitPane() {
+        return splitPane;
+    }
+
+    public void setSplitPane(SplitPane splitPane) {
+        this.splitPane = splitPane;
+    }
+
+    public Button getSaveButton() {
+        return saveButton;
+    }
+
+    public void setSaveButton(Button saveButton) {
+        this.saveButton = saveButton;
+    }
+
+    public WebView getCurrentRenderView() {
+        return currentRenderView;
+    }
+
+    public void setCurrentRenderView(WebView currentRenderView) {
+        this.currentRenderView = currentRenderView;
+    }
+
+    public BorderPane getCurrentBoxRender() {
+        return currentBoxRender;
+    }
+
+    public void setCurrentBoxRender(BorderPane currentBoxRender) {
+        this.currentBoxRender = currentBoxRender;
+    }
+
+    public StyleClassedTextArea getCurrentSourceText() {
+        return currentSourceText;
+    }
+
+    public void setCurrentSourceText(StyleClassedTextArea currentSourceText) {
+        this.currentSourceText = currentSourceText;
+    }
 
     @FXML
     private void initialize() {
@@ -145,11 +191,11 @@ public class MdTextController {
 
     public void loadConsolePython() {
         new Thread(() -> {
-            pyconsole = new PythonInterpreter();
-            pyconsole.exec("from markdown import Markdown");
-            pyconsole.exec("from markdown.extensions.zds import ZdsExtension");
-            pyconsole.exec("from smileys_definition import smileys");
-            pyconsole.exec("mk_instance = Markdown(extensions=(ZdsExtension(inline=False, emoticons=smileys, js_support=False, ping_url=None),), inline=False)");
+            //pyconsole = new PythonInterpreter();
+            //pyconsole.exec("from markdown import Markdown");
+            //pyconsole.exec("from markdown.extensions.zds import ZdsExtension");
+            //pyconsole.exec("from smileys_definition import smileys");
+            //pyconsole.exec("mk_instance = Markdown(extensions=(ZdsExtension(inline=False, emoticons=smileys, js_support=False, ping_url=None),), inline=False)");
             log.info("PYTHON STARTED");
             setPythonStarted(true);
         }).start();
@@ -266,22 +312,19 @@ public class MdTextController {
         int size = editorList.getTabs().size();
 
         if (size > 0) {
-            TabPaneSkin skin = (TabPaneSkin) editorList.getSkin();
-            TabPaneBehavior tabPaneBehavior = skin.getBehavior();
-
             int selectedIndex = editorList.getSelectionModel().getSelectedIndex();
 
             if (right) {
                 if (selectedIndex < size - 1) {
-                    tabPaneBehavior.selectNextTab();
+                    editorList.getSelectionModel().selectNext();
                 } else {
-                    tabPaneBehavior.selectTab(editorList.getTabs().get(0));
+                    editorList.getSelectionModel().select(editorList.getTabs().get(0));
                 }
             } else {
                 if (selectedIndex > 0) {
-                    tabPaneBehavior.selectPreviousTab();
+                    editorList.getSelectionModel().selectPrevious();
                 } else {
-                    tabPaneBehavior.selectTab(editorList.getTabs().get(size - 1));
+                    editorList.getSelectionModel().select(editorList.getTabs().get(size - 1));
                 }
             }
         }
@@ -309,14 +352,16 @@ public class MdTextController {
     }
 
     public String markdownToHtml(String chaine) {
-        if (pyconsole != null) {
-            pyconsole.set("text", chaine);
-            pyconsole.exec("render = mk_instance.convert(text)");
-            PyString render = pyconsole.get("render", PyString.class);
-            return render.toString();
-        } else {
-            return null;
-        }
+        // TODO : uncomment
+        //if (pyconsole != null) {
+        //    pyconsole.set("text", chaine);
+        //    pyconsole.exec("render = mk_instance.convert(text)");
+        //    PyString render = pyconsole.get("render", PyString.class);
+        //    return render.toString();
+        //} else {
+        //    return null;
+        //}
+        return null;
     }
 
     public void createTabExtract(Textual extract) throws IOException {
@@ -410,9 +455,7 @@ public class MdTextController {
                                 log.error("Problème lors de la création de l'extrait", e);
                             }
                         } else {
-                            TabPaneSkin skin = (TabPaneSkin) editorList.getSkin();
-                            TabPaneBehavior tabPaneBehavior = skin.getBehavior();
-                            tabPaneBehavior.selectTab(FunctionTreeFactory.getTabFromTextual(editorList, myTextual));
+                            editorList.getSelectionModel().select(FunctionTreeFactory.getTabFromTextual(editorList, myTextual));
                         }
                     }
                 }
@@ -845,6 +888,8 @@ public class MdTextController {
 
     @FXML
     private void handleValidateButtonAction(ActionEvent event) {
+        /*
+        TODO : uncomment this
         String s = StringEscapeUtils.unescapeHtml4(markdownToHtml(currentSourceText.getText()));
         if (MdConvertController.corrector == null) {
             MdConvertController.corrector = new Corrector();
@@ -857,7 +902,7 @@ public class MdTextController {
             webEngine.setUserStyleSheetLocation(MainApp.class.getResource("assets/static/css/content.css").toExternalForm());
         } catch (DOMException e) {
             log.error(e.getMessage(), e);
-        }
+        }*/
     }
 
     @FXML

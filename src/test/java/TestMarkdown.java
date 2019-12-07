@@ -3,8 +3,6 @@ import org.junit.Test;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 
-import static org.junit.Assert.assertEquals;
-
 public class TestMarkdown {
 
     PythonInterpreter pyconsole;

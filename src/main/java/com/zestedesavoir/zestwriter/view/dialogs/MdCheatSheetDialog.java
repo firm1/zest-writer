@@ -6,8 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.web.WebView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.zeroturnaround.zip.commons.IOUtils;
 
 import java.io.IOException;
@@ -23,7 +22,7 @@ public class MdCheatSheetDialog {
     private final static String TITLE_REGEX = "(?m)^<!--(.*)-->$";
 
     public MdCheatSheetDialog() {
-        logger = LoggerFactory.getLogger(getClass ());
+        logger = Logger.getLogger(getClass ());
     }
 
 
