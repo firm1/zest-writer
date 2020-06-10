@@ -1,7 +1,5 @@
 import org.junit.Before;
 import org.junit.Test;
-import org.python.core.PyString;
-import org.python.util.PythonInterpreter;
 
 public class TestMarkdown {
 

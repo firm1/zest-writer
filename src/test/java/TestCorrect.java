@@ -1,8 +1,8 @@
-import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.utils.Corrector;
+import com.zds.zw.utils.Configuration;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.Before;
 import org.junit.Test;
+import utils.Corrector;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;

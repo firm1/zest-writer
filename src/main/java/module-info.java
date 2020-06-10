@@ -1,10 +1,11 @@
 open module zest.writer.main {
+    requires java.base;
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
     requires com.fasterxml.jackson.databind;
     requires de.jensd.fx.glyphs.materialdesignicons;
-    requires richtextfx;
+    requires org.fxmisc.richtext;
     requires wellbehavedfx;
     requires de.jensd.fx.glyphs.commons;
     requires commons.io;
@@ -24,7 +25,10 @@ open module zest.writer.main {
     requires org.apache.commons.lang3;
     requires undofx;
     requires reactfx;
-    requires log4j;
-    exports com.zestedesavoir.zestwriter;
-    exports com.zestedesavoir.zestwriter.view;
+    requires org.graalvm.sdk;
+    requires org.graalvm.js;
+    requires slf4j.api;
+    requires org.apache.logging.log4j;
+
+    exports com.zds.zw;
 }

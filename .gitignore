@@ -25,3 +25,6 @@ doc/rst/.presentation.rst
 # Misc
 *.log
 venv/
+
+# Build scripts
+scripts/zmarkdown/*

@@ -1,4 +1,4 @@
-import com.zestedesavoir.zestwriter.utils.Lang;
+import com.zds.zw.utils.Lang;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class TestLang {
         List<Lang> langs = Lang.getLangAvailable();
         List<Set<String>> keys = new ArrayList<>();
         for(Lang lang:langs) {
-            ResourceBundle bundle = ResourceBundle.getBundle("locales/ui", lang.getLocale());
+            ResourceBundle bundle = ResourceBundle.getBundle("com/zds/zw/locales/ui", lang.getLocale());
             keys.add(bundle.keySet());
         }
         Set<String> firstLang = keys.get(0);

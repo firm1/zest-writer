@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.web.WebView?>
+<Tab xmlns:fx="http://javafx.com/fxml/1" fx:id="tab" xmlns="http://javafx.com/javafx/8.0.40"
+     fx:controller="com.zds.zw.view.MdConvertController">
+<SplitPane fx:id="splitPane" dividerPositions="0.5">
+    <BorderPane fx:id="container" >
+    </BorderPane>
+    <BorderPane fx:id="boxRender" prefHeight="200.0" prefWidth="200.0">
+        <center>
+          <WebView fx:id="renderView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER"/>
+        </center>
+    </BorderPane>
+</SplitPane>
+</Tab>

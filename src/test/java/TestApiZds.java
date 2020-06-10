@@ -1,6 +1,6 @@
-import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.utils.StorageSaver;
-import com.zestedesavoir.zestwriter.utils.ZdsHttp;
+import com.zds.zw.utils.Configuration;
+import com.zds.zw.utils.StorageSaver;
+import com.zds.zw.utils.ZdsHttp;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

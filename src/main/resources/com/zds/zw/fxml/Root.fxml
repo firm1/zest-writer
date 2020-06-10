@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.materialdesignicons.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="600.0" prefWidth="900.0"
+            xmlns="http://javafx.com/" fx:controller="com.zds.zw.view.MenuController">
+   <top>
+       <MenuBar BorderPane.alignment="CENTER">
+           <Menu mnemonicParsing="false" text="%ui.menu.file">
+               <MenuItem fx:id="menuNewContent" mnemonicParsing="false" onAction="#handleNewButtonAction"
+                         text="%ui.menu.file.new">
+                   <graphic>
+                       <MaterialDesignIconView fill="#084561" glyphName="FOLDER_PLUS" size="1.8em"/>
+                   </graphic>
+                   <accelerator>
+                       <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                   </accelerator>
+               </MenuItem>
+               <MenuItem mnemonicParsing="false" onAction="#handleOpenButtonAction" text="%ui.menu.file.open">
+                   <graphic>
+                       <MaterialDesignIconView fill="#084561" glyphName="FOLDER" size="1.8em"/>
+                   </graphic>
+                   <accelerator>
+                       <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                   </accelerator>
+               </MenuItem>
+               <MenuItem mnemonicParsing="false" onAction="#handleSwitchWorkspaceAction"
+                         text="%ui.menu.file.switch_dir">
+                   <graphic>
+                       <MaterialDesignIconView fill="#084561" glyphName="FOLDER_MOVE" size="1.8em"/>
+                   </graphic>
+               </MenuItem>
+               <SeparatorMenuItem/>
+               <Menu fx:id="menuImport" mnemonicParsing="false" text="%ui.menu.import">
+                   <graphic>
+                       <MaterialDesignIconView fill="#084561" glyphName="FILE_IMPORT" size="1.8em"/>
+                   </graphic>
+                   <MenuItem mnemonicParsing="false" onAction="#handleImportGithubButtonAction"
+                             text="%ui.menu.import.github">
+                       <graphic>
+                           <MaterialDesignIconView fill="#084561" glyphName="GITHUB_CIRCLE" size="1.8em"/>
+                       </graphic>
+                   </MenuItem>
+                   <MenuItem mnemonicParsing="false" onAction="#handleImportZdsButtonAction"
+                             text="%ui.menu.import.zds">
+                       <graphic>
+                           <MaterialDesignIconView fill="#084561" glyphName="WEB" size="1.8em"/>
+                       </graphic>
+                   </MenuItem>
+               </Menu>
+               <Menu fx:id="menuExport" disable="true" mnemonicParsing="false" text="%ui.menu.export">
+                   <graphic>
+                       <MaterialDesignIconView fill="#084561" glyphName="FILE_EXPORT" size="1.8em"/>
+                   </graphic>
+                   <MenuItem mnemonicParsing="false" onAction="#handleExportMarkdownButtonAction"
+                             text="%ui.menu.export.mardkown">
+                       <graphic>
+                           <MaterialDesignIconView fill="#084561" glyphName="MARKDOWN" size="1.8em"/>
+                       </graphic>
+                   </MenuItem>
+                   <MenuItem mnemonicParsing="false" onAction="#handleExportPdfButtonAction"
+                             text="%ui.menu.export.pdf">
+                       <graphic>
+                           <MaterialDesignIconView fill="#084561" glyphName="FILE_PDF" size="1.8em"/>
+                       </graphic>
+                   </MenuItem>
+               </Menu>
+               <SeparatorMenuItem/>
+               <MenuItem fx:id="menuQuit" mnemonicParsing="false" onAction="#handleQuitButtonAction"
+                         text="%ui.menu.quit">
+                   <graphic>
+                       <MaterialDesignIconView fill="#084561" glyphName="EXIT_TO_APP" size="1.8em"/>
+                   </graphic>
+                   <accelerator>
+                       <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                   </accelerator>
+               </MenuItem>
+           </Menu>
+           <Menu mnemonicParsing="false" text="%ui.menu.edit">
+               <MenuItem fx:id="menuFindReplace" mnemonicParsing="false" onAction="#handleFindReplaceAction"
+                         text="%ui.menu.tools.find_replace" disable="true"/>
+               <MenuItem fx:id="menuReport" disable="true" mnemonicParsing="false"
+                         onAction="#handleReportWithoutTypoButtonAction" text="%ui.menu.edit.correction">
+                   <graphic>
+                       <MaterialDesignIconView fill="#084561" glyphName="SPELLCHECK" size="1.8em"/>
+                   </graphic>
+                   <accelerator>
+                       <KeyCodeCombination alt="UP" code="F7" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                   </accelerator>
+               </MenuItem>
+               <Menu fx:id="menuLisibility" disable="true" mnemonicParsing="false" text="%ui.menu.edit.readable">
+                   <graphic>
+                       <MaterialDesignIconView fill="#084561" glyphName="READ" size="1.8em"/>
+                   </graphic>
+                   <MenuItem mnemonicParsing="false" onAction="#handleFleshButtonAction"
+                             text="%ui.menu.edit.readable.flesch_index"/>
+                   <MenuItem mnemonicParsing="false" onAction="#handleGunningButtonAction"
+                             text="%ui.menu.edit.readable.gunning_index"/>
+               </Menu>
+               <MenuItem fx:id="menuOptions" mnemonicParsing="false" onAction="#handleOptionsButtonAction"
+                         text="%ui.menu.options">
+                   <graphic>
+                       <MaterialDesignIconView fill="#084561" glyphName="SETTINGS" size="1.8em"/>
+                   </graphic>
+               </MenuItem>
+           </Menu>
+           <Menu mnemonicParsing="false" text="%ui.menu.tools">
+               <Menu fx:id="menuDownload" disable="false" mnemonicParsing="false" text="%ui.menu.syncho.download">
+                   <graphic>
+                       <MaterialDesignIconView fill="#084561" glyphName="CLOUD_DOWNLOAD" size="1.8em"/>
+                   </graphic>
+                   <MenuItem mnemonicParsing="false" onAction="#handleDownloadOpinionButtonAction"
+                             text="%ui.menu.content_type.opinion">
+                       <graphic>
+                           <MaterialDesignIconView fill="#084561" glyphName="BOOK" size="1.8em"/>
+                       </graphic>
+                   </MenuItem>
+                   <MenuItem mnemonicParsing="false" onAction="#handleDownloadArticleButtonAction"
+                             text="%ui.menu.content_type.article">
+                       <graphic>
+                           <MaterialDesignIconView fill="#ef9708" glyphName="BOOK_OPEN" size="1.8em"/>
+                       </graphic>
+                   </MenuItem>
+                   <MenuItem mnemonicParsing="false" onAction="#handleDownloadTutorialButtonAction"
+                             text="%ui.menu.content_type.tutorial">
+                       <graphic>
+                           <MaterialDesignIconView fill="#48a200" glyphName="LIBRARY_BOOKS" size="1.8em"/>
+                       </graphic>
+                   </MenuItem>
+                   <SeparatorMenuItem/>
+                   <MenuItem mnemonicParsing="false" onAction="#handleDownloadButtonAction"
+                             text="Tout types de contenus">
+                       <accelerator>
+                           <KeyCodeCombination alt="UP" code="D" control="DOWN" meta="UP" shift="UP"
+                                               shortcut="UP"/>
+                       </accelerator>
+                   </MenuItem>
+               </Menu>
+               <MenuItem fx:id="menuUpload" disable="true" mnemonicParsing="false"
+                         onAction="#handleUploadButtonAction" text="%ui.menu.syncho.upload">
+                   <graphic>
+                       <MaterialDesignIconView fill="#084561" glyphName="CLOUD_UPLOAD" size="1.8em"/>
+                   </graphic>
+                   <accelerator>
+                       <KeyCodeCombination alt="UP" code="U" control="DOWN" meta="UP" shift="UP"
+                                           shortcut="UP"/>
+                   </accelerator>
+               </MenuItem>
+           </Menu>
+           <Menu mnemonicParsing="false" text="%ui.menu.help">
+               <MenuItem mnemonicParsing="false" onAction="#handleAboutButtonAction" text="%ui.menu.help.about"/>
+               <MenuItem mnemonicParsing="false" onAction="#handleMdCheatSheetButtonAction"
+                         text="%ui.menu.help.md_cheat_sheet"/>
+               <MenuItem mnemonicParsing="false" onAction="#handleCheckUpdateButtonAction"
+                         text="%ui.menu.help.check_update"/>
+           </Menu>
+       </MenuBar>
+   </top>
+   <bottom>
+      <GridPane fx:id="hBottomBox" prefHeight="30.0" BorderPane.alignment="CENTER" />
+   </bottom>
+</BorderPane>

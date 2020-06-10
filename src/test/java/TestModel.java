@@ -1,10 +1,10 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zestedesavoir.zestwriter.MainApp;
-import com.zestedesavoir.zestwriter.model.*;
-import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.utils.GithubHttp;
-import com.zestedesavoir.zestwriter.utils.ZdsHttp;
-import com.zestedesavoir.zestwriter.utils.readability.Readability;
+import com.zds.zw.MainApp;
+import com.zds.zw.utils.Configuration;
+import com.zds.zw.utils.GithubHttp;
+import com.zds.zw.utils.ZdsHttp;
+import com.zds.zw.utils.readability.Readability;
+import model.*;
 import org.apache.http.client.HttpResponseException;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +44,7 @@ public class TestModel {
 
     @Before
     public void setUp() throws Exception {
-        MainApp.setLogger(LoggerFactory.getLogger(MainApp.class));
+        MainApp.setLogger(LoggerFactory.LoggerFactory.getLogger(MainApp.class));
         Configuration config = new Configuration (TEST_DIR);
         ObjectMapper mapper = new ObjectMapper();
         File manifest = new File(getClass().getResource("fixtures").getFile()+File.separator+"le-guide-du-contributeur"+File.separator+"manifest.json");

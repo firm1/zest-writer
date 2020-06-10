@@ -1,9 +1,9 @@
-import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.utils.Corrector;
-import com.zestedesavoir.zestwriter.utils.FlipTable;
-import com.zestedesavoir.zestwriter.utils.Markdown;
+import com.zds.zw.utils.Configuration;
+import com.zds.zw.utils.FlipTable;
+import com.zds.zw.utils.Markdown;
 import org.junit.Before;
 import org.junit.Test;
+import utils.Corrector;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

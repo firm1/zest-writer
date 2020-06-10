@@ -1,5 +1,5 @@
-import com.zestedesavoir.zestwriter.utils.Configuration;
-import com.zestedesavoir.zestwriter.utils.readability.Readability;
+import com.zds.zw.utils.Configuration;
+import com.zds.zw.utils.readability.Readability;
 import org.junit.Before;
 import org.junit.Test;
 

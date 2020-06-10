@@ -1,11 +1,9 @@
 plugins {
+    id "java"
+    id "application"
     id "jacoco"
     id "com.github.kt3k.coveralls" version "2.6.3"
     id "org.openjfx.javafxplugin" version "0.0.8"
-}
-
-if(JavaVersion.current() < JavaVersion.VERSION_1_8){
-    throw new GradleException("This build must be run with java 8 or higher. Current version is " + JavaVersion.current() + ".\nYou should install jdk >= 1.8 from http://www.oracle.com/technetwork/java/javase/downloads and/or check your JAVA_HOME.")
 }
 
 processResources {
@@ -14,9 +12,16 @@ processResources {
     }
 }
 
-apply plugin: 'java'
+group 'com.zds.zw'
 
-sourceCompatibility = 1.9
+sourceCompatibility = 1.11
+
+application {
+    mainClassName = "com.zds.zw.MainApp"
+    //mainClassName = "com.zds.zw.Test"
+}
+
+
 
 compileJava.options.encoding = 'UTF-8'
 
@@ -49,23 +54,47 @@ repositories {
 //    dependsOn 'processResources'
 //}
 
+task uberJar(type: Jar) {
+    archiveClassifier = 'uber'
+
+    from sourceSets.main.output
+
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+}
+
 dependencies {
     testImplementation 'junit:junit:4.13-rc-2'
     implementation group: 'org.apache.httpcomponents', name: 'fluent-hc', version: '4.5.3'
     implementation group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.3'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.1'
-    implementation group: 'de.julielab', name: 'aliasi-lingpipe', version: '4.1.2-JL1.0'
+    implementation (group: 'de.julielab', name: 'aliasi-lingpipe', version: '4.1.2-JL1.0') {
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
     implementation group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
-    implementation group: 'log4j', name: 'log4j', version: '1.2.17'
+    /*implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.29'*/
+    /*implementation('org.slf4j:slf4j-log4j12:1.7.29') {
+        //exclude group: 'log4j', module: 'log4j'
+    }*/
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.12.1'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.1'
+    implementation (group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.12.1')
+    implementation group: 'de.jensd', name: 'fontawesomefx-commons', version: '9.1.2'
     implementation group: 'de.jensd', name: 'fontawesomefx-commons', version: '9.1.2'
     implementation group: 'de.jensd', name: 'fontawesomefx-materialdesignfont', version: '2.0.26-9.1.2'
     implementation group: 'org.zeroturnaround', name: 'zt-zip', version: '1.11'
     implementation group: 'org.controlsfx', name: 'controlsfx', version: '11.0.0'
-    implementation group: 'org.fxmisc.richtext', name: 'richtextfx', version: '0.10.3'
+    implementation group: 'org.fxmisc.richtext', name: 'richtextfx', version: '0.10.5'
     implementation group: 'com.fasterxml', name: 'jackson-module-json-org', version: '0.9.1'
     implementation group: 'commons-io', name: 'commons-io', version: '2.5'
     implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    implementation group: 'org.graalvm.sdk', name: 'graal-sdk', version: '19.3.0'
+    implementation group: 'org.graalvm.js', name: 'js', version: '19.3.0'
+    implementation group: 'org.graalvm.js', name: 'js-scriptengine', version: '19.3.0'
+    implementation group: 'org.graalvm.tools', name: 'chromeinspector', version: '19.3.0'
 }
 
 test {
