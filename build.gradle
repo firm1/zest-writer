@@ -1,10 +1,25 @@
+import java.text.SimpleDateFormat
+
 plugins {
     id "java"
     id "application"
     id "jacoco"
     id "com.github.kt3k.coveralls" version "2.6.3"
     id "org.openjfx.javafxplugin" version "0.0.8"
+    id 'org.beryx.jlink' version '2.21.0'
 }
+
+apply plugin : "java"
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+targetCompatibility = "11"
+sourceCompatibility = "11"
+
+compileJava.options.encoding = 'UTF-8'
 
 processResources {
     filesMatching('config.properties') {
@@ -12,18 +27,14 @@ processResources {
     }
 }
 
-group 'com.zds.zw'
-
-sourceCompatibility = 1.11
-
-application {
-    mainClassName = "com.zds.zw.MainApp"
-    //mainClassName = "com.zds.zw.Test"
+wrapper {
+    gradleVersion = '6.5'
 }
 
-
-
-compileJava.options.encoding = 'UTF-8'
+application {
+    mainClassName = "com.zds.zw.Launcher"
+    mainModule = "zestwriter"
+}
 
 // Configures plugin
 javafx {
@@ -31,20 +42,89 @@ javafx {
     modules = ['javafx.controls', 'javafx.fxml', 'javafx.web']
 }
 
-repositories {
-    mavenLocal()
-    mavenCentral()
-    jcenter()
+// set jpackage installerType based on OS
+def os = org.gradle.internal.os.OperatingSystem.current()
+def jPkgInstallerType = ''
+if (os.isLinux()) {
+    jPkgInstallerType = 'deb'
+} else if (os.isMacOsX()) {
+    jPkgInstallerType = 'pkg'
+} else if (os.isWindows()) {
+    jPkgInstallerType = 'msi'
 }
 
+jlink {
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    imageZip = project.file("${buildDir}/distributions/zest-writer-${javafx.platform.classifier}.zip")
 
-//minifyCss {
-//    source = "${sourceSets.main.resources.srcDirs.first()}/com/zestedesavoir/zestwriter/assets/static/css/content.css"
-//    dest = "${sourceSets.main.output.resourcesDir}/com/zestedesavoir/zestwriter/assets/static/css/content.css"
-//    yuicompressor { // Optional
-//        lineBreakPos = -1
-//    }
-//}
+    launcher {
+        name = 'zestwriter'
+        moduleName = 'zestwriter'
+    }
+
+    forceMerge 'javafx', 'log4j-api', 'jackson'
+
+    mergedModule {
+        excludeUses 'com.sun.webkit.plugin.PluginHandler'
+    }
+
+    jpackage {
+        // can be set with BADASS_JLINK_JPACKAGE_HOME
+        jpackageHome = "/home/willy/dev/jdk-14_linux-x64_bin/jdk-14"
+
+        outputDir = "installer"
+        imageName = 'zestwriter'
+        skipInstaller = false
+        installerName = 'zestwriter'
+        installerType = "${jPkgInstallerType}"
+        installerOptions = [
+                '--description', "Editeur de texte zMarkdown",
+                '--copyright', 'Copyrigth 2018-2020'
+        ]
+        if (installerType == 'msi') {
+            //imageOptions += ['--icon', 'src/main/resources/com/zds/zw/logo/logo-16.png']
+            installerOptions += [
+                    '--win-per-user-install',
+                    '--win-dir-chooser',
+                    '--win-menu',
+                    '--win-shortcut'
+            ]
+        }
+        if (installerType in ['deb', 'rpm']) {
+            imageOptions += ['--icon', 'src/main/resources/com/zds/zw/logo/logo-256.png']
+            installerOptions += [
+                    '--linux-menu-group', 'Office',
+                    '--linux-shortcut'
+            ]
+        }
+        if (installerType == 'deb') {
+            installerOptions += [
+                    '--linux-deb-maintainer', 'contact@firm1.eu'
+            ]
+        }
+        if (installerType == 'rpm') {
+            installerOptions += [
+                    '--linux-rpm-license-type', 'GPLv3'
+            ]
+        }
+    }
+}
+
+task dist {
+    dependsOn clean, jlinkZip
+    description "Calls clean and then jlinkZip [default]"
+}
+
+defaultTasks 'dist'
+
+/*
+minifyCss {
+    source = "${sourceSets.main.resources.srcDirs.first()}/com/zds/zw/assets/dist/css/content.css"
+    dest = "${sourceSets.main.output.resourcesDir}/com/zds/zw/assets/static/dist/css/content.css"
+    yuicompressor { // Optional
+        lineBreakPos = -1
+    }
+}*/
 
 //tasks.cssToBin {
 //    dependsOn.minifyCss
@@ -54,47 +134,39 @@ repositories {
 //    dependsOn 'processResources'
 //}
 
-task uberJar(type: Jar) {
-    archiveClassifier = 'uber'
-
-    from sourceSets.main.output
-
-    dependsOn configurations.runtimeClasspath
-    from {
-        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
-    }
-}
-
 dependencies {
     testImplementation 'junit:junit:4.13-rc-2'
-    implementation group: 'org.apache.httpcomponents', name: 'fluent-hc', version: '4.5.3'
-    implementation group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.3'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.1'
+
     implementation (group: 'de.julielab', name: 'aliasi-lingpipe', version: '4.1.2-JL1.0') {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
-    implementation group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
-    /*implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.29'*/
-    /*implementation('org.slf4j:slf4j-log4j12:1.7.29') {
-        //exclude group: 'log4j', module: 'log4j'
-    }*/
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.12.1'
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.1'
-    implementation (group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.12.1')
-    implementation group: 'de.jensd', name: 'fontawesomefx-commons', version: '9.1.2'
-    implementation group: 'de.jensd', name: 'fontawesomefx-commons', version: '9.1.2'
-    implementation group: 'de.jensd', name: 'fontawesomefx-materialdesignfont', version: '2.0.26-9.1.2'
-    implementation group: 'org.zeroturnaround', name: 'zt-zip', version: '1.11'
-    implementation group: 'org.controlsfx', name: 'controlsfx', version: '11.0.0'
-    implementation group: 'org.fxmisc.richtext', name: 'richtextfx', version: '0.10.5'
-    implementation group: 'com.fasterxml', name: 'jackson-module-json-org', version: '0.9.1'
-    implementation group: 'commons-io', name: 'commons-io', version: '2.5'
-    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
-    implementation group: 'org.graalvm.sdk', name: 'graal-sdk', version: '19.3.0'
-    implementation group: 'org.graalvm.js', name: 'js', version: '19.3.0'
-    implementation group: 'org.graalvm.js', name: 'js-scriptengine', version: '19.3.0'
-    implementation group: 'org.graalvm.tools', name: 'chromeinspector', version: '19.3.0'
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
+    // jackson
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.1'
+
+    // logging
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: "${log4jVersion}"
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: "${log4jVersion}"
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "${log4jVersion}"
+
+    // icons
+    implementation group: 'de.jensd', name: 'fontawesomefx-commons', version: "${faVersion}"
+    implementation group: 'de.jensd', name: 'fontawesomefx-commons', version: "${faVersion}"
+    implementation group: 'de.jensd', name: 'fontawesomefx-materialdesignfont', version: "2.0.26-${faVersion}"
+
+    // utils
+    implementation group: 'org.zeroturnaround', name: 'zt-zip', version: '1.14'
+    implementation group: 'org.fxmisc.wellbehaved', name: 'wellbehavedfx', version: '0.3.3'
+    implementation group: 'org.controlsfx', name: 'controlsfx', version: '11.0.2'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.7'
+    implementation group: 'org.apache.commons', name: 'commons-text', version: '1.8'
+
+
+    // graal vm
+    implementation group: 'org.graalvm.sdk', name: 'graal-sdk', version: "${graalVersion}"
+    implementation group: 'org.graalvm.js', name: 'js', version: "${graalVersion}"
+    implementation group: 'org.graalvm.js', name: 'js-scriptengine', version: "${graalVersion}"
+    implementation group: 'org.graalvm.tools', name: 'chromeinspector', version: "${graalVersion}"
 }
 
 test {

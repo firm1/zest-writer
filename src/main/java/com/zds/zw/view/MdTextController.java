@@ -31,7 +31,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Pair;
-import org.fxmisc.richtext.StyleClassedTextArea;
 import org.fxmisc.wellbehaved.event.Nodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,10 +40,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
 
-import static com.zds.zw.view.MdConvertController.recognizeBullet;
-import static com.zds.zw.view.MdConvertController.recognizeNumber;
 import static javafx.scene.input.KeyCombination.SHIFT_DOWN;
 import static javafx.scene.input.KeyCombination.SHORTCUT_DOWN;
 import static org.fxmisc.wellbehaved.event.EventPattern.keyPressed;
@@ -58,9 +54,6 @@ public class MdTextController {
     private boolean zmdStarted = false;
     private MainApp mainApp;
     private ZMD zmd;
-//    @Getter
-//    @Setter
-//    private PythonInterpreter pyconsole;
     @FXML
     private VBox contentBox;
     @FXML
@@ -77,7 +70,7 @@ public class MdTextController {
     private ToolBar editorToolBar;
     private WebView currentRenderView;
     private BorderPane currentBoxRender;
-    private StyleClassedTextArea currentSourceText;
+    private TextArea currentSourceText;
     private ObjectPropertyBase<Textual> currentExtract = new SimpleObjectProperty<>(null);
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -144,11 +137,11 @@ public class MdTextController {
         this.currentBoxRender = currentBoxRender;
     }
 
-    public StyleClassedTextArea getCurrentSourceText() {
+    public TextArea getCurrentSourceText() {
         return currentSourceText;
     }
 
-    public void setCurrentSourceText(StyleClassedTextArea currentSourceText) {
+    public void setCurrentSourceText(TextArea currentSourceText) {
         this.currentSourceText = currentSourceText;
     }
 
@@ -236,7 +229,6 @@ public class MdTextController {
             Font.loadFont(MainApp.class.getResource("assets/static/fonts/SourceSansPro-Regular.ttf").toExternalForm(), 10);
             Font.loadFont(MainApp.class.getResource("assets/static/fonts/SourceSansPro-SemiBold.ttf").toExternalForm(), 10);
             Font.loadFont(MainApp.class.getResource("assets/static/fonts/SourceSansPro-SemiBoldItalic.ttf").toExternalForm(), 10);
-
 
         }).start();
     }
@@ -539,47 +531,10 @@ public class MdTextController {
         log.info("Contenu stocké dans " + filePath + " ouvert");
     }
 
-    private void handleSmartEnter() {
-        int precLine = currentSourceText.getCurrentParagraph() - 1;
-        if (precLine >= 0) {
-            String line = currentSourceText.getParagraph(precLine).toString();
-            Matcher matcher = recognizeBullet.matcher(line);
-            //TODO: find how combine recognize bullet and number together for breaking following if
-            if (!matcher.matches()) {
-                matcher = recognizeNumber.matcher(line);
-            }
-            if (matcher.matches()) {
-                if ("".equals(matcher.group(4).trim())) {
-                    int positionCaret = currentSourceText.getCaretPosition();
-                    currentSourceText.deleteText(positionCaret - line.length() - 1, positionCaret);
-                } else {
-                    currentSourceText.replaceSelection(matcher.group(1) + matcher.group(2) + " ");
-                }
-            }
-        }
-    }
-
-    private void handleSmartTab() {
-        int caseLine = currentSourceText.getCurrentParagraph();
-        if (caseLine >= 0) {
-            String line = currentSourceText.getParagraph(caseLine).toString();
-            Matcher matcher = recognizeBullet.matcher(line);
-            //TODO: find how combine recognize bullet and number together for breaking following if
-            if (!matcher.matches()) {
-                matcher = recognizeNumber.matcher(line);
-            }
-            if (matcher.matches()) {
-                int positionCaret = currentSourceText.getCaretPosition();
-                int delta = matcher.group(1).length() + matcher.group(2).length() + matcher.group(3).length() + 1;
-                currentSourceText.replaceText(positionCaret - delta, positionCaret, "    " + matcher.group(2) + " " + matcher.group(4));
-            }
-        }
-    }
-
     private void replaceAction(String defaultString, int defaultOffsetCaret, String beforeString, String afterString) {
         if (currentSourceText.getSelectedText().isEmpty()) {
             currentSourceText.replaceText(currentSourceText.getSelection(), defaultString);
-            currentSourceText.moveTo(currentSourceText.getCaretPosition() - defaultOffsetCaret);
+            currentSourceText.positionCaret(currentSourceText.getCaretPosition() - defaultOffsetCaret);
         } else {
             currentSourceText.replaceText(currentSourceText.getSelection(), beforeString + currentSourceText.getSelectedText() + afterString);
         }
@@ -960,7 +915,10 @@ public class MdTextController {
         dialog.initOwner(MainApp.getPrimaryStage());
 
         Optional<String> result = dialog.showAndWait();
-        result.ifPresent(line -> currentSourceText.moveTo(currentSourceText.position(Integer.parseInt(line) - 1, 0).toOffset()));
+        /* TODO : handle this
+        result.ifPresent(line -> currentSourceText.positionCaret(currentSourceText.position(Integer.parseInt(line) - 1, 0).toOffset()));
+
+         */
     }
 
     @FXML
@@ -968,7 +926,7 @@ public class MdTextController {
         FunctionTreeFactory.openFindReplaceDialog(currentSourceText);
     }
 
-    public void initKeyMapping(StyleClassedTextArea sourceText) {
+    public void initKeyMapping(TextArea sourceText) {
         Platform.runLater(() -> {
             Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.S, SHORTCUT_DOWN), e -> handleSaveButtonAction())));
             Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.G, SHORTCUT_DOWN), e -> handleBoldButtonAction(null))));

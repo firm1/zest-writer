@@ -13,12 +13,12 @@ import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import org.fxmisc.richtext.StyleClassedTextArea;
 
 import java.io.File;
 import java.io.IOException;
@@ -203,7 +203,7 @@ public class FunctionTreeFactory {
         return file.getAbsolutePath();
     }
 
-    public static void openFindReplaceDialog(StyleClassedTextArea sourceText) {
+    public static void openFindReplaceDialog(TextArea sourceText) {
         FXMLLoader loader = new CustomFXMLLoader(MainApp.class.getResource("fxml/FindReplaceDialog.fxml"));
 
         Stage dialogStage = new CustomStage(loader, Configuration.getBundle().getString("ui.dialog.find.title"));

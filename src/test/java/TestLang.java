@@ -22,7 +22,8 @@ public class TestLang {
         Set<String> firstLang = keys.get(0);
         for(Set<String> key:keys) {
             assertEquals(key.size(), firstLang.size());
-            assertArrayEquals(key.toArray(), firstLang.toArray());
+            System.out.println(key+ " vs " +firstLang);
+            assertEquals(key, firstLang);
         }
     }
 }

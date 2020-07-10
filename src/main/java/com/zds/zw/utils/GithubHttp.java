@@ -2,22 +2,18 @@ package com.zds.zw.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zds.zw.model.*;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.fluent.Executor;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,25 +30,42 @@ public class GithubHttp {
     }
 
     public static String getGithubZipball(String owner, String repo, String destFolder) throws IOException {
-        CloseableHttpClient httpclient = HttpClients.custom()
-                .setRedirectStrategy(new LaxRedirectStrategy())
-                .build();
+        HttpClient client = getHttpClient();
         String urlForGet = "https://api.github.com/repos/" + owner + "/" + repo + "/zipball/";
-
-        HttpGet get = new HttpGet(urlForGet);
-
-        HttpResponse response = httpclient.execute(get);
-
-        InputStream is = response.getEntity().getContent();
         String filePath = destFolder + File.separator + repo + ".zip";
-        FileOutputStream fos = new FileOutputStream(new File(filePath));
 
-        int inByte;
-        while ((inByte = is.read()) != -1)
-            fos.write(inByte);
-        is.close();
-        fos.close();
+        HttpRequest.Builder builder = HttpRequest.newBuilder()
+                .uri(URI.create(urlForGet))
+                .GET();
+        HttpRequest request = builder.build();
+        try {
+            client.send(request, java.net.http.HttpResponse.BodyHandlers.ofFile(Path.of(filePath)));
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
         return filePath;
+    }
+
+    public static HttpClient getHttpClient() {
+        String githubUser = System.getProperty("zw.github_user");
+        String githubToken = System.getProperty("zw.github_token");
+
+        if(githubUser != null && !"".equals(githubUser) && githubToken != null && !"".equals(githubToken)) {
+            return HttpClient.newBuilder()
+                    .version(HttpClient.Version.HTTP_2)
+                    .followRedirects(HttpClient.Redirect.NORMAL)
+                    .authenticator(new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(githubUser, githubToken.toCharArray());
+                }
+            }).build();
+        } else {
+            return HttpClient.newBuilder()
+                    .version(HttpClient.Version.HTTP_2)
+                    .followRedirects(HttpClient.Redirect.NORMAL)
+                    .build();
+        }
     }
 
     public static File unzipOnlineContent(String zipFilePath, String destFolder) {
@@ -75,30 +88,31 @@ public class GithubHttp {
         String projecUrl = "https://api.github.com/repos/"+owner+"/"+repo;
         String title = null;
         log.debug("Tentative de connexion à l'url : "+projecUrl);
-        String githubUser = System.getProperty("zw.github_user");
-        String githubToken = System.getProperty("zw.github_token");
+        HttpClient client = getHttpClient();
 
-        Executor executor;
-        if(githubUser != null && !"".equals(githubUser) && githubToken != null && !"".equals(githubToken)) {
-            executor = Executor
-                    .newInstance()
-                    .auth(new HttpHost("api.github.com"), githubUser, githubToken);
-        } else {
-            executor = Executor.newInstance();
-        }
+        HttpRequest.Builder builder = HttpRequest.newBuilder()
+                .uri(URI.create(projecUrl))
+                .GET();
 
-        String json = executor.execute(Request.Get(projecUrl)).returnContent().asString();
-        ObjectMapper mapper = new ObjectMapper();
-        Map map = mapper.readValue(json, Map.class);
-        if(map.containsKey("description")) {
-            title = (String) map.get("description");
+        HttpRequest request = builder.build();
+        try {
+            String json = client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString()).body();
+            ObjectMapper mapper = new ObjectMapper();
+            Map map = mapper.readValue(json, Map.class);
+            if(map.containsKey("description")) {
+                title = (String) map.get("description");
+            }
+            Content current = new Content("container", toSlug(title), title, Constant.DEFAULT_INTRODUCTION_FILENAME, Constant.DEFAULT_CONCLUSION_FILENAME, new ArrayList<>(), 2, "CC-BY", title, "TUTORIAL");
+            // read all directory
+            current.getChildren ().addAll (loadDirectory (folder.length () + File.separator.length (), new File(folder)));
+            current.setBasePath (folder);
+            generateMetadataAttributes(current.getFilePath());
+            return current;
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
         }
-        Content current = new Content("container", toSlug(title), title, Constant.DEFAULT_INTRODUCTION_FILENAME, Constant.DEFAULT_CONCLUSION_FILENAME, new ArrayList<>(), 2, "CC-BY", title, "TUTORIAL");
-        // read all directory
-        current.getChildren ().addAll (loadDirectory (folder.length () + File.separator.length (), new File(folder)));
-        current.setBasePath (folder);
-        generateMetadataAttributes(current.getFilePath());
-        return current;
+        return null;
     }
 
     private static List<MetaContent> loadDirectory(int countBase, File folder) {

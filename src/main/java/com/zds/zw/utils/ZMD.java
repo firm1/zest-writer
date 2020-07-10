@@ -6,11 +6,10 @@ import org.graalvm.polyglot.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 
 public class ZMD {
     Context engine;
@@ -38,18 +37,11 @@ public class ZMD {
     }
 
     public static StringBuilder readJs(String script) throws URISyntaxException, IOException {
-        FileReader fileReader = new FileReader(MainApp.class.getResource("js/"+script+".js").toURI().getPath());
-        BufferedReader reader = new BufferedReader(fileReader);
-        StringBuilder stringBuilder = new StringBuilder();
-        String line = null;
-        String ls = System.getProperty("line.separator");
-        while ((line = reader.readLine()) != null) {
-            stringBuilder.append(line);
-            stringBuilder.append(ls);
-        }
-        // delete the last new line separator
-        reader.close();
-        return stringBuilder;
+        InputStream in = MainApp.class.getResourceAsStream("js/"+script+".js");
+        String text = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))
+                .lines()
+                .collect(Collectors.joining(System.getProperty("line.separator")));
+        return new StringBuilder(text);
     }
 
     public String subHeader(String markdown) {

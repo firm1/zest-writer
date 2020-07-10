@@ -111,22 +111,10 @@
                                         onAction="#handleEditorToolbarViewNo" text="%ui.no"
                                         toggleGroup="$toolbar" GridPane.columnIndex="2"
                                         GridPane.rowIndex="1"/>
-                           <Label text="%ui.options.editor.display_lineno" GridPane.rowIndex="2"/>
-                           <RadioButton fx:id="optEditorLinenoViewYes" mnemonicParsing="false"
-                                        onAction="#handleEditorLinenoViewYes" text="%ui.yes"
-                                        GridPane.columnIndex="1" GridPane.rowIndex="2">
-                               <toggleGroup>
-                                   <ToggleGroup fx:id="lineno"/>
-                               </toggleGroup>
-                           </RadioButton>
-                           <RadioButton fx:id="optEditorLinenoViewNo" mnemonicParsing="false"
-                                        onAction="#handleEditorLinenoViewNo" text="%ui.no"
-                                        toggleGroup="$lineno" GridPane.columnIndex="2"
-                                        GridPane.rowIndex="2"/>
-                           <Label text="%ui.options.editor.rendering" GridPane.rowIndex="3"/>
+                           <Label text="%ui.options.editor.rendering" GridPane.rowIndex="2"/>
                            <RadioButton fx:id="optEditorRenderViewYes" mnemonicParsing="false"
                                         onAction="#handleEditorRenderViewYes" text="%ui.yes"
-                                        GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                        GridPane.columnIndex="1" GridPane.rowIndex="2">
                                <toggleGroup>
                                    <ToggleGroup fx:id="render"/>
                                </toggleGroup>
@@ -135,34 +123,6 @@
                                         onAction="#handleEditorRenderViewNo" text="%ui.no"
                                         toggleGroup="$render" GridPane.columnIndex="2"
                                         GridPane.rowIndex="3"/>
-                       </GridPane>
-                       <Label styleClass="subtitle" text="%ui.options.editor.redaction"/>
-                       <GridPane hgap="20.0" styleClass="options-grid">
-                           <columnConstraints>
-                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="166.0" minWidth="10.0"
-                                                  prefWidth="166.0"/>
-                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
-                                                  prefWidth="100.0"/>
-                           </columnConstraints>
-                           <rowConstraints>
-                               <RowConstraints minHeight="10.0" prefHeight="30.0"
-                                               vgrow="SOMETIMES"/>
-                           </rowConstraints>
-                           <padding>
-                               <Insets left="20.0"/>
-                           </padding>
-                           <Label text="%ui.options.write.smart"/>
-                           <RadioButton fx:id="optSmartEditorYes" mnemonicParsing="false"
-                                        onAction="#handleSmartEditorYes" text="%ui.yes"
-                                        GridPane.columnIndex="1">
-                               <toggleGroup>
-                                   <ToggleGroup fx:id="smartEditor"/>
-                               </toggleGroup>
-                           </RadioButton>
-                           <RadioButton fx:id="optSmartEditorNo" mnemonicParsing="false"
-                                        onAction="#handleSmartEditorNo" text="%ui.no"
-                                        toggleGroup="$smartEditor" GridPane.columnIndex="2"/>
                        </GridPane>
                    </VBox>
                </AnchorPane>
@@ -315,15 +275,12 @@
                            <Label text="%ui.options.advanced.protocol" GridPane.rowIndex="0"/>
                            <Label text="%ui.options.advanced.hostname" GridPane.rowIndex="1"/>
                            <Label text="%ui.options.advanced.port" GridPane.rowIndex="2"/>
-                           <Label text="%ui.options.advanced.pandoc.url" GridPane.rowIndex="3"/>
                            <ComboBox fx:id="optAdvancedProtocol" GridPane.columnIndex="1"
                                      GridPane.rowIndex="0"/>
                            <TextField fx:id="optAdvancedHost" GridPane.columnIndex="1"
                                       GridPane.rowIndex="1"/>
                            <TextField fx:id="optAdvancedPort" GridPane.columnIndex="1"
                                       GridPane.rowIndex="2"/>
-                           <TextField fx:id="optAdvancedPandocUrl" GridPane.columnIndex="1"
-                                      GridPane.rowIndex="3"/>
                        </GridPane>
                    </VBox>
                </AnchorPane>

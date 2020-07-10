@@ -2,14 +2,16 @@ package com.zds.zw.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zds.zw.MainApp;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.*;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,8 +51,12 @@ public class Configuration {
         try {
             bundle = ResourceBundle.getBundle("com/zds/zw/locales/ui", Lang.getLangFromCode(getDisplayLang()).getLocale());
         }catch(Exception e) {
-            bundle = ResourceBundle.getBundle("com/zds/zw/locales/ui", Locale.FRANCE);
-            log.error("Impossible de charger la langue "+getDisplayLang(), e);
+            try {
+                bundle = ResourceBundle.getBundle("com/zds/zw/locales/ui", Locale.FRANCE);
+            } catch (Exception ex) {
+                log.error("Impossible de charger la langue FR ", ex.getMessage());
+            }
+            log.error("Impossible de charger la langue "+getDisplayLang(), e.getMessage());
         }
     }
 
@@ -62,13 +68,24 @@ public class Configuration {
 
     public static String getLastRelease() throws IOException {
         String projectUrlRelease = "https://api.github.com/repos/firm1/zest-writer/releases/latest";
-
-        String json = Request.Get(projectUrlRelease).execute().returnContent().asString();
-        ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
-        Map map = mapper.readValue(json, Map.class);
-        if(map.containsKey("tag_name")) {
-            return (String) map.get("tag_name");
+        HttpClient httpClient = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build();
+        HttpRequest.Builder builder = HttpRequest.newBuilder()
+                .uri(URI.create(projectUrlRelease))
+                .GET();
+        HttpRequest request = builder.build();
+        try {
+            String json =  httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body().toString();
+            ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
+            Map map = mapper.readValue(json, Map.class);
+            if(map.containsKey("tag_name")) {
+                return (String) map.get("tag_name");
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
         }
+
         return null;
     }
 
@@ -176,12 +193,24 @@ public class Configuration {
         log.info("Espace de travail chargé en mémoire");
     }
 
+    public static boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
     /*
      * Zest-Writer data
      */
     private double getGenericDoubleDisplay(ConfigData configData) {
         if(conf.containsKey(configData.getKey())){
-            if(NumberUtils.isNumber(conf.getProperty(configData.getKey())))
+            if(isNumeric(conf.getProperty(configData.getKey())))
                 return Double.parseDouble(conf.getProperty(configData.getKey()));
             else
                 return Double.parseDouble(configData.getDefaultValue());

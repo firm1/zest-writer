@@ -11,36 +11,20 @@ import javafx.beans.property.BooleanPropertyBase;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
-import javafx.concurrent.Worker.State;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TreeItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSException;
-import org.fxmisc.flowless.VirtualizedScrollPane;
-import org.fxmisc.richtext.LineNumberFactory;
-import org.fxmisc.richtext.StyleClassedTextArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.regex.Pattern;
-
 public class MdConvertController {
-    public static final Pattern recognizeNumber = Pattern.compile("^(\\s*)([\\d][\\.]) (\\s*)(.*)");
-    public static final Pattern recognizeBullet = Pattern.compile("^(\\s*)([*|-]) (\\s*)(.*)");
     //public static Corrector corrector;
     private final Logger logger = LoggerFactory.getLogger(MdConvertController.class);
     private MdTextController mdBox;
-    private Service<String> renderTask;
     private int xRenderPosition = 0;
     private int yRenderPosition = 0;
     private StringProperty countChars = new SimpleStringProperty();
@@ -52,9 +36,9 @@ public class MdConvertController {
     @FXML private SplitPane splitPane;
     @FXML private BorderPane boxRender;
     @FXML private Tab tab;
-    private StyleClassedTextArea sourceText;
+    private TextArea sourceText;
     @FXML private BorderPane container;
-    VirtualizedScrollPane<StyleClassedTextArea> vsPane;
+    Thread async = null;
 
 
     public void setMdBox(MdTextController mdBox, Textual extract) {
@@ -70,24 +54,29 @@ public class MdConvertController {
                     tab.setText("! " + extract.getTitle());
                 }
             });
-            sourceText.replaceText(extract.getMarkdown());
+            sourceText.replaceText(new IndexRange(0, sourceText.getLength()), extract.getMarkdown());
             initStats();
-            sourceText.getUndoManager().forgetHistory();
-            sourceText.richChanges()
-                    //.filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
-                    .subscribe(change -> {
-                        sourceText.getUndoManager().mark();
-                        getMdBox().setCurrentSaved(false);
-                        if(renderTask.getState().equals(State.READY)) {
-                            renderTask.start();
-                            needRefresh.set(false);
-                        } else {
-                            needRefresh.set(true);
-                        }
-                    });
-            if(renderTask.getState().equals(State.READY)) {
-                renderTask.start();
+
+            String contentHtml = getMdBox().markdownToHtml(sourceText.getText());
+            if (contentHtml != null) {
+                renderView.getEngine().loadContent(MainApp.getMdUtils().addHeaderAndFooter(contentHtml));
             }
+
+            sourceText.textProperty().addListener((observable, oldValue, newValue) -> {
+                getMdBox().setCurrentSaved(false);
+                if(async != null) {
+                    async.stop();
+                }
+                async = setTimeout(() -> {
+                    yRenderPosition = getVScrollValue(renderView);
+                    xRenderPosition = getHScrollValue(renderView);
+                    String html = getMdBox().markdownToHtml(sourceText.getText());
+                    if (html != null) {
+                        renderView.getEngine().loadContent(MainApp.getMdUtils().addHeaderAndFooter(html));
+                        scrollTo(renderView, xRenderPosition, yRenderPosition);
+                    }
+                }, 500);
+            });
         });
 
         tab.setOnSelectionChanged(t -> {
@@ -101,6 +90,22 @@ public class MdConvertController {
                 initStats();
             });
         });
+    }
+
+    public static Thread setTimeout(Runnable runnable, int delay){
+        Thread process = new Thread(() -> {
+            try {
+                Thread.sleep(delay);
+                Platform.runLater(() -> {
+                    runnable.run();
+                });
+            }
+            catch (Exception e){
+                System.err.println(e);
+            }
+        });
+        process.start();
+        return process;
     }
 
     public BooleanPropertyBase getSaved() {
@@ -122,71 +127,21 @@ public class MdConvertController {
     }
 
     public MdConvertController() {
-        sourceText = new StyleClassedTextArea();
+        sourceText = new TextArea();
         sourceText.setStyle("markdown-editor");
         sourceText.setWrapText(true);
-        vsPane = new VirtualizedScrollPane<>(sourceText);
     }
 
     @FXML private void initialize() {
-        container.setCenter(vsPane);
+        container.setCenter(sourceText);
         sourceText.getStylesheets().add(MainApp.class.getResource("css/editor.css").toExternalForm());
         sourceText.setStyle("-fx-font-family: \"" + MainApp.getConfig().getEditorFont() + "\";-fx-font-size: " + MainApp.getConfig().getEditorFontsize() + ";");
 
-        if(MainApp.getConfig().isEditorLinenoView())
-            sourceText.setParagraphGraphicFactory(LineNumberFactory.get(sourceText));
-
-        if(MainApp.getConfig().isEditorRenderView()) {
-            initRenderTask();
-        } else {
+        if(!MainApp.getConfig().isEditorRenderView()) {
             splitPane.getItems().remove(1);
         }
 
         Platform.runLater(sourceText::requestFocus);
-    }
-
-
-    private void initRenderTask() {
-        renderTask = new Service<String>() {
-            @Override
-            protected Task<String> createTask() {
-                return new Task<String>() {
-                    @Override
-                    protected String call() throws Exception {
-                        String html = getMdBox().markdownToHtml(sourceText.getText());
-                        if (html != null) {
-                            return MainApp.getMdUtils().addHeaderAndFooter(html);
-                        } else {
-                            throw new IOException();
-                        }
-                    }
-                };
-            }
-        };
-
-        renderTask.setOnFailed(t -> {
-            renderTask.restart();
-        });
-
-        renderTask.setOnSucceeded(t -> {
-            Platform.runLater(() -> {
-                yRenderPosition = getVScrollValue(renderView);
-                xRenderPosition = getHScrollValue(renderView);
-                renderView.getEngine().loadContent(renderTask.getValue());
-                performStats();
-                renderTask.reset();
-                if(needRefresh.getValue()) {
-                    needRefresh.set(false);
-                    renderTask.start();
-                }
-            });
-        });
-        renderView.getEngine().getLoadWorker().stateProperty()
-            .addListener((ObservableValue<? extends State> ov, State oldState, State newState) -> {
-                if (newState == State.SUCCEEDED) {
-                    Platform.runLater(() -> scrollTo(renderView, xRenderPosition, yRenderPosition));
-                }
-            });
     }
 
 
@@ -235,7 +190,7 @@ public class MdConvertController {
      * @param y vertical scroll value
      */
     public void scrollTo(WebView view, int x, int y) {
-        view.getEngine().executeScript("window.scrollTo(" + x + ", " + y + ")");
+        view.getEngine().executeScript("window.scrollTo(" + x + ", " + y + ");");
     }
 
     /**

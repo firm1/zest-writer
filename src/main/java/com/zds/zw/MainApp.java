@@ -50,7 +50,7 @@ public class MainApp extends Application{
     private static Markdown mdUtils;
     private static String[] args;
     private static File defaultHome;
-    private static Logger logger;
+    private static Logger logger = LoggerFactory.getLogger(MainApp.class);;
     private Scene scene;
     private BorderPane rootLayout;
     private ObservableList<Textual> extracts = FXCollections.observableArrayList();
@@ -66,7 +66,6 @@ public class MainApp extends Application{
         super();
 
         initEnvVariable();
-        logger = LoggerFactory.getLogger(MainApp.class);
 
         logger.info("Version Java de l'utilisateur: " + System.getProperty("java.version"));
         logger.info("Architecture du système utilisateur: " + System.getProperty("os.arch"));

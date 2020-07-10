@@ -1,14 +1,12 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zds.zw.MainApp;
+import com.zds.zw.model.*;
 import com.zds.zw.utils.Configuration;
 import com.zds.zw.utils.GithubHttp;
 import com.zds.zw.utils.ZdsHttp;
 import com.zds.zw.utils.readability.Readability;
-import model.*;
-import org.apache.http.client.HttpResponseException;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +42,6 @@ public class TestModel {
 
     @Before
     public void setUp() throws Exception {
-        MainApp.setLogger(LoggerFactory.LoggerFactory.getLogger(MainApp.class));
         Configuration config = new Configuration (TEST_DIR);
         ObjectMapper mapper = new ObjectMapper();
         File manifest = new File(getClass().getResource("fixtures").getFile()+File.separator+"le-guide-du-contributeur"+File.separator+"manifest.json");
@@ -358,24 +355,24 @@ public class TestModel {
     @Test
     public void testImport() throws IOException {
         File workspace = new File(new File(TEST_DIR), "zworkspace");
+        System.out.println(workspace.getAbsolutePath());
         if(!workspace.exists()) {
             workspace.mkdirs();
+            System.out.println("workspace créee");
         }
         String filePath = GithubHttp.getGithubZipball ("steeve", "france.code-civil", workspace.getAbsolutePath());
+        System.out.println(filePath);
         File folder = GithubHttp.unzipOnlineContent (filePath, workspace.getAbsolutePath());
         File off = new File(workspace, "france.code-civil");
         assertTrue(off.exists());
-        try {
-            Content loadContent = GithubHttp.loadManifest(folder.getAbsolutePath(), "steeve", "france.code-civil");
-            checkManifestAntislash(loadContent);
-            assertNotNull(loadContent);
-            assertNotNull(loadContent.getTitle());
-            assertNotNull(loadContent.getFilePath());
-            assertNotNull(loadContent.getType());
-            assertNotNull(loadContent.getLicence());
-            assertTrue(loadContent.getChildren().size() > 0);
-        } catch(HttpResponseException hhtpe) {
-            
-        }
+
+        Content loadContent = GithubHttp.loadManifest(folder.getAbsolutePath(), "steeve", "france.code-civil");
+        checkManifestAntislash(loadContent);
+        assertNotNull(loadContent);
+        assertNotNull(loadContent.getTitle());
+        assertNotNull(loadContent.getFilePath());
+        assertNotNull(loadContent.getType());
+        assertNotNull(loadContent.getLicence());
+        assertTrue(loadContent.getChildren().size() > 0);
     }
 }

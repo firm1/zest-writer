@@ -1,5 +1,5 @@
 #!/bin/bash
-ZMD_VERSION="6.1.0"
+ZMD_VERSION="8.3.0"
 
 if [ -d "zmarkdown" ]; then
   rm -rf zmarkdown

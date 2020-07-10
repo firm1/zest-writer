@@ -23,18 +23,12 @@ public class OptionsDialog{
     private String optEditorFont;
     private double optEditorFontSize;
     private boolean optEditorToolbarView;
-    private boolean optEditorLinenoView;
     private boolean optEditorRenderView;
-    private boolean optSmartEditor;
 
     @FXML private RadioButton optEditorToolbarViewYes;
     @FXML private RadioButton optEditorToolbarViewNo;
-    @FXML private RadioButton optEditorLinenoViewYes;
-    @FXML private RadioButton optEditorLinenoViewNo;
     @FXML private RadioButton optEditorRenderViewYes;
     @FXML private RadioButton optEditorRenderViewNo;
-    @FXML private RadioButton optSmartEditorYes;
-    @FXML private RadioButton optSmartEditorNo;
     @FXML private Button optEditorFontButton;
     @FXML private ComboBox<Theme> optDisplayTheme;
     @FXML private ComboBox<Lang> optDisplayLang;
@@ -50,7 +44,6 @@ public class OptionsDialog{
     @FXML private ComboBox<String> optAdvancedProtocol;
     @FXML private TextField optAdvancedHost;
     @FXML private TextField optAdvancedPort;
-    @FXML private TextField optAdvancedPandocUrl;
     @FXML private Label workspacepath;
 
     @FXML public void initialize() {
@@ -70,9 +63,7 @@ public class OptionsDialog{
         MainApp.getConfig().setEditorFont(optEditorFont);
         MainApp.getConfig().setEditorFontSize(String.valueOf(optEditorFontSize));
         MainApp.getConfig().setEditorToolbarView(optEditorToolbarView);
-        MainApp.getConfig().setEditorLinenoView(optEditorLinenoView);
         MainApp.getConfig().setEditorRenderView(optEditorRenderView);
-        MainApp.getConfig().setEditorSmart(Boolean.toString(optSmartEditor));
 
         MainApp.getConfig().setDisplayTheme(optDisplayTheme.getValue().getFilename());
         MainApp.getConfig().setDisplayLang(optDisplayLang.getValue().getLocale().toString());
@@ -101,7 +92,6 @@ public class OptionsDialog{
         MainApp.getConfig().setAdvancedServerProtocol(optAdvancedProtocol.getValue());
         MainApp.getConfig().setAdvancedServerHost(optAdvancedHost.getText());
         MainApp.getConfig().setAdvancedServerPort(optAdvancedPort.getText());
-        MainApp.getConfig().setAdvancedServerPandoc(optAdvancedPandocUrl.getText());
 
         MainApp.getConfig().saveConfFile();
         MainApp.getConfig().loadWorkspace();
@@ -192,45 +182,19 @@ public class OptionsDialog{
         optEditorRenderView = false;
     }
 
-    @FXML private void handleEditorLinenoViewYes(){
-        optEditorLinenoView = true;
-    }
-
-    @FXML private void handleEditorLinenoViewNo(){
-        optEditorLinenoView = false;
-    }
-
-    @FXML private void handleSmartEditorYes(){
-        optSmartEditor = true;
-    }
-
-    @FXML private void handleSmartEditorNo(){
-        optSmartEditor = false;
-    }
-
     private void setEditorOptions(){
         optEditorFontButton.setText(MainApp.getConfig().getEditorFont() + " - " + MainApp.getConfig().getEditorFontsize());
 
         optEditorFont = MainApp.getConfig().getEditorFont();
         optEditorFontSize = MainApp.getConfig().getEditorFontsize();
         optEditorToolbarView = MainApp.getConfig().isEditorToolbarView();
-        optEditorLinenoView = MainApp.getConfig().isEditorLinenoView();
         optEditorRenderView = MainApp.getConfig().isEditorRenderView();
-        optSmartEditor = MainApp.getConfig().isEditorSmart();
 
         optEditorToolbarViewYes.setSelected(optEditorToolbarView);
         optEditorToolbarViewNo.setSelected(!optEditorToolbarView);
 
-        optEditorLinenoViewYes.setSelected(optEditorLinenoView);
-        optEditorLinenoViewNo.setSelected(!optEditorLinenoView);
-
         optEditorRenderViewYes.setSelected(optEditorRenderView);
         optEditorRenderViewNo.setSelected(!optEditorRenderView);
-
-        if(optSmartEditor)
-            optSmartEditorYes.setSelected(true);
-        else
-            optSmartEditorNo.setSelected(true);
 
         optEditorRenderViewYes.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if(optEditorRenderViewYes.isSelected()){
@@ -307,7 +271,6 @@ public class OptionsDialog{
         optAdvancedProtocol.setValue(MainApp.getConfig().getAdvancedServerProtocol());
         optAdvancedHost.setText(MainApp.getConfig().getAdvancedServerHost());
         optAdvancedPort.setText(MainApp.getConfig().getAdvancedServerPort());
-        optAdvancedPandocUrl.setText(MainApp.getConfig().getAdvancedServerPandoc());
     }
 
     private void resetOptions(){

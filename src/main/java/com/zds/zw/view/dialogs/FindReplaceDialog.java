@@ -3,12 +3,8 @@ package com.zds.zw.view.dialogs;
 
 import com.zds.zw.utils.Configuration;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.util.Pair;
-import org.fxmisc.richtext.StyleClassedTextArea;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FindReplaceDialog{
-    private StyleClassedTextArea sourceText;
+    private TextArea sourceText;
 
     private int replaceIndex;
     private int findIndex;
@@ -40,7 +36,7 @@ public class FindReplaceDialog{
         REPLACE
     }
 
-    public void setSourceText(StyleClassedTextArea sourceText){
+    public void setSourceText(TextArea sourceText){
         this.sourceText = sourceText;
     }
 
@@ -157,7 +153,7 @@ public class FindReplaceDialog{
             if(action == FindReplaceAction.FIND_ACTION){
                 if(i == findIndex){
                     textFill(matchCurrent.getKey(), matchCurrent.getValue(), FindReplaceAction.FIND_ACTION);
-                    sourceText.moveTo(matchCurrent.getKey());
+                    sourceText.positionCaret(matchCurrent.getKey());
                     refreshSearch();
                     findIndex = numberIterationTotal>0 ? (findIndex + 1) % numberIterationTotal : 0;
                     break;
@@ -166,7 +162,7 @@ public class FindReplaceDialog{
                 if(i == replaceIndex){
                     sourceText.replaceText(matchCurrent.getKey(), matchCurrent.getValue(), replaceField.getText());
                     textFill(matchCurrent.getKey(), matchCurrent.getKey() + replaceField.getText().length(), FindReplaceAction.REPLACE);
-                    sourceText.moveTo(matchCurrent.getKey());
+                    sourceText.positionCaret(matchCurrent.getKey());
                     refreshSearch();
                     replaceIndex = numberIterationTotal>0 ? (replaceIndex + 1) % numberIterationTotal : 0;
                     break;
@@ -180,6 +176,7 @@ public class FindReplaceDialog{
     }
 
     private void textFill(int start, int end, FindReplaceAction action){
+        /* TODO : handle this
         if(action == FindReplaceAction.FIND){
             sourceText.setStyleClass(start, end, "findReplace-highlightsFind");
         }else if(action == FindReplaceAction.FIND_ACTION){
@@ -187,9 +184,13 @@ public class FindReplaceDialog{
         }else if(action == FindReplaceAction.REPLACE){
             sourceText.setStyleClass(start, end, "findReplace-highlightsReplace");
         }
+
+         */
     }
 
     private void resetTextFill(){
+        /* TODO : handle this
         sourceText.setStyleClass(0, sourceText.getText().length(), "");
+        */
     }
 }

@@ -39,7 +39,8 @@ public class DownloadZdsService extends Service<Content>{
                     logger.debug ("id : " + id);
                     logger.debug ("slug : " + slug);
                     updateMessage (Configuration.getBundle().getString("ui.dialog.download.zds.message.downloading"));
-                    String filePath = ZdsHttp.getZdsZipball (id, slug, type, onlineFolder);
+                    //String filePath = ZdsHttp.getZdsZipball (id, slug, type, onlineFolder);
+                    String filePath ="";
                     updateMessage (Configuration.getBundle().getString("ui.dialog.download.zds.message.unpacking"));
                     File folder = ZdsHttp.unzipOnlineContent (filePath, offlineFolder);
                     // get folder in unzip folder

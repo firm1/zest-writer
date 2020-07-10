@@ -18,13 +18,14 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update ; fi
 
 script:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/travis.sh ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew fatJar ; fi
+  - cd scripts && ./build-zmd.sh && cd ..
+  - cd scripts && ./build-css.sh && cd ..
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew dist ; fi
 
 after_success:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew jacocoTestReport coveralls; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_deb.sh $BINTRAY_KEY ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_rpm.sh $BINTRAY_KEY ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_jar.sh $BINTRAY_KEY ; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_jar.sh $BINTRAY_KEY ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then scripts/upload_dmg.sh $BINTRAY_KEY ; fi
 

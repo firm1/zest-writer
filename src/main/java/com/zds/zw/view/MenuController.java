@@ -40,8 +40,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.fxmisc.richtext.StyleClassedTextArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +51,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static com.zds.zw.utils.Configuration.isNumeric;
 
 public class MenuController{
     private final ProgressBar pb = new ProgressBar(0);
@@ -697,7 +697,7 @@ public class MenuController{
                 .get()
                 .getContent();
         BorderPane bPane = (BorderPane) sPane.getItems().get(0);
-        StyleClassedTextArea source = (StyleClassedTextArea) bPane.getCenter();
+        TextArea source = (TextArea) bPane.getCenter();
         FunctionTreeFactory.openFindReplaceDialog(source);
     }
 
@@ -819,7 +819,7 @@ public class MenuController{
                         } else {
                             String[] localeTab = current.split(".");
                             for(String s:localeTab) {
-                                if(!StringUtils.isNumeric(s)) {
+                                if(!isNumeric(s)) {
                                     return true;
                                 }
                             }

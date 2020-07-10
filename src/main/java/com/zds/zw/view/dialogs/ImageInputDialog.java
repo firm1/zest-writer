@@ -13,15 +13,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.fxmisc.richtext.StyleClassedTextArea;
 
 import java.io.File;
 
 public class ImageInputDialog{
-    private StyleClassedTextArea sourceText;
+    private TextArea sourceText;
     private ZdsHttp zdsUtils;
     private MenuController menuManager;
     private Content content;
@@ -30,7 +30,7 @@ public class ImageInputDialog{
     @FXML private TextField link;
     @FXML private TextField title;
 
-    public void setSourceText(StyleClassedTextArea sourceText, ZdsHttp zdsUtils, MenuController menuManager, Content content){
+    public void setSourceText(TextArea sourceText, ZdsHttp zdsUtils, MenuController menuManager, Content content){
         this.sourceText = sourceText;
         this.zdsUtils = zdsUtils;
         this.menuManager = menuManager;
