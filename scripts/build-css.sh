@@ -1,8 +1,5 @@
 #!/bin/bash
 ZDS_VERSION="v29.1a-plume"
-NODE_VERSION="12"
-
-source ./setup_node.sh
 
 if [ -d "zds-site" ]; then
   rm -rf zds-site

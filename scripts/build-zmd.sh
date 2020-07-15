@@ -1,8 +1,5 @@
 #!/bin/bash
 ZMD_VERSION="8.3.0"
-NODE_VERSION="10.8.0"
-
-source ./setup_node.sh
 
 if [ -d "zmarkdown" ]; then
   rm -rf zmarkdown
@@ -22,6 +19,10 @@ sed '/remarkIframes/d' -i common.js
 npm install
 
 npm run release
+
+pwd
+
+ls -rtlh
 
 cp -rp dist/*.js ../../../../src/main/resources/com/zds/zw/js/
 

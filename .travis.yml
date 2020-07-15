@@ -20,6 +20,7 @@ before_install:
   - sudo apt-get install -y npm
 
 script:
+  - cd scripts && NODE_VERSION="12" ./setup_node.sh && cd ..
   - cd scripts && ./build-zmd.sh && cd ..
   - cd scripts && ./build-css.sh && cd ..
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew jpackage ; fi
