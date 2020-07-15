@@ -1,7 +1,6 @@
 #!/bin/bash
 ZDS_VERSION="v29.1a-plume"
 NODE_VERSION="12"
-NPM_VERSION="6.2.0"
 
 source ./setup_node.sh
 

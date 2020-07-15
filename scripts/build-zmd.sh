@@ -1,7 +1,6 @@
 #!/bin/bash
 ZMD_VERSION="8.3.0"
 NODE_VERSION="10.8.0"
-NPM_VERSION="6.2.0"
 
 source ./setup_node.sh
 
