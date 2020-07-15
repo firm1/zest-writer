@@ -1,16 +1,9 @@
 #!/bin/bash
+ZMD_VERSION="8.3.0"
 NODE_VERSION="10.8.0"
 NPM_VERSION="6.2.0"
-ZMD_VERSION="8.3.0"
 
-curl https://raw.githubusercontent.com/creationix/nvm/v0.30.2/install.sh | bash
-source ~/.profile
-nvm ls-remote
-
-nvm install "$NODE_VERSION"
-nvm use "$NODE_VERSION"
-
-node -v
+source ./setup_node.sh
 
 if [ -d "zmarkdown" ]; then
   rm -rf zmarkdown
