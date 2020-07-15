@@ -1,6 +1,8 @@
 #!/bin/bash
 ZMD_VERSION="8.3.0"
 
+source ./setup_node.sh
+
 if [ -d "zmarkdown" ]; then
   rm -rf zmarkdown
 fi
