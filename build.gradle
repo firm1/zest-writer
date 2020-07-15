@@ -1,5 +1,3 @@
-import java.text.SimpleDateFormat
-
 plugins {
     id "java"
     id "application"
@@ -116,23 +114,6 @@ task dist {
 }
 
 defaultTasks 'dist'
-
-/*
-minifyCss {
-    source = "${sourceSets.main.resources.srcDirs.first()}/com/zds/zw/assets/dist/css/content.css"
-    dest = "${sourceSets.main.output.resourcesDir}/com/zds/zw/assets/static/dist/css/content.css"
-    yuicompressor { // Optional
-        lineBreakPos = -1
-    }
-}*/
-
-//tasks.cssToBin {
-//    dependsOn.minifyCss
-//}
-
-//tasks minifyCss {
-//    dependsOn 'processResources'
-//}
 
 dependencies {
     testImplementation 'junit:junit:4.13-rc-2'

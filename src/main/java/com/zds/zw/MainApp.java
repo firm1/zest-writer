@@ -31,12 +31,15 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.core.config.ConfigurationSource;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -66,7 +69,6 @@ public class MainApp extends Application{
         super();
 
         initEnvVariable();
-
         logger.info("Version Java de l'utilisateur: " + System.getProperty("java.version"));
         logger.info("Architecture du système utilisateur: " + System.getProperty("os.arch"));
         logger.info("Nom du système utilisateur: " + System.getProperty("os.name"));
@@ -203,6 +205,7 @@ public class MainApp extends Application{
                 logger.error("Impossible de créer le répertoire "+dir.getAbsolutePath());
             }
         }
+
         System.setProperty("zw.logPath", log.getAbsolutePath());
     }
 
