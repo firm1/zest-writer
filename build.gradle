@@ -68,7 +68,7 @@ jlink {
 
     jpackage {
         // can be set with BADASS_JLINK_JPACKAGE_HOME
-        jpackageHome = "/home/willy/dev/jdk-14_linux-x64_bin/jdk-14"
+        jpackageHome = "./jdk-14_linux-x64_bin/jdk-14"
 
         outputDir = "installer"
         imageName = 'zestwriter'

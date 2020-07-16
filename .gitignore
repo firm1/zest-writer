@@ -35,3 +35,5 @@ src/main/resources/com/zds/zw/js/zmarkdown*.js
 Vagrantfile
 prov_trusty.sh
 .vagrant
+
+jdk-14*
