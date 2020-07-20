@@ -29,6 +29,9 @@ public class FindReplaceDialog{
     @FXML private Button replaceAllButton;
     @FXML private Label iterations;
 
+    private Pair<Integer, Integer> lastMatch;
+    private Pair<Integer, Integer> currentMatch;
+
 
     private enum FindReplaceAction{
         FIND,
@@ -56,7 +59,6 @@ public class FindReplaceDialog{
     @FXML private void handleSearchFieldChange(){
         replaceIndex = 0;
         findIndex = 0;
-        resetTextFill();
         if(!searchField.getText().isEmpty()){
             refreshSearch();
         } else {
@@ -97,8 +99,6 @@ public class FindReplaceDialog{
     }
 
     private List<Pair<Integer, Integer>>  refreshSearch() {
-        resetTextFill();
-
         if(!searchField.getText().isEmpty()){
             String text = sourceText.getText();
             String searchText = searchField.getText();
@@ -125,10 +125,6 @@ public class FindReplaceDialog{
             List<Pair<Integer, Integer>> matchers=getRegionIndex(pattern, text, deltaText);
             numberIterationTotal = matchers.size();
 
-            for(Pair<Integer, Integer> m:matchers) {
-                textFill(m.getKey(), m.getValue(), FindReplaceAction.FIND);
-            }
-
             if(numberIterationTotal > 0){
                 iterations.setText(numberIterationTotal +" "+Configuration.getBundle().getString("ui.dialog.find.plural"));
             }else{
@@ -140,11 +136,11 @@ public class FindReplaceDialog{
     }
 
     private void findReplaceAll(){
-        resetTextFill();
-        for(int k=0; k<numberIterationTotal; k++) {
+        do {
             findReplace(FindReplaceAction.REPLACE);
-        }
+        } while(numberIterationTotal > 0);
     }
+
     private void findReplace(FindReplaceAction action){
         List<Pair<Integer, Integer>> matchers = refreshSearch();
         if(matchers != null)
@@ -153,7 +149,6 @@ public class FindReplaceDialog{
             if(action == FindReplaceAction.FIND_ACTION){
                 if(i == findIndex){
                     textFill(matchCurrent.getKey(), matchCurrent.getValue(), FindReplaceAction.FIND_ACTION);
-                    sourceText.positionCaret(matchCurrent.getKey());
                     refreshSearch();
                     findIndex = numberIterationTotal>0 ? (findIndex + 1) % numberIterationTotal : 0;
                     break;
@@ -162,9 +157,8 @@ public class FindReplaceDialog{
                 if(i == replaceIndex){
                     sourceText.replaceText(matchCurrent.getKey(), matchCurrent.getValue(), replaceField.getText());
                     textFill(matchCurrent.getKey(), matchCurrent.getKey() + replaceField.getText().length(), FindReplaceAction.REPLACE);
-                    sourceText.positionCaret(matchCurrent.getKey());
                     refreshSearch();
-                    replaceIndex = numberIterationTotal>0 ? (replaceIndex + 1) % numberIterationTotal : 0;
+                    replaceIndex = numberIterationTotal>0 ? replaceIndex % numberIterationTotal : 0;
                     break;
                 }
             }
@@ -176,21 +170,13 @@ public class FindReplaceDialog{
     }
 
     private void textFill(int start, int end, FindReplaceAction action){
-        /* TODO : handle this
+
         if(action == FindReplaceAction.FIND){
-            sourceText.setStyleClass(start, end, "findReplace-highlightsFind");
+            sourceText.selectRange(start, end);
         }else if(action == FindReplaceAction.FIND_ACTION){
-            sourceText.setStyleClass(start, end, "findReplace-highlightsFindAction");
+            sourceText.selectRange(start, end);
         }else if(action == FindReplaceAction.REPLACE){
-            sourceText.setStyleClass(start, end, "findReplace-highlightsReplace");
+            sourceText.selectRange(start, end);
         }
-
-         */
-    }
-
-    private void resetTextFill(){
-        /* TODO : handle this
-        sourceText.setStyleClass(0, sourceText.getText().length(), "");
-        */
     }
 }

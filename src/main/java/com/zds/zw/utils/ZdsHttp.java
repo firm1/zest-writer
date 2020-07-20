@@ -14,9 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.HttpCookie;
-import java.net.URI;
-import java.net.URLEncoder;
+import java.net.*;
 import java.net.http.HttpClient;
 import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
@@ -88,7 +86,7 @@ public class ZdsHttp {
         return contentListOnline;
     }
 
-    private String getBaseUrl() {
+    public String getBaseUrl() {
         if ("80".equals(this.port) || ("443".equals(this.port) && "https".equals(this.protocol))) {
             return this.protocol + "://" + this.hostname;
         } else {
@@ -109,7 +107,7 @@ public class ZdsHttp {
     }
 
     private String getPersonalOpinionUrl() {
-        return getBaseUrl() + "billets/voir/" + login + "/";
+        return getBaseUrl() + "/billets/voir/" + login + "/";
     }
 
     private String getDownloadDraftContentUrl(String id, String slug) {
@@ -165,12 +163,15 @@ public class ZdsHttp {
      * @param id user id on ZdS associated to login
      */
     public void authToGoogle(List<HttpCookie> cookies, String login, String id) {
-        /*
+
         if(login != null && id != null) {
             this.login = login;
-            this.idUser = id;
-            log.info("L'identifiant de l'utilisateur " + this.login + " est : " + idUser);
-            cookieStore = new BasicCookieStore();
+            log.info("L'identifiant de l'utilisateur " + this.login + " est : " + id);
+            Map<String, String> params = new HashMap<>();
+            CookieManager cm = new CookieManager();
+            CookieStore cookieStore = cm.getCookieStore();
+
+            /*
             for(HttpCookie cookie:cookies) {
                 BasicClientCookie c = new BasicClientCookie(cookie.getName(), cookie.getValue());
                 c.setDomain(cookie.getDomain());
@@ -179,15 +180,22 @@ public class ZdsHttp {
                 c.setVersion(cookie.getVersion());
                 c.setComment(cookie.getComment());
                 cookieStore.addCookie(c);
+                cookieStore.add(, cookie);
             }
             context.setCookieStore(cookieStore);
+
+             */
+
+            for(HttpCookie cookie:cookies) {
+                cookieStore.add(URI.create(getBaseUrl()), cookie);
+            }
+            System.out.println("===> "+cookieStore.toString());
             this.authenticated = true;
+
         }
         else {
             log.debug("Le login de l'utilisateur n'a pas pu être trouvé");
         }
-
-         */
     }
 
     private HttpResponse postRequest(String url, Map<Object, Object> data, String referer) {
@@ -298,10 +306,10 @@ public class ZdsHttp {
         data.put("password", password);
         data.put("csrfmiddlewaretoken", token.get());
 
-        HttpResponse response = postRequest(getLoginUrl(), data, null);
+        var response = postRequest(getLoginUrl(), data, null);
 
         this.cookies = getUniquesStringCookie(response.headers());
-        HttpResponse getContentHomeResponse = getRequest(getBaseUrl());
+        var getContentHomeResponse = getRequest(getBaseUrl());
 
         if(getContentHomeResponse.body().toString().contains("my-account-dropdown")) {
             this.authenticated = true;
@@ -310,6 +318,8 @@ public class ZdsHttp {
         } else {
             log.debug("Utilisateur " + this.login + " non connecté via " + getLoginUrl());
         }
+        System.out.println(this.cookies);
+
         return this.authenticated;
     }
 
@@ -345,7 +355,7 @@ public class ZdsHttp {
     public String importImage(File file) throws IOException {
         if(getGalleryId() != null) {
             String url = getImportImageUrl();
-            HttpResponse response = getRequest(getImportImageUrl());
+            var response = getRequest(getImportImageUrl());
             Document doc = Jsoup.parse(response.body().toString());
             Elements inputs = doc.select("form input");
             Optional<String> token = inputs.stream()
@@ -373,8 +383,9 @@ public class ZdsHttp {
                     .build();
 
             try {
-                HttpResponse httpResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
-                doc = Jsoup.parse(httpResponse.body().toString());
+                var httpResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
+                var responseGet = getRequest(getBaseUrl()+httpResponse.headers().firstValue("location").get());
+                doc = Jsoup.parse(responseGet.body().toString());
                 Elements endPoints = doc.select("input[name=avatar_url]");
                 if(!endPoints.isEmpty()) {
                     return getBaseUrl() + endPoints.first().attr("value").trim();
@@ -418,7 +429,6 @@ public class ZdsHttp {
                 .build();
         try {
             HttpResponse httpResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(httpResponse.body().toString());
 
             switch (httpResponse.statusCode()) {
                 case 200:
@@ -566,37 +576,24 @@ public class ZdsHttp {
         return authenticated;
     }
 
-    public String getZdsZipball(String id, String slug, String type, String destFolder) throws IOException{
-        String urlForGet = getBaseUrl() + "/" + type + "/zip/"+ id + "/" + slug + ".zip";
+    public static String getZdsZipball(String id, String slug, String type, String destFolder) throws IOException{
+        String urlForGet = "https://zestedesavoir.com/" + type + "/zip/"+ id + "/" + slug + ".zip";
         log.debug("Tentative de téléchargement du lien "+urlForGet);
         log.debug("Répertoire de téléchargement cible : "+destFolder);
 
         String filePath = destFolder + File.separator + slug + ".zip";
-
         log.debug("Début du téléchargement");
-        HttpResponse response = getRequestFile(urlForGet, Path.of(filePath));
-        log.debug("Archive téléchargée : "+filePath);
-        return filePath;
-    }
-
-    public static void main(String[] args) {
-        /*
-        ZdsHttp zdsHttp = new ZdsHttp(new Configuration("/home/willy"));
-        zdsHttp.initContext();
-        System.out.println("login ="+zdsHttp.login("firm1", "leshow"));
+        HttpRequest.Builder builder = HttpRequest.newBuilder()
+                .uri(URI.create(urlForGet))
+                .GET();
+        HttpRequest request = builder.build();
         try {
-            zdsHttp.initGalleryId("1428", "la-ligne-editoriale-officielle-de-zeste-de-savoir-1");
-            zdsHttp.initInfoOnlineContent("article");
-            zdsHttp.downloaDraft("1428", "article");
-            //zdsHttp.uploadContent("/home/willy/zwriter-workspace/online/la-ligne-editoriale-officielle-de-zeste-de-savoir-1.zip", "https://zestedesavoir.com/contenus/importer/1428/la-ligne-editoriale-officielle-de-zeste-de-savoir-1/", "update");
-            zdsHttp.importImage(new File("/home/willy/Images/image.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-        try {
-            System.out.println(GithubHttp.loadManifest("/tmp/zworkspace/france.code-civil","steeve", "france.code-civil"));
-        } catch (IOException e) {
+            HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofFile(Path.of(filePath)));
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+
+        log.debug("Archive téléchargée : "+filePath);
+        return filePath;
     }
 }

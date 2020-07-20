@@ -178,15 +178,6 @@
                   </graphic>
                </Button>
 
-               <Button fx:id="CorrectButton" mnemonicParsing="false" onAction="#handleValidateButtonAction">
-                  <tooltip>
-                     <Tooltip text="%ui.editor.button.correct"/>
-                  </tooltip>
-                  <graphic>
-                     <MaterialDesignIconView fill="#084561" glyphName="SPELLCHECK" size="1.8em"/>
-                  </graphic>
-               </Button>
-
                <Button fx:id="ExternalWindow" mnemonicParsing="false" onAction="#handleExternalButtonAction">
                   <tooltip>
                      <Tooltip text="%ui.editor.button.externalrender"/>

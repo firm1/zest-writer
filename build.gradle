@@ -142,7 +142,6 @@ dependencies {
     implementation group: 'commons-io', name: 'commons-io', version: '2.7'
     implementation group: 'org.apache.commons', name: 'commons-text', version: '1.8'
 
-
     // graal vm
     implementation group: 'org.graalvm.sdk', name: 'graal-sdk', version: "${graalVersion}"
     implementation group: 'org.graalvm.js', name: 'js', version: "${graalVersion}"
@@ -167,17 +166,6 @@ jacocoTestReport {
         xml.enabled = true
         html.enabled = true
     }
-//    afterEvaluate {
-//        classDirectories = files(classDirectories.files.collect {
-//            fileTree(dir: it,
-//                    exclude: ['**/view/**',
-//                              '**/contents/**',
-//                              '**/utils/api/**',
-//                              '**/MainApp**',
-//                              '**/officialContents/**',
-//                              '**/task/**'])
-//        })
-//    }
 }
 
 tasks.check.dependsOn jacocoTestReport

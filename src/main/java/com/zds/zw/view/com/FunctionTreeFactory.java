@@ -48,10 +48,11 @@ public class FunctionTreeFactory {
                     Constant.DEFAULT_INTRODUCTION_FILENAME,
                     Constant.DEFAULT_CONCLUSION_FILENAME,
                     new ArrayList<>(),
-                    2,
+                    "2.1",
                     MainApp.getConfig().getWritingLicense(),
                     "",
-                    EditContentDialog.getTypeOptions().get(1).getCode()));
+                    EditContentDialog.getTypeOptions().get(1).getCode(),
+                    "true"));
         } else {
             dialog = new EditContentDialog(defaultContent);
         }

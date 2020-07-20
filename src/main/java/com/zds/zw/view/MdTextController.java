@@ -859,27 +859,9 @@ public class MdTextController {
     }
 
     @FXML
-    private void handleValidateButtonAction(ActionEvent event) {
-        /*
-        TODO : uncomment this
-        String s = StringEscapeUtils.unescapeHtml4(markdownToHtml(currentSourceText.getText()));
-        if (MdConvertController.corrector == null) {
-            MdConvertController.corrector = new Corrector();
-        }
-        try {
-            String result = MdConvertController.corrector.checkHtmlContent(s);
-            WebEngine webEngine = currentRenderView.getEngine();
-            webEngine.loadContent("<!doctype html><html lang='fr'><head><meta charset='utf-8'><base href='"
-                    + com.zds.zw.MainApp.class.getResource("assets").toExternalForm() + "' /></head><body>" + result + "</body></html>");
-            webEngine.setUserStyleSheetLocation(com.zds.zw.MainApp.class.getResource("assets/static/css/content.css").toExternalForm());
-        } catch (DOMException e) {
-            log.error(e.getMessage(), e);
-        }*/
-    }
-
-    @FXML
     private void handleExternalButtonAction(ActionEvent event) {
-        splitPane.getItems().remove(1);
+        SplitPane selectedSplitPane = (SplitPane) editorList.getSelectionModel().getSelectedItem().getContent();
+        selectedSplitPane.getItems().remove(1);
 
         Stage stage = new CustomStage(Configuration.getBundle().getString("ui.window.externalrender.title"));
         AnchorPane pane = new AnchorPane(currentRenderView);
@@ -896,8 +878,8 @@ public class MdTextController {
 
         stage.setOnCloseRequest(e -> {
             currentBoxRender.setCenter(currentRenderView);
-            splitPane.getItems().add(1, currentBoxRender);
-            splitPane.setDividerPositions(0.5);
+            selectedSplitPane.getItems().add(1, currentBoxRender);
+            selectedSplitPane.setDividerPositions(0.5);
         });
     }
 
@@ -913,12 +895,17 @@ public class MdTextController {
         dialog.setHeaderText(Configuration.getBundle().getString("ui.editor.dialog.goto.header"));
         dialog.setContentText(Configuration.getBundle().getString("ui.editor.dialog.goto.text"));
         dialog.initOwner(MainApp.getPrimaryStage());
-
         Optional<String> result = dialog.showAndWait();
-        /* TODO : handle this
-        result.ifPresent(line -> currentSourceText.positionCaret(currentSourceText.position(Integer.parseInt(line) - 1, 0).toOffset()));
 
-         */
+        String[] splitText = currentSourceText.getText().split("\n");
+
+        result.ifPresent(line -> {
+            int position = 0;
+            for(int i=0; i<Math.min(splitText.length, Integer.parseInt(line)) - 1; i++) {
+                position += splitText[i].length() + 1;
+            }
+            currentSourceText.positionCaret(position);
+        });
     }
 
     @FXML
@@ -942,10 +929,6 @@ public class MdTextController {
             Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.F, SHORTCUT_DOWN), e -> handleFindReplaceDialog())));
             if (FunctionTreeFactory.isMacOs()) {
                 Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.Q, SHORTCUT_DOWN), e -> currentSourceText.selectAll())));
-            }
-            if (MainApp.getConfig().isEditorSmart()) {
-                //Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.TAB), e -> handleSmartTab())));
-                //Nodes.addInputMap(sourceText, sequence(consume(keyPressed(KeyCode.ENTER), e -> handleSmartEnter())));
             }
         });
     }

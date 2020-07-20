@@ -25,10 +25,11 @@ import java.util.Objects;
 
 @JsonIgnoreProperties({"basePath", "filePath", "editable", "countChildrenExtract", "countDescendantContainer" ,"rootContent", "depth", "tutorial", "article", "opinion"})
 public class Content extends Container implements ContentNode{
-    private int _version;
+    private String _version;
     private String _licence;
     private String _description;
     private String _type;
+    private String ready_to_publish;
 
 
     /**
@@ -46,19 +47,27 @@ public class Content extends Container implements ContentNode{
      */
     @JsonCreator
     public Content(@JsonProperty("object") String object, @JsonProperty("slug") String slug, @JsonProperty("title") String title, @JsonProperty("introduction") String introduction, @JsonProperty("conclusion") String conclusion,
-            @JsonProperty("children") List<MetaContent> children, @JsonProperty("version") int version, @JsonProperty("licence") String licence, @JsonProperty("description") String description, @JsonProperty("type") String type) {
-        super(object, slug, title, introduction, conclusion, children);
+            @JsonProperty("children") List<MetaContent> children, @JsonProperty("version") String version, @JsonProperty("licence") String licence, @JsonProperty("description") String description, @JsonProperty("type") String type, @JsonProperty("ready_to_publish") String ready_to_publish) {
+        super(object, slug, title, introduction, conclusion, children, ready_to_publish);
         this._version = version;
         this._licence = licence;
         this._description = description;
         this._type = type;
     }
 
-    public int getVersion() {
+    public String getReady_to_publish() {
+        return ready_to_publish;
+    }
+
+    public void setReady_to_publish(String ready_to_publish) {
+        this.ready_to_publish = ready_to_publish;
+    }
+
+    public String getVersion() {
         return _version;
     }
 
-    public void setVersion(int version) {
+    public void setVersion(String version) {
         this._version = version;
     }
 
@@ -147,25 +156,6 @@ public class Content extends Container implements ContentNode{
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF8"));
             writer.append(sb.toString());
             writer.append(exportContentToMarkdown(0, getDepth()));
-            writer.flush();
-        } catch (Exception e) {
-            MainApp.getLogger().error(e.getMessage(), e);
-        }
-    }
-
-    public static String normalizeHtml(String htmlValue) {
-        String pattern = "(?i)(href=\"\\/media\\/galleries)(<title.*?>)(.+?)()";
-        String updated = htmlValue.replaceAll(pattern, "$2");
-        return htmlValue;
-    }
-
-    public void saveToHtml(File file, MdTextController index) {
-        try (FileOutputStream fos = new FileOutputStream(file)) {
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF8"));
-            String mdValue = exportContentToMarkdown(0, getDepth());
-            String htmlValue = StringEscapeUtils.unescapeHtml4(index.markdownToHtml(mdValue));
-            htmlValue = normalizeHtml(htmlValue);
-            writer.append(MainApp.getMdUtils().addHeaderAndFooterStrict(htmlValue, getTitle()));
             writer.flush();
         } catch (Exception e) {
             MainApp.getLogger().error(e.getMessage(), e);

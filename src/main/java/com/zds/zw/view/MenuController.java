@@ -2,13 +2,12 @@ package com.zds.zw.view;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zds.zw.MainApp;
-import com.zds.zw.model.Constant;
-import com.zds.zw.model.Content;
-import com.zds.zw.model.MetadataContent;
-import com.zds.zw.model.Textual;
+import com.zds.zw.model.*;
 import com.zds.zw.utils.Configuration;
+import com.zds.zw.utils.HtmlToPlainText;
 import com.zds.zw.utils.ZMD;
 import com.zds.zw.utils.ZdsHttp;
+import com.zds.zw.utils.readability.Readability;
 import com.zds.zw.view.com.*;
 import com.zds.zw.view.dialogs.*;
 import com.zds.zw.view.task.*;
@@ -34,12 +33,13 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.text.StringEscapeUtils;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +60,6 @@ public class MenuController{
     private MainApp mainApp;
     @FXML private MenuItem menuDownload;
     @FXML private MenuItem menuUpload;
-    @FXML private MenuItem menuReport;
     @FXML private MenuItem menuLisibility;
     @FXML private GridPane hBottomBox;
     @FXML private Menu menuExport;
@@ -151,10 +150,10 @@ public class MenuController{
     }
 
     @FXML private void handleFleshButtonAction(ActionEvent event){
-        /*
+
         Function<Textual, Double> calFlesh = (Textual ch) -> {
             String htmlText = StringEscapeUtils.unescapeHtml4(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
-            String plainText = Corrector.htmlToTextWithoutCode(htmlText);
+            String plainText = new HtmlToPlainText().getPlainText(Jsoup.parse(htmlText), "pre", "table");
             if("".equals(plainText.trim())){
                 return 100.0;
             }else{
@@ -174,14 +173,12 @@ public class MenuController{
             hBottomBox.getChildren().clear();
         });
         computeIndexService.start();
-         */
     }
 
     @FXML private void handleGunningButtonAction(ActionEvent event){
-        /*
         Function<Textual, Double> calGuning = (Textual ch) -> {
             String htmlText = StringEscapeUtils.unescapeHtml4(markdownToHtml(mainApp.getIndex(), ch.readMarkdown()));
-            String plainText = Corrector.htmlToTextWithoutCode(htmlText);
+            String plainText = new HtmlToPlainText().getPlainText(Jsoup.parse(htmlText), "pre", "table");
             if("".equals(plainText.trim())){
                 return 100.0;
             }else{
@@ -200,50 +197,8 @@ public class MenuController{
             hBottomBox.getChildren().clear();
         });
         computeIndexService.start();
-         */
     }
 
-    @FXML private void handleReportWithoutTypoButtonAction(ActionEvent event){
-        TextArea textArea = new TextArea();
-        textArea.setEditable(true);
-        textArea.setWrapText(true);
-
-        textArea.setMaxWidth(Double.MAX_VALUE);
-        textArea.setMaxHeight(Double.MAX_VALUE);
-        GridPane.setVgrow(textArea, Priority.ALWAYS);
-        GridPane.setHgrow(textArea, Priority.ALWAYS);
-
-        GridPane expContent = new GridPane();
-        expContent.setMaxWidth(Double.MAX_VALUE);
-        expContent.add(new Label(Configuration.getBundle().getString("ui.menu.edit.correction")), 0, 0);
-        expContent.add(textArea, 0, 1);
-
-        hBottomBox.getChildren().addAll(labelField);
-        /*
-        CorrectionService correctTask = new CorrectionService(mainApp.getIndex());
-        labelField.textProperty().bind(correctTask.messageProperty());
-        textArea.textProperty().bind(correctTask.valueProperty());
-        correctTask.setOnFailed(t -> {
-            Alert alert = new CustomAlert(AlertType.ERROR);
-            alert.setTitle(Configuration.getBundle().getString("ui.alert.correction.failed.title"));
-            alert.setHeaderText(Configuration.getBundle().getString("ui.alert.correction.failed.header"));
-            alert.setContentText(Configuration.getBundle().getString("ui.alert.correction.failed.text"));
-
-            alert.showAndWait();
-            hBottomBox.getChildren().clear();
-        });
-        correctTask.setOnSucceeded(t -> {
-            Alert alert = new CustomAlert(AlertType.INFORMATION);
-            alert.setTitle(Configuration.getBundle().getString("ui.alert.correction.success.title"));
-            alert.setHeaderText(Configuration.getBundle().getString("ui.alert.correction.success.header"));
-
-            // Set expandable Exception into the dialog pane.
-            alert.getDialogPane().setExpandableContent(expContent);
-            alert.showAndWait();
-            hBottomBox.getChildren().clear();
-        });
-        correctTask.start();*/
-    }
 
     @FXML private void handleNewButtonAction(ActionEvent event){
         File defaultDirectory;
@@ -302,7 +257,6 @@ public class MenuController{
         menuExport.disableProperty().bind(mainApp.contentProperty().isNull());
         menuUpload.disableProperty().bind(mainApp.contentProperty().isNull());
         menuLisibility.disableProperty().bind(mainApp.contentProperty().isNull());
-        menuReport.disableProperty().bind(mainApp.contentProperty().isNull());
     }
 
     @FXML public Service<Void> handleLoginButtonAction(ActionEvent event){
@@ -317,6 +271,7 @@ public class MenuController{
 
         hBottomBox.add(labelField, 0, 0);
         LoginService loginTask = new LoginService();
+
         result.ifPresent(usernamePassword -> {
             loginTask.setUsername(usernamePassword.getKey());
             loginTask.setPassword(usernamePassword.getValue());
@@ -639,44 +594,6 @@ public class MenuController{
             alert.setResizable(true);
 
             alert.showAndWait();
-        }
-    }
-
-    @FXML private void handleExportPdfButtonAction(ActionEvent event){
-        Content content = mainApp.getContent();
-        DirectoryChooser fileChooser = new DirectoryChooser();
-        fileChooser.setInitialDirectory(MainApp.getDefaultHome());
-        fileChooser.setTitle(Configuration.getBundle().getString("ui.dialog.export.dir.title"));
-        File selectedDirectory = fileChooser.showDialog(MainApp.getPrimaryStage());
-        File selectedFile = new File(selectedDirectory, ZdsHttp.toSlug(content.getTitle()) + ".pdf");
-        log.debug("Tentative d'export vers le fichier " + selectedFile.getAbsolutePath());
-
-        if(selectedDirectory != null){
-            hBottomBox.getChildren().clear();
-            hBottomBox.add(pb, 0, 0);
-            hBottomBox.add(labelField, 1, 0);
-            ExportPdfService exportPdfTask = new ExportPdfService(mainApp.getIndex(), content, selectedFile);
-            labelField.textProperty().bind(exportPdfTask.messageProperty());
-            pb.progressProperty().bind(exportPdfTask.progressProperty());
-            Alert alert = new CustomAlert(AlertType.NONE);
-            exportPdfTask.setOnFailed((WorkerStateEvent ev) -> {
-                alert.setAlertType(AlertType.ERROR);
-                alert.setTitle(Configuration.getBundle().getString("ui.dialog.export.failed.title"));
-                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.export.failed.header"));
-                alert.setContentText(Configuration.getBundle().getString("ui.dialog.export.failed.text"));
-                alert.showAndWait();
-                hBottomBox.getChildren().clear();
-            });
-
-            exportPdfTask.setOnSucceeded((WorkerStateEvent ev) -> {
-                alert.setAlertType(AlertType.INFORMATION);
-                alert.setTitle(Configuration.getBundle().getString("ui.dialog.export.success.title"));
-                alert.setHeaderText(Configuration.getBundle().getString("ui.dialog.export.success.header"));
-                alert.setContentText(Configuration.getBundle().getString("ui.dialog.export.success.text")+" \"" + selectedFile.getAbsolutePath() + "\"");
-                alert.showAndWait();
-                hBottomBox.getChildren().clear();
-            });
-            exportPdfTask.start();
         }
     }
 

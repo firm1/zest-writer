@@ -29,12 +29,12 @@ public class LoginDialog extends BaseDialog<Pair<String, String>> {
         password.setPromptText("password");
         CheckBox keepConnection = new CheckBox(Configuration.getBundle().getString("ui.dialog.auth.stay"));
 
-        getGridPane().add(googleButton, 0, 0, 1, 2);
-        getGridPane().add(new Label(Configuration.getBundle().getString("ui.dialog.auth.username")+":"), 1, 0);
-        getGridPane().add(username, 2, 0);
-        getGridPane().add(new Label(Configuration.getBundle().getString("ui.dialog.auth.password")+":"), 1, 1);
-        getGridPane().add(password, 2, 1);
-        getGridPane().add(keepConnection, 2, 2);
+        //getGridPane().add(googleButton, 0, 0, 1, 2);
+        getGridPane().add(new Label(Configuration.getBundle().getString("ui.dialog.auth.username")+":"), 0, 0);
+        getGridPane().add(username, 1, 0);
+        getGridPane().add(new Label(Configuration.getBundle().getString("ui.dialog.auth.password")+":"), 0, 1);
+        getGridPane().add(password, 1, 1);
+        getGridPane().add(keepConnection, 1, 2);
 
         // Enable/Disable login button depending on whether a username was entered.
         Node loginButton = this.getDialogPane().lookupButton(loginButtonType);

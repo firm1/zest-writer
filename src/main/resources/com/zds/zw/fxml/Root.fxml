@@ -61,12 +61,14 @@
                            <MaterialDesignIconView fill="#084561" glyphName="MARKDOWN" size="1.8em"/>
                        </graphic>
                    </MenuItem>
+                   <!--
                    <MenuItem mnemonicParsing="false" onAction="#handleExportPdfButtonAction"
                              text="%ui.menu.export.pdf">
                        <graphic>
                            <MaterialDesignIconView fill="#084561" glyphName="FILE_PDF" size="1.8em"/>
                        </graphic>
                    </MenuItem>
+                   -->
                </Menu>
                <SeparatorMenuItem/>
                <MenuItem fx:id="menuQuit" mnemonicParsing="false" onAction="#handleQuitButtonAction"
@@ -80,17 +82,9 @@
                </MenuItem>
            </Menu>
            <Menu mnemonicParsing="false" text="%ui.menu.edit">
+
                <MenuItem fx:id="menuFindReplace" mnemonicParsing="false" onAction="#handleFindReplaceAction"
                          text="%ui.menu.tools.find_replace" disable="true"/>
-               <MenuItem fx:id="menuReport" disable="true" mnemonicParsing="false"
-                         onAction="#handleReportWithoutTypoButtonAction" text="%ui.menu.edit.correction">
-                   <graphic>
-                       <MaterialDesignIconView fill="#084561" glyphName="SPELLCHECK" size="1.8em"/>
-                   </graphic>
-                   <accelerator>
-                       <KeyCodeCombination alt="UP" code="F7" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
-                   </accelerator>
-               </MenuItem>
                <Menu fx:id="menuLisibility" disable="true" mnemonicParsing="false" text="%ui.menu.edit.readable">
                    <graphic>
                        <MaterialDesignIconView fill="#084561" glyphName="READ" size="1.8em"/>

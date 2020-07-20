@@ -13,6 +13,8 @@ public class CustomDialog<T> extends Dialog<T> {
         FunctionTreeFactory.addTheming(this.getDialogPane());
         initModality(Modality.APPLICATION_MODAL);
         initOwner(MainApp.getPrimaryStage());
+        setResizable(true);
+        setHeight(400);
         getDialogPane().getChildren().stream().filter(node -> node instanceof Label).forEach(node -> ((Label)node).setMinHeight(Region.USE_PREF_SIZE));
     }
 }

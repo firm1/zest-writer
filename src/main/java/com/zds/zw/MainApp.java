@@ -31,15 +31,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.apache.logging.log4j.core.config.ConfigurationSource;
-import org.apache.logging.log4j.core.config.Configurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -96,7 +93,7 @@ public class MainApp extends Application{
             config = new Configuration(defaultHome.getAbsolutePath());
         }
         zdsutils = new ZdsHttp(config);
-        mdUtils = new Markdown();
+        mdUtils = new Markdown(zdsutils);
     }
 
     public static void main(String[] args) {

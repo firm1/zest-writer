@@ -214,7 +214,8 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                         result.get(),
                         (baseSlug + "/" + Constant.DEFAULT_INTRODUCTION_FILENAME).substring(baseFilePath.length()+1),
                         (baseSlug + "/" + Constant.DEFAULT_CONCLUSION_FILENAME).substring(baseFilePath.length()+1),
-                        new ArrayList<>());
+                        new ArrayList<>(),
+                        "true");
                 container.setBasePath(baseFilePath);
                 ((Container)getItem()).getChildren().add(container);
 
@@ -293,7 +294,8 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                         result.get(),
                         (baseSlug + "/" + Constant.DEFAULT_INTRODUCTION_FILENAME).substring(baseFilePath.length()+1),
                         (baseSlug + "/" + Constant.DEFAULT_CONCLUSION_FILENAME).substring(baseFilePath.length()+1),
-                        new ArrayList<>());
+                        new ArrayList<>(),
+                        "true");
                 container.setBasePath(baseFilePath);
                 ((Container)getItem()).getChildren().add(container);
 
