@@ -8,7 +8,7 @@ package com.zds.zw.utils.readability;
  */
 public class Readability {
 
-    private static SentenceExtractor se = new SentenceExtractor();
+    private static final SentenceExtractor se = new SentenceExtractor();
 
     Integer sentences;
     Integer complex;

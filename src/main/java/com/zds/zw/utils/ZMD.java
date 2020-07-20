@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class ZMD {
     Context engine;
-    private static Logger logger = LoggerFactory.getLogger(ZMD.class);
+    private static final Logger logger = LoggerFactory.getLogger(ZMD.class);
     public ZMD() {
         engine = Context
                 .newBuilder("js")

@@ -27,11 +27,11 @@ public class MdConvertController {
     private MdTextController mdBox;
     private int xRenderPosition = 0;
     private int yRenderPosition = 0;
-    private StringProperty countChars = new SimpleStringProperty();
-    private StringProperty countWords = new SimpleStringProperty();
-    private StringProperty countTimes = new SimpleStringProperty();
-    private BooleanPropertyBase needRefresh = new SimpleBooleanProperty(false);
-    private BooleanPropertyBase saved  = new SimpleBooleanProperty(true);
+    private final StringProperty countChars = new SimpleStringProperty();
+    private final StringProperty countWords = new SimpleStringProperty();
+    private final StringProperty countTimes = new SimpleStringProperty();
+    private final BooleanPropertyBase needRefresh = new SimpleBooleanProperty(false);
+    private final BooleanPropertyBase saved  = new SimpleBooleanProperty(true);
     @FXML private WebView renderView;
     @FXML private SplitPane splitPane;
     @FXML private BorderPane boxRender;

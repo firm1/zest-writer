@@ -15,6 +15,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
@@ -153,7 +154,7 @@ public class Content extends Container implements ContentNode{
         sb.append("# ").append(getIntroduction().getTitle()).append("\n\n");
 
         try (FileOutputStream fos = new FileOutputStream(file)) {
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF8"));
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, StandardCharsets.UTF_8));
             writer.append(sb.toString());
             writer.append(exportContentToMarkdown(0, getDepth()));
             writer.flush();

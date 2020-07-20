@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class Theme {
-    private static List<Theme> themeAvailable = Arrays.asList(
+    private static final List<Theme> themeAvailable = Arrays.asList(
             new Theme("dark.css", Configuration.getBundle().getString("ui.options.display.theme.dark")),
             new Theme("light.css", Configuration.getBundle().getString("ui.options.display.theme.light")),
             new Theme("halloween.css", Configuration.getBundle().getString("ui.options.display.theme.halloween"), 31, 10, 2, 11),

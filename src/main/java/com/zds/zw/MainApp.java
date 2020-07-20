@@ -50,7 +50,7 @@ public class MainApp extends Application{
     private static Markdown mdUtils;
     private static String[] args;
     private static File defaultHome;
-    private static Logger logger = LoggerFactory.getLogger(MainApp.class);;
+    private static Logger logger = LoggerFactory.getLogger(MainApp.class);
     private Scene scene;
     private BorderPane rootLayout;
     private ObservableList<Textual> extracts = FXCollections.observableArrayList();

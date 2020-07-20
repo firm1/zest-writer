@@ -19,7 +19,7 @@ public interface Textual{
 
     default void save() {
         try (FileOutputStream fos = new FileOutputStream(getFilePath())) {
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF8"));
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, StandardCharsets.UTF_8));
             writer.append(getMarkdown());
             writer.flush();
         } catch (IOException e) {

@@ -16,7 +16,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -65,7 +64,7 @@ public class MenuController{
     @FXML private Menu menuExport;
     @FXML private MenuItem menuQuit;
     @FXML private MenuItem menuFindReplace;
-    private BooleanPropertyBase isOnReadingTab = new SimpleBooleanProperty(true);
+    private final BooleanPropertyBase isOnReadingTab = new SimpleBooleanProperty(true);
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     public MenuController() {
@@ -481,9 +480,7 @@ public class MenuController{
         msg.setText(Configuration.getBundle().getString("ui.content.select.placeholder.commit_msg"));
         ChoiceBox<MetadataContent> contenus = new ChoiceBox<>();
         contenus.setItems(FXCollections.observableArrayList(contents));
-        if(selectedContent.isPresent()) {
-            contenus.getSelectionModel().select(selectedContent.get());
-        }
+        selectedContent.ifPresent(metadataContent -> contenus.getSelectionModel().select(metadataContent));
 
         grid.add(new Label(Configuration.getBundle().getString("ui.content.select.field.slug")+" : "), 0, 0);
         grid.add(contenus, 1, 0);

@@ -8,7 +8,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class BaseDialog<T> extends CustomDialog<T> {
-	private GridPane gridPane = new GridPane();
+	private final GridPane gridPane = new GridPane();
 
 	public BaseDialog(String title) {
 		super();

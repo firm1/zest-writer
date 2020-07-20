@@ -4,14 +4,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zds.zw.MainApp;
 import com.zds.zw.model.*;
 import com.zds.zw.utils.Configuration;
+import com.zds.zw.utils.HtmlToPlainText;
 import com.zds.zw.utils.ZdsHttp;
 import com.zds.zw.utils.readability.Readability;
 import com.zds.zw.view.MdTextController;
+import com.zds.zw.view.MenuController;
 import com.zds.zw.view.dialogs.BaseDialog;
+import com.zds.zw.view.task.ComputeIndexService;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.text.StringEscapeUtils;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +33,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
     private final Logger logger;
     private MdTextController index;
 	private String baseFilePath;
-    private ContextMenu addMenu = new ContextMenu();
+    private final ContextMenu addMenu = new ContextMenu();
     private Content content;
 
 
@@ -224,7 +229,9 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 FunctionTreeFactory.generateMetadataAttributes(container);
 
                 if (!dirFile.exists() && !dirFile.isDirectory()) {
-                    dirFile.mkdir();
+                    if(!dirFile.mkdir()) {
+                        logger.error("Probleme pour créer le répertoire "+dirFile.getAbsolutePath());
+                    }
                 }
                 saveManifestJson();
                 // refresh visual
@@ -304,7 +311,9 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                 FunctionTreeFactory.generateMetadataAttributes(container);
 
                 if (!dirFile.exists() && !dirFile.isDirectory()) {
-                    dirFile.mkdir();
+                    if(!dirFile.mkdir()) {
+                        logger.error("Probleme pour créer le répertoire "+dirFile.getAbsolutePath());
+                    }
                 }
 
                 // move physical file to new directory
@@ -385,11 +394,11 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
         menuStatReadability.setOnAction(t -> {
             logger.debug("Tentative de calcul des statistiques de lisiblité");
-            /*
+
             Container container = (Container) getItem();
             Function<Textual, Double> performGuning = (Textual ch) -> {
                 String htmlText = StringEscapeUtils.unescapeHtml4(MenuController.markdownToHtml(index, ch.readMarkdown()));
-                String plainText = Corrector.htmlToTextWithoutCode(htmlText);
+                String plainText = new HtmlToPlainText().getPlainText(Jsoup.parse(htmlText), "pre", "table");
                 if("".equals(plainText.trim())){
                     return 100.0;
                 }else{
@@ -399,7 +408,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             };
             Function<Textual, Double> performFlesch = (Textual ch) -> {
                 String htmlText = StringEscapeUtils.unescapeHtml4(MenuController.markdownToHtml(index, ch.readMarkdown()));
-                String plainText = Corrector.htmlToTextWithoutCode(htmlText);
+                String plainText = new HtmlToPlainText().getPlainText(Jsoup.parse(htmlText), "pre", "table");
                 if("".equals(plainText.trim())){
                     return 100.0;
                 }else{
@@ -407,7 +416,6 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                     return rd.getFleschReadingEase();
                 }
             };
-
 
             ComputeIndexService computeGuningService = new ComputeIndexService(performGuning, container);
             index.getMainApp().getMenuController().getHBottomBox().getChildren().clear();
@@ -424,40 +432,8 @@ public class MdTreeCell extends TreeCell<ContentNode>{
             });
             computeGuningService.setOnFailed(g -> index.getMainApp().getMenuController().getHBottomBox().getChildren().clear());
             computeGuningService.start();
-
-             */
         });
 
-        menuStatMistakes.setOnAction(t -> {
-            logger.debug("Tentative de calcul du nombre de fautes");
-            /*
-            Container container = (Container) getItem();
-
-            Corrector corrector = new Corrector();
-            Function<Textual, Double> performCorrection = (Textual ch) -> {
-                String md = ch.readMarkdown();
-                try {
-                    return (double) corrector.countMistakes(index, md);
-                } catch(Exception e) {
-                    logger.trace(e.getMessage(), e);
-                    return 0.0;
-                }
-            };
-
-            ComputeIndexService computeTypoService = new ComputeIndexService(performCorrection, container);
-            index.getMainApp().getMenuController().getHBottomBox().getChildren().clear();
-            index.getMainApp().getMenuController().getHBottomBox().getChildren().addAll(index.getMainApp().getMenuController().getLabelField());
-            index.getMainApp().getMenuController().getLabelField().textProperty().bind(computeTypoService.messageProperty());
-            computeTypoService.setOnSucceeded(tp -> {
-                Map<String, Double> mapT = ((ComputeIndexService) tp.getSource()).getValue();
-                displayTypoChart(mapT);
-                index.getMainApp().getMenuController().getHBottomBox().getChildren().clear();
-            });
-            computeTypoService.setOnFailed(g -> index.getMainApp().getMenuController().getHBottomBox().getChildren().clear());
-            computeTypoService.start();
-
-             */
-        });
     }
 
     private XYChart.Series<String, Number> getSeriesIndex(Map<String, Double> statIndex, String title) {

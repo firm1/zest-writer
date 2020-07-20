@@ -7,8 +7,8 @@ import java.util.Optional;
 
 
 public class Lang {
-    private static List<Lang> langAvailable = Arrays.asList(new Lang(Locale.FRANCE), new Lang(Locale.ENGLISH));
-    private Locale locale;
+    private static final List<Lang> langAvailable = Arrays.asList(new Lang(Locale.FRANCE), new Lang(Locale.ENGLISH));
+    private final Locale locale;
 
     public Lang(Locale locale) {
         this.locale = locale;

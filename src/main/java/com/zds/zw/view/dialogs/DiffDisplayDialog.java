@@ -23,9 +23,8 @@ public class DiffDisplayDialog extends BaseDialog<Boolean>{
     String titleContent;
     String titleExtract;
     File file;
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
-	public DiffDisplayDialog(File file, String newContent, String titleContent, String titleExtract) {
+    public DiffDisplayDialog(File file, String newContent, String titleContent, String titleExtract) {
 		super(Configuration.getBundle().getString("ui.dialog.download.compare.window.title"), Configuration.getBundle().getString("ui.dialog.download.compare.window.header"));
 		this.file = file;
 		this.newContent = newContent;
@@ -36,11 +35,11 @@ public class DiffDisplayDialog extends BaseDialog<Boolean>{
                 this.oldContent = IOUtils.toString(new FileInputStream(this.file), "UTF-8");
             }
         } catch (IOException e) {
+            Logger log = LoggerFactory.getLogger(getClass());
             log.error(e.getMessage(), e);
         }
-        ;
 
-	    // Set the button types.
+        // Set the button types.
 	    ButtonType validButtonType = new ButtonType(Configuration.getBundle().getString("ui.dialog.download.compare.button.confirm"), ButtonData.OK_DONE);
 	    this.getDialogPane().getButtonTypes().addAll(validButtonType, ButtonType.CANCEL);
 

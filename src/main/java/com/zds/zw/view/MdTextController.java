@@ -71,7 +71,7 @@ public class MdTextController {
     private WebView currentRenderView;
     private BorderPane currentBoxRender;
     private TextArea currentSourceText;
-    private ObjectPropertyBase<Textual> currentExtract = new SimpleObjectProperty<>(null);
+    private final ObjectPropertyBase<Textual> currentExtract = new SimpleObjectProperty<>(null);
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     public MdTextController() {

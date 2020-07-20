@@ -13,9 +13,9 @@ import java.util.regex.Pattern;
 public class Markdown {
     private static String CONTENT_KEYWORD_BEFORE;
     private static String CONTENT_KEYWORD_AFTER;
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     public Markdown(ZdsHttp zdsHttp) {
+        Logger log = LoggerFactory.getLogger(getClass());
         try(InputStream is = MainApp.class.getResourceAsStream("assets/static/html/template-begin.html"))  {
             String template= IOUtils.toString(is, "UTF-8");
             Matcher pathMatcher = Pattern.compile("%%(.*)%%").matcher(template);

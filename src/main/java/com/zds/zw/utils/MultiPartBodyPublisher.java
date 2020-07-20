@@ -11,8 +11,8 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public class MultiPartBodyPublisher {
-    private List<PartsSpecification> partsSpecificationList = new ArrayList<>();
-    private String boundary = UUID.randomUUID().toString();
+    private final List<PartsSpecification> partsSpecificationList = new ArrayList<>();
+    private final String boundary = UUID.randomUUID().toString();
 
     public HttpRequest.BodyPublisher build() {
         if (partsSpecificationList.size() == 0) {

@@ -17,7 +17,7 @@ import java.util.Optional;
 
 public class UploadContentService extends Service<Void>{
 	private final Logger logger;
-    private Content content;
+    private final Content content;
 	private Optional<Pair<String, MetadataContent>> result;
 
 	public UploadContentService(Optional<Pair<String, MetadataContent>> result, Content content) {
