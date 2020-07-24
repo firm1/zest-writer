@@ -29,7 +29,7 @@ script:
   - cd scripts && ./build-css.sh && cd ..
   - curl "https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_$TRAVIS_OS_NAME-x64_bin.tar.gz" --output openjdk-14.0.2.tar.gz
   - tar -xf openjdk-14.0.2.tar.gz
-  - export BADASS_JLINK_JPACKAGE_HOME="$(pwd)/jdk-14.0.2"
+  - export BADASS_JLINK_JPACKAGE_HOME="$TRAVIS_BUILD_DIR/jdk-14.0.2"
   - ./gradlew jpackage
 
 after_success:
