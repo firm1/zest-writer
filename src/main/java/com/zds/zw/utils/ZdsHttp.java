@@ -189,7 +189,6 @@ public class ZdsHttp {
             for(HttpCookie cookie:cookies) {
                 cookieStore.add(URI.create(getBaseUrl()), cookie);
             }
-            System.out.println("===> "+cookieStore.toString());
             this.authenticated = true;
 
         }
@@ -318,7 +317,6 @@ public class ZdsHttp {
         } else {
             log.debug("Utilisateur " + this.login + " non connecté via " + getLoginUrl());
         }
-        System.out.println(this.cookies);
 
         return this.authenticated;
     }
@@ -398,9 +396,10 @@ public class ZdsHttp {
 
     }
 
-    private boolean uploadContent(String filePath, String url, String msg) throws IOException{
+    private boolean uploadContent(String filePath, String url, String msg){
+        HttpClient uploadClient = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
 
-        HttpResponse response = getRequest(url);
+        var response = getRequest(url);
         Document doc = Jsoup.parse(response.body().toString());
         Elements inputs = doc.select("form input");
         Optional<String> token = inputs.stream()
@@ -428,11 +427,11 @@ public class ZdsHttp {
                 .POST(publisher.build())
                 .build();
         try {
-            HttpResponse httpResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
+            var httpResponse = uploadClient.send(request, HttpResponse.BodyHandlers.ofString());
 
             switch (httpResponse.statusCode()) {
                 case 200:
-                    return !httpResponse.body().toString().contains ("alert-box alert");
+                    return !httpResponse.body().contains ("alert-box alert");
                 case 404:
                     log.debug("L'id cible du contenu ou le slug est incorrect. Donnez de meilleur informations");
                     return false;
@@ -458,8 +457,7 @@ public class ZdsHttp {
         return uploadContent(filePath, getImportNewContenttUrl(), msg);
     }
 
-    public boolean importContent(String filePath, String targetId, String targetSlug, String msg)
-            throws IOException {
+    public boolean importContent(String filePath, String targetId, String targetSlug, String msg) {
         log.debug("Tentative d'import via l'url : " + getImportContenttUrl(targetId, targetSlug));
         return uploadContent(filePath, getImportContenttUrl(targetId, targetSlug), msg);
     }

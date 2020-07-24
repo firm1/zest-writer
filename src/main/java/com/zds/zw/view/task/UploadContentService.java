@@ -19,7 +19,6 @@ public class UploadContentService extends Service<Void>{
 	private final Logger logger;
     private final Content content;
 	private Optional<Pair<String, MetadataContent>> result;
-
 	public UploadContentService(Optional<Pair<String, MetadataContent>> result, Content content) {
 		this.result = result;
         this.content = content;

@@ -646,7 +646,12 @@ public class MdTextController {
 
     @FXML
     private void handleHeaderButtonAction(ActionEvent event) {
-        currentSourceText.replaceText(currentSourceText.getSelection(), "# " + currentSourceText.getSelectedText());
+        String pref = "#";
+        String selection = currentSourceText.getSelectedText();
+        if(!selection.strip().startsWith("#")) {
+            pref+=" ";
+        }
+        currentSourceText.replaceText(currentSourceText.getSelection(), pref + selection);
         currentSourceText.requestFocus();
     }
 

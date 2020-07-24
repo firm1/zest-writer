@@ -107,11 +107,11 @@ public class GithubHttp {
                     title,
                     Constant.DEFAULT_INTRODUCTION_FILENAME, Constant.DEFAULT_CONCLUSION_FILENAME,
                     new ArrayList<>(),
-                    "2.1",
+                    2.1,
                     "CC-BY",
                     title,
                     "TUTORIAL",
-                    "true");
+                    true);
             // read all directory
             current.getChildren ().addAll (loadDirectory (folder.length () + File.separator.length (), new File(folder)));
             current.setBasePath (folder);
@@ -134,8 +134,8 @@ public class GithubHttp {
                 String conclu = file.getAbsolutePath ().substring (countBase)+File.separator+Constant.DEFAULT_CONCLUSION_FILENAME;
                 intro = intro.replace (File.separator, "/");
                 conclu = conclu.replace (File.separator, "/");
-                MetaContent container = new Container("container", toSlug (name), name, intro ,conclu, new ArrayList<>(), "true");
-                ((Container)container).getChildren().addAll (loadDirectory (countBase, file));
+                Container container = new Container("container", toSlug (name), name, intro ,conclu, new ArrayList<>(), true);
+                container.getChildren().addAll (loadDirectory (countBase, file));
                 metas.add(container);
                 generateMetadataAttributes(file.getAbsolutePath());
             } else if(file.isFile ()) {

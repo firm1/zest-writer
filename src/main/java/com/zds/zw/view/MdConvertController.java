@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MdConvertController {
-    //public static Corrector corrector;
     private final Logger logger = LoggerFactory.getLogger(MdConvertController.class);
     private MdTextController mdBox;
     private int xRenderPosition = 0;
@@ -74,6 +73,7 @@ public class MdConvertController {
                     if (html != null) {
                         renderView.getEngine().loadContent(MainApp.getMdUtils().addHeaderAndFooter(html));
                         scrollTo(renderView, xRenderPosition, yRenderPosition);
+                        performStats();
                     }
                 }, 500);
             });
@@ -96,9 +96,7 @@ public class MdConvertController {
         Thread process = new Thread(() -> {
             try {
                 Thread.sleep(delay);
-                Platform.runLater(() -> {
-                    runnable.run();
-                });
+                Platform.runLater(runnable);
             }
             catch (Exception e){
                 System.err.println(e);

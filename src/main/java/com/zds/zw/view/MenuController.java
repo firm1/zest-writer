@@ -221,7 +221,8 @@ public class MenuController{
             File manifest = new File(realLocalPath + File.separator + "manifest.json");
             ObjectMapper mapper = new ObjectMapper();
             paramContent.put("slug", ZdsHttp.toSlug((String)paramContent.get("title")));
-            paramContent.put("version", 2);
+            paramContent.put("version", "2.1");
+            paramContent.put("ready_to_publish", true);
             paramContent.put("object", "container");
             paramContent.put("introduction", Constant.DEFAULT_INTRODUCTION_FILENAME);
             paramContent.put("conclusion", Constant.DEFAULT_CONCLUSION_FILENAME);

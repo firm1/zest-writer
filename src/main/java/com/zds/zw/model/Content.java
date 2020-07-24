@@ -5,11 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zds.zw.MainApp;
 import com.zds.zw.utils.ZdsHttp;
-import com.zds.zw.view.MdTextController;
 import com.zds.zw.view.com.FunctionTreeFactory;
 import com.zds.zw.view.com.IconFactory;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
-import org.apache.commons.text.StringEscapeUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -26,11 +24,10 @@ import java.util.Objects;
 
 @JsonIgnoreProperties({"basePath", "filePath", "editable", "countChildrenExtract", "countDescendantContainer" ,"rootContent", "depth", "tutorial", "article", "opinion"})
 public class Content extends Container implements ContentNode{
-    private String _version;
+    private Double _version;
     private String _licence;
     private String _description;
     private String _type;
-    private String ready_to_publish;
 
 
     /**
@@ -47,8 +44,17 @@ public class Content extends Container implements ContentNode{
      * @param type content type (tutorial, article or opinion)
      */
     @JsonCreator
-    public Content(@JsonProperty("object") String object, @JsonProperty("slug") String slug, @JsonProperty("title") String title, @JsonProperty("introduction") String introduction, @JsonProperty("conclusion") String conclusion,
-            @JsonProperty("children") List<MetaContent> children, @JsonProperty("version") String version, @JsonProperty("licence") String licence, @JsonProperty("description") String description, @JsonProperty("type") String type, @JsonProperty("ready_to_publish") String ready_to_publish) {
+    public Content(@JsonProperty("object") String object,
+                   @JsonProperty("slug") String slug,
+                   @JsonProperty("title") String title,
+                   @JsonProperty("introduction") String introduction,
+                   @JsonProperty("conclusion") String conclusion,
+                   @JsonProperty("children") List<MetaContent> children,
+                   @JsonProperty("version") Double version,
+                   @JsonProperty("licence") String licence,
+                   @JsonProperty("description") String description,
+                   @JsonProperty("type") String type,
+                   @JsonProperty("ready_to_publish") boolean ready_to_publish) {
         super(object, slug, title, introduction, conclusion, children, ready_to_publish);
         this._version = version;
         this._licence = licence;
@@ -56,19 +62,11 @@ public class Content extends Container implements ContentNode{
         this._type = type;
     }
 
-    public String getReady_to_publish() {
-        return ready_to_publish;
-    }
-
-    public void setReady_to_publish(String ready_to_publish) {
-        this.ready_to_publish = ready_to_publish;
-    }
-
-    public String getVersion() {
+    public Double getVersion() {
         return _version;
     }
 
-    public void setVersion(String version) {
+    public void setVersion(Double version) {
         this._version = version;
     }
 

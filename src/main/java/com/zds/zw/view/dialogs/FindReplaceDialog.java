@@ -29,10 +29,6 @@ public class FindReplaceDialog{
     @FXML private Button replaceAllButton;
     @FXML private Label iterations;
 
-    private Pair<Integer, Integer> lastMatch;
-    private Pair<Integer, Integer> currentMatch;
-
-
     private enum FindReplaceAction{
         FIND,
         FIND_ACTION,

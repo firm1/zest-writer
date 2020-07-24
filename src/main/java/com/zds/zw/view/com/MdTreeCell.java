@@ -29,6 +29,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.fasterxml.jackson.core.JsonGenerator.Feature.QUOTE_FIELD_NAMES;
+
 public class MdTreeCell extends TreeCell<ContentNode>{
     private final Logger logger;
     private MdTextController index;
@@ -76,10 +78,8 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         Menu menuStats = new Menu(Configuration.getBundle().getString("ui.actions.stats.label"));
         MenuItem menuStatCountHisto = new MenuItem(Configuration.getBundle().getString("ui.actions.stats.count.histo"));
         MenuItem menuStatReadability = new MenuItem(Configuration.getBundle().getString("ui.actions.stats.readability"));
-        MenuItem menuStatMistakes = new MenuItem(Configuration.getBundle().getString("ui.actions.stats.mistake"));
         menuStats.getItems().add(menuStatCountHisto);
         menuStats.getItems().add(menuStatReadability);
-        menuStats.getItems().add(menuStatMistakes);
         addMenuItem1.setGraphic(IconFactory.createFileIcon());
         addMenuItem2.setGraphic(IconFactory.createAddFolderIcon());
         addMenuItem3.setGraphic(IconFactory.createEditIcon());
@@ -90,7 +90,6 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         menuStats.setGraphic(IconFactory.createStatsIcon());
         menuStatCountHisto.setGraphic(IconFactory.createStatsHistoIcon());
         menuStatReadability.setGraphic(IconFactory.createStatsHistoIcon());
-        menuStatMistakes.setGraphic(IconFactory.createAbcIcon());
         addMenu.getItems().clear();
 
         if(item instanceof Container) {
@@ -220,7 +219,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                         (baseSlug + "/" + Constant.DEFAULT_INTRODUCTION_FILENAME).substring(baseFilePath.length()+1),
                         (baseSlug + "/" + Constant.DEFAULT_CONCLUSION_FILENAME).substring(baseFilePath.length()+1),
                         new ArrayList<>(),
-                        "true");
+                        true);
                 container.setBasePath(baseFilePath);
                 ((Container)getItem()).getChildren().add(container);
 
@@ -302,7 +301,7 @@ public class MdTreeCell extends TreeCell<ContentNode>{
                         (baseSlug + "/" + Constant.DEFAULT_INTRODUCTION_FILENAME).substring(baseFilePath.length()+1),
                         (baseSlug + "/" + Constant.DEFAULT_CONCLUSION_FILENAME).substring(baseFilePath.length()+1),
                         new ArrayList<>(),
-                        "true");
+                        true);
                 container.setBasePath(baseFilePath);
                 ((Container)getItem()).getChildren().add(container);
 
@@ -446,33 +445,6 @@ public class MdTreeCell extends TreeCell<ContentNode>{
         return series;
     }
 
-    private void displayTypoChart(Map<String, Double> statT) {
-        BaseDialog dialog = new BaseDialog(Configuration.getBundle().getString("ui.actions.stats.label"), Configuration.getBundle().getString("ui.actions.stats.header")+" "+getItem().getTitle());
-        dialog.getDialogPane().setPrefSize(800, 600);
-        dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(Configuration.getBundle().getString("ui.actions.stats.close"), ButtonBar.ButtonData.CANCEL_CLOSE));
-
-        // draw
-        final CategoryAxis xAxis = new CategoryAxis();
-        final NumberAxis yAxis = new NumberAxis();
-        final LineChart<String,Number> lineChart = new LineChart<>(xAxis, yAxis);
-        lineChart.setTitle(Configuration.getBundle().getString("ui.actions.stats.mistake"));
-        lineChart.setLegendVisible(false);
-
-        xAxis.setLabel(Configuration.getBundle().getString("ui.actions.stats.xaxis"));
-        yAxis.setLabel(Configuration.getBundle().getString("ui.actions.stats.mistakes.yaxis"));
-
-        XYChart.Series<String, Number> series1 = new XYChart.Series();
-        for(Map.Entry<String, Double> st:statT.entrySet()) {
-            series1.getData().add(new XYChart.Data(st.getKey(), st.getValue()));
-        }
-
-        lineChart.getData().addAll(series1);
-        dialog.getDialogPane().setContent(lineChart);
-        dialog.setResizable(true);
-        dialog.showAndWait();
-
-    }
-
     public void displayIndexChart(Map<String, Double> statG, Map<String, Double> statF) {
         BaseDialog dialog = new BaseDialog(Configuration.getBundle().getString("ui.actions.stats.label"), Configuration.getBundle().getString("ui.actions.stats.header")+" "+getItem().getTitle());
         dialog.getDialogPane().setPrefSize(800, 600);
@@ -517,7 +489,6 @@ public class MdTreeCell extends TreeCell<ContentNode>{
 
     public void saveManifestJson() {
         Content c = (Content) index.getSummary().getRoot().getValue();
-
         ObjectMapper mapper = new ObjectMapper();
         try {
             mapper.writerWithDefaultPrettyPrinter().writeValue(new File(baseFilePath + File.separator + "manifest.json"), c);
