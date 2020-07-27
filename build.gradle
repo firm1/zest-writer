@@ -74,7 +74,8 @@ jlink {
         imageName = 'zestwriter'
         skipInstaller = false
         installerName = 'zestwriter'
-        installerType = "${jPkgInstallerType}"
+        installerType = "${version}"
+        appVersion = "${jPkgInstallerType}"
         installerOptions = [
                 '--description', "Editeur de texte zMarkdown",
                 '--copyright', 'Copyrigth 2018-2020'
