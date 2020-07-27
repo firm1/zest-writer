@@ -8,6 +8,7 @@ environment:
 install:
 #  - curl -fsS -o openjdk-14.0.2_windows-x64_bin.zip https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_windows-x64_bin.zip
 #  - 7z e openjdk-14.0.2_windows-x64_bin.zip
+  - dir C:\Program Files\Java\jdk14
   - set BADASS_JLINK_JPACKAGE_HOME="C:\Program Files\Java\jdk14"
   - set PATH=%JAVA_HOME%\bin;%PATH%
   - gradlew.bat clean
