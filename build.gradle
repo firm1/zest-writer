@@ -75,7 +75,7 @@ jlink {
         skipInstaller = false
         installerName = 'zestwriter'
         installerType = "${version}"
-        appVersion = "2.0.0-beta"
+        appVersion = "2.0.0"
         installerOptions = [
                 '--description', "Editeur de texte zMarkdown",
                 '--copyright', 'Copyrigth 2018-2020'
