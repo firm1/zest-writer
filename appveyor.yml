@@ -16,16 +16,16 @@ install:
   - echo %PATH%
   - gradlew.bat clean
   - set JAVA_OPTS=-XX:MaxPermSize=1024m -Xmx1512m -Dfile.encoding=UTF-8
-  #- set JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
-  - choco install -y InnoSetup
-  - set PATH="C:\\Program Files (x86)\\Inno Setup 6";%PATH%
+  - set JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
+#  - choco install -y InnoSetup
+#  - set PATH="C:\\Program Files (x86)\\Inno Setup 6";%PATH%
 
 
 build_script:
   - gradlew.bat jpackage
 
 artifacts:
-  - path: build\installer\*.exe
+  - path: build\installer\*
     name: setup-zest-writer-for-windows
 
 on_failure:
