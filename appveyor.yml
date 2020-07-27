@@ -8,15 +8,18 @@ environment:
 install:
   - curl -fsS -o openjdk-14.0.2_windows-x64_bin.zip https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_windows-x64_bin.zip
   - 7z e -y openjdk-14.0.2_windows-x64_bin.zip
+  - dir "."
+  - dir ".\jdk-14.0.2"
   - dir "%cd%\jdk-14.0.2"
+  - dir ".\jdk-14.0.2\bin"
   - set BADASS_JLINK_JPACKAGE_HOME="%cd%\jdk-14.0.2"
   - set PATH=%JAVA_HOME%\bin;%PATH%
   - echo %PATH%
   - gradlew.bat clean
   - set JAVA_OPTS=-XX:MaxPermSize=1024m -Xmx1512m -Dfile.encoding=UTF-8
-  - set JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
+  #- set JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
   - choco install -y InnoSetup
-  - set PATH="C:\\Program Files (x86)\\Inno Setup 5";%PATH%
+  - set PATH="C:\\Program Files (x86)\\Inno Setup 6";%PATH%
 
 
 build_script:
