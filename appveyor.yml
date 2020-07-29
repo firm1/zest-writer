@@ -5,12 +5,17 @@ environment:
   matrix:
     - JAVA_HOME: C:\Program Files\Java\jdk11
       PLATFORM: win64
+
+cache:
+  - openjdk-14.0.2_windows-x64_bin.zip
+  - c:\jdk14
+  - C:\ProgramData\chocolatey\bin -> appveyor.yml
+  - C:\ProgramData\chocolatey\lib -> appveyor.yml
+  - .gradle -> build.gradle
+
 install:
-  - curl -fsS -o openjdk-14.0.2_windows-x64_bin.zip https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_windows-x64_bin.zip
-  - 7z x -y openjdk-14.0.2_windows-x64_bin.zip -oc:\jdk14
-  - dir "."
-  - dir "c:\jdk14"
-  - dir "c:\jdk14\jdk-14.0.2\bin"
+  - if not exist "openjdk-14.0.2_windows-x64_bin.zip" (curl -fsS -o openjdk-14.0.2_windows-x64_bin.zip https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_windows-x64_bin.zip)
+  - if not exist "c:\jdk14\jdk-14.0.2" (7z x -y openjdk-14.0.2_windows-x64_bin.zip -oc:\jdk14)
   - set BADASS_JLINK_JPACKAGE_HOME=c:\jdk14\jdk-14.0.2
   - set PATH=%JAVA_HOME%\bin;%PATH%
   - echo %PATH%
@@ -18,14 +23,17 @@ install:
   - set JAVA_OPTS=-Xmx1512m -Dfile.encoding=UTF-8
 #  - set JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
   - choco install wixtoolset
+  - choco install nodejs --version=12.18.3
 #  - set PATH="C:\\Program Files (x86)\\Inno Setup 5";%PATH%
 
 
 build_script:
+  - cd scripts && .\build-zmd.bat && cd ..
+  - cd scripts && .\build-css.bat && cd ..
   - gradlew.bat jpackage
 
 artifacts:
-  - path: build\installer\*
+  - path: build\installer\*.msi
     name: setup-zest-writer-for-windows
 
 on_failure:

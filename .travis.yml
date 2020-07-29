@@ -37,7 +37,8 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export BADASS_JLINK_JPACKAGE_HOME="$TRAVIS_BUILD_DIR/jdk-14.0.2"; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export BADASS_JLINK_JPACKAGE_HOME="$TRAVIS_BUILD_DIR/jdk-14.0.2.jdk/Contents/Home"; fi
   - ls -rtlh "$BADASS_JLINK_JPACKAGE_HOME"
-  - ./gradlew jpackage
+  - ./gradlew jpackage -PlinuxTarget=deb
+  - ./gradlew jpackage -PlinuxTarget=rpm
 
 after_success:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew jacocoTestReport coveralls; fi

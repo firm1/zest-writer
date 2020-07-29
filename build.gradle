@@ -42,9 +42,11 @@ javafx {
 
 // set jpackage installerType based on OS
 def os = org.gradle.internal.os.OperatingSystem.current()
-def jPkgInstallerType = ''
+def jPkgInstallerType = 'rpm'
+def linuxOs = project.hasProperty('linuxTarget') ? project.property('linuxTarget') : 'deb'
+
 if (os.isLinux()) {
-    jPkgInstallerType = 'deb'
+    jPkgInstallerType = linuxOs
 } else if (os.isMacOsX()) {
     jPkgInstallerType = 'pkg'
 } else if (os.isWindows()) {
@@ -67,21 +69,18 @@ jlink {
     }
 
     jpackage {
-        // can be set with BADASS_JLINK_JPACKAGE_HOME
-        //jpackageHome = "./jdk-14_linux-x64_bin/jdk-14"
-
         outputDir = "installer"
         imageName = 'zestwriter'
         skipInstaller = false
         installerName = 'zestwriter'
-        installerType = "${version}"
-        appVersion = "2.0.0"
+        installerType = "${jPkgInstallerType}"
+        appVersion = "${version}"
         installerOptions = [
-                '--description', "Editeur de texte zMarkdown",
-                '--copyright', 'Copyrigth 2018-2020'
+                '--description', "This is a Markdown Editor for Zeste de Savoir contents",
+                '--copyright', 'Copyright (c) 2016 - 2020 Zest Writer'
         ]
         if (installerType == 'msi') {
-            //imageOptions += ['--icon', 'src/main/resources/com/zds/zw/logo/logo-16.png']
+            imageOptions += ['--icon', 'src/main/resources/com/zds/zw/logo/logo.ico']
             installerOptions += [
                     '--win-per-user-install',
                     '--win-dir-chooser',
