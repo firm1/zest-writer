@@ -21,15 +21,14 @@ install:
   - echo %PATH%
   - gradlew.bat clean
   - set JAVA_OPTS=-Xmx1512m -Dfile.encoding=UTF-8
-#  - set JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
   - choco install wixtoolset
   - choco install nodejs --version=12.18.3
-#  - set PATH="C:\\Program Files (x86)\\Inno Setup 5";%PATH%
 
 
 build_script:
   - cd scripts && .\build-zmd.bat && cd ..
   - cd scripts && .\build-css.bat && cd ..
+  - set JAVA_HOME=c:\jdk14\jdk-14.0.2
   - gradlew.bat jpackage
 
 artifacts:
