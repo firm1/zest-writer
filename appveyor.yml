@@ -11,7 +11,7 @@ cache:
   - c:\jdk14
 #  - C:\ProgramData\chocolatey\bin -> appveyor.yml
 #  - C:\ProgramData\chocolatey\lib -> appveyor.yml
-  - .gradle -> build.gradle
+#  - .gradle -> build.gradle
 
 install:
   - if not exist "openjdk-14.0.2_windows-x64_bin.zip" (curl -fsS -o openjdk-14.0.2_windows-x64_bin.zip https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_windows-x64_bin.zip)
