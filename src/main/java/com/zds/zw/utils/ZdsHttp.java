@@ -288,12 +288,15 @@ public class ZdsHttp {
 
     public boolean login(String username, String password) {
         HttpResponse getContentLoginResponse = getRequest(getLoginUrl());
+        log.debug("getContentLoginResponse = "+getContentLoginResponse);
+        log.debug("headers = "+getContentLoginResponse.headers());
         if(getContentLoginResponse.headers().firstValue("Set-Cookie").isPresent()) {
             this.cookies = getUniquesStringCookie(getContentLoginResponse.headers());
         }
-
+        log.debug("content = "+getContentLoginResponse.body().toString());
         Document doc = Jsoup.parse(getContentLoginResponse.body().toString());
         Elements inputs = doc.select("form input");
+        log.debug("inputs = "+inputs);
         Optional<String> token = inputs.stream()
                 .filter(input -> input.hasAttr("name"))
                 .filter(input -> input.attr("name").equals("csrfmiddlewaretoken"))
@@ -304,8 +307,11 @@ public class ZdsHttp {
         data.put("username", username);
         data.put("password", password);
         data.put("csrfmiddlewaretoken", token.get());
+        log.debug("inputs = "+data);
 
         var response = postRequest(getLoginUrl(), data, null);
+        log.debug("response headers = "+response);
+        log.debug("response headers = "+response.headers());
 
         this.cookies = getUniquesStringCookie(response.headers());
         var getContentHomeResponse = getRequest(getBaseUrl());
