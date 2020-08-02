@@ -31,19 +31,17 @@ before_install:
 script:
   - cd scripts && ./build-zmd.sh && cd ..
   - cd scripts && ./build-css.sh && cd ..
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew check; fi
   - curl "https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_$TRAVIS_OS_NAME-x64_bin.tar.gz" --output openjdk-14.0.2.tar.gz
   - tar -xf openjdk-14.0.2.tar.gz
-  - ls -rtlh
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export BADASS_JLINK_JPACKAGE_HOME="$TRAVIS_BUILD_DIR/jdk-14.0.2"; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export BADASS_JLINK_JPACKAGE_HOME="$TRAVIS_BUILD_DIR/jdk-14.0.2.jdk/Contents/Home"; fi
-  - ls -rtlh "$BADASS_JLINK_JPACKAGE_HOME"
-  - ./gradlew jpackage -PlinuxTarget=deb
-  - ./gradlew jpackage -PlinuxTarget=rpm
+  - if [[ "$TRAVIS_BRANCH" == "master" ]] || [[ "$TRAVIS_TAG" != "" ]] ; then ./gradlew jpackage -PlinuxTarget=deb; fi
+  - if [[ "$TRAVIS_BRANCH" == "master" ]] || [[ "$TRAVIS_TAG" != "" ]] ; then ./gradlew jpackage -PlinuxTarget=rpm; fi
 
 after_success:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew jacocoTestReport coveralls; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_deb.sh $BINTRAY_KEY ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_rpm.sh $BINTRAY_KEY ; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then scripts/upload_jar.sh $BINTRAY_KEY ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then scripts/upload_dmg.sh $BINTRAY_KEY ; fi
 

@@ -1,1 +1,0 @@
-https://github.com/artragis/zds-site/blob/zep_12_double_stack/doc/source/back-end/contents.rst#de-la-structure-g%C3%A9n%C3%A9rale-dun-contenu
