@@ -12,7 +12,8 @@ public class AboutDialog{
 
     public void setMainApp(MainApp mainApp){
         this.mainApp = mainApp;
-        version.setText(MainApp.getConfig().getProps().getProperty("version", Configuration.getBundle().getString("ui.version.label.unknown")));
+
+        version.setText(MainApp.getVersion());
     }
 
     @FXML private void handleGplHyperlinkAction(){

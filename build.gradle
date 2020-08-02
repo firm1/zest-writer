@@ -20,12 +20,6 @@ sourceCompatibility = "11"
 
 compileJava.options.encoding = 'UTF-8'
 
-processResources {
-    filesMatching('config.properties') {
-        expand(project.properties)
-    }
-}
-
 wrapper {
     gradleVersion = '6.5'
 }

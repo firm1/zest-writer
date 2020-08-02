@@ -37,11 +37,14 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.Properties;
 
 public class MainApp extends Application{
     private static Configuration config;
@@ -100,6 +103,19 @@ public class MainApp extends Application{
     public static void main(String[] args) {
         MainApp.args  = args;
         launch(args);
+    }
+
+    public static String getVersion() {
+        Properties prop = new Properties();
+        InputStream input = null;
+        try {
+            input = new FileInputStream("gradle.properties");
+            prop.load(input);
+            return prop.getProperty("version");
+        } catch (IOException ex) {
+            logger.error(ex.getMessage());
+        }
+        return null;
     }
 
     public Scene getScene() {

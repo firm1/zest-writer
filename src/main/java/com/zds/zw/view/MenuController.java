@@ -727,7 +727,7 @@ public class MenuController{
                 return new Task<Boolean>() {
                     @Override
                     protected Boolean call() throws Exception {
-                        String current = MainApp.getConfig().getProps().getProperty("version", Configuration.getBundle().getString("ui.version.label.unknown"));
+                        String current = MainApp.getVersion();
                         String versionOnline = Configuration.getLastRelease();
                         if(versionOnline == null) {
                             throw new IOException();
