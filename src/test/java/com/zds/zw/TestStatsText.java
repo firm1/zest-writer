@@ -1,6 +1,5 @@
 package com.zds.zw;
 
-import com.zds.zw.utils.Configuration;
 import com.zds.zw.utils.readability.Readability;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +12,7 @@ public class TestStatsText {
 
     @Before
     public void setUp() throws Exception {
-        Configuration config = new Configuration (System.getProperty("java.io.tmpdir"));
+
     }
 
     @Test

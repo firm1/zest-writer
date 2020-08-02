@@ -31,7 +31,7 @@ before_install:
 script:
   - cd scripts && ./build-zmd.sh && cd ..
   - cd scripts && ./build-css.sh && cd ..
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew check; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew check; fi
   - curl "https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_$TRAVIS_OS_NAME-x64_bin.tar.gz" --output openjdk-14.0.2.tar.gz
   - tar -xf openjdk-14.0.2.tar.gz
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export BADASS_JLINK_JPACKAGE_HOME="$TRAVIS_BUILD_DIR/jdk-14.0.2"; fi
