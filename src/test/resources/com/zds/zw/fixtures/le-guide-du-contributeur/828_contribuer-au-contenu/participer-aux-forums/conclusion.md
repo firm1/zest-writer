@@ -1,0 +1,1 @@
+Au terme de ce chapitre, vous connaissez désormais les principales manières de participer via les forums.

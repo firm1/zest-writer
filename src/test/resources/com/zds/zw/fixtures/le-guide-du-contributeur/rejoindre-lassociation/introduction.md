@@ -1,0 +1,1 @@
+Dans cette courte partie, nous allons présenter la structure légale du site et fournir quelques renseignements utiles à tout lecteur désireux de donner un coup de pouce !

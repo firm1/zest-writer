@@ -1,0 +1,3 @@
+Voilà, vous savez désormais ce qu’il faut pour amorcer la rédaction, en choisissant un sujet, en créant un contenu ou encore en gérant des galeries d’images. Vous constaterez que le processus n’est pas si différent dans le cas d’un article ou d’un tutoriel. De toute façon, le choix du type de contenu dépendra du sujet que vous aurez choisi. 
+
+Maintenant que vous connaissez le nécessaire, nous allons pouvoir attaquer sur la rédaction en elle-même.

@@ -1,0 +1,407 @@
+{
+    "version":2.1,
+    "introduction":"introduction.md",
+    "slug":"le-guide-du-contributeur",
+    "licence":"CC BY",
+    "title":"Le guide du contributeur",
+    "type":"TUTORIAL",
+    "ready_to_publish":true,
+    "description":"",
+    "conclusion":"conclusion.md",
+    "object":"container",
+    "children":[
+        {
+            "introduction":"828_contribuer-au-contenu/introduction.md",
+            "slug":"828_contribuer-au-contenu",
+            "title":"Contribuer au contenu",
+            "ready_to_publish":true,
+            "conclusion":"828_contribuer-au-contenu/conclusion.md",
+            "object":"container",
+            "children":[
+                {
+                    "introduction":"828_contribuer-au-contenu/5467_generalites/introduction.md",
+                    "slug":"5467_generalites",
+                    "title":"Généralités",
+                    "ready_to_publish":true,
+                    "conclusion":"828_contribuer-au-contenu/5467_generalites/conclusion.md",
+                    "object":"container",
+                    "children":[
+                        {
+                            "text":"828_contribuer-au-contenu/5467_generalites/un-mot-sur-le-zmarkdown-1.md",
+                            "slug":"un-mot-sur-le-zmarkdown-1",
+                            "object":"extract",
+                            "title":"Un mot sur le zMarkdown"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/5467_generalites/types-de-contenu.md",
+                            "slug":"types-de-contenu",
+                            "object":"extract",
+                            "title":"Types de contenu"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/5467_generalites/15378_cycle-de-vie-des-contenus.md",
+                            "slug":"15378_cycle-de-vie-des-contenus",
+                            "object":"extract",
+                            "title":"Cycle de vie des contenus"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/5467_generalites/ecrire-seul-ou-a-plusieurs.md",
+                            "slug":"ecrire-seul-ou-a-plusieurs",
+                            "object":"extract",
+                            "title":"Écrire seul ou à plusieurs"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/5467_generalites/participer-a-des-contenus.md",
+                            "slug":"participer-a-des-contenus",
+                            "object":"extract",
+                            "title":"Participer à des contenus"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/5467_generalites/rediger-en-hors-ligne-avec-zest-writer-1.md",
+                            "slug":"rediger-en-hors-ligne-avec-zest-writer-1",
+                            "object":"extract",
+                            "title":"Rédiger en hors-ligne avec Zest Writer"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/5467_generalites/les-cas-particuliers.md",
+                            "slug":"les-cas-particuliers",
+                            "object":"extract",
+                            "title":"Les cas particuliers"
+                        }
+                    ]
+                },
+                {
+                    "introduction":"828_contribuer-au-contenu/amorce-de-la-redaction/introduction.md",
+                    "slug":"amorce-de-la-redaction",
+                    "title":"Amorce de la rédaction",
+                    "ready_to_publish":true,
+                    "conclusion":"828_contribuer-au-contenu/amorce-de-la-redaction/conclusion.md",
+                    "object":"container",
+                    "children":[
+                        {
+                            "text":"828_contribuer-au-contenu/amorce-de-la-redaction/choix-du-sujet.md",
+                            "slug":"choix-du-sujet",
+                            "object":"extract",
+                            "title":"Choix du sujet"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/amorce-de-la-redaction/creer-un-contenu-1-2.md",
+                            "slug":"creer-un-contenu-1-2",
+                            "object":"extract",
+                            "title":"Créer un contenu 1/2"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/amorce-de-la-redaction/creer-un-contenu-2-2.md",
+                            "slug":"creer-un-contenu-2-2",
+                            "object":"extract",
+                            "title":"Créer un contenu 2/2"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/amorce-de-la-redaction/les-galeries-dimages.md",
+                            "slug":"les-galeries-dimages",
+                            "object":"extract",
+                            "title":"Les galeries d'images"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/amorce-de-la-redaction/importer-un-contenu.md",
+                            "slug":"importer-un-contenu",
+                            "object":"extract",
+                            "title":"Importer un contenu"
+                        }
+                    ]
+                },
+                {
+                    "introduction":"828_contribuer-au-contenu/la-redaction/introduction.md",
+                    "slug":"la-redaction",
+                    "title":"La rédaction",
+                    "ready_to_publish":true,
+                    "conclusion":"828_contribuer-au-contenu/la-redaction/conclusion.md",
+                    "object":"container",
+                    "children":[
+                        {
+                            "text":"828_contribuer-au-contenu/la-redaction/definition-du-niveau-technique-du-contenu.md",
+                            "slug":"definition-du-niveau-technique-du-contenu",
+                            "object":"extract",
+                            "title":"Définition du niveau technique du contenu"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/la-redaction/structure-et-organisation.md",
+                            "slug":"structure-et-organisation",
+                            "object":"extract",
+                            "title":"Structure et organisation"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/la-redaction/importance-de-la-pedagogie.md",
+                            "slug":"importance-de-la-pedagogie",
+                            "object":"extract",
+                            "title":"Importance de la pédagogie"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/la-redaction/la-mise-en-forme.md",
+                            "slug":"la-mise-en-forme",
+                            "object":"extract",
+                            "title":"La mise en forme"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/la-redaction/les-references.md",
+                            "slug":"les-references",
+                            "object":"extract",
+                            "title":"Les références"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/la-redaction/quelques-conseils-de-redaction.md",
+                            "slug":"quelques-conseils-de-redaction",
+                            "object":"extract",
+                            "title":"Quelques conseils de rédaction"
+                        }
+                    ]
+                },
+                {
+                    "introduction":"828_contribuer-au-contenu/les-phases-de-correction-et-de-validation/introduction.md",
+                    "slug":"les-phases-de-correction-et-de-validation",
+                    "title":"Les phases de correction et de validation",
+                    "ready_to_publish":true,
+                    "conclusion":"828_contribuer-au-contenu/les-phases-de-correction-et-de-validation/conclusion.md",
+                    "object":"container",
+                    "children":[
+                        {
+                            "text":"828_contribuer-au-contenu/les-phases-de-correction-et-de-validation/demander-des-retours.md",
+                            "slug":"demander-des-retours",
+                            "object":"extract",
+                            "title":"Demander des retours"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/les-phases-de-correction-et-de-validation/bien-utiliser-la-beta.md",
+                            "slug":"bien-utiliser-la-beta",
+                            "object":"extract",
+                            "title":"Bien utiliser la bêta !"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/les-phases-de-correction-et-de-validation/bien-utiliser-la-validation-1.md",
+                            "slug":"bien-utiliser-la-validation-1",
+                            "object":"extract",
+                            "title":"Bien utiliser la validation !"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/les-phases-de-correction-et-de-validation/point-particulier-la-validation-partielle.md",
+                            "slug":"point-particulier-la-validation-partielle",
+                            "object":"extract",
+                            "title":"Point particulier : la validation partielle"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/les-phases-de-correction-et-de-validation/criteres-de-validation.md",
+                            "slug":"criteres-de-validation",
+                            "object":"extract",
+                            "title":"Critères de validation"
+                        }
+                    ]
+                },
+                {
+                    "introduction":"828_contribuer-au-contenu/consulter-les-statistiques-de-vos-contenus/introduction.md",
+                    "slug":"consulter-les-statistiques-de-vos-contenus",
+                    "title":"Consulter les statistiques de vos contenus",
+                    "ready_to_publish":false,
+                    "conclusion":"828_contribuer-au-contenu/consulter-les-statistiques-de-vos-contenus/conclusion.md",
+                    "object":"container",
+                    "children":[
+                        {
+                            "text":"828_contribuer-au-contenu/consulter-les-statistiques-de-vos-contenus/acceder-a-la-page-des-statistiques.md",
+                            "slug":"acceder-a-la-page-des-statistiques",
+                            "object":"extract",
+                            "title":"Accéder à la page des statistiques"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/consulter-les-statistiques-de-vos-contenus/quelques-explications.md",
+                            "slug":"quelques-explications",
+                            "object":"extract",
+                            "title":"Quelques explications..."
+                        }
+                    ]
+                },
+                {
+                    "introduction":"828_contribuer-au-contenu/3657_aider-a-la-correction-des-contenus/introduction.md",
+                    "slug":"3657_aider-a-la-correction-des-contenus",
+                    "title":"Aider à la correction des contenus",
+                    "ready_to_publish":true,
+                    "conclusion":"828_contribuer-au-contenu/3657_aider-a-la-correction-des-contenus/conclusion.md",
+                    "object":"container",
+                    "children":[
+                        {
+                            "text":"828_contribuer-au-contenu/3657_aider-a-la-correction-des-contenus/signaler-une-erreur-dorthographe.md",
+                            "slug":"signaler-une-erreur-dorthographe",
+                            "object":"extract",
+                            "title":"Signaler une erreur d'orthographe"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/3657_aider-a-la-correction-des-contenus/proposer-une-amelioration-a-un-contenu.md",
+                            "slug":"proposer-une-amelioration-a-un-contenu",
+                            "object":"extract",
+                            "title":"Proposer une amélioration à un contenu"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/3657_aider-a-la-correction-des-contenus/proposer-son-aide-a-un-auteur.md",
+                            "slug":"proposer-son-aide-a-un-auteur",
+                            "object":"extract",
+                            "title":"Proposer son aide à un auteur"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/3657_aider-a-la-correction-des-contenus/faire-des-remarques-sur-un-contenu-en-beta.md",
+                            "slug":"faire-des-remarques-sur-un-contenu-en-beta",
+                            "object":"extract",
+                            "title":"Faire des remarques sur un contenu en bêta"
+                        }
+                    ]
+                },
+                {
+                    "introduction":"828_contribuer-au-contenu/participer-aux-forums/introduction.md",
+                    "slug":"participer-aux-forums",
+                    "title":"Participer aux forums ",
+                    "ready_to_publish":true,
+                    "conclusion":"828_contribuer-au-contenu/participer-aux-forums/conclusion.md",
+                    "object":"container",
+                    "children":[
+                        {
+                            "text":"828_contribuer-au-contenu/participer-aux-forums/15767_aider-sur-les-forums.md",
+                            "slug":"15767_aider-sur-les-forums",
+                            "object":"extract",
+                            "title":"Aider sur les forums"
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/participer-aux-forums/15768_suggerer-des-idees.md",
+                            "slug":"15768_suggerer-des-idees",
+                            "object":"extract",
+                            "title":"Suggérer des idées "
+                        },
+                        {
+                            "text":"828_contribuer-au-contenu/participer-aux-forums/organiser-des-projets.md",
+                            "slug":"organiser-des-projets",
+                            "object":"extract",
+                            "title":"Organiser des projets"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "introduction":"rejoindre-lassociation/introduction.md",
+            "slug":"rejoindre-lassociation",
+            "title":"Rejoindre l'association",
+            "ready_to_publish":true,
+            "conclusion":"rejoindre-lassociation/conclusion.md",
+            "object":"container",
+            "children":[
+                {
+                    "text":"rejoindre-lassociation/presentation-de-lassociation.md",
+                    "slug":"presentation-de-lassociation",
+                    "object":"extract",
+                    "title":"Présentation de l'association"
+                },
+                {
+                    "text":"rejoindre-lassociation/comment-la-rejoindre-.md",
+                    "slug":"comment-la-rejoindre-",
+                    "object":"extract",
+                    "title":"Comment la rejoindre ?"
+                }
+            ]
+        },
+        {
+            "introduction":"points-particuliers/introduction.md",
+            "slug":"points-particuliers",
+            "title":"Annexes",
+            "ready_to_publish":true,
+            "conclusion":"points-particuliers/conclusion.md",
+            "object":"container",
+            "children":[
+                {
+                    "introduction":"points-particuliers/je-ne-sais-pas-choisir-les-tags-et-categories-de-mon-contenu/introduction.md",
+                    "slug":"je-ne-sais-pas-choisir-les-tags-et-categories-de-mon-contenu",
+                    "title":"Système de classement de la Bibliothèque sur Zeste de Savoir",
+                    "ready_to_publish":true,
+                    "conclusion":"points-particuliers/je-ne-sais-pas-choisir-les-tags-et-categories-de-mon-contenu/conclusion.md",
+                    "object":"container",
+                    "children":[
+                        {
+                            "text":"points-particuliers/je-ne-sais-pas-choisir-les-tags-et-categories-de-mon-contenu/classification-de-la-bibliotheque-sur-zeste-de-savoir.md",
+                            "slug":"classification-de-la-bibliotheque-sur-zeste-de-savoir",
+                            "object":"extract",
+                            "title":"Classification de la Bibliothèque sur Zeste de Savoir"
+                        },
+                        {
+                            "text":"points-particuliers/je-ne-sais-pas-choisir-les-tags-et-categories-de-mon-contenu/choix-des-categories-et-des-tags-1.md",
+                            "slug":"choix-des-categories-et-des-tags-1",
+                            "object":"extract",
+                            "title":"Choix des catégories et des tags"
+                        },
+                        {
+                            "text":"points-particuliers/je-ne-sais-pas-choisir-les-tags-et-categories-de-mon-contenu/gestion-des-categories-et-des-tags.md",
+                            "slug":"gestion-des-categories-et-des-tags",
+                            "object":"extract",
+                            "title":"Gestion des catégories et des tags"
+                        }
+                    ]
+                },
+                {
+                    "introduction":"points-particuliers/jai-du-mal-a-trouver-une-idee-et-un-plan/introduction.md",
+                    "slug":"jai-du-mal-a-trouver-une-idee-et-un-plan",
+                    "title":"J'ai du mal à trouver une idée et un plan",
+                    "ready_to_publish":true,
+                    "conclusion":"points-particuliers/jai-du-mal-a-trouver-une-idee-et-un-plan/conclusion.md",
+                    "object":"container",
+                    "children":[
+                        {
+                            "text":"points-particuliers/jai-du-mal-a-trouver-une-idee-et-un-plan/techniques-de-brainstorming.md",
+                            "slug":"techniques-de-brainstorming",
+                            "object":"extract",
+                            "title":"Techniques de brainstorming"
+                        },
+                        {
+                            "text":"points-particuliers/jai-du-mal-a-trouver-une-idee-et-un-plan/preparer-son-contenu-se-poser-les-bonnes-questions.md",
+                            "slug":"preparer-son-contenu-se-poser-les-bonnes-questions",
+                            "object":"extract",
+                            "title":"Préparer son contenu : se poser les bonnes questions"
+                        },
+                        {
+                            "text":"points-particuliers/jai-du-mal-a-trouver-une-idee-et-un-plan/formaliser-le-plan-et-le-premier-jet.md",
+                            "slug":"formaliser-le-plan-et-le-premier-jet",
+                            "object":"extract",
+                            "title":"Formaliser le plan et le premier jet"
+                        }
+                    ]
+                },
+                {
+                    "introduction":"points-particuliers/jai-du-mal-a-obtenir-des-retours-de-la-beta/introduction.md",
+                    "slug":"jai-du-mal-a-obtenir-des-retours-de-la-beta",
+                    "title":"J'ai du mal à obtenir des retours de la bêta",
+                    "ready_to_publish":false,
+                    "conclusion":"points-particuliers/jai-du-mal-a-obtenir-des-retours-de-la-beta/conclusion.md",
+                    "object":"container",
+                    "children":[
+                        {
+                            "text":"points-particuliers/jai-du-mal-a-obtenir-des-retours-de-la-beta/ameliorer-la-visibilite-via-les-recap-communautaires.md",
+                            "slug":"ameliorer-la-visibilite-via-les-recap-communautaires",
+                            "object":"extract",
+                            "title":"Améliorer la visibilité via les récap' communautaires"
+                        },
+                        {
+                            "text":"points-particuliers/jai-du-mal-a-obtenir-des-retours-de-la-beta/sassurer-davoir-assez-de-contenu.md",
+                            "slug":"sassurer-davoir-assez-de-contenu",
+                            "object":"extract",
+                            "title":"S'assurer d'avoir assez de contenu"
+                        }
+                    ]
+                },
+                {
+                    "introduction":"points-particuliers/jai-du-mal-a-terminer-mon-contenu/introduction.md",
+                    "slug":"jai-du-mal-a-terminer-mon-contenu",
+                    "title":"J'ai du mal à terminer mon contenu",
+                    "ready_to_publish":false,
+                    "conclusion":"points-particuliers/jai-du-mal-a-terminer-mon-contenu/conclusion.md",
+                    "object":"container",
+                    "children":[
+
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,1 @@
+Durant ce chapitre, nous allons parler de la rédaction en elle-même, comment bien se lancer et bien rédiger, en structurant son contenu et en étant pédagogue, notamment.
