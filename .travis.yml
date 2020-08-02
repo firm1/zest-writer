@@ -14,6 +14,11 @@ matrix:
     - os: linux
       dist: trusty
       sudo: required
+      TARGET: deb
+    - os: linux
+      dist: trusty
+      sudo: required
+      TARGET: rpm
     - os: osx
       osx_image: xcode10
       addons:
@@ -36,8 +41,7 @@ script:
   - tar -xf openjdk-14.0.2.tar.gz
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export BADASS_JLINK_JPACKAGE_HOME="$TRAVIS_BUILD_DIR/jdk-14.0.2"; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export BADASS_JLINK_JPACKAGE_HOME="$TRAVIS_BUILD_DIR/jdk-14.0.2.jdk/Contents/Home"; fi
-  - if [[ "$TRAVIS_BRANCH" == "master" ]] || [[ "$TRAVIS_TAG" != "" ]] ; then ./gradlew jpackage -PlinuxTarget=deb; fi
-  - if [[ "$TRAVIS_BRANCH" == "master" ]] || [[ "$TRAVIS_TAG" != "" ]] ; then ./gradlew jpackage -PlinuxTarget=rpm; fi
+  - if [[ "$TRAVIS_BRANCH" == "master" ]] || [[ "$TRAVIS_TAG" != "" ]] ; then ./gradlew jpackage -PlinuxTarget=$TARGET; fi
 
 after_success:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew jacocoTestReport coveralls; fi
