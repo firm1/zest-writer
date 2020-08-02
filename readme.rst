@@ -13,9 +13,6 @@ Un éditeur **hors-ligne** de contenus au format zMarkdown.
 
 .. no_readme_only
 
-.. image:: ./doc/images/logo_home.png
-   :alt: Logo de ZestWriter (menu)
-
 ZestWriter est un éditeur d'articles et de tutoriels fonctionnant hors-ligne. Il supporte la syntaxe *zMarkdown*, une version de Markdown utilisée sur le site `Zeste de Savoir <https://zestedesavoir.com/>`_.
 
 .. readme_only
@@ -33,10 +30,6 @@ ZestWriter est un éditeur d'articles et de tutoriels fonctionnant hors-ligne. I
 .. image:: https://coveralls.io/repos/github/firm1/zest-writer/badge.svg?branch=master
    :target: https://coveralls.io/github/firm1/zest-writer?branch=master
    :alt: Coverage Status
-
-.. image:: https://www.versioneye.com/user/projects/5719ed6bfcd19a0039f17b07/badge.svg?style=flat
-   :target: https://www.versioneye.com/user/projects/5719ed6bfcd19a0039f17b07
-   :alt: Dependency Status
 
 .. image:: https://readthedocs.org/projects/zest-writer/badge
    :target: http://zest-writer.readthedocs.io/
@@ -104,11 +97,6 @@ Arbre de navigation des contenus (tutoriels ou articles)
 Révision
 ########
 
-- proposition de corrections orthographiques, grammaticales et typographiques du contenu ;
-
-.. image:: ./doc/images/grammar_hint.png
-   :alt: Prosition de correction
-
 - indices de lisibilité des extraits pour améliorer leur lisibilité (*Flesch* et *Gunning*) ;
 
 .. image:: ./doc/images/flesch_indice.png
@@ -124,11 +112,7 @@ Synchronisation
 ###############
 
 - possibilité de récupérer ses contenus depuis le site `Zeste de Savoir <https://zestedesavoir.com/>`_ ;
-- possibilité d'envoyer sur le site les modifications effectuées sur Zeste Writer.
-
-.. image:: ./doc/images/logo_zds.png
-   :alt: Logo de Zeste de Savoir
-
+- possibilité d'envoyer sur le site les modifications effectuées sur Zest Writer.
 - possibilité de récupérer des contenus depuis un dépôt GitHub ;
 
 Multiplateforme

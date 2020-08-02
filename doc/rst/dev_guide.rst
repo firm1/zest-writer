@@ -11,16 +11,16 @@ Code Java
 *********
 
 ===================  ===========================
-Version de Java      Java 8
+Version de Java      Java 11
 Interface graphique  `JavaFX`_
-Parseur Markdown     `Python-ZMarkdown`_ [1]_
+Parseur Markdown     `ZMarkdown`_ [1]_
 Tests unitaires      Junit 4.12
 ===================  ===========================
 
 .. _JavaFX: http://www.oracle.com/technetwork/java/javase/overview/javafx-overview-2158620.html
-.. _Python-ZMarkdown: https://github.com/zestedesavoir/Python-ZMarkdown
+.. _ZMarkdown: https://github.com/zestedesavoir/zmarkdown
 
-.. [1] Le même parseur qu'utilisé sur Zeste de Savoir (l'application émule un interpreteur Python grace à Jython).
+.. [1] Le même parseur qu'utilisé sur Zeste de Savoir (l'application émule un moteur zmarkdown à travers GraalVM).
 
 Livraison continue
 ******************
@@ -32,11 +32,7 @@ Livraison continue
 +------------------------------+---------------+----------------+---------------+
 | Couverture des tests                         | `Coveralls`_   | |coverAlls|   |
 +------------------------------+---------------+----------------+---------------+
-| Vérification de dépendances                  | `VersionEye`_  | |versionEye|  |
-+------------------------------+---------------+----------------+---------------+
 | Analyse du code                              | `OpenHub`_     | |OpenHub|     |
-+                                              +----------------+---------------+
-|                                              | Sonar          | à venir       |
 +------------------------------+---------------+----------------+---------------+
 | Publication de documentation                 | `ReadTheDocs`_ | |ReadTheDocs| |
 +------------------------------+---------------+----------------+---------------+
@@ -44,14 +40,12 @@ Livraison continue
 .. _Travis CI: https://travis-ci.org/firm1/zest-writer
 .. _AppVeyor: https://ci.appveyor.com/project/firm1/zest-writer/branch/master
 .. _Coveralls: https://coveralls.io/github/firm1/zest-writer?branch=master
-.. _VersionEye: https://www.versioneye.com/user/projects/5719ed6bfcd19a0039f17b07
 .. _OpenHub: https://www.openhub.net/p/zest-writer?ref=sample
 .. _ReadTheDocs: http://zest-writer.readthedocs.io
 
 .. |travisCI| image:: https://travis-ci.org/firm1/zest-writer.svg?branch=master
 .. |appVeyor| image:: https://ci.appveyor.com/api/projects/status/n3aa5h519uxvjufq/branch/master?svg=true
 .. |coverAlls| image:: https://coveralls.io/repos/github/firm1/zest-writer/badge.svg?branch=master
-.. |versionEye| image:: https://www.versioneye.com/user/projects/5719ed6bfcd19a0039f17b07/badge.svg?style=flat
 .. |OpenHub| image:: https://www.openhub.net/p/zest-writer/widgets/project_thin_badge.gif
 .. |ReadTheDocs| image:: https://readthedocs.org/projects/zest-writer/badge
 
