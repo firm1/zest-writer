@@ -1,0 +1,1 @@
+Pour écrire au mieux, il convient de bien préparer la rédaction. À travers ce chapitre, nous allons donc parler de ce dont vous avez besoin pour amorcer la rédaction d’un contenu : le choix du sujet, la création de celui-ci ou encore la gestion des galeries d’images. 

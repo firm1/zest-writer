@@ -6,7 +6,7 @@ if [ -z "$1" ]
     exit 1
 fi
 
-RPMFILE=`ls build/distributions/*.rpm`
+RPMFILE=`ls build/installer/*.rpm`
 APIKEY=$1
 VERSION=`cat gradle.properties | grep "version" | cut -d "=" -f2`
 

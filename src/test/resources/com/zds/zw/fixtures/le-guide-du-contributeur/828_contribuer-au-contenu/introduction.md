@@ -1,0 +1,1 @@
+Au cours de cette première partie, nous allons nous intéresser aux contenus sur ZdS, aux différentes moyens d’en créer et d’y contribuer ainsi que comment participer aux forums.

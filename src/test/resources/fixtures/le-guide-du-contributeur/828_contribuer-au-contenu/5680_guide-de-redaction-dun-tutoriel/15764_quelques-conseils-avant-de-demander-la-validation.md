@@ -1,1 +1,0 @@
-- Parler (rappel) du niveau requis et inciter à créer du contenu ouvert aux novices

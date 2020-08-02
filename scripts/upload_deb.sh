@@ -6,7 +6,7 @@ if [ -z "$1" ]
     exit 1
 fi
 
-DEBFILE=`ls build/distributions/*.deb`
+DEBFILE=`ls build/installer/*.deb`
 APIKEY=$1
 VERSION=`cat gradle.properties | grep "version" | cut -d "=" -f2`
 

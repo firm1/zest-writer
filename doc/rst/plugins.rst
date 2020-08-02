@@ -34,17 +34,17 @@ Détail du fichier modèle
 
    package com.winxaito.main;
 
-   import com.zestedesavoir.zestwriter.MainApp;
+   import com.zds.zw.MainApp;
    import com.zestedesavoir.zestwriter.contents.plugins.ZwPlugin;
    import com.zestedesavoir.zestwriter.contents.plugins.ZwPluginVersion;
 
    import java.util.ArrayList;
 
    public class Main implements ZwPlugin{
-       private MainApp mainApp;
+       private com.zds.zw.MainApp mainApp;
 
        @Override
-       public void onEnable(MainApp mainApp){
+       public void onEnable(com.zds.zw.MainApp mainApp){
            System.out.println("[FROM PLUGIN] Enable plugin");
            this.mainApp = mainApp;
        }
@@ -72,7 +72,7 @@ La méthode ``onEnable``
 ***********************
 
 La méthode ``onEnable`` est appelée lors du lancement de l'application.
-Cette méthode prend en paramètre la classe ``MainApp`` (classe principale de l'application).
+Cette méthode prend en paramètre la classe ``com.zds.zw.MainApp`` (classe principale de l'application).
 C'est grâce à cette classe que nous pouvons modifier notre application.
 
 La méthode ``getListener``

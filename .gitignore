@@ -25,3 +25,15 @@ doc/rst/.presentation.rst
 # Misc
 *.log
 venv/
+
+# Build scripts
+scripts/zmarkdown
+scripts/zds-site
+src/main/resources/com/zds/zw/assets/dist
+src/main/resources/com/zds/zw/js/zmarkdown*.js
+
+Vagrantfile
+prov_trusty.sh
+.vagrant
+
+jdk-14*

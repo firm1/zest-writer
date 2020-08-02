@@ -1,0 +1,3 @@
+Et voilà ! Vous êtes normalement arrivé à bout de cette maudite page blanche. N'hésitez pas bien évidemment à tester les autres méthodes de brainstorming brièvement abordées ici (et ailleurs sur Internet) si la méthodologie suggérée n'a pas porté ses fruits. 
+
+N'hésitez pas également à suggérer d'autres méthodes dans les commentaires du tutoriel, le guide du tutoriel vise à être le plus complet et utile possible. :)

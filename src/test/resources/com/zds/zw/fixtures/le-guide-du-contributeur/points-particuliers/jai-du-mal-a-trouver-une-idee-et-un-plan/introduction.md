@@ -1,0 +1,1 @@
+Trouver une idée et formaliser un plan peut parfois être difficile. Dans ce chapitre, nous allons aborder une piste de réflexion pour vous aider — nous l'espérons — à franchir cet odieux obstacle qui empêche Clémentine de partager le fruit de votre savoir au monde entier ! :)

@@ -1,3 +1,0 @@
-La QA, ou *Quality Assurance*, est une étape très importante dans la vie d'un logiciel en général, et donc dans celle de Zeste de Savoir en particulier. Ici, une connaissance technique n'est pas obligatoire, mais peu s'avérer  un plus.
-
-Dans ce chapitre, nous verrons ce qu'est la qualité logicielle de manière générale, avant d'étudier plus en détail l'application de ces points au sein du projet Zeste de Savoir.

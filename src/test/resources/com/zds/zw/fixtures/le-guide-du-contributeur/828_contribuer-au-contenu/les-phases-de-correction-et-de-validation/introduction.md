@@ -1,0 +1,1 @@
+Après la rédaction, nous allons voir comment se servir des retours pour corriger efficacement son contenu et comment utiliser correctement les phases de bêta et de validation.
