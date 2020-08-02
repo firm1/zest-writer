@@ -207,22 +207,22 @@ public class TestModel {
         String extract_111_title = "Premier Extrait";
         String extract_21_title = "Autre Extrait";
 
-        Content bigtuto = new Content("container", ZdsHttp.toSlug(title), title, "introduction.md", "conclusion.md", new ArrayList<>(), 2, "CC-BY", description, "TUTORIAL");
+        Content bigtuto = new Content("container", ZdsHttp.toSlug(title), title, "introduction.md", "conclusion.md", new ArrayList<>(), 2.1, "CC-BY", description, "TUTORIAL", true);
         assertEquals(bigtuto.getSlug(), "tutoriel-de-test");
 
-        Container part_1 = new Container("container", ZdsHttp.toSlug(part_1_title), part_1_title, ZdsHttp.toSlug(part_1_title)+"/introduction.md", ZdsHttp.toSlug(part_1_title)+"/conclusion.md", new ArrayList<>());
+        Container part_1 = new Container("container", ZdsHttp.toSlug(part_1_title), part_1_title, ZdsHttp.toSlug(part_1_title)+"/introduction.md", ZdsHttp.toSlug(part_1_title)+"/conclusion.md", new ArrayList<>(), true);
         bigtuto.getChildren().add(part_1);
         assertEquals(part_1.getSlug(), "premiere-partie");
-        Container part_2 = new Container("container", ZdsHttp.toSlug(part_2_title), part_2_title, ZdsHttp.toSlug(part_2_title)+"/introduction.md", ZdsHttp.toSlug(part_2_title)+"/conclusion.md", new ArrayList<>());
+        Container part_2 = new Container("container", ZdsHttp.toSlug(part_2_title), part_2_title, ZdsHttp.toSlug(part_2_title)+"/introduction.md", ZdsHttp.toSlug(part_2_title)+"/conclusion.md", new ArrayList<>(), true);
         bigtuto.getChildren().add(part_2);
         assertEquals(part_2.getSlug(), "deuxieme-partie");
 
 
-        Container chapter_11 = new Container("container", ZdsHttp.toSlug(chapter_11_title), chapter_11_title, ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_11_title)+"/introduction.md", ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_11_title)+"/conclusion.md", new ArrayList<>());
+        Container chapter_11 = new Container("container", ZdsHttp.toSlug(chapter_11_title), chapter_11_title, ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_11_title)+"/introduction.md", ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_11_title)+"/conclusion.md", new ArrayList<>(), true);
 
         part_1.getChildren().add(chapter_11);
         assertEquals(chapter_11.getSlug(), "premier-chapitre");
-        Container chapter_12 = new Container("container", ZdsHttp.toSlug(chapter_12_title), chapter_12_title, ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_12_title)+"/introduction.md", ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_12_title)+"/conclusion.md", new ArrayList<>());
+        Container chapter_12 = new Container("container", ZdsHttp.toSlug(chapter_12_title), chapter_12_title, ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_12_title)+"/introduction.md", ZdsHttp.toSlug(part_1_title)+"/"+ZdsHttp.toSlug(chapter_12_title)+"/conclusion.md", new ArrayList<>(), true);
 
         part_1.getChildren().add(chapter_12);
         assertEquals(chapter_12.getSlug(), "deuxieme-chapitre");

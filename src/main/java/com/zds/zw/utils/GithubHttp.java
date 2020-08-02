@@ -41,7 +41,7 @@ public class GithubHttp {
         try {
             client.send(request, java.net.http.HttpResponse.BodyHandlers.ofFile(Path.of(filePath)));
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return filePath;
     }
@@ -119,7 +119,7 @@ public class GithubHttp {
             return current;
 
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return null;
     }

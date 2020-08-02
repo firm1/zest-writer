@@ -72,9 +72,10 @@ public class MainApp extends Application{
         logger.info("Version du système utilisateur: " + System.getProperty("os.version"));
         logger.info("Emplacement du fichier de log: " + System.getProperty("zw.logPath"));
 
-        Optional<String> homeDir = Arrays.asList(args).stream()
+
+        Optional<String> homeDir = Arrays.stream(args)
                     .filter(v -> v.split("=").length == 2)
-                    .filter(v -> (v.split("="))[0] == "home")
+                    .filter(v -> (v.split("="))[0].equals("home"))
                     .map(v -> (v.split("="))[1])
                     .findFirst();
 

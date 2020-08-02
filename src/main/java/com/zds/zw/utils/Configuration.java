@@ -66,7 +66,7 @@ public class Configuration {
         return fw.getDefaultDirectory().getAbsolutePath() + File.separator + "zwriter-workspace";
     }
 
-    public static String getLastRelease() throws IOException {
+    public static String getLastRelease() {
         String projectUrlRelease = "https://api.github.com/repos/firm1/zest-writer/releases/latest";
         HttpClient httpClient = HttpClient.newBuilder()
                 .followRedirects(HttpClient.Redirect.NORMAL)

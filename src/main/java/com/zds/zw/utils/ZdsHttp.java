@@ -152,6 +152,7 @@ public class ZdsHttp {
 
 
     private void initContext() {
+
         client = HttpClient.newHttpClient();
         contentListOnline = new ArrayList<>();
     }
@@ -220,7 +221,7 @@ public class ZdsHttp {
         try {
             return client.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return null;
     }
@@ -236,8 +237,9 @@ public class ZdsHttp {
         try {
             return client.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
+        log.debug("Can't send request");
         return null;
     }
 
@@ -252,7 +254,7 @@ public class ZdsHttp {
         try {
             return client.send(request, HttpResponse.BodyHandlers.ofFile(file));
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return null;
     }
@@ -288,15 +290,11 @@ public class ZdsHttp {
 
     public boolean login(String username, String password) {
         HttpResponse getContentLoginResponse = getRequest(getLoginUrl());
-        log.debug("getContentLoginResponse = "+getContentLoginResponse);
-        log.debug("headers = "+getContentLoginResponse.headers());
         if(getContentLoginResponse.headers().firstValue("Set-Cookie").isPresent()) {
             this.cookies = getUniquesStringCookie(getContentLoginResponse.headers());
         }
-        log.debug("content = "+getContentLoginResponse.body().toString());
         Document doc = Jsoup.parse(getContentLoginResponse.body().toString());
         Elements inputs = doc.select("form input");
-        log.debug("inputs = "+inputs);
         Optional<String> token = inputs.stream()
                 .filter(input -> input.hasAttr("name"))
                 .filter(input -> input.attr("name").equals("csrfmiddlewaretoken"))
@@ -307,11 +305,8 @@ public class ZdsHttp {
         data.put("username", username);
         data.put("password", password);
         data.put("csrfmiddlewaretoken", token.get());
-        log.debug("inputs = "+data);
 
         var response = postRequest(getLoginUrl(), data, null);
-        log.debug("response headers = "+response);
-        log.debug("response headers = "+response.headers());
 
         this.cookies = getUniquesStringCookie(response.headers());
         var getContentHomeResponse = getRequest(getBaseUrl());
@@ -452,13 +447,12 @@ public class ZdsHttp {
                     return false;
             }
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
 
         return false;
     }
-    public boolean importNewContent(String filePath, String msg) throws IOException {
-
+    public boolean importNewContent(String filePath, String msg) {
         log.debug("Tentative d'import via l'url : " + getImportNewContenttUrl());
         return uploadContent(filePath, getImportNewContenttUrl(), msg);
     }
@@ -594,7 +588,7 @@ public class ZdsHttp {
         try {
             HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofFile(Path.of(filePath)));
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
 
         log.debug("Archive téléchargée : "+filePath);

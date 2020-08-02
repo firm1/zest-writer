@@ -24,8 +24,8 @@ public class TestConfig {
     @Test
     public void testConfiguration() {
         ZdsHttp api = new ZdsHttp(config);
-        assertEquals(new File(TEST_DIR, ".zestwriter").exists(), true);
-        assertEquals(new File(TEST_DIR, ".zestwriter"+File.separator+"conf.properties").exists(), true);
+        assertTrue(new File(TEST_DIR, ".zestwriter").exists());
+        assertTrue(new File(TEST_DIR, ".zestwriter" + File.separator + "conf.properties").exists());
         assertEquals(config.getAdvancedServerHost(), "zestedesavoir.com");
         assertEquals(config.getAdvancedServerPort(), "443");
         assertEquals(config.getAdvancedServerProtocol(), "https");
@@ -35,8 +35,8 @@ public class TestConfig {
         assertEquals(config.getDisplayLang(), "fr_FR");
         assertTrue(config.getDisplayWindowHeight() > 0);
         assertTrue(config.getDisplayWindowWidth() > 0);
-        assertTrue(config.getDisplayWindowPositionX() == 0);
-        assertTrue(config.getDisplayWindowPositionY() == 0);
+        assertEquals(0, config.getDisplayWindowPositionX(), 0.0);
+        assertEquals(0, config.getDisplayWindowPositionY(), 0.0);
         assertTrue(config.isEditorSmart());
         assertFalse(config.isDisplayWindowMaximize());
         assertTrue(config.isDisplayWindowPersonnalDimension());
@@ -122,8 +122,8 @@ public class TestConfig {
 
     @Test
     public void testActions() {
-        assertEquals(new File(TEST_DIR, ".zestwriter").exists(), true);
-        assertEquals(new File(TEST_DIR, "action.properties").exists(), true);
+        assertTrue(new File(TEST_DIR, ".zestwriter").exists());
+        assertTrue(new File(TEST_DIR, "action.properties").exists());
         assertEquals(config.getActions().size(), 0);
         config.addActionProject(new File(TEST_DIR, "tutorial-one").getAbsolutePath());
         assertEquals(config.getActions().size(), 1);
@@ -144,12 +144,8 @@ public class TestConfig {
 
     @Test
     public void testRelease() {
-        try {
-            String last = Configuration.getLastRelease();
-            assertEquals(last == null, false);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String last = Configuration.getLastRelease();
+        assertFalse(last == null);
     }
 
 }
