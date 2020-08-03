@@ -44,7 +44,7 @@ def linuxOs = project.hasProperty('linuxTarget') ? project.property('linuxTarget
 if (os.isLinux()) {
     jPkgInstallerType = linuxOs
 } else if (os.isMacOsX()) {
-    jPkgInstallerType = 'pkg'
+    jPkgInstallerType = 'dmg'
 } else if (os.isWindows()) {
     jPkgInstallerType = 'msi'
 }
