@@ -5,18 +5,14 @@ language: java
 jdk:
   - oraclejdk11
 
-branches:
-  only:
-    - master
-
 matrix:
   include:
     - os: linux
-      dist: trusty
+      dist: bionic
       sudo: required
       TARGET: deb
     - os: linux
-      dist: trusty
+      dist: bionic
       sudo: required
       TARGET: rpm
     - os: osx
