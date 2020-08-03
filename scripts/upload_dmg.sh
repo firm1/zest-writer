@@ -6,7 +6,7 @@ if [ -z "$1" ]
     exit 1
 fi
 
-DMGFILE=`ls build/installer/*.pkg`
+DMGFILE=`ls build/installer/*.dmg`
 APIKEY=$1
 VERSION=`cat gradle.properties | grep "version" | cut -d "=" -f2`
 

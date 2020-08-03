@@ -20,7 +20,7 @@ Windows 64 bits
 Os X
 ####
 
-Téléchargez la dernière version de Zest Writer via `ce lien <https://bintray.com/zest-writer/dmg/zest-writer/_latestVersion#files>`_, puis installez le fichier pkg.
+Téléchargez la dernière version de Zest Writer via `ce lien <https://bintray.com/zest-writer/dmg/zest-writer/_latestVersion#files>`_, puis installez le fichier dmg.
 
 Linux
 #####
