@@ -1,5 +1,5 @@
 #!/bin/bash
-ZMD_VERSION="9.1.3"
+ZMD_VERSION="8.3.0"
 
 source ./setup_node.sh
 

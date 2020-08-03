@@ -1,4 +1,4 @@
-set ZMD_VERSION="9.1.3"
+set ZMD_VERSION="8.3.0"
 
 IF EXIST .\zmarkdown (
 rmdir .\zmarkdown /s /q
