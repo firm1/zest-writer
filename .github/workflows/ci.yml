@@ -12,11 +12,12 @@ jobs:
   # Build package
   build:
     name: Build zest-writer
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.OS }}
     strategy:
       matrix:
-        - os: ubuntu-22.04
-          TARGET: deb
+        include:
+          - OS: ubuntu-22.04
+            TARGET: deb
     steps:
       - uses: actions/checkout@v3
 
