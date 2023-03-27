@@ -22,5 +22,6 @@ open module zestwriter {
     requires org.apache.logging.log4j;
     requires org.apache.logging.log4j.core;
     requires jdk.crypto.ec;
+    requires org.objectweb.asm;
     exports com.zds.zw;
 }
