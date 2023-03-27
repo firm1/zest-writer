@@ -12,8 +12,10 @@ jobs:
   # Build package
   build:
     name: Build zest-writer
-    runs-on: ubuntu-22.04
-
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-22.04 ]
     steps:
       - uses: actions/checkout@v3
 
@@ -28,14 +30,27 @@ jobs:
           website: oracle.com
           release: "${{ env.JDK_VERSION }}"
 
+      - name: Download JDK 14 for Linux
+        run: curl "https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_linux-x64_bin.tar.gz" --output openjdk-14.0.2.tar.gz
+        if: runner.os == 'Linux'
+
+      - name: Download JDK 14 for OsX
+        run: curl "https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_osx-x64_bin.tar.gz" --output openjdk-14.0.2.tar.gz
+        if: runner.os == 'macOS'
+
+      - name: Download JDK 14
+        run: tar -xf openjdk-14.0.2.tar.gz
+
+      - name: Export BADASS_JLINK_JPACKAGE_HOME
+        run: export BADASS_JLINK_JPACKAGE_HOME="$GITHUB_WORKSPACE/jdk-14.0.2"
+        if: runner.os == 'Linux'
+
+      - name: Export BADASS_JLINK_JPACKAGE_HOME
+        run: export BADASS_JLINK_JPACKAGE_HOME="$GITHUB_WORKSPACE/jdk-14.0.2.jdk/Contents/Home"
+        if: runner.os == 'macOS'
+
       - name: Build zmd
         run: cd scripts && ./build-zmd.sh && cd ..
 
       - name: Build assets
         run: cd scripts && ./build-css.sh && cd ..
-
-      - name: Download JDK 14
-        run: curl "https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_$TRAVIS_OS_NAME-x64_bin.tar.gz" --output openjdk-14.0.2.tar.gz
-
-      - name: Download JDK 14
-        run: tar -xf openjdk-14.0.2.tar.gz
