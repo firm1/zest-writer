@@ -24,7 +24,7 @@ jobs:
         uses: oracle-actions/setup-java@v1
         with:
           website: oracle.com
-          release: 11
+          release: 17
 
       - name: Build zmd
         run: cd scripts && ./build-zmd.sh && cd ..
