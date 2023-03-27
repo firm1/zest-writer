@@ -5,7 +5,7 @@ on:
   pull_request:
 
 env:
-  JDK_VERSION: "11"
+  JDK_VERSION: "17"
   NODE_VERSION: "12.x"
 
 jobs:
@@ -15,16 +15,18 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
+      - uses: actions/checkout@v3
+
       - name: Set up NodeJS ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
           node-version: "${{ env.NODE_VERSION }}"
 
-      - name: 'Set up latest Oracle JDK 11'
+      - name: 'Set up latest Oracle JDK 17'
         uses: oracle-actions/setup-java@v1
         with:
           website: oracle.com
-          release: 17
+          release: "${{ env.JDK_VERSION }}"
 
       - name: Build zmd
         run: cd scripts && ./build-zmd.sh && cd ..
