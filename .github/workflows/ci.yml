@@ -15,7 +15,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-22.04 ]
+        - os: ubuntu-22.04
+          TARGET: deb
     steps:
       - uses: actions/checkout@v3
 
@@ -54,3 +55,6 @@ jobs:
 
       - name: Build assets
         run: cd scripts && ./build-css.sh && cd ..
+
+      - name: Build package
+        run: ./gradlew jpackage -PlinuxTarget=$TARGET
