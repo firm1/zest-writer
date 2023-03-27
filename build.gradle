@@ -15,7 +15,7 @@ repositories {
 }
 
 
-targetCompatibility = "17"
+targetCompatibility = "11"
 sourceCompatibility = "11"
 
 compileJava.options.encoding = 'UTF-8'
