@@ -18,6 +18,8 @@ jobs:
         include:
           - OS: ubuntu-22.04
             TARGET: deb
+          - OS: ubuntu-22.04
+            TARGET: rpm
     steps:
       - uses: actions/checkout@v3
 
