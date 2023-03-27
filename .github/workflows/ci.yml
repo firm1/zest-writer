@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+env:
+  JDK_VERSION: "11"
+  NODE_VERSION: "12.x"
+
+jobs:
+  # Build package
+  build:
+    name: Build zest-writer
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Set up NodeJS ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: "${{ env.NODE_VERSION }}"
+
+      - name: 'Set up latest Oracle JDK 11'
+        uses: oracle-actions/setup-java@v1
+        with:
+          website: oracle.com
+          release: 11
+
+      - name: Build zmd
+        run: cd scripts && ./build-zmd.sh && cd ..
+
+      - name: Build assets
+        run: cd scripts && ./build-css.sh && cd ..
+
+      - name: Download JDK 14
+        run: curl "https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_$TRAVIS_OS_NAME-x64_bin.tar.gz" --output openjdk-14.0.2.tar.gz
+
+      - name: Download JDK 14
+        run: tar -xf openjdk-14.0.2.tar.gz
