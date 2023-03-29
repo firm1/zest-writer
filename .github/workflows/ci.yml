@@ -2,6 +2,8 @@ name: CI
 
 on:
   push:
+    branches:
+      - master
   pull_request:
 
 env:
@@ -103,7 +105,7 @@ jobs:
         if: runner.os == 'macOS'
 
       - name: Build package for Windows
-        run: gradlew.bat jpackage
+        run: ./gradlew.bat jpackage
         if: runner.os == 'Windows'
 
       - name: Push deb to github release
