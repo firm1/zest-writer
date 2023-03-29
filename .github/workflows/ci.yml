@@ -16,11 +16,11 @@ jobs:
     strategy:
       matrix:
         include:
-#          - OS: ubuntu-22.04
-#            TARGET: deb
-#          - OS: ubuntu-22.04
-#            TARGET: rpm
-#          - OS: macos-latest
+          - OS: ubuntu-22.04
+            TARGET: deb
+          - OS: ubuntu-22.04
+            TARGET: rpm
+          - OS: macos-latest
           - OS: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -116,10 +116,8 @@ jobs:
           file: "build/installer/*.deb"
           delete_file: "*zestwriter*.deb"
           overwrite: true
-          branches: "new_build"
+          tags: true
           verbose: true
-          prerelease: true
-          default_release_name: test
         if: ${{ (runner.os == 'Linux') && matrix.TARGET == 'deb'}}
 
       - name: Push rpm to github release
@@ -130,10 +128,8 @@ jobs:
           file: "build/installer/*.rpm"
           delete_file: "*zestwriter*.rpm"
           overwrite: true
-          branches: "new_build"
+          tags: true
           verbose: true
-          prerelease: true
-          default_release_name: test
         if: ${{ (runner.os == 'Linux') && matrix.TARGET == 'rpm'}}
 
       - name: Push dmg to github release
@@ -144,10 +140,8 @@ jobs:
           file: "build/installer/*.dmg"
           delete_file: "*zestwriter*.dmg"
           overwrite: true
-          branches: "new_build"
+          tags: true
           verbose: true
-          prerelease: true
-          default_release_name: test
         if: runner.os == 'macOS'
 
       - name: Push msi to github release
@@ -158,8 +152,6 @@ jobs:
           file: "build/installer/*.msi"
           delete_file: "*zestwriter*.msi"
           overwrite: true
-          branches: "new_build"
+          tags: true
           verbose: true
-          prerelease: true
-          default_release_name: test
         if: runner.os == 'Windows'
