@@ -20,6 +20,7 @@ jobs:
             TARGET: deb
           - OS: ubuntu-22.04
             TARGET: rpm
+          - OS: macos-latest
     steps:
       - uses: actions/checkout@v3
 
@@ -59,5 +60,22 @@ jobs:
       - name: Build assets
         run: cd scripts && ./build-css.sh && cd ..
 
-      - name: Build package
+      - name: Build package for Linux
         run: ./gradlew jpackage -PlinuxTarget=$TARGET
+        if: runner.os == 'Linux'
+
+      - name: Build package for macOs
+        run: ./gradlew jpackage
+        if: runner.os == 'macOS'
+
+      - uses: xresloader/upload-to-github-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: "build/installer/*.deb"
+          delete_file: "*zestwriter*.deb"
+          overwrite: true
+          branches: "new_build"
+          verbose: true
+          prerelease: true
+        if: ${{ (runner.os == 'Linux') && $TARGET == 'deb'}}
