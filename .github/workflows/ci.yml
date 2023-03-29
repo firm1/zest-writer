@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    tags:
+      - *
   pull_request:
 
 env:
@@ -62,10 +64,6 @@ jobs:
 
       - name: Extract files
         run: 7z x openjdk-14.0.2_windows-x64_bin.zip
-        if: runner.os == 'Windows'
-
-      - name: List files
-        run: dir .
         if: runner.os == 'Windows'
 
       - name: Export BADASS_JLINK_JPACKAGE_HOME
