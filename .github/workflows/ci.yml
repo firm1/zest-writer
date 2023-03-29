@@ -16,11 +16,12 @@ jobs:
     strategy:
       matrix:
         include:
-          - OS: ubuntu-22.04
-            TARGET: deb
-          - OS: ubuntu-22.04
-            TARGET: rpm
-          - OS: macos-latest
+#          - OS: ubuntu-22.04
+#            TARGET: deb
+#          - OS: ubuntu-22.04
+#            TARGET: rpm
+#          - OS: macos-latest
+          - OS: windows-latest
     steps:
       - uses: actions/checkout@v3
 
@@ -36,15 +37,34 @@ jobs:
           release: "${{ env.JDK_VERSION }}"
 
       - name: Download JDK 14 for Linux
-        run: curl "https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_linux-x64_bin.tar.gz" --output openjdk-14.0.2.tar.gz
+        uses: wei/curl@v1
+        with:
+          args: --output openjdk-14.0.2.tar.gz https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_linux-x64_bin.tar.gz
         if: runner.os == 'Linux'
 
       - name: Download JDK 14 for OsX
-        run: curl "https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_osx-x64_bin.tar.gz" --output openjdk-14.0.2.tar.gz
+        uses: wei/curl@v1
+        with:
+          args: --output openjdk-14.0.2.tar.gz https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_osx-x64_bin.tar.gz
         if: runner.os == 'macOS'
 
-      - name: Download JDK 14
-        run: tar -xf openjdk-14.0.2.tar.gz
+      - name: Download JDK 14 for OsX
+        uses: wei/curl@v1
+        with:
+          args: --output openjdk-14.0.2.zip https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_windows-x64_bin.zip
+        if: runner.os == 'Windows'
+
+      - name: Extract files
+        uses: a7ul/tar-action@v1.1.0
+        id: extract
+        with:
+          command: x
+          files: openjdk-14.0.2.tar.gz
+        if: runner.os != 'Windows'
+
+      - name: Extract files
+        run: 7z x openjdk-14.0.2.zip
+        if: runner.os == 'Windows'
 
       - name: Export BADASS_JLINK_JPACKAGE_HOME
         run: export BADASS_JLINK_JPACKAGE_HOME="$GITHUB_WORKSPACE/jdk-14.0.2"
@@ -53,6 +73,10 @@ jobs:
       - name: Export BADASS_JLINK_JPACKAGE_HOME
         run: export BADASS_JLINK_JPACKAGE_HOME="$GITHUB_WORKSPACE/jdk-14.0.2.jdk/Contents/Home"
         if: runner.os == 'macOS'
+
+      - name: Export BADASS_JLINK_JPACKAGE_HOME
+        run: set BADASS_JLINK_JPACKAGE_HOME="$GITHUB_WORKSPACE\jdk-14.0.2"
+        if: runner.os == 'Windows'
 
       - name: Build zmd
         run: cd scripts && ./build-zmd.sh && cd ..
@@ -67,6 +91,10 @@ jobs:
       - name: Build package for macOs
         run: ./gradlew jpackage
         if: runner.os == 'macOS'
+
+      - name: Build package for macOs
+        run: ./gradlew.bat jpackage
+        if: runner.os == 'Windows'
 
       - name: Push deb to github release
         uses: xresloader/upload-to-github-release@main
