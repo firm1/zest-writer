@@ -1,0 +1,157 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+env:
+  JDK_VERSION: "17"
+  NODE_VERSION: "12.x"
+
+jobs:
+  # Build package
+  build:
+    name: Build zest-writer
+    runs-on: ${{ matrix.OS }}
+    strategy:
+      matrix:
+        include:
+          - OS: ubuntu-22.04
+            TARGET: deb
+          - OS: ubuntu-22.04
+            TARGET: rpm
+          - OS: macos-latest
+          - OS: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up NodeJS ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: "${{ env.NODE_VERSION }}"
+
+      - name: 'Set up latest Oracle JDK 17'
+        uses: oracle-actions/setup-java@v1
+        with:
+          website: oracle.com
+          release: "${{ env.JDK_VERSION }}"
+
+      - name: Download JDK 14 for Linux
+        uses: wei/curl@v1
+        with:
+          args: --output openjdk-14.0.2.tar.gz https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_linux-x64_bin.tar.gz
+        if: runner.os == 'Linux'
+
+      - name: Download JDK 14 for OsX
+        run: curl https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_osx-x64_bin.tar.gz --output openjdk-14.0.2.tar.gz
+        if: runner.os == 'macOS'
+
+      - name: Download JDK 14 for Windows
+        run: "curl -fsS -o openjdk-14.0.2_windows-x64_bin.zip https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_windows-x64_bin.zip"
+        if: runner.os == 'Windows'
+
+      - name: Extract files
+        uses: a7ul/tar-action@v1.1.0
+        id: extract
+        with:
+          command: x
+          files: openjdk-14.0.2.tar.gz
+        if: runner.os != 'Windows'
+
+      - name: Extract files
+        run: 7z x openjdk-14.0.2_windows-x64_bin.zip
+        if: runner.os == 'Windows'
+
+      - name: List files
+        run: dir .
+        if: runner.os == 'Windows'
+
+      - name: Export BADASS_JLINK_JPACKAGE_HOME
+        run: export BADASS_JLINK_JPACKAGE_HOME="$GITHUB_WORKSPACE/jdk-14.0.2"
+        if: runner.os == 'Linux'
+
+      - name: Export BADASS_JLINK_JPACKAGE_HOME
+        run: export BADASS_JLINK_JPACKAGE_HOME="$GITHUB_WORKSPACE/jdk-14.0.2.jdk/Contents/Home"
+        if: runner.os == 'macOS'
+
+      - name: Export BADASS_JLINK_JPACKAGE_HOME
+        run: set BADASS_JLINK_JPACKAGE_HOME="$GITHUB_WORKSPACE\jdk-14.0.2"
+        if: runner.os == 'Windows'
+
+      - name: Build zmd for Linux & Mac
+        run: cd scripts && ./build-zmd.sh && cd ..
+        if: runner.os != 'Windows'
+
+      - name: Build zmd for Windows
+        run: cd scripts && .\build-zmd.bat && cd ..
+        if: runner.os == 'Windows'
+
+      - name: Build assets for Linux & Mac
+        run: cd scripts && ./build-css.sh && cd ..
+        if: runner.os != 'Windows'
+
+      - name: Build assets for Windows
+        run: cd scripts && .\build-css.bat && cd ..
+        if: runner.os == 'Windows'
+
+      - name: Build package for Linux
+        run: ./gradlew jpackage -PlinuxTarget=$TARGET
+        if: runner.os == 'Linux'
+
+      - name: Build package for macOs
+        run: ./gradlew jpackage
+        if: runner.os == 'macOS'
+
+      - name: Build package for Windows
+        run: ./gradlew.bat jpackage
+        if: runner.os == 'Windows'
+
+      - name: Push deb to github release
+        uses: xresloader/upload-to-github-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: "build/installer/*.deb"
+          delete_file: "*zestwriter*.deb"
+          overwrite: true
+          tags: true
+          verbose: true
+        if: ${{ (runner.os == 'Linux') && matrix.TARGET == 'deb'}}
+
+      - name: Push rpm to github release
+        uses: xresloader/upload-to-github-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: "build/installer/*.rpm"
+          delete_file: "*zestwriter*.rpm"
+          overwrite: true
+          tags: true
+          verbose: true
+        if: ${{ (runner.os == 'Linux') && matrix.TARGET == 'rpm'}}
+
+      - name: Push dmg to github release
+        uses: xresloader/upload-to-github-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: "build/installer/*.dmg"
+          delete_file: "*zestwriter*.dmg"
+          overwrite: true
+          tags: true
+          verbose: true
+        if: runner.os == 'macOS'
+
+      - name: Push msi to github release
+        uses: xresloader/upload-to-github-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: "build/installer/*.msi"
+          delete_file: "*zestwriter*.msi"
+          overwrite: true
+          tags: true
+          verbose: true
+        if: runner.os == 'Windows'
