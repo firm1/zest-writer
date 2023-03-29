@@ -68,7 +68,8 @@ jobs:
         run: ./gradlew jpackage
         if: runner.os == 'macOS'
 
-      - uses: xresloader/upload-to-github-release@main
+      - name: Push deb to github release
+        uses: xresloader/upload-to-github-release@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -78,4 +79,33 @@ jobs:
           branches: "new_build"
           verbose: true
           prerelease: true
+          default_release_name: test
         if: ${{ (runner.os == 'Linux') && matrix.TARGET == 'deb'}}
+
+      - name: Push rpm to github release
+        uses: xresloader/upload-to-github-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: "build/installer/*.rpm"
+          delete_file: "*zestwriter*.rpm"
+          overwrite: true
+          branches: "new_build"
+          verbose: true
+          prerelease: true
+          default_release_name: test
+        if: ${{ (runner.os == 'Linux') && matrix.TARGET == 'rpm'}}
+
+      - name: Push dmg to github release
+        uses: xresloader/upload-to-github-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: "build/installer/*.dmg"
+          delete_file: "*zestwriter*.dmg"
+          overwrite: true
+          branches: "new_build"
+          verbose: true
+          prerelease: true
+          default_release_name: test
+        if: runner.os == 'macOS'
