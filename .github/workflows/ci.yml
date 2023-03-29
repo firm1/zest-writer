@@ -48,10 +48,8 @@ jobs:
           args: --output openjdk-14.0.2.tar.gz https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_osx-x64_bin.tar.gz
         if: runner.os == 'macOS'
 
-      - name: Download JDK 14 for OsX
-        uses: wei/curl@v1
-        with:
-          args: --output openjdk-14.0.2.zip https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_windows-x64_bin.zip
+      - name: Download JDK 14 for Windows
+        run: "curl -fsS -o openjdk-14.0.2_windows-x64_bin.zip https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_windows-x64_bin.zip"
         if: runner.os == 'Windows'
 
       - name: Extract files
@@ -63,7 +61,11 @@ jobs:
         if: runner.os != 'Windows'
 
       - name: Extract files
-        run: 7z x openjdk-14.0.2.zip
+        run: 7z x openjdk-14.0.2_windows-x64_bin.zip
+        if: runner.os == 'Windows'
+
+      - name: List files
+        run: dir .
         if: runner.os == 'Windows'
 
       - name: Export BADASS_JLINK_JPACKAGE_HOME
@@ -137,3 +139,17 @@ jobs:
           prerelease: true
           default_release_name: test
         if: runner.os == 'macOS'
+
+      - name: Push msi to github release
+        uses: xresloader/upload-to-github-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: "build/installer/*.msi"
+          delete_file: "*zestwriter*.msi"
+          overwrite: true
+          branches: "new_build"
+          verbose: true
+          prerelease: true
+          default_release_name: test
+        if: runner.os == 'Windows'
