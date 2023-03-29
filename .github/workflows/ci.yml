@@ -78,4 +78,4 @@ jobs:
           branches: "new_build"
           verbose: true
           prerelease: true
-        if: ${{ (runner.os == 'Linux') && $TARGET == 'deb'}}
+        if: ${{ (runner.os == 'Linux') && matrix.TARGET == 'deb'}}
