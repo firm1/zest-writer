@@ -43,9 +43,7 @@ jobs:
         if: runner.os == 'Linux'
 
       - name: Download JDK 14 for OsX
-        uses: wei/curl@v1
-        with:
-          args: --output openjdk-14.0.2.tar.gz https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_osx-x64_bin.tar.gz
+        run: curl https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_osx-x64_bin.tar.gz --output openjdk-14.0.2.tar.gz
         if: runner.os == 'macOS'
 
       - name: Download JDK 14 for Windows
